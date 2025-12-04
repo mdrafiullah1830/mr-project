@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MR Shop — Settings</title>
+  <style>
+    /* ===== CSS RESET & FONT IMPORT ===== */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* ===== ROOT VARIABLES ===== */
+    :root {
+      --primary-color: #3b82f6;
+      --secondary-color: #8b5cf6;
+      --accent-color: #06b6d4;
+      --success-color: #10b981;
+      --danger-color: #ef4444;
+      --warning-color: #f59e0b;
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --border-color: #e2e8f0;
+      --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Dark theme variables */
+    .theme-dark {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --border-color: #334155;
+      --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    /* ===== GLOBAL STYLES ===== */
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      transition: var(--transition);
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: linear-gradient(90deg, #7c3aed, #06b6d4);
+      color: white;
+      padding: 18px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .brand-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+      font-weight: 700;
+      font-size: 1.25rem;
+      text-decoration: none;
+    }
+
+    .brand-link:focus {
+      outline: 2px solid rgba(255,255,255,0.15);
+      border-radius: 6px;
+      padding: 4px;
+    }
+
+    .brand-icon {
+      font-size: 2rem;
+    }
+
+    .mr-logo {
+      box-sizing: border-box;
+      height: 40px;
+      width: auto;
+      display: block;
+      object-fit: contain;
+      border-radius: 8px;
+      padding: 4px;
+      border: 2px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.03);
+      box-shadow: 0 6px 18px rgba(16,24,40,0.08);
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .nav-link {
+      color: white;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .theme-toggle {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.1);
+    }
+
+    .theme-toggle:focus {
+      outline: 2px solid rgba(255,255,255,0.15);
+    }
+
+    /* ===== MAIN CONTAINER ===== */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    /* ===== PAGE HEADER ===== */
+    .page-header {
+      margin-bottom: 40px;
+      animation: fadeInDown 0.5s ease;
+    }
+
+    .page-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    /* ===== SETTINGS GRID ===== */
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+      animation: fadeInUp 0.6s ease;
+    }
+
+    /* ===== SETTING CARD ===== */
+    .setting-card {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+
+    .setting-card:hover {
+      box-shadow: var(--shadow-xl);
+      transform: translateY(-4px);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .card-icon {
+      font-size: 1.75rem;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    /* ===== FORM ELEMENTS ===== */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      letter-spacing: 0.3px;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      font-family: inherit;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      transition: var(--transition);
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .form-input[type="color"] {
+      height: 50px;
+      padding: 4px;
+      cursor: pointer;
+    }
+
+    .form-input[type="file"] {
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .form-hint {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      display: block;
+    }
+
+    /* ===== TOGGLE SWITCH ===== */
+    .toggle-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .toggle-group:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .toggle-info {
+      flex: 1;
+    }
+
+    .toggle-label {
+      font-weight: 600;
+      color: var(--text-primary);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .toggle-description {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 56px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--border-color);
+      transition: var(--transition);
+      border-radius: 34px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: var(--transition);
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .toggle-switch input:checked + .toggle-slider {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(28px);
+    }
+
+    /* ===== COLOR PICKER GROUP ===== */
+    .color-picker-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 16px;
+    }
+
+    .color-picker-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* ===== SAVE BUTTON ===== */
+    .save-button {
+      width: 100%;
+      padding: 18px 32px;
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+      border: none;
+      border-radius: var(--radius-lg);
+      font-size: 1.125rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 32px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      animation: fadeInUp 0.7s ease;
+    }
+
+    .save-button:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-xl);
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    }
+
+    .save-button:active {
+      transform: translateY(0);
+    }
+
+    .button-icon {
+      font-size: 1.5rem;
+    }
+
+    /* ===== SUCCESS MESSAGE ===== */
+    .success-message {
+      position: fixed;
+      top: 100px;
+      right: 24px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 20px 28px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      display: none;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      font-size: 1rem;
+      z-index: 2000;
+      animation: slideInRight 0.4s ease;
+    }
+
+    .success-message.show {
+      display: flex;
+    }
+
+    .success-icon {
+      font-size: 1.75rem;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(400px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideOutRight {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(400px);
+      }
+    }
+
+    /* ===== RESPONSIVE DESIGN ===== */
+    @media (max-width: 1024px) {
+      .settings-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 16px 20px;
+        flex-wrap: wrap;
+      }
+
+      .header-nav {
+        gap: 12px;
+      }
+
+      .nav-link {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+      }
+
+      .container {
+        padding: 24px 16px;
+      }
+
+      .page-title {
+        font-size: 2rem;
+      }
+
+      .page-subtitle {
+        font-size: 1rem;
+      }
+
+      .settings-grid {
+        gap: 16px;
+        grid-template-columns: 1fr;
+      }
+
+      .setting-card {
+        padding: 20px;
+      }
+
+      .card-title {
+        font-size: 1.25rem;
+      }
+
+      .color-picker-group {
+        grid-template-columns: 1fr;
+      }
+
+      .success-message {
+        right: 16px;
+        left: 16px;
+        top: 80px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .brand-link {
+        font-size: 1rem;
+      }
+
+      .brand-icon {
+        font-size: 1.5rem;
+      }
+
+      .mr-logo {
+        height: 32px;
+      }
+
+      .page-title {
+        font-size: 1.75rem;
+      }
+
+      .card-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+      }
+
+      .toggle-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+    }
+
+    /* ===== UTILITY CLASSES ===== */
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .mt-2 {
+      margin-top: 8px;
+    }
+
+    .mb-2 {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <a href="index.html" class="brand-link">
+      <span class="brand-icon">🛍️</span>
+      <img src="./assets/images/mrlogo.png" alt="MR Shop" class="mr-logo">
+    </a>
+    <nav class="header-nav">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="cart.html" class="nav-link">Cart</a>
+      <a href="userprofile.html" class="nav-link">Profile</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        🌙
+      </button>
+    </nav>
+  </header>
+
+  <!-- ===== MAIN CONTAINER ===== -->
+  <div class="container">
+    
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">⚙️ Settings</h1>
+      <p class="page-subtitle">Manage your store configuration and preferences</p>
+    </div>
+
+    <!-- Settings Form -->
+    <form id="settingsForm">
+      
+      <!-- Settings Grid -->
+      <div class="settings-grid">
+
+        <!-- 1. Store Settings -->
+        <div class="setting-card">
+          <div class="card-header">
+            <div class="card-icon">🏪</div>
+            <h2 class="card-title">Store Settings</h2>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="storeName">Store Name</label>
+            <input type="text" id="storeName" class="form-input" value="MR Shop" placeholder="Enter store name">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="tagline">Tagline</label>
+            <input type="text" id="tagline" class="form-input" value="Your One-Stop Shop" placeholder="Enter tagline">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="logoUpload">Logo Upload</label>
+            <input type="file" id="logoUpload" class="form-input" accept="image/*">
+            <span class="form-hint">Recommended size: 512x512px (PNG or JPG)</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Brand Colors</label>
+            <div class="color-picker-group">
+              <div class="color-picker-item">
+                <label class="form-label" for="primaryColor">Primary</label>
+                <input type="color" id="primaryColor" class="form-input" value="#7c3aed">
+              </div>
+              <div class="color-picker-item">
+                <label class="form-label" for="secondaryColor">Secondary</label>
+                <input type="color" id="secondaryColor" class="form-input" value="#06b6d4">
+              </div>
+              <div class="color-picker-item">
+                <label class="form-label" for="accentColor">Accent</label>
+                <input type="color" id="accentColor" class="form-input" value="#3b82f6">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="currency">Currency</label>
+            <select id="currency" class="form-select">
+              <option value="BDT" selected>BDT (৳) - Bangladeshi Taka</option>
+            </select>
+            <span class="form-hint">Default currency for your store</span>
+          </div>
+        </div>
+
+        <!-- 2. Product Settings -->
+        <div class="setting-card">
+          <div class="card-header">
+            <div class="card-icon">📦</div>
+            <h2 class="card-title">Product Settings</h2>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-label">Enable Stock Tracking</span>
+              <span class="toggle-description">Track product inventory levels</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="enableStockTracking" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="form-group mt-2">
+            <label class="form-label" for="lowStockAlert">Low Stock Alert Threshold</label>
+            <input type="number" id="lowStockAlert" class="form-input" value="10" min="1" placeholder="e.g., 10">
+            <span class="form-hint">Alert when stock falls below this number</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="itemsPerPage">Items Per Page</label>
+            <select id="itemsPerPage" class="form-select">
+              <option value="12" selected>12 items</option>
+              <option value="24">24 items</option>
+              <option value="36">36 items</option>
+            </select>
+            <span class="form-hint">Number of products shown per page</span>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-label">Allow Backorders</span>
+              <span class="toggle-description">Accept orders when stock is zero</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="allowBackorders">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 3. Cart & Checkout -->
+        <div class="setting-card">
+          <div class="card-header">
+            <div class="card-icon">🛒</div>
+            <h2 class="card-title">Cart & Checkout</h2>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-label">Enable Guest Checkout</span>
+              <span class="toggle-description">Allow purchases without account</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="enableGuestCheckout" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-label">Enable Cash on Delivery (COD)</span>
+              <span class="toggle-description">Accept cash payments on delivery</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="enableCOD" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="form-group mt-2">
+            <label class="form-label" for="codFee">COD Fee (৳)</label>
+            <input type="number" id="codFee" class="form-input" value="50" min="0" placeholder="e.g., 50">
+            <span class="form-hint">Additional fee for COD orders</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="freeShippingMin">Free Shipping Minimum Order (৳)</label>
+            <input type="number" id="freeShippingMin" class="form-input" value="1000" min="0" placeholder="e.g., 1000">
+            <span class="form-hint">Free shipping for orders above this amount</span>
+          </div>
+        </div>
+
+        <!-- 4. Courier & Shipping Settings -->
+        <div class="setting-card">
+          <div class="card-header">
+            <div class="card-icon">🚚</div>
+            <h2 class="card-title">Courier & Shipping</h2>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="defaultCourier">Default Courier Service</label>
+            <select id="defaultCourier" class="form-select">
+              <option value="deliverytiger">DeliveryTiger</option>
+              <option value="redx" selected>REDX</option>
+              <option value="pathao">Pathao</option>
+              <option value="ecourier">eCourier</option>
+            </select>
+            <span class="form-hint">Primary courier for shipments</span>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-label">Enable Shipping Tracking</span>
+              <span class="toggle-description">Provide tracking links to customers</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="enableShippingTracking" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 5. Payment Methods -->
+        <div class="setting-card">
+          <div class="card-header">
+            <div class="card-icon">💳</div>
+            <h2 class="card-title">Payment Methods</h2>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-label">bKash</span>
+              <span class="toggle-description">Mobile banking payment</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="paymentBkash" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-label">Nagad</span>
+              <span class="toggle-description">Digital financial service</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="paymentNagad" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-label">Rocket</span>
+              <span class="toggle-description">Mobile financial service</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="paymentRocket" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-label">Stripe</span>
+              <span class="toggle-description">International card payments</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="paymentStripe">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-label">PayPal</span>
+              <span class="toggle-description">Global payment processor</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="paymentPaypal">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 6. Donation Feature -->
+        <div class="setting-card">
+          <div class="card-header">
+            <div class="card-icon">❤️</div>
+            <h2 class="card-title">Donation Feature</h2>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-label">Enable Donation</span>
+              <span class="toggle-description">Donate percentage of profits to charity</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="enableDonation" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="form-group mt-2">
+            <label class="form-label" for="donationPercentage">Donation Percentage (%)</label>
+            <input type="number" id="donationPercentage" class="form-input" value="10" min="1" max="100" step="1" placeholder="e.g., 10">
+            <span class="form-hint">Percentage of profit to donate (1-100%)</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="donationAmounts">Suggested Donation Amounts (৳)</label>
+            <input type="text" id="donationAmounts" class="form-input" value="300, 500, 1000, 2000" placeholder="e.g., 300, 500, 1000">
+            <span class="form-hint">Comma-separated amounts for quick selection</span>
+          </div>
+        </div>
+
+        <!-- 7. SEO Settings -->
+        <div class="setting-card">
+          <div class="card-header">
+            <div class="card-icon">🔍</div>
+            <h2 class="card-title">SEO Settings</h2>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="metaTitle">Meta Title</label>
+            <input type="text" id="metaTitle" class="form-input" value="MR Shop | Your One-Stop Online Store" placeholder="Enter meta title">
+            <span class="form-hint">Shown in search engine results (50-60 chars)</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="metaDescription">Meta Description</label>
+            <textarea id="metaDescription" class="form-textarea" placeholder="Enter meta description">Discover quality products at MR Shop. Fast shipping, great prices, and exceptional customer service. Shop now!</textarea>
+            <span class="form-hint">Brief summary for search results (150-160 chars)</span>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-label">Enable Sitemap</span>
+              <span class="toggle-description">Generate XML sitemap for search engines</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="enableSitemap" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-label">Enable Robots.txt</span>
+              <span class="toggle-description">Control search engine crawling</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="enableRobots" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 8. Contact Information -->
+        <div class="setting-card">
+          <div class="card-header">
+            <div class="card-icon">📞</div>
+            <h2 class="card-title">Contact Information</h2>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="supportEmail">Support Email</label>
+            <input type="email" id="supportEmail" class="form-input" value="support@mrshop.com" placeholder="support@example.com">
+            <span class="form-hint">Primary email for customer support</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="supportPhone">Support Phone Number</label>
+            <input type="tel" id="supportPhone" class="form-input" value="+880 1606-079896" placeholder="+880 1XXX-XXXXXX">
+            <span class="form-hint">Customer service contact number</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="address">Business Address</label>
+            <textarea id="address" class="form-textarea" placeholder="Enter full address">House 12, Road 5, Dhanmondi
+Dhaka - 1209, Bangladesh</textarea>
+            <span class="form-hint">Physical address of your business</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Save Button -->
+      <button type="submit" class="save-button">
+        <span class="button-icon">💾</span>
+        <span>Save All Settings</span>
+      </button>
+
+    </form>
+
+  </div>
+
+  <!-- Success Message -->
+  <div class="success-message" id="successMessage">
+    <span class="success-icon">✅</span>
+    <span>Settings Saved Successfully!</span>
+  </div>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // ===== THEME TOGGLE =====
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('mrshop-theme');
+    if (savedTheme === 'dark') {
+      body.classList.add('theme-dark');
+      themeToggle.textContent = '☀️';
+    }
+
+    // Theme toggle handler
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('theme-dark');
+      const isDark = body.classList.contains('theme-dark');
+      themeToggle.textContent = isDark ? '☀️' : '🌙';
+      localStorage.setItem('mrshop-theme', isDark ? 'dark' : 'light');
+    });
+
+    // ===== FORM SUBMISSION =====
+    const settingsForm = document.getElementById('settingsForm');
+    const successMessage = document.getElementById('successMessage');
+
+    settingsForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // Collect all form data
+      const formData = {
+        // Store Settings
+        storeName: document.getElementById('storeName').value,
+        tagline: document.getElementById('tagline').value,
+        logoUpload: document.getElementById('logoUpload').files[0]?.name || 'No file selected',
+        primaryColor: document.getElementById('primaryColor').value,
+        secondaryColor: document.getElementById('secondaryColor').value,
+        accentColor: document.getElementById('accentColor').value,
+        currency: document.getElementById('currency').value,
+
+        // Product Settings
+        enableStockTracking: document.getElementById('enableStockTracking').checked,
+        lowStockAlert: document.getElementById('lowStockAlert').value,
+        itemsPerPage: document.getElementById('itemsPerPage').value,
+        allowBackorders: document.getElementById('allowBackorders').checked,
+
+        // Cart & Checkout
+        enableGuestCheckout: document.getElementById('enableGuestCheckout').checked,
+        enableCOD: document.getElementById('enableCOD').checked,
+        codFee: document.getElementById('codFee').value,
+        freeShippingMin: document.getElementById('freeShippingMin').value,
+
+        // Courier & Shipping
+        defaultCourier: document.getElementById('defaultCourier').value,
+        enableShippingTracking: document.getElementById('enableShippingTracking').checked,
+
+        // Payment Methods
+        paymentBkash: document.getElementById('paymentBkash').checked,
+        paymentNagad: document.getElementById('paymentNagad').checked,
+        paymentRocket: document.getElementById('paymentRocket').checked,
+        paymentStripe: document.getElementById('paymentStripe').checked,
+        paymentPaypal: document.getElementById('paymentPaypal').checked,
+
+        // Donation Feature
+        enableDonation: document.getElementById('enableDonation').checked,
+        donationPercentage: document.getElementById('donationPercentage').value,
+        donationAmounts: document.getElementById('donationAmounts').value,
+
+        // SEO Settings
+        metaTitle: document.getElementById('metaTitle').value,
+        metaDescription: document.getElementById('metaDescription').value,
+        enableSitemap: document.getElementById('enableSitemap').checked,
+        enableRobots: document.getElementById('enableRobots').checked,
+
+        // Contact Information
+        supportEmail: document.getElementById('supportEmail').value,
+        supportPhone: document.getElementById('supportPhone').value,
+        address: document.getElementById('address').value
+      };
+
+      // Save to localStorage
+      localStorage.setItem('mrshop-settings', JSON.stringify(formData));
+
+      // Log settings to console
+      console.log('Settings saved:', formData);
+
+      // Show success message
+      successMessage.classList.add('show');
+
+      // Hide success message after 3 seconds
+      setTimeout(() => {
+        successMessage.style.animation = 'slideOutRight 0.4s ease';
+        setTimeout(() => {
+          successMessage.classList.remove('show');
+          successMessage.style.animation = '';
+        }, 400);
+      }, 3000);
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // ===== LOAD SAVED SETTINGS ON PAGE LOAD =====
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedSettings = localStorage.getItem('mrshop-settings');
+      
+      if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+
+        // Populate form fields with saved data
+        if (settings.storeName) document.getElementById('storeName').value = settings.storeName;
+        if (settings.tagline) document.getElementById('tagline').value = settings.tagline;
+        if (settings.primaryColor) document.getElementById('primaryColor').value = settings.primaryColor;
+        if (settings.secondaryColor) document.getElementById('secondaryColor').value = settings.secondaryColor;
+        if (settings.accentColor) document.getElementById('accentColor').value = settings.accentColor;
+        if (settings.currency) document.getElementById('currency').value = settings.currency;
+
+        // Product Settings
+        if (settings.enableStockTracking !== undefined) 
+          document.getElementById('enableStockTracking').checked = settings.enableStockTracking;
+        if (settings.lowStockAlert) document.getElementById('lowStockAlert').value = settings.lowStockAlert;
+        if (settings.itemsPerPage) document.getElementById('itemsPerPage').value = settings.itemsPerPage;
+        if (settings.allowBackorders !== undefined) 
+          document.getElementById('allowBackorders').checked = settings.allowBackorders;
+
+        // Cart & Checkout
+        if (settings.enableGuestCheckout !== undefined) 
+          document.getElementById('enableGuestCheckout').checked = settings.enableGuestCheckout;
+        if (settings.enableCOD !== undefined) 
+          document.getElementById('enableCOD').checked = settings.enableCOD;
+        if (settings.codFee) document.getElementById('codFee').value = settings.codFee;
+        if (settings.freeShippingMin) document.getElementById('freeShippingMin').value = settings.freeShippingMin;
+
+        // Courier & Shipping
+        if (settings.defaultCourier) document.getElementById('defaultCourier').value = settings.defaultCourier;
+        if (settings.enableShippingTracking !== undefined) 
+          document.getElementById('enableShippingTracking').checked = settings.enableShippingTracking;
+
+        // Payment Methods
+        if (settings.paymentBkash !== undefined) 
+          document.getElementById('paymentBkash').checked = settings.paymentBkash;
+        if (settings.paymentNagad !== undefined) 
+          document.getElementById('paymentNagad').checked = settings.paymentNagad;
+        if (settings.paymentRocket !== undefined) 
+          document.getElementById('paymentRocket').checked = settings.paymentRocket;
+        if (settings.paymentStripe !== undefined) 
+          document.getElementById('paymentStripe').checked = settings.paymentStripe;
+        if (settings.paymentPaypal !== undefined) 
+          document.getElementById('paymentPaypal').checked = settings.paymentPaypal;
+
+        // Donation Feature
+        if (settings.enableDonation !== undefined) 
+          document.getElementById('enableDonation').checked = settings.enableDonation;
+        if (settings.donationPercentage) 
+          document.getElementById('donationPercentage').value = settings.donationPercentage;
+        if (settings.donationAmounts) 
+          document.getElementById('donationAmounts').value = settings.donationAmounts;
+
+        // SEO Settings
+        if (settings.metaTitle) document.getElementById('metaTitle').value = settings.metaTitle;
+        if (settings.metaDescription) document.getElementById('metaDescription').value = settings.metaDescription;
+        if (settings.enableSitemap !== undefined) 
+          document.getElementById('enableSitemap').checked = settings.enableSitemap;
+        if (settings.enableRobots !== undefined) 
+          document.getElementById('enableRobots').checked = settings.enableRobots;
+
+        // Contact Information
+        if (settings.supportEmail) document.getElementById('supportEmail').value = settings.supportEmail;
+        if (settings.supportPhone) document.getElementById('supportPhone').value = settings.supportPhone;
+        if (settings.address) document.getElementById('address').value = settings.address;
+
+        console.log('Settings loaded from localStorage');
+      }
+    });
+
+    // ===== SMOOTH SCROLL TO TOP ON PAGE LOAD =====
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // ===== LOG SUCCESS ON CONSOLE =====
+    console.log('%c⚙️ MR Shop Settings Page Loaded Successfully!', 'font-size: 18px; font-weight: bold; color: #667eea;');
+    console.log('%cAll form inputs are functional and data persists in localStorage', 'font-size: 12px; color: #64748b;');
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Notifications — MR Shop</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+    :root{
+      --accent: #7c3aed;
+      --accent-2: #06b6d4;
+      --bg-1: #fff7fb;
+      --bg-2: #f0fbff;
+      --muted: #6b7280;
+      --shadow: 0 10px 30px rgba(18,38,63,0.08);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: 'Poppins', Arial, sans-serif;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background: linear-gradient(135deg,var(--bg-1),var(--bg-2));
+      color:#102a43;
+      line-height:1.4;
+    }
+
+    /* Header */
+    header{
+      background: linear-gradient(90deg,var(--accent),var(--accent-2));
+      color: white;
+      padding: 18px 36px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      box-shadow: var(--shadow);
+    }
+    header h1{font-size:20px;letter-spacing:0.2px}
+    .brand-link{color:inherit;text-decoration:none;font-weight:700;display:inline-flex;align-items:center;gap:8px}
+    .mr-logo{box-sizing:border-box;height:40px;width:auto;display:block;object-fit:contain;border-radius:8px;padding:4px;border:2px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.03);box-shadow:0 6px 18px rgba(16,24,40,0.08)}
+    .header-links{display:flex;gap:12px;align-items:center}
+    .header-links a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:8px;background:transparent;transition:all .2s ease}
+    .header-links a:hover{background:rgba(255,255,255,0.15)}
+
+    /* Page layout */
+    .page-container{max-width:720px;margin:0 auto;padding:28px 20px}
+
+    /* Notification header */
+    .notification-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+    }
+
+    .notification-title{
+      font-size:24px;
+      font-weight:700;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+
+    .notification-actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .mark-all-read{
+      background:transparent;
+      border:1px solid var(--accent);
+      color:var(--accent);
+      padding:8px 14px;
+      border-radius:8px;
+      font-size:13px;
+      font-weight:600;
+      cursor:pointer;
+      transition:all .2s ease;
+    }
+
+    .mark-all-read:hover{
+      background:var(--accent);
+      color:#fff;
+    }
+
+    .settings-btn{
+      background:transparent;
+      border:none;
+      color:var(--muted);
+      font-size:20px;
+      cursor:pointer;
+      padding:8px;
+      border-radius:8px;
+      transition:all .2s ease;
+      position:relative;
+    }
+
+    .settings-btn:hover{
+      background:rgba(124,58,237,0.1);
+      color:var(--accent);
+    }
+
+    /* Settings dropdown */
+    .settings-dropdown{
+      position:absolute;
+      top:calc(100% + 8px);
+      right:0;
+      background:#fff;
+      border-radius:12px;
+      box-shadow:0 12px 40px rgba(18,38,63,0.15);
+      padding:8px;
+      min-width:220px;
+      display:none;
+      z-index:100;
+    }
+
+    .settings-dropdown.open{display:block}
+
+    .settings-item{
+      padding:10px 12px;
+      border-radius:8px;
+      cursor:pointer;
+      font-size:14px;
+      color:#102a43;
+      transition:all .2s ease;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .settings-item:hover{
+      background:rgba(124,58,237,0.08);
+    }
+
+    .settings-item .icon{
+      font-size:16px;
+    }
+
+    /* Notification tabs */
+    .notification-tabs{
+      display:flex;
+      gap:8px;
+      margin-bottom:18px;
+      border-bottom:2px solid #e6e9ee;
+      padding-bottom:8px;
+    }
+
+    .tab-btn{
+      background:transparent;
+      border:none;
+      padding:8px 16px;
+      border-radius:8px 8px 0 0;
+      font-size:14px;
+      font-weight:600;
+      color:var(--muted);
+      cursor:pointer;
+      transition:all .2s ease;
+      position:relative;
+    }
+
+    .tab-btn.active{
+      color:var(--accent);
+      background:rgba(124,58,237,0.05);
+    }
+
+    .tab-btn.active::after{
+      content:'';
+      position:absolute;
+      bottom:-10px;
+      left:0;
+      right:0;
+      height:2px;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    }
+
+    /* Notification list */
+    .notification-list{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    /* Notification item */
+    .notification-item{
+      background:#fff;
+      border-radius:12px;
+      padding:14px;
+      box-shadow:0 4px 12px rgba(18,38,63,0.06);
+      transition:all .3s ease;
+      display:flex;
+      gap:12px;
+      position:relative;
+    }
+
+    .notification-item:hover{
+      box-shadow:0 8px 24px rgba(18,38,63,0.12);
+      transform:translateY(-2px);
+    }
+
+    .notification-item.unread{
+      background:linear-gradient(135deg,rgba(124,58,237,0.05),rgba(6,182,212,0.05));
+      border-left:3px solid var(--accent);
+    }
+
+    .notification-avatar{
+      width:44px;
+      height:44px;
+      border-radius:50%;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-size:20px;
+      flex-shrink:0;
+    }
+
+    .notification-content{
+      flex:1;
+    }
+
+    .notification-text{
+      font-size:14px;
+      color:#102a43;
+      line-height:1.5;
+      margin-bottom:4px;
+    }
+
+    .notification-text strong{
+      font-weight:700;
+      color:var(--accent);
+    }
+
+    .notification-time{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .notification-menu-btn{
+      background:transparent;
+      border:none;
+      color:var(--muted);
+      font-size:18px;
+      cursor:pointer;
+      padding:4px 8px;
+      border-radius:6px;
+      transition:all .2s ease;
+      position:relative;
+    }
+
+    .notification-menu-btn:hover{
+      background:rgba(107,114,128,0.1);
+      color:#102a43;
+    }
+
+    /* 3-dot menu dropdown */
+    .notification-dropdown{
+      position:absolute;
+      top:calc(100% + 4px);
+      right:0;
+      background:#fff;
+      border-radius:8px;
+      box-shadow:0 8px 24px rgba(18,38,63,0.15);
+      padding:6px;
+      min-width:160px;
+      display:none;
+      z-index:10;
+    }
+
+    .notification-dropdown.open{display:block}
+
+    .dropdown-item{
+      padding:8px 10px;
+      border-radius:6px;
+      cursor:pointer;
+      font-size:13px;
+      color:#102a43;
+      transition:all .2s ease;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .dropdown-item:hover{
+      background:rgba(124,58,237,0.08);
+    }
+
+    .dropdown-item.danger{
+      color:#ef4444;
+    }
+
+    .dropdown-item.danger:hover{
+      background:rgba(239,68,68,0.08);
+    }
+
+    /* Empty state */
+    .empty-state{
+      text-align:center;
+      padding:60px 20px;
+      color:var(--muted);
+    }
+
+    .empty-state .icon{
+      font-size:64px;
+      margin-bottom:12px;
+      opacity:0.5;
+    }
+
+    .empty-state p{
+      font-size:16px;
+    }
+
+    /* Footer */
+    footer{
+      background:linear-gradient(90deg,#eef2ff,#f0f9ff);
+      color:var(--muted);
+      text-align:center;
+      padding:28px;
+      margin-top:28px;
+    }
+
+    /* Responsive */
+    @media (max-width:768px){
+      header{padding:12px 18px}
+      .page-container{padding:20px 12px}
+      .notification-title{font-size:20px}
+      .notification-actions{flex-direction:column;gap:8px}
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1><a href="index.html" class="brand-link" aria-label="MR Shop home" style="display:flex;align-items:center;gap:8px"><span style="font-size:32px">🛍️</span><img src="./assets/images/mrlogo.png" alt="MR" class="mr-logo" /></a></h1>
+    <div class="header-links">
+      <a href="index.html">Home</a>
+      <a href="cart.html">Cart</a>
+    </div>
+  </header>
+
+  <main class="page-container">
+    <div class="notification-header">
+      <h2 class="notification-title">Notifications</h2>
+      <div class="notification-actions">
+        <button class="mark-all-read" onclick="markAllRead()">Mark all read</button>
+        <div style="position:relative">
+          <button class="settings-btn" id="settingsBtn" onclick="toggleSettings()">⚙️</button>
+          <div class="settings-dropdown" id="settingsDropdown">
+            <div class="settings-item" onclick="openNotificationSettings()">
+              <span class="icon">🔔</span>
+              <span>Notification Settings</span>
+            </div>
+            <div class="settings-item" onclick="clearAll()">
+              <span class="icon">🗑️</span>
+              <span>Clear All</span>
+            </div>
+            <div class="settings-item" onclick="exportNotifications()">
+              <span class="icon">📥</span>
+              <span>Export</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notification-tabs">
+      <button class="tab-btn active" data-tab="all" onclick="switchTab('all')">All</button>
+      <button class="tab-btn" data-tab="orders" onclick="switchTab('orders')">Orders</button>
+      <button class="tab-btn" data-tab="promotions" onclick="switchTab('promotions')">Promotions</button>
+      <button class="tab-btn" data-tab="updates" onclick="switchTab('updates')">Updates</button>
+    </div>
+
+    <div class="notification-list" id="notificationList">
+      <!-- Notifications will be inserted here by JS -->
+    </div>
+  </main>
+
+  <footer>
+    © 2025 MR Shop | Stay Updated
+  </footer>
+
+  <script>
+    // Sample notification data (would come from server)
+    let notifications = [
+      {
+        id: 1,
+        type: 'orders',
+        avatar: '📦',
+        title: 'Order Shipped',
+        message: 'Your order <strong>#5001</strong> has been shipped and will arrive in 2-3 days.',
+        time: '5 minutes ago',
+        unread: true
+      },
+      {
+        id: 2,
+        type: 'promotions',
+        avatar: '🎉',
+        title: 'Flash Sale',
+        message: 'Get <strong>50% off</strong> on all Bengali sweets today only!',
+        time: '1 hour ago',
+        unread: true
+      },
+      {
+        id: 3,
+        type: 'orders',
+        avatar: '✅',
+        title: 'Order Delivered',
+        message: 'Your order <strong>#4998</strong> has been delivered successfully.',
+        time: '3 hours ago',
+        unread: false
+      },
+      {
+        id: 4,
+        type: 'updates',
+        avatar: '🔔',
+        title: 'New Products',
+        message: 'Check out our new collection of <strong>Handicrafts</strong> from local artisans.',
+        time: '1 day ago',
+        unread: true
+      },
+      {
+        id: 5,
+        type: 'orders',
+        avatar: '💳',
+        title: 'Payment Confirmed',
+        message: 'Your payment of <strong>৳1,250</strong> has been processed successfully.',
+        time: '2 days ago',
+        unread: false
+      },
+      {
+        id: 6,
+        type: 'promotions',
+        avatar: '🎁',
+        title: 'Loyalty Reward',
+        message: 'You earned <strong>100 points</strong>! Redeem them for discounts.',
+        time: '3 days ago',
+        unread: false
+      },
+      {
+        id: 7,
+        type: 'updates',
+        avatar: '📢',
+        title: 'System Update',
+        message: 'We have improved our checkout process for a better experience.',
+        time: '5 days ago',
+        unread: false
+      }
+    ];
+
+    let currentTab = 'all';
+    let openMenuId = null;
+
+    function renderNotifications() {
+      const list = document.getElementById('notificationList');
+      const filtered = currentTab === 'all' 
+        ? notifications 
+        : notifications.filter(n => n.type === currentTab);
+
+      if (filtered.length === 0) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <div class="icon">🔕</div>
+            <p>No notifications in this category</p>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = filtered.map(n => `
+        <div class="notification-item ${n.unread ? 'unread' : ''}" data-id="${n.id}">
+          <div class="notification-avatar">${n.avatar}</div>
+          <div class="notification-content">
+            <div class="notification-text">${n.message}</div>
+            <div class="notification-time">${n.time}</div>
+          </div>
+          <div style="position:relative">
+            <button class="notification-menu-btn" onclick="toggleMenu(${n.id}, event)">⋮</button>
+            <div class="notification-dropdown" id="menu-${n.id}">
+              <div class="dropdown-item" onclick="markAsRead(${n.id})">
+                <span>✓</span>
+                <span>Mark as read</span>
+              </div>
+              <div class="dropdown-item" onclick="viewDetails(${n.id})">
+                <span>👁️</span>
+                <span>View details</span>
+              </div>
+              <div class="dropdown-item danger" onclick="deleteNotification(${n.id})">
+                <span>🗑️</span>
+                <span>Delete</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      updateBadge();
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tab);
+      });
+      renderNotifications();
+    }
+
+    function toggleMenu(id, event) {
+      event.stopPropagation();
+      const menu = document.getElementById(`menu-${id}`);
+      const wasOpen = menu.classList.contains('open');
+      
+      // Close all menus
+      document.querySelectorAll('.notification-dropdown').forEach(m => m.classList.remove('open'));
+      
+      if (!wasOpen) {
+        menu.classList.add('open');
+        openMenuId = id;
+      } else {
+        openMenuId = null;
+      }
+    }
+
+    function toggleSettings() {
+      const dropdown = document.getElementById('settingsDropdown');
+      dropdown.classList.toggle('open');
+    }
+
+    function markAsRead(id) {
+      const notification = notifications.find(n => n.id === id);
+      if (notification) {
+        notification.unread = false;
+        renderNotifications();
+      }
+      closeAllMenus();
+    }
+
+    function markAllRead() {
+      notifications.forEach(n => n.unread = false);
+      renderNotifications();
+    }
+
+    function deleteNotification(id) {
+      if (confirm('Delete this notification?')) {
+        notifications = notifications.filter(n => n.id !== id);
+        renderNotifications();
+      }
+      closeAllMenus();
+    }
+
+    function viewDetails(id) {
+      const notification = notifications.find(n => n.id === id);
+      if (notification) {
+        alert(`Notification Details:\n\n${notification.message}\n\nTime: ${notification.time}`);
+      }
+      closeAllMenus();
+    }
+
+    function clearAll() {
+      if (confirm('Clear all notifications? This cannot be undone.')) {
+        notifications = [];
+        renderNotifications();
+      }
+      closeAllMenus();
+    }
+
+    function openNotificationSettings() {
+      alert('Notification settings:\n\n• Order updates: ON\n• Promotions: ON\n• System updates: ON\n• Email notifications: OFF\n\n(Full settings page coming soon)');
+      closeAllMenus();
+    }
+
+    function exportNotifications() {
+      const data = JSON.stringify(notifications, null, 2);
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'notifications.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      closeAllMenus();
+    }
+
+    function updateBadge() {
+      const unreadCount = notifications.filter(n => n.unread).length;
+      // Update badge in index.html if on that page
+      const badge = document.getElementById('notificationBadge');
+      if (badge) {
+        badge.textContent = unreadCount;
+        badge.style.display = unreadCount > 0 ? 'block' : 'none';
+      }
+    }
+
+    function closeAllMenus() {
+      document.querySelectorAll('.notification-dropdown').forEach(m => m.classList.remove('open'));
+      document.getElementById('settingsDropdown').classList.remove('open');
+      openMenuId = null;
+    }
+
+    // Close menus when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.notification-menu-btn') && !e.target.closest('.settings-btn')) {
+        closeAllMenus();
+      }
+    });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', renderNotifications);
+  </script>
+
+</body>
+</html>

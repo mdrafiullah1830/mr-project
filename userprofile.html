@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile — MR Shop</title>
+  <link rel="stylesheet" href="assets/css/userprofile.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="brand-link">
+        <span class="brand-icon">🛍️</span>
+        <img src="./assets/images/mrlogo.png" alt="MR Shop" class="brand-logo">
+      </a>
+      <nav class="header-nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="cart.html" class="nav-link">Cart</a>
+        <a href="notification.html" class="nav-link">Notifications</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <span class="theme-icon">🌙</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="profile-container">
+    
+    <!-- Sidebar -->
+    <aside class="profile-sidebar">
+      <div class="profile-card">
+        <div class="profile-photo-wrapper">
+          <img src="https://i.pravatar.cc/200?img=33" alt="User" class="profile-photo" id="profilePhoto">
+          <button class="photo-edit-btn" onclick="changeProfilePhoto()">
+            <span>📷</span>
+          </button>
+        </div>
+        <h2 class="profile-name" id="profileName">Rafi Ullah</h2>
+        <p class="profile-email" id="profileEmail">rafi@mrshop.com</p>
+        <div class="profile-stats">
+          <div class="stat-item">
+            <span class="stat-value">24</span>
+            <span class="stat-label">Orders</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-value">12</span>
+            <span class="stat-label">Wishlist</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-value">45</span>
+            <span class="stat-label">Reviews</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav class="profile-menu">
+        <button class="menu-item active" data-section="personal-info" onclick="switchSection('personal-info')">
+          <span class="menu-icon">👤</span>
+          <span class="menu-text">Personal Info</span>
+        </button>
+        <button class="menu-item" data-section="order-history" onclick="switchSection('order-history')">
+          <span class="menu-icon">📦</span>
+          <span class="menu-text">Order History</span>
+        </button>
+        <button class="menu-item" data-section="wishlist" onclick="switchSection('wishlist')">
+          <span class="menu-icon">❤️</span>
+          <span class="menu-text">Wishlist</span>
+        </button>
+        <button class="menu-item" data-section="recently-viewed" onclick="switchSection('recently-viewed')">
+          <span class="menu-icon">👁️</span>
+          <span class="menu-text">Recently Viewed</span>
+        </button>
+        <button class="menu-item" data-section="settings" onclick="switchSection('settings')">
+          <span class="menu-icon">⚙️</span>
+          <span class="menu-text">Settings</span>
+        </button>
+        <button class="menu-item logout-btn" onclick="logout()">
+          <span class="menu-icon">🚪</span>
+          <span class="menu-text">Logout</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <section class="profile-content">
+
+      <!-- Personal Info Section -->
+      <div class="content-section active" id="personal-info">
+        <div class="section-header">
+          <h2 class="section-title">Personal Information</h2>
+          <button class="edit-btn" id="editBtn" onclick="toggleEdit()">
+            <span class="edit-icon">✏️</span>
+            <span class="edit-text">Edit</span>
+          </button>
+        </div>
+        
+        <form class="info-form" id="infoForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-input" id="fullName" value="Md. Rafi Ullah" disabled>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input type="tel" class="form-input" id="phoneNumber" value="+880 1712-345678" disabled>
+            </div>
+            
+            <div class="form-group full-width">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" id="emailAddress" value="rafi@mrshop.com" disabled>
+            </div>
+            
+            <div class="form-group full-width">
+              <label class="form-label">Address</label>
+              <textarea class="form-textarea" id="address" rows="3" disabled>House 12, Road 5, Dhanmondi
+Dhaka - 1205, Bangladesh</textarea>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Date of Birth</label>
+              <input type="date" class="form-input" id="dob" value="1995-05-15" disabled>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Gender</label>
+              <select class="form-input" id="gender" disabled>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          
+          <button type="submit" class="save-btn hidden" id="saveBtn">
+            <span>💾</span>
+            Save Changes
+          </button>
+        </form>
+      </div>
+
+      <!-- Order History Section -->
+      <div class="content-section" id="order-history">
+        <div class="section-header">
+          <h2 class="section-title">Order History</h2>
+          <div class="order-filters">
+            <button class="filter-btn active" onclick="filterOrders('all')">All</button>
+            <button class="filter-btn" onclick="filterOrders('delivered')">Delivered</button>
+            <button class="filter-btn" onclick="filterOrders('pending')">Pending</button>
+            <button class="filter-btn" onclick="filterOrders('cancelled')">Cancelled</button>
+          </div>
+        </div>
+        
+        <div class="orders-container" id="ordersContainer">
+          <!-- Orders will be dynamically inserted -->
+        </div>
+      </div>
+
+      <!-- Wishlist Section -->
+      <div class="content-section" id="wishlist">
+        <div class="section-header">
+          <h2 class="section-title">My Wishlist</h2>
+          <button class="clear-btn" onclick="clearWishlist()">Clear All</button>
+        </div>
+        
+        <div class="products-grid" id="wishlistContainer">
+          <!-- Wishlist items will be dynamically inserted -->
+        </div>
+      </div>
+
+      <!-- Recently Viewed Section -->
+      <div class="content-section" id="recently-viewed">
+        <div class="section-header">
+          <h2 class="section-title">Recently Viewed Products</h2>
+          <button class="clear-btn" onclick="clearHistory()">Clear History</button>
+        </div>
+        
+        <div class="products-grid" id="recentlyViewedContainer">
+          <!-- Recently viewed items will be dynamically inserted -->
+        </div>
+      </div>
+
+      <!-- Settings Section -->
+      <div class="content-section" id="settings">
+        <div class="section-header">
+          <h2 class="section-title">Account Settings</h2>
+        </div>
+        
+        <div class="settings-container">
+          <div class="settings-card">
+            <div class="settings-item">
+              <div class="settings-info">
+                <h3 class="settings-title">Email Notifications</h3>
+                <p class="settings-desc">Receive order updates via email</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="settings-item">
+              <div class="settings-info">
+                <h3 class="settings-title">SMS Notifications</h3>
+                <p class="settings-desc">Get SMS alerts for deliveries</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="settings-item">
+              <div class="settings-info">
+                <h3 class="settings-title">Promotional Emails</h3>
+                <p class="settings-desc">Receive deals and offers</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <h3 class="card-title">Privacy & Security</h3>
+            <button class="settings-action-btn">
+              <span>🔒</span>
+              Change Password
+            </button>
+            <button class="settings-action-btn">
+              <span>🛡️</span>
+              Two-Factor Authentication
+            </button>
+            <button class="settings-action-btn">
+              <span>📱</span>
+              Connected Devices
+            </button>
+          </div>
+
+          <div class="settings-card danger-zone">
+            <h3 class="card-title">Danger Zone</h3>
+            <button class="settings-action-btn danger">
+              <span>⚠️</span>
+              Deactivate Account
+            </button>
+            <button class="settings-action-btn danger">
+              <span>🗑️</span>
+              Delete Account
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <script src="assets/js/userprofile.js"></script>
+</body>
+</html>

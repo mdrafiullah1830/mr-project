@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chat with us — Local Assistant</title>
+  <style>
+    body{font-family:Inter,Arial,sans-serif;background:linear-gradient(135deg,#f7fbff,#fff7fb);margin:0;color:#0f172a}
+    .wrap{max-width:880px;margin:36px auto;padding:20px}
+    .card{background:#fff;padding:20px;border-radius:12px;box-shadow:0 12px 40px rgba(18,38,63,0.06)}
+    h1{color:#7c3aed;margin:0 0 8px}
+    p.lead{color:#475569}
+    .cmd{background:#0f172a;color:#fff;padding:10px;border-radius:8px;display:inline-block;margin-top:12px}
+    .btn{display:inline-block;background:linear-gradient(90deg,#7c3aed,#06b6d4);color:#fff;padding:10px 14px;border-radius:8px;text-decoration:none}
+    .note{margin-top:14px;color:#334155}
+    pre{background:#f1f5f9;padding:12px;border-radius:8px;overflow:auto}
+    .actions{margin-top:16px;display:flex;gap:12px;align-items:center}
+  </style>
+</head>
+<body>
+  <div class="wrap" style="display:flex;justify-content:center;">
+    <div class="card" style="width:100%;max-width:420px;padding:0;overflow:hidden;display:flex;flex-direction:column;height:80vh">
+      <!-- mobile-style header -->
+      <div style="background:linear-gradient(90deg,#7c3aed,#06b6d4);color:#fff;padding:12px 14px;display:flex;align-items:center;gap:12px">
+  <div style="font-size:18px;font-weight:700">Chat with us</div>
+  <a href="index.html" style="margin-left:auto;color:rgba(255,255,255,0.95);text-decoration:none;font-weight:600">Home</a>
+        <a id="showPolicy" href="#" style="color:rgba(255,255,255,0.95);text-decoration:none;margin-left:8px">Policy</a>
+      </div>
+
+      <!-- messages pane -->
+      <div id="pane" style="flex:1;overflow:auto;padding:14px;background:linear-gradient(180deg,#f7fbff,#fff);display:flex;flex-direction:column;gap:10px">
+        <div style="text-align:center;color:#94a3b8;font-size:13px">You are chatting with our local assistant. Attach images/videos to report content.</div>
+      </div>
+
+      <!-- attachment previews -->
+      <div id="previews" style="padding:8px 12px;border-top:1px solid #eef2ff;display:flex;gap:8px;overflow:auto;align-items:center;min-height:56px"></div>
+
+      <!-- input bar -->
+      <div style="padding:10px;border-top:1px solid #eef2ff;display:flex;gap:8px;align-items:center;background:#fff">
+        <button id="attachBtn" title="Attach image/video" style="background:transparent;border:none;cursor:pointer;font-size:20px">📎</button>
+        <input id="fileInput" type="file" accept="image/*,video/*" multiple style="display:none" />
+        <input id="msg" placeholder="Type a message" style="flex:1;padding:10px;border-radius:20px;border:1px solid #e6edf3" />
+        <button id="sendBtn" class="btn" style="padding:8px 12px;border-radius:20px">Send</button>
+      </div>
+
+      <!-- policy modal (hidden) -->
+      <div id="policyModal" style="display:none;position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.4);align-items:center;justify-content:center">
+        <div style="background:#fff;max-width:420px;margin:auto;border-radius:12px;padding:16px;box-shadow:0 12px 40px rgba(0,0,0,0.2)">
+          <h3 style="margin:0 0 8px;color:#0f172a">Chat & Report Policy</h3>
+          <p style="color:#475569;margin:0 0 8px">Use this chat to ask about site content and to report images or videos that violate our rules. Do not attach personal ID documents. Reports are stored on the server for review.</p>
+          <div style="text-align:right;margin-top:8px"><button id="closePolicy" class="btn">Close</button></div>
+        </div>
+      </div>
+
+      <script>
+        const pane = document.getElementById('pane');
+        const convAppend = (el) => { pane.appendChild(el); pane.scrollTop = pane.scrollHeight; };
+        function userBubble(html){ const d=document.createElement('div'); d.style.alignSelf='flex-end'; d.style.background='#7c3aed'; d.style.color='#fff'; d.style.padding='10px 12px'; d.style.borderRadius='12px'; d.style.maxWidth='82%'; d.innerHTML=html; return d; }
+        function botBubble(html){ const d=document.createElement('div'); d.style.alignSelf='flex-start'; d.style.background='#fff'; d.style.border='1px solid #eef2ff'; d.style.color='#0f172a'; d.style.padding='10px 12px'; d.style.borderRadius='12px'; d.style.maxWidth='82%'; d.innerHTML=html; return d; }
+
+        async function queryServer(question){
+          const res = await fetch('/api/query',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question})});
+          return await res.json();
+        }
+
+        // upload attachments to /api/report
+        async function uploadAttachments(files, message){
+          const fd = new FormData();
+          if(message) fd.append('message', message);
+          for(let i=0;i<files.length;i++){ fd.append('file'+i, files[i], files[i].name); }
+          const res = await fetch('/api/report',{method:'POST',body:fd});
+          return await res.json();
+        }
+
+        document.getElementById('attachBtn').addEventListener('click', ()=>document.getElementById('fileInput').click());
+        document.getElementById('fileInput').addEventListener('change', (e)=>{
+          const previews = document.getElementById('previews'); previews.innerHTML='';
+          const files = Array.from(e.target.files || []);
+          files.forEach(f=>{
+            const wrap = document.createElement('div'); wrap.style.minWidth='60px'; wrap.style.minHeight='60px'; wrap.style.borderRadius='8px'; wrap.style.overflow='hidden'; wrap.style.background='#f8fafc'; wrap.style.display='flex'; wrap.style.alignItems='center'; wrap.style.justifyContent='center'; wrap.style.border='1px solid #eef2ff';
+            if(f.type.startsWith('image/')){
+              const img = document.createElement('img'); img.style.width='56px'; img.style.height='56px'; img.style.objectFit='cover'; img.src = URL.createObjectURL(f); wrap.appendChild(img);
+            } else {
+              const label = document.createElement('div'); label.textContent = f.name; label.style.fontSize='12px'; label.style.padding='6px'; wrap.appendChild(label);
+            }
+            previews.appendChild(wrap);
+          });
+        });
+
+        document.getElementById('sendBtn').addEventListener('click', async ()=>{
+          const msgInput = document.getElementById('msg');
+          const text = msgInput.value.trim();
+          const files = document.getElementById('fileInput').files;
+          if(!text && files.length===0) return;
+          // show user bubble with text and previews
+          if(text) convAppend(userBubble(text));
+          if(files.length>0){
+            const previews = document.getElementById('previews');
+            // move previews into chat as attachments
+            const att = document.createElement('div'); att.style.display='flex'; att.style.gap='8px'; att.style.marginTop='6px';
+            Array.from(files).forEach(f=>{
+              const el = document.createElement('div'); el.style.width='72px'; el.style.height='72px'; el.style.borderRadius='8px'; el.style.overflow='hidden'; el.style.border='1px solid #eef2ff';
+              if(f.type.startsWith('image/')){ const img=document.createElement('img'); img.src=URL.createObjectURL(f); img.style.width='100%'; img.style.height='100%'; img.style.objectFit='cover'; el.appendChild(img); }
+              else { el.textContent=f.name; el.style.fontSize='12px'; el.style.padding='6px'; }
+              att.appendChild(el);
+            });
+            convAppend(att);
+          }
+          msgInput.value=''; document.getElementById('previews').innerHTML=''; document.getElementById('fileInput').value='';
+
+          // If files attached, upload them first
+          let reportResp = null;
+          if(files.length>0){
+            convAppend(botBubble('<em>Uploading attachments...</em>'));
+            try{ reportResp = await uploadAttachments(files, text); convAppend(botBubble('<strong>Report received.</strong> We saved your attachments.')) }catch(e){ convAppend(botBubble('<strong>Error:</strong> failed to upload attachments')) }
+          }
+
+          // Then query the index
+          if(text){
+            convAppend(botBubble('<em>Searching site content...</em>'));
+            try{
+              const data = await queryServer(text);
+              // remove searching indicator (last bot bubble)
+              if(pane.lastChild && pane.lastChild.textContent && pane.lastChild.textContent.includes('Searching')){
+                pane.removeChild(pane.lastChild);
+              }
+              if(!data.results || data.results.length===0){ convAppend(botBubble('<strong>Assistant:</strong> No matching content found.')); return; }
+              let out = '<strong>Top results</strong><ol style="padding-left:14px;margin:6px 0 0 0">';
+              data.results.forEach(r=>{ out += `<li style="margin-bottom:8px"><small><em>${r.path}</em></small><div style="margin-top:6px">${r.snippet.replace(/\n/g,'<br>')}</div></li>` });
+              out += '</ol>';
+              convAppend(botBubble(out));
+            }catch(e){ convAppend(botBubble('<strong>Error:</strong> failed to query server')) }
+          }
+        });
+
+        // policy modal
+        document.getElementById('showPolicy').addEventListener('click', (e)=>{ e.preventDefault(); document.getElementById('policyModal').style.display='flex'; });
+        document.getElementById('closePolicy').addEventListener('click', ()=>document.getElementById('policyModal').style.display='none');
+      </script>
+    </div>
+  </div>
+</body>
+</html>

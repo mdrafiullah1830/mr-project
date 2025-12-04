@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antique & Collectibles | Coins</title>
+  <style>
+    /* Remove underlines from all links for a clean UI */
+    a, a:link, a:visited, a:hover, a:active {
+      text-decoration: none !important;
+    }
+
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg,#f7fbff,#fff7fb);
+      color: #102a43;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(90deg,#7c3aed,#06b6d4);
+      color: #fff;
+      padding: 18px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 10px 30px rgba(16,24,40,0.08);
+    }
+    header h1 {
+      font-size: 26px;
+      margin: 0;
+      letter-spacing: 0.3px;
+      font-weight: 700;
+      text-shadow: 0 2px 8px rgba(6,182,212,0.08);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .mr-logo {
+      height: 40px;
+      border-radius: 8px;
+      padding: 4px;
+      border: 2px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.03);
+    }
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .coins-section {
+      max-width: 900px;
+      margin: 36px auto;
+      padding: 32px 24px 28px 24px;
+      background: rgba(255,255,255,0.92);
+      border-radius: 20px;
+      box-shadow: 0 12px 40px rgba(18,38,63,0.10);
+    }
+    .coins-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 22px;
+      color: #7c3aed;
+      text-align: center;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 8px rgba(124,58,237,0.08);
+    }
+    .coin-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+      gap: 24px;
+      margin-top: 28px;
+    }
+    .coin-card {
+      background: linear-gradient(135deg,#ffffff 0%,#f0f9ff 100%);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(124,58,237,0.12);
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      position: relative;
+      overflow: hidden;
+      border: 2px solid transparent;
+      cursor: pointer;
+    }
+    .coin-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);
+      transition: left 0.5s;
+    }
+    .coin-card:hover::before {
+      left: 100%;
+    }
+    .coin-card:hover {
+      box-shadow: 0 20px 50px rgba(124,58,237,0.25);
+      transform: translateY(-8px) scale(1.05) rotateX(5deg);
+      background: linear-gradient(135deg,#e0e7ff 0%,#f7fbff 100%);
+      border-color: #7c3aed;
+    }
+    .coin-img {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      border-radius: 12px;
+      background: radial-gradient(circle,#f9fafb 0%,#f3f4f6 100%);
+      padding: 8px;
+      box-shadow: 0 4px 16px rgba(124,58,237,0.15);
+      transition: all 0.3s ease;
+      filter: drop-shadow(0 2px 8px rgba(124,58,237,0.1));
+    }
+    .coin-card:hover .coin-img {
+      box-shadow: 0 12px 32px rgba(124,58,237,0.25);
+      transform: scale(1.08) rotateZ(2deg);
+      filter: drop-shadow(0 6px 16px rgba(124,58,237,0.2)) brightness(1.1);
+    }
+    .coin-name {
+      font-size: 17px;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 6px;
+      text-align: center;
+      letter-spacing: 0.3px;
+    }
+    .coin-desc {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 10px;
+      text-align: center;
+      line-height: 1.4;
+    }
+    .coin-price {
+      background: linear-gradient(135deg,#7c3aed 0%,#06b6d4 100%);
+      color: white;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 16px;
+      margin-top: 4px;
+      box-shadow: 0 4px 12px rgba(124,58,237,0.20);
+      letter-spacing: 0.3px;
+      transition: all 0.3s ease;
+    }
+    .coin-card:hover .coin-price {
+      box-shadow: 0 8px 24px rgba(124,58,237,0.35);
+      transform: scale(1.08);
+    }
+    @media (max-width:600px) {
+      .coins-section { padding: 12px 4px; }
+      .coins-title { font-size: 22px; }
+      .coin-list { gap: 16px; }
+      .coin-card { padding: 14px 8px; }
+      .coin-img { width: 60px; height: 60px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>
+      <a href="index.html" style="display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none;">
+        <img src="./assets/images/mrlogo.png" alt="MR" class="mr-logo" />
+        <span style="font-weight:700;font-size:20px;line-height:1;">MR Shop</span>
+      </a>
+    </h1>
+    <div class="header-actions">
+      <a href="index.html" style="color:#fff;text-decoration:none;padding:8px 12px;border-radius:8px;background:transparent;transition:all .2s ease;font-weight:600">Home</a>
+      <a href="javascript:history.back()" style="color:#fff;text-decoration:none;padding:8px 12px;border-radius:8px;background:transparent;transition:all .2s ease;font-weight:600">Back</a>
+    </div>
+  </header>
+  <section class="coins-section">
+    <div class="coins-title">✨ Rare Coins Collection ✨</div>
+    <div class="coin-list">
+      <a href="coin1.html" class="coin-card" aria-label="View details for Singapore 50 cents (1978)">
+        <img src="./assets/images/coin1.jpeg" alt="Singapore 50 cents (1978)" class="coin-img" />
+        <div class="coin-name">Singapore 50 Cents (1978)</div>
+        <div class="coin-desc">First coin series, cupro-nickel composition. Circulated 1967–1987.</div>
+  <div class="coin-price">৳ 150</div>
+      </a>
+      <a href="coin2.html" class="coin-card" aria-label="View details for Bahrain 100 Fils (2010)">
+        <img src="./assets/images/coin2.jpeg" alt="Bahrain 100 Fils (2010)" class="coin-img" />
+        <div class="coin-name">Bahrain 100 Fils (2010)</div>
+        <div class="coin-desc">Bi-metallic 100 Fils — brass outer ring with copper-nickel center.</div>
+  <div class="coin-price">৳ 150</div>
+      </a>
+      <div class="coin-card">
+        <img src="./assets/images/coin3.jpeg" alt="Rare Coin 3" class="coin-img" />
+        <div class="coin-name">Royal Dynasty Coin</div>
+        <div class="coin-desc">Historical mint condition rare treasure</div>
+  <div class="coin-price">৳ 150</div>
+      </div>
+      <a href="coin4.html" class="coin-card" aria-label="View details for Saudi Arabia 50 Halala">
+        <img src="./assets/images/coin4.jpeg" alt="Saudi Arabia 50 Halala" class="coin-img" />
+        <div class="coin-name">Saudi Arabia — 50 Halala</div>
+        <div class="coin-desc">Brass/Copper-nickel coin featuring crossed swords and palm tree emblem.</div>
+  <div class="coin-price">৳ 150</div>
+      </a>
+      <div class="coin-card">
+        <img src="./assets/images/coin5.jpeg" alt="Rare Coin 5" class="coin-img" />
+        <div class="coin-name">Vintage Bronze Coin</div>
+        <div class="coin-desc">Authentic bronze specimen from ancient times</div>
+  <div class="coin-price">৳ 150</div>
+      </div>
+      <div class="coin-card">
+        <img src="./assets/images/coin6.jpeg" alt="Rare Coin 6" class="coin-img" />
+        <div class="coin-name">Royal Mint Coin</div>
+        <div class="coin-desc">Official royal mint production rare edition</div>
+  <div class="coin-price">৳ 150</div>
+      </div>
+      <div class="coin-card">
+        <img src="./assets/images/coin7.jpeg" alt="Rare Coin 7" class="coin-img" />
+        <div class="coin-name">Monarch's Treasure</div>
+        <div class="coin-desc">Historical commemorative coin in perfect state</div>
+  <div class="coin-price">৳ 150</div>
+      </div>
+      <div class="coin-card">
+        <img src="./assets/images/coin8.jpeg" alt="Rare Coin 8" class="coin-img" />
+        <div class="coin-name">Gilded Heritage Coin</div>
+        <div class="coin-desc">Gold-plated vintage collectible masterpiece</div>
+  <div class="coin-price">৳ 150</div>
+      </div>
+      <div class="coin-card">
+        <img src="./assets/images/coin9.jpeg" alt="Rare Coin 9" class="coin-img" />
+        <div class="coin-name">Colonial Era Coin</div>
+        <div class="coin-desc">Authentic coin from the colonial period</div>
+  <div class="coin-price">৳ 150</div>
+      </div>
+      <div class="coin-card">
+        <img src="./assets/images/coin10.jpeg" alt="Rare Coin 10" class="coin-img" />
+        <div class="coin-name">Noble Medallion Coin</div>
+        <div class="coin-desc">Premium noble family mint production</div>
+  <div class="coin-price">৳ 150</div>
+      </div>
+      <div class="coin-card">
+        <img src="./assets/images/coin11.jpeg" alt="Rare Coin 11" class="coin-img" />
+        <div class="coin-name">Treasure Vault Rarity</div>
+        <div class="coin-desc">Ultra-rare collectible from vault collection</div>
+  <div class="coin-price">৳ 150</div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

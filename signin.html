@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign In — MR Shop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+        body{
+            font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            background:
+              radial-gradient(800px 400px at 10% 10%, rgba(124,58,237,0.04), transparent 10%),
+              radial-gradient(600px 320px at 90% 90%, rgba(6,182,212,0.03), transparent 12%),
+              linear-gradient(135deg,#ffffff 0%, #f7fbff 100%);
+            margin:0;padding:0;color:var(--muted);
+        }
+    :root{--accent:#7c3aed;--accent-2:#06b6d4;--shadow:0 10px 30px rgba(18,38,63,0.08)}
+    .site-header{position:sticky;top:0;z-index:30;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;box-shadow:var(--shadow);padding:18px 36px;border-bottom:1px solid rgba(2,6,23,0.06)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:1200px;margin:0 auto;padding:0}
+    .brand{display:flex;align-items:center;gap:8px;color:inherit;text-decoration:none;font-weight:700;font-size:20px}
+    .logo{height:40px;width:auto;border-radius:8px;padding:4px;border:2px solid rgba(255,255,255,.18);background:rgba(255,255,255,.03)}
+    .header-actions{display:flex;gap:12px;align-items:center;margin-left:auto}
+    .header-actions a{appearance:none;border:none;background:transparent;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer;text-decoration:none;font-weight:600;transition:all .2s ease}
+    .header-actions a:hover{background:rgba(255,255,255,.12)}
+    .brand-link{display:none}
+    /* logo styling to match home page */
+    .mr-logo{box-sizing:border-box;height:40px;display:block;object-fit:contain;border-radius:8px;padding:4px;border:2px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.03);box-shadow:0 6px 18px rgba(16,24,40,0.08)}
+    .brand-text{margin-left:6px;font-weight:700;font-size:20px;color:#fff}
+        .header-links{display:flex;gap:10px;align-items:center}
+        .header-links a{color:white;text-decoration:none;padding:6px 10px;border-radius:6px;background:transparent}
+        .header-links a.back{background:rgba(255,255,255,0.12)}
+    .theme-toggle{background:transparent;border:none;color:inherit;font-size:18px;cursor:pointer;padding:8px;border-radius:8px;margin-left:8px}
+
+        .page-wrap{max-width:920px;margin:0 auto;padding:28px}
+        .signin-container{background-color:rgba(255,255,255,0.95);padding:28px;border-radius:10px;box-shadow:0 8px 24px rgba(16,24,40,0.06);width:100%;max-width:420px;margin:40px auto}
+        .signin-container h2{text-align:center;color:var(--accent);margin-bottom:18px}
+        .form-group{margin-bottom:15px}
+        .form-group label{display:block;margin-bottom:6px;color:#333}
+        .form-group input{width:100%;padding:10px;border:1px solid #e6e6e9;border-radius:6px}
+        .signin-btn{width:100%;padding:10px;background:linear-gradient(90deg,var(--accent),#06b6d4);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:16px;box-shadow:0 8px 20px rgba(12,20,30,0.08)}
+        .signin-btn:hover{transform:translateY(-2px)}
+        .divider{text-align:center;margin:20px 0;position:relative}
+    .divider::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background-color:#eee}
+    .divider span{background-color:transparent;padding:0 10px;color:var(--muted)}
+
+    /* Auth option buttons (image-based logos for crisp rendering) */
+    .auth-options{display:flex;flex-direction:column;gap:12px}
+    .auth-btn{display:flex;align-items:center;justify-content:flex-start;gap:12px;padding:10px 14px;border-radius:10px;border:1px solid #e6e6e9;text-decoration:none;color:#111;font-weight:700;background:#fff;box-shadow:0 4px 14px rgba(12,20,30,0.04)}
+    .auth-btn img{width:22px;height:22px;object-fit:cover;border-radius:4px}
+    .auth-btn svg{width:18px;height:18px}
+    /* phone button keeps the brand gradient and white text */
+    .phone-btn{background:linear-gradient(90deg,var(--accent),#06b6d4);color:#fff;border:none}
+    .auth-btn:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(12,20,30,0.08)}
+        .forgot-password{text-align:center;margin-top:12px}
+    .forgot-password a{color:var(--accent);text-decoration:none}
+    /* Forgot-password modal */
+    #forgotOverlay{position:fixed;inset:0;background:rgba(2,6,23,0.45);display:none;align-items:center;justify-content:center;z-index:9999}
+    .forgot-modal{background:#fff;border-radius:12px;padding:18px;min-width:320px;max-width:420px;box-shadow:0 12px 36px rgba(2,6,23,0.2)}
+    .forgot-modal h3{margin:0 0 8px 0;color:var(--accent)}
+    .forgot-modal p{margin:0 0 12px 0;color:var(--muted);font-size:14px}
+    .forgot-modal input{width:100%;padding:10px;border:1px solid #e6e9ee;border-radius:8px;margin-bottom:12px}
+    .forgot-actions{display:flex;gap:8px;justify-content:flex-end}
+    .btn-secondary{background:transparent;border:1px solid #e6e9ee;padding:8px 12px;border-radius:8px}
+        .signup-link{text-align:center;margin-top:12px}
+        .signup-link a{color:var(--accent);text-decoration:none}
+        @media (max-width:620px){.signin-container{padding:20px;margin:18px}}
+
+        /* Social Auth Gateway Modal */
+        #socialGatewayModal{position:fixed;inset:0;background:rgba(2,6,23,0.45);display:none;align-items:center;justify-content:center;z-index:9999}
+        #socialGatewayModal>div{background:white;border-radius:16px;padding:28px;max-width:380px;width:90%;box-shadow:0 20px 60px rgba(12,20,30,0.15)}
+        #socialGatewayModal h2{margin:0;color:#102a43;font-size:20px}
+        #socialGatewayModal button#socialGatewayClose{background:none;border:none;font-size:24px;cursor:pointer;color:#6b7280}
+        #socialGatewayModal #socialGatewayContent{display:flex;flex-direction:column;gap:18px}
+        #socialGatewayModal #socialGatewayLogo{width:48px;height:48px;object-fit:contain;border-radius:12px;margin-bottom:8px}
+        #socialGatewayModal #socialGatewayProvider{font-weight:600;font-size:18px;color:#374151}
+        #socialGatewayModal #socialGatewayEmail{width:100%;padding:10px;border:1px solid #e6e6e9;border-radius:8px;font-size:14px}
+        #socialGatewayModal button[type="submit"]{width:100%;padding:12px;background:linear-gradient(90deg,#7c3aed,#06b6d4);color:white;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-size:16px}
+        #socialGatewayModal #socialGatewayProcessing{display:none;text-align:center;margin:18px 0}
+        #socialGatewayModal #socialGatewayProcessing div{width:40px;height:40px;border:4px solid #e6e6e9;border-top-color:#7c3aed;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto}
+        #socialGatewayModal #socialGatewaySuccess{display:none;text-align:center}
+        #socialGatewayModal #socialGatewaySuccess div{font-size:36px;margin-bottom:8px}
+        #socialGatewayModal #socialGatewaySuccess h3{color:#10b981;margin:0 0 8px 0;font-size:16px}
+        #socialGatewayModal #socialGatewaySuccess p{color:#6b7280;margin:0 0 12px 0;font-size:14px}
+        #socialGatewayModal button#socialGatewayDone{width:100%;padding:10px;background:linear-gradient(90deg,#10b981,#059669);color:white;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-size:15px}
+
+        @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    </style>
+</head>
+<body>
+        <header class="site-header">
+            <div class="header-inner">
+                <a class="brand" href="index.html" aria-label="MR Shop home">
+                    <img src="./assets/images/mrlogo.png" alt="MR" class="logo" />
+                    <span>MR Shop</span>
+                </a>
+                <div class="header-actions">
+                    <a href="index.html">Home</a>
+                    <a href="#" onclick="history.back();return false;">Back</a>
+                    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="page-wrap">
+            <div class="signin-container">
+                <h2>Sign In</h2>
+                <form>
+                    <div class="form-group">
+                        <label for="username">Username or Email</label>
+                        <input type="text" id="username" name="username" placeholder="Enter your username or email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="signin-btn">Sign In</button>
+                </form>
+                        <div class="divider"><span>or</span></div>
+                        <div class="auth-options">
+                            <a class="google-btn auth-btn" href="#" aria-label="Continue with Google" role="button" tabindex="0">
+                                <img src="./assets/images/google.jpg" alt="Google logo" />
+                                <span>Continue with Google</span>
+                            </a>
+                            <a class="facebook-btn auth-btn" href="https://facebook.com/mrshop" target="_blank" rel="noopener noreferrer" aria-label="Continue with Facebook" role="button" tabindex="0">
+                                <img src="./assets/images/facebook.jpg" alt="Facebook logo" />
+                                <span>Continue with Facebook</span>
+                            </a>
+                            <a class="apple-btn auth-btn" href="#" aria-label="Continue with Apple" role="button" tabindex="0">
+                                <img src="./assets/images/apple.jpg" alt="Apple logo" />
+                                <span>Continue with Apple</span>
+                            </a>
+                            <a class="phone-btn auth-btn" href="tel:+8801606079896">
+                                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:18px;height:18px;margin-right:10px"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V20a1 1 0 01-1 1C9.39 21 3 14.61 3 6a1 1 0 011-1h3.5a1 1 0 011 1c0 1.24.2 2.45.57 3.57a1 1 0 01-.25 1.02l-2.2 2.2z"/></svg>
+                                Continue with Phone
+                            </a>
+                        </div>
+                        </div>
+                        <div class="forgot-password"><a href="#" id="forgotLink">Forgot Password?</a></div>
+                        <div class="signup-link"><p>Don't have an account? <a href="signup.html" id="signupLink">Sign up</a></p></div>
+            </div>
+        </div>
+        <!-- Forgot password modal overlay -->
+        <div id="forgotOverlay" aria-hidden="true">
+            <div class="forgot-modal" role="dialog" aria-modal="true" aria-labelledby="forgotTitle">
+                <h3 id="forgotTitle">Reset password</h3>
+                <p>Enter your username, email, or phone number. We'll send instructions to reset your password if an account exists.</p>
+                <form id="forgotForm">
+                    <input id="fpInput" type="text" name="identifier" placeholder="Username, email or phone" aria-label="Username or email or phone" required />
+                    <div class="forgot-actions">
+                        <button type="button" class="btn-secondary" id="fpCancel">Cancel</button>
+                        <button type="submit" class="signin-btn">Send reset link</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Social Auth Gateway Modal -->
+        <div id="socialGatewayModal" style="position:fixed;inset:0;background:rgba(2,6,23,0.45);display:none;align-items:center;justify-content:center;z-index:9999">
+          <div style="background:white;border-radius:16px;padding:28px;max-width:380px;width:90%;box-shadow:0 20px 60px rgba(12,20,30,0.15)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+              <h2 id="socialGatewayTitle" style="margin:0;color:#102a43;font-size:20px">Sign in with Provider</h2>
+              <button id="socialGatewayClose" style="background:none;border:none;font-size:24px;cursor:pointer;color:#6b7280">✕</button>
+            </div>
+            <div id="socialGatewayContent">
+              <div style="text-align:center;margin-bottom:18px">
+                <img id="socialGatewayLogo" src="" alt="Provider" style="width:48px;height:48px;object-fit:contain;border-radius:12px;margin-bottom:8px" />
+                <div id="socialGatewayProvider" style="font-weight:600;font-size:18px;color:#374151"></div>
+              </div>
+              <form id="socialGatewayForm">
+                <div style="margin-bottom:16px">
+                  <label style="display:block;margin-bottom:6px;font-weight:600;color:#102a43;font-size:14px">Email</label>
+                  <input type="email" id="socialGatewayEmail" placeholder="Enter your email" style="width:100%;padding:10px;border:1px solid #e6e6e9;border-radius:8px;font-size:14px" required />
+                </div>
+                <button type="submit" style="width:100%;padding:12px;background:linear-gradient(90deg,#7c3aed,#06b6d4);color:white;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-size:16px">Continue</button>
+              </form>
+              <div id="socialGatewayProcessing" style="display:none;text-align:center;margin:18px 0">
+                <div style="width:40px;height:40px;border:4px solid #e6e6e9;border-top-color:#7c3aed;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto"></div>
+                <p style="color:#6b7280;margin-top:12px;font-size:14px">Authenticating...</p>
+              </div>
+              <div id="socialGatewaySuccess" style="display:none;text-align:center">
+                <div style="font-size:36px;margin-bottom:8px">✓</div>
+                <h3 style="color:#10b981;margin:0 0 8px 0;font-size:16px">Authentication Successful!</h3>
+                <p id="socialGatewaySuccessMsg" style="color:#6b7280;margin:0 0 12px 0;font-size:14px"></p>
+                <button id="socialGatewayDone" style="width:100%;padding:10px;background:linear-gradient(90deg,#10b981,#059669);color:white;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-size:15px">Done</button>
+              </div>
+            </div>
+          </div>
+          <style>@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}</style>
+                </div>
+
+                <!-- Terms & Conditions Modal -->
+                <div id="termsModal" aria-hidden="true" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.5);z-index:9999">
+                    <div style="background:white;border-radius:12px;padding:20px;max-width:720px;width:92%;max-height:80vh;overflow:auto;box-shadow:0 20px 60px rgba(12,20,30,0.12)">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                            <h2 style="margin:0;font-size:18px;color:#102a43">MR Shop — Terms & Conditions</h2>
+                            <button id="termsClose" style="background:none;border:none;font-size:20px;cursor:pointer;color:#6b7280">✕</button>
+                        </div>
+                        <div style="color:#374151;font-size:14px;line-height:1.6">
+                            <p><strong>Welcome to MR Shop.</strong> By creating an account you agree to abide by our Terms and Conditions and acknowledge our Privacy Policy. Please read the highlights below before proceeding.</p>
+                            <h4 style="margin-top:12px">1. Using MR Shop</h4>
+                            <p>You're responsible for keeping your account secure and for all activity that happens under your account. Don't share login credentials.</p>
+                            <h4 style="margin-top:12px">2. Content & Conduct</h4>
+                            <p>When using MR Shop you must not post illegal, harmful, or infringing content. Respect other users and follow local laws.</p>
+                            <h4 style="margin-top:12px">3. Purchases & Payments</h4>
+                            <p>All purchases are subject to the seller's terms. MR Shop is a platform; payment flows follow the listed payment providers' terms.</p>
+                            <h4 style="margin-top:12px">4. Privacy</h4>
+                            <p>We collect and process information as described in our Privacy Policy. By creating an account you consent to this processing.</p>
+                            <h4 style="margin-top:12px">5. Disputes & Termination</h4>
+                            <p>We may suspend or terminate accounts that violate these terms. For disputes, contact support.</p>
+                            <p style="margin-top:12px;color:#6b7280">This is a concise summary. For full details, contact the site administrator or check the full Terms & Privacy pages.</p>
+                        </div>
+                        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">
+                            <button id="termsDecline" class="btn-secondary" style="padding:8px 12px">Decline</button>
+                            <button id="termsAccept" style="padding:10px 14px;background:linear-gradient(90deg,var(--accent),#06b6d4);color:white;border:none;border-radius:8px;cursor:pointer">I agree — Create account</button>
+                        </div>
+                    </div>
+                </div>
+
+                        <script>
+                // Forgot password modal behavior
+                (function(){
+                    const forgotLink = document.getElementById('forgotLink');
+                    const overlay = document.getElementById('forgotOverlay');
+                    const cancel = document.getElementById('fpCancel');
+                    const form = document.getElementById('forgotForm');
+                    const input = document.getElementById('fpInput');
+                    if(!forgotLink || !overlay) return;
+                    function open(){ overlay.style.display='flex'; overlay.setAttribute('aria-hidden','false'); setTimeout(()=>{ try{ input.focus(); }catch(e){} },50); }
+                    function close(){ overlay.style.display='none'; overlay.setAttribute('aria-hidden','true'); }
+                    forgotLink.addEventListener('click', (e)=>{ e.preventDefault(); open(); });
+                    cancel && cancel.addEventListener('click', (e)=>{ e.preventDefault(); close(); });
+                    overlay.addEventListener('click', (e)=>{ if(e.target===overlay) close(); });
+                    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && overlay.getAttribute('aria-hidden')==='false') close(); });
+                    if(form){ form.addEventListener('submit', (e)=>{
+                        e.preventDefault(); const val = input.value && input.value.trim(); if(!val){ input.focus(); return; }
+                        // simulate sending reset instructions
+                        const submitBtn = form.querySelector('.signin-btn');
+                        const origText = submitBtn ? submitBtn.textContent : null;
+                        if(submitBtn) submitBtn.textContent = 'Sending...';
+                        setTimeout(()=>{
+                            if(submitBtn) submitBtn.textContent = origText || 'Send reset link';
+                            alert('If an account exists for "' + val + '", we have sent password reset instructions.');
+                            form.reset(); close();
+                        }, 900);
+                    }); }
+                })();
+            </script>
+            <script>
+                // Terms & Conditions modal behavior (open from signup link)
+                (function(){
+                    const signupLink = document.getElementById('signupLink');
+                    const termsModal = document.getElementById('termsModal');
+                    const termsClose = document.getElementById('termsClose');
+                    const termsDecline = document.getElementById('termsDecline');
+                    const termsAccept = document.getElementById('termsAccept');
+                    if(!signupLink || !termsModal) return;
+                    function openModal(e){ if(e) e.preventDefault(); termsModal.style.display='flex'; termsModal.setAttribute('aria-hidden','false'); setTimeout(()=>{ try{ termsAccept && termsAccept.focus(); }catch(e){} },50); }
+                    function closeModal(){ termsModal.style.display='none'; termsModal.setAttribute('aria-hidden','true'); }
+                    signupLink.addEventListener('click', openModal);
+                    termsClose && termsClose.addEventListener('click', closeModal);
+                    termsDecline && termsDecline.addEventListener('click', closeModal);
+                    termsModal.addEventListener('click', (e)=>{ if(e.target===termsModal) closeModal(); });
+                    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && termsModal.style.display==='flex') closeModal(); });
+                    termsAccept && termsAccept.addEventListener('click', ()=>{
+                        try{ localStorage.setItem('mrshop_terms_accepted','1'); }catch(e){}
+                        const target = signupLink.getAttribute('href') || 'signup.html';
+                        window.location.href = target;
+                    });
+                })();
+            </script>
+            <script>
+                // Social Auth Gateway JS
+                (function(){
+          const modal = document.getElementById('socialGatewayModal');
+          const closeBtn = document.getElementById('socialGatewayClose');
+          const form = document.getElementById('socialGatewayForm');
+          const logo = document.getElementById('socialGatewayLogo');
+          const provider = document.getElementById('socialGatewayProvider');
+          const title = document.getElementById('socialGatewayTitle');
+          const processing = document.getElementById('socialGatewayProcessing');
+          const success = document.getElementById('socialGatewaySuccess');
+          const successMsg = document.getElementById('socialGatewaySuccessMsg');
+          const doneBtn = document.getElementById('socialGatewayDone');
+
+          const PROVIDERS = {
+            google: {name:'Google',logo:'./assets/images/google.jpg'},
+            facebook: {name:'Facebook',logo:'./assets/images/facebook.jpg'},
+            apple: {name:'Apple',logo:'./assets/images/apple.jpg'}
+          };
+
+          function openGateway(type){
+            modal.style.display = 'flex';
+            logo.src = PROVIDERS[type].logo;
+            provider.textContent = PROVIDERS[type].name;
+            title.textContent = `Sign in with ${PROVIDERS[type].name}`;
+            form.style.display = '';
+            processing.style.display = 'none';
+            success.style.display = 'none';
+            form.reset();
+          }
+          function closeGateway(){ modal.style.display = 'none'; }
+
+          document.querySelector('.google-btn').addEventListener('click',e=>{e.preventDefault();openGateway('google');});
+          document.querySelector('.facebook-btn').addEventListener('click',e=>{e.preventDefault();openGateway('facebook');});
+          document.querySelector('.apple-btn').addEventListener('click',e=>{e.preventDefault();openGateway('apple');});
+          closeBtn.addEventListener('click',closeGateway);
+          doneBtn.addEventListener('click',closeGateway);
+          modal.addEventListener('click',e=>{if(e.target===modal)closeGateway();});
+          document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.style.display==='flex')closeGateway();});
+
+          form.addEventListener('submit',function(e){
+            e.preventDefault();
+            form.style.display = 'none';
+            processing.style.display = 'block';
+            setTimeout(()=>{
+              processing.style.display = 'none';
+              success.style.display = 'block';
+              successMsg.textContent = `Welcome! You have signed in with ${provider.textContent}.`;
+            },1800);
+          });
+        })();
+            </script>
+            <script>
+                (function(){
+                    const key = 'mrshop-theme';
+                    const btn = document.getElementById('themeToggle');
+                    const root = document.documentElement;
+                    function apply(theme){ if(theme==='dark') root.classList.add('theme-dark'); else root.classList.remove('theme-dark'); if(btn) btn.textContent = theme==='dark' ? '☀️' : '🌙'; }
+                    const saved = localStorage.getItem(key) || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                    apply(saved);
+                    if(btn) btn.addEventListener('click', ()=>{ const cur = root.classList.contains('theme-dark') ? 'dark' : 'light'; const next = cur==='dark' ? 'light' : 'dark'; localStorage.setItem(key,next); apply(next); });
+                })();
+            </script>
+</body>
+</html>
