@@ -1,0 +1,26 @@
+:root{--accent:#7c3aed;--accent-2:#06b6d4;--text:#102a43;--muted:#64748b}
+*{box-sizing:border-box}
+body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;line-height:1.5;color:var(--text);margin:0;background:#f7fbff}
+.site-header{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:16px}
+.site-header .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none;font-weight:700}
+.brand .logo{height:36px}
+.product-page{max-width:1100px;margin:28px auto;padding:20px}
+.product-container{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
+.product-image{background:#fff;border-radius:12px;padding:16px;box-shadow:0 6px 20px rgba(2,6,23,0.06);display:flex;align-items:center;justify-content:center}
+.product-image img{max-width:100%;height:auto;border-radius:8px}
+.product-info{background:#fff;border-radius:12px;padding:20px;box-shadow:0 6px 20px rgba(2,6,23,0.06)}
+.product-info h1{margin:0 0 8px;font-size:24px}
+.meta{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+.price{font-size:20px;color:var(--accent);font-weight:800}
+.category{background:#eef2ff;color:var(--accent);padding:6px 10px;border-radius:999px;font-weight:600}
+.description{color:var(--muted);margin-bottom:16px}
+.actions{display:flex;gap:12px}
+.btn{padding:10px 16px;border-radius:8px;border:1px solid rgba(2,6,23,0.06);cursor:pointer;background:#fff}
+.btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;border:none}
+.message{max-width:1100px;margin:12px auto;padding:0 20px;color:var(--muted)}
+
+@media (max-width:800px){
+  .product-container{grid-template-columns:1fr}
+  .product-page{padding:12px}
+}

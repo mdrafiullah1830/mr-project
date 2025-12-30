@@ -55,6 +55,71 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
 
     def do_POST(self):
+        # Admin product upload (multipart) -> save image to ./assets/images and create product entry
+        if self.path == '/api/admin/product':
+            try:
+                env = {'REQUEST_METHOD': 'POST', 'CONTENT_TYPE': self.headers.get('Content-Type'), 'CONTENT_LENGTH': self.headers.get('Content-Length')}
+                fs = cgi.FieldStorage(fp=self.rfile, headers=self.headers, environ=env)
+            except Exception as e:
+                self._set_json_response(400)
+                self.wfile.write(json.dumps({'error': 'failed to parse upload', 'detail': str(e)}).encode('utf-8'))
+                return
+
+            proj_root = os.path.dirname(os.path.dirname(__file__)) if os.path.basename(os.path.dirname(__file__)) == 'backend' else os.path.dirname(__file__)
+            assets_dir = os.path.join(proj_root, 'assets', 'images')
+            os.makedirs(assets_dir, exist_ok=True)
+
+            # gather fields
+            product = {'id': None, 'name': '', 'price': 0, 'description': '', 'category': '', 'image': ''}
+            for key in fs.keys() if hasattr(fs, 'keys') else []:
+                field = fs[key]
+                if not field:
+                    continue
+                if field.filename:
+                    filename = os.path.basename(field.filename)
+                    safe_name = filename
+                    out_path = os.path.join(assets_dir, safe_name)
+                    # if exists, append timestamp
+                    if os.path.exists(out_path):
+                        ts = datetime.utcnow().strftime('%Y%m%d%H%M%S')
+                        out_path = os.path.join(assets_dir, f"{ts}_{filename}")
+                    try:
+                        with open(out_path, 'wb') as out_f:
+                            data = field.file.read()
+                            out_f.write(data)
+                        product['image'] = os.path.relpath(out_path, proj_root).replace('\\', '/')
+                    except Exception as e:
+                        print('Failed to save uploaded image', e)
+                else:
+                    val = getattr(field, 'value', '')
+                    if key in product:
+                        # cast price
+                        product[key] = float(val) if key == 'price' and val else val
+
+            # store product in data/products.json
+            data_dir = os.path.join(proj_root, 'data')
+            os.makedirs(data_dir, exist_ok=True)
+            products_file = os.path.join(data_dir, 'products.json')
+            try:
+                if os.path.exists(products_file):
+                    with open(products_file, 'r', encoding='utf-8') as pf:
+                        products = json.load(pf)
+                else:
+                    products = []
+            except Exception:
+                products = []
+
+            # assign id
+            max_id = max((p.get('id', 0) for p in products), default=200)
+            product['id'] = int(max_id) + 1
+            products.append(product)
+            with open(products_file, 'w', encoding='utf-8') as pf:
+                json.dump(products, pf, indent=2, ensure_ascii=False)
+
+            self._set_json_response(201)
+            self.wfile.write(json.dumps(product).encode('utf-8'))
+            return
+
         if self.path == '/api/query':
             length = int(self.headers.get('Content-Length', 0))
             body = self.rfile.read(length)
@@ -130,9 +195,95 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self._set_json_response(200)
             self.wfile.write(json.dumps({'status': 'ok', 'message': message, 'files': saved}).encode('utf-8'))
             return
+        # create category via JSON POST
+        elif self.path == '/api/admin/category':
+            length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(length)
+            try:
+                data = json.loads(body.decode('utf-8'))
+            except Exception:
+                self._set_json_response(400)
+                self.wfile.write(json.dumps({'error': 'invalid json'}).encode('utf-8'))
+                return
+            name = data.get('name')
+            if not name:
+                self._set_json_response(400)
+                self.wfile.write(json.dumps({'error': 'missing name'}).encode('utf-8'))
+                return
+            proj_root = os.path.dirname(os.path.dirname(__file__)) if os.path.basename(os.path.dirname(__file__)) == 'backend' else os.path.dirname(__file__)
+            data_dir = os.path.join(proj_root, 'data')
+            os.makedirs(data_dir, exist_ok=True)
+            cats_file = os.path.join(data_dir, 'categories.json')
+            try:
+                if os.path.exists(cats_file):
+                    with open(cats_file, 'r', encoding='utf-8') as cf:
+                        cats = json.load(cf)
+                else:
+                    cats = []
+            except Exception:
+                cats = []
+            cats.append({'name': name})
+            with open(cats_file, 'w', encoding='utf-8') as cf:
+                json.dump(cats, cf, indent=2, ensure_ascii=False)
+            self._set_json_response(201)
+            self.wfile.write(json.dumps({'name': name}).encode('utf-8'))
+            return
         else:
             # fallback to file handling (unlikely for POST)
             return http.server.SimpleHTTPRequestHandler.do_POST(self)
+
+    def do_GET(self):
+        # list products
+        if self.path == '/api/products':
+            proj_root = os.path.dirname(os.path.dirname(__file__)) if os.path.basename(os.path.dirname(__file__)) == 'backend' else os.path.dirname(__file__)
+            products_file = os.path.join(proj_root, 'data', 'products.json')
+            try:
+                with open(products_file, 'r', encoding='utf-8') as pf:
+                    products = json.load(pf)
+            except Exception:
+                products = []
+            self._set_json_response(200)
+            self.wfile.write(json.dumps(products).encode('utf-8'))
+            return
+
+        # single product by id: /api/products/<id>
+        if self.path.startswith('/api/products/'):
+            parts = self.path.split('/')
+            pid = parts[-1]
+            proj_root = os.path.dirname(os.path.dirname(__file__)) if os.path.basename(os.path.dirname(__file__)) == 'backend' else os.path.dirname(__file__)
+            products_file = os.path.join(proj_root, 'data', 'products.json')
+            try:
+                with open(products_file, 'r', encoding='utf-8') as pf:
+                    products = json.load(pf)
+            except Exception:
+                products = []
+            found = None
+            for p in products:
+                if str(p.get('id')) == pid:
+                    found = p; break
+            if found:
+                self._set_json_response(200)
+                self.wfile.write(json.dumps(found).encode('utf-8'))
+            else:
+                self._set_json_response(404)
+                self.wfile.write(json.dumps({'error': 'not found'}).encode('utf-8'))
+            return
+
+        # categories list
+        if self.path == '/api/categories':
+            proj_root = os.path.dirname(os.path.dirname(__file__)) if os.path.basename(os.path.dirname(__file__)) == 'backend' else os.path.dirname(__file__)
+            cats_file = os.path.join(proj_root, 'data', 'categories.json')
+            try:
+                with open(cats_file, 'r', encoding='utf-8') as cf:
+                    cats = json.load(cf)
+            except Exception:
+                cats = []
+            self._set_json_response(200)
+            self.wfile.write(json.dumps(cats).encode('utf-8'))
+            return
+
+        # default serve static
+        return http.server.SimpleHTTPRequestHandler.do_GET(self)
 
 
 def reindex():
