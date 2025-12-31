@@ -14,34 +14,64 @@
 /* Use the same font stack and smoothing as handricrafts/home for pixel parity */
 body{font-family:'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; background:linear-gradient(135deg,var(--bg-1),var(--bg-2)); color:var(--text-1);}
 *{box-sizing:border-box}
-.site-header{position:sticky;top:0;z-index:30;background:linear-gradient(90deg,var(--primary),var(--accent-2));color:#fff;box-shadow:var(--shadow);padding:18px 36px;border-bottom:1px solid rgba(2,6,23,0.06)}
-.header-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:1200px;margin:0 auto;padding:0}
+.site-header{position:sticky;top:0;z-index:30;background:linear-gradient(90deg,var(--primary),var(--accent-2));color:#fff;box-shadow:var(--shadow);padding:18px 36px}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0}
 .brand{display:flex;align-items:center;gap:8px;color:inherit;text-decoration:none;font-weight:700;font-size:20px}
 .logo{height:40px;width:auto;border-radius:8px;padding:4px;border:2px solid rgba(255,255,255,.18);background:rgba(255,255,255,.03);box-shadow:0 6px 18px rgba(16,24,40,0.08)}
 .header-actions{display:flex;gap:12px;align-items:center;margin-left:auto}
 .header-actions a{appearance:none;border:none;background:transparent;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer;text-decoration:none;font-weight:600;transition:all .2s ease}
 .header-actions a:hover{background:rgba(255,255,255,.12)}
 
-.auth-main{display:flex;justify-content:center;align-items:center;padding:28px}
-.wrapper{position:relative;width:820px;max-width:95vw;height:520px;background:var(--white);border-radius:18px;overflow:hidden;border:2px solid rgba(12,20,30,0.04);box-shadow:0 10px 40px rgba(12,20,30,0.06)}
-.wrapper .form-box{position:absolute;width:50%;height:100%;display:flex;justify-content:center;flex-direction:column;padding:40px}
+.auth-main{display:flex;justify-content:center;align-items:center;padding:40px 24px}
+.wrapper{position:relative;width:820px;max-width:95vw;height:clamp(540px, 70vh, 660px);background:linear-gradient(180deg,rgba(255,255,255,0.98),rgba(247,250,255,0.96));border-radius:24px;overflow:hidden;border:2px solid rgba(124,58,237,0.16);box-shadow:0 18px 50px rgba(12,20,30,0.12);backdrop-filter:blur(18px);transition:border 0.2s ease,box-shadow 0.2s ease}
+.wrapper:hover{box-shadow:0 24px 60px rgba(12,20,30,0.16);border-color:rgba(6,182,212,0.25)}
+.wrapper .form-box{position:absolute;width:50%;height:100%;display:flex;justify-content:flex-start;flex-direction:column;padding:48px 44px;overflow-y:auto;scrollbar-width:thin}
+.wrapper .form-box::-webkit-scrollbar{width:6px}
+.wrapper .form-box::-webkit-scrollbar-track{background:transparent}
+.wrapper .form-box::-webkit-scrollbar-thumb{background:rgba(124,58,237,0.4);border-radius:999px}
 .wrapper .form-box h2{margin:0 0 12px;color:var(--primary)}
 .wrapper .form-box.login{left:0}
 .wrapper .form-box.register{right:0;transform:translateX(120%);opacity:0;filter:blur(6px)}
+.wrapper .form-box.forgot-password{left:0;transform:translateX(-120%);opacity:0;filter:blur(6px)}
+.wrapper .form-box.reset-password{right:0;transform:translateX(120%);opacity:0;filter:blur(6px)}
+
+/* Forgot password description */
+.forgot-description, .reset-description{font-size:14px;color:var(--muted);margin:0 0 20px;line-height:1.5}
 
 .info-text{position:absolute;width:50%;height:100%;display:flex;justify-content:center;flex-direction:column;padding:40px;background:linear-gradient(180deg,var(--primary),#06b6d4);color:var(--white);transition:.7s ease}
 .info-text.login{right:0;transform:translateX(0)}
 .info-text.register{left:0;transform:translateX(-100%);opacity:0}
+.info-text.forgot-password{right:0;transform:translateX(100%);opacity:0}
+.info-text.reset-password{left:0;transform:translateX(-100%);opacity:0}
 
 .wrapper.active .form-box.login.animation{transform:translateX(-120%);opacity:0;filter:blur(10px);transition:.7s ease;transition-delay:calc(.05s * var(--i))}
 .wrapper.active .form-box.register.animation{transform:translateX(0);opacity:1;filter:blur(0);transition:.7s ease;transition-delay:calc(.05s * var(--i))}
 .wrapper.active .info-text.login.animation{transform:translateX(-100%);opacity:0}
 .wrapper.active .info-text.register.animation{transform:translateX(0);opacity:1}
 
+/* Forgot Password State */
+.wrapper.forgot .form-box.login.animation{transform:translateX(-120%);opacity:0;filter:blur(10px);transition:.7s ease;transition-delay:calc(.05s * var(--i))}
+.wrapper.forgot .form-box.forgot-password.animation{transform:translateX(0);opacity:1;filter:blur(0);transition:.7s ease;transition-delay:calc(.05s * var(--i))}
+.wrapper.forgot .info-text.login.animation{transform:translateX(100%);opacity:0}
+.wrapper.forgot .info-text.forgot-password.animation{transform:translateX(0);opacity:1}
+
+/* Reset Password State */
+.wrapper.reset .form-box.forgot-password.animation{transform:translateX(-120%);opacity:0;filter:blur(10px);transition:.7s ease;transition-delay:calc(.05s * var(--i))}
+.wrapper.reset .form-box.reset-password.animation{transform:translateX(0);opacity:1;filter:blur(0);transition:.7s ease;transition-delay:calc(.05s * var(--i))}
+.wrapper.reset .info-text.forgot-password.animation{transform:translateX(-100%);opacity:0}
+.wrapper.reset .info-text.reset-password.animation{transform:translateX(0);opacity:1}
+
+/* Forgot password link */
+.forgot-password-link{text-align:right;margin:-8px 0 12px}
+.forgot-password-link a{color:var(--primary);text-decoration:none;font-size:14px;font-weight:500;transition:color .2s ease}
+.forgot-password-link a:hover{color:#06b6d4}
+
+
 .input-box{position:relative;margin:16px 0}
-.input-box input{width:100%;padding:12px 14px;border:1px solid #e6e9ee;border-radius:8px;background:transparent}
-.input-box label{position:absolute;top:50%;left:14px;transform:translateY(-50%);pointer-events:none;transition:.2s ease;background:var(--white);padding:0 6px;color:#667085}
-.input-box input:focus+label,.input-box input:not(:placeholder-shown)+label{transform:translateY(-180%);font-size:13px;color:var(--primary)}
+.input-box input{width:100%;padding:14px 16px;border:2px solid rgba(230,233,238,0.9);border-radius:12px;background:rgba(255,255,255,0.92);transition:border-color 0.2s ease,box-shadow 0.2s ease,background 0.2s ease}
+.input-box label{position:absolute;top:50%;left:18px;transform:translateY(-50%);pointer-events:none;transition:.2s ease;background:linear-gradient(120deg,#fff,#f8f9ff);padding:0 8px;color:#667085;border-radius:999px}
+.input-box input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(124,58,237,0.12)}
+.input-box input:focus+label,.input-box input:not(:placeholder-shown)+label{transform:translateY(-190%);font-size:13px;color:var(--primary);box-shadow:0 0 0 1px rgba(124,58,237,0.12)}
 
 .btn{margin-top:8px;padding:12px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--primary),#06b6d4);color:var(--white);font-weight:700;cursor:pointer;transition:all .3s ease}
 .btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(124,58,237,0.3)}
@@ -54,7 +84,7 @@ body{font-family:'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, sans-s
 .divider span{padding:0 14px}
 
 .social-login{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
-.social-btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:11px 16px;border:2px solid #e6e9ee;border-radius:10px;background:var(--white);color:#1f2937;font-weight:600;font-size:14px;cursor:pointer;transition:all .3s ease}
+.social-btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:12px 18px;border:2px solid rgba(230,233,238,0.9);border-radius:12px;background:rgba(255,255,255,0.95);color:#1f2937;font-weight:600;font-size:14px;cursor:pointer;transition:all .3s ease, border-color .2s ease}
 .social-btn:hover{border-color:#d1d5db;box-shadow:0 4px 12px rgba(0,0,0,0.08);transform:translateY(-2px)}
 .social-btn svg{flex-shrink:0}
 .social-btn.google:hover{border-color:#4285F4;background:rgba(66,133,244,0.05)}

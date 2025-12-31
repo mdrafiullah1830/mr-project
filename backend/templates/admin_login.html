@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MR Shop Admin Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}" />
+  </head>
+  <body data-view="login" data-base-url="{{ admin_base }}">
+    <main class="auth-shell">
+      <section class="login-card">
+        <div class="login-card__header">
+          <div class="brand-mark">MR</div>
+          <div>
+            <p class="eyebrow">Secure Access</p>
+            <h1>MR Shop Admin</h1>
+            <p class="subcopy">Hidden console · Localhost only</p>
+          </div>
+        </div>
+
+        <div class="auth-tabs">
+          <button type="button" class="auth-tab is-active" data-panel-toggle="login">
+            Sign in
+          </button>
+          <button type="button" class="auth-tab" data-panel-toggle="forgot">
+            Forgot password
+          </button>
+        </div>
+
+        <div id="login-panel" data-panel="login">
+          {% if error %}
+          <div class="alert alert--error">{{ error }}</div>
+          {% endif %}
+          <div id="login-error" class="alert alert--error" role="alert" hidden></div>
+          <form method="post" class="form-stack" autocomplete="off" data-form="login">
+            <label class="form-label">
+              Username
+              <input
+                type="text"
+                name="username"
+                class="form-input"
+                autofocus
+                required
+              />
+            </label>
+            <label class="form-label">
+              Password
+              <input type="password" name="password" class="form-input" required />
+            </label>
+            <button type="submit" class="btn btn-primary">Unlock dashboard</button>
+          </form>
+          <p class="hint">
+            Requests are audited and restricted to <code>127.0.0.1</code> only.
+          </p>
+        </div>
+
+        <div id="forgot-panel" data-panel="forgot" hidden>
+          <div class="alert alert--success" id="forgot-success" role="status" hidden></div>
+          <div class="alert alert--error" id="forgot-error" role="alert" hidden></div>
+          <p class="eyebrow" data-recovery-question>{{ recovery_question }}</p>
+          <p class="hint" data-recovery-hint>{{ recovery_hint }}</p>
+          <form id="forgot-form" class="form-stack" autocomplete="off">
+            <label class="form-label">
+              Username
+              <input type="text" name="username" class="form-input" required />
+            </label>
+            <label class="form-label">
+              Recovery code
+              <input
+                type="text"
+                name="recovery_answer"
+                class="form-input"
+                placeholder="Enter your secure recovery code"
+                required
+              />
+            </label>
+            <label class="form-label">
+              New password
+              <input
+                type="password"
+                name="new_password"
+                class="form-input"
+                minlength="10"
+                required
+              />
+            </label>
+            <label class="form-label">
+              Confirm password
+              <input
+                type="password"
+                name="confirm_password"
+                class="form-input"
+                minlength="10"
+                required
+              />
+            </label>
+            <button type="submit" class="btn btn-primary">Reset password</button>
+          </form>
+        </div>
+      </section>
+    </main>
+    <script defer src="{{ url_for('static', filename='js/admin.js') }}"></script>
+  </body>
+</html>

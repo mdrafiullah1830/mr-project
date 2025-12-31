@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MR Shop Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}" />
+  </head>
+  <body data-view="dashboard" data-base-url="{{ admin_base }}">
+    <header class="top-bar">
+      <div>
+        <p class="eyebrow">Welcome back</p>
+        <h1>Control Center</h1>
+      </div>
+      <div class="top-bar__actions">
+        <span class="badge">{{ summary.products }} products</span>
+        <span class="badge badge--muted">{{ summary.sellers }} sellers</span>
+        <form method="post" action="{{ url_for('admin_logout') }}">
+          <button type="submit" class="btn btn-ghost">Logout {{ username }}</button>
+        </form>
+      </div>
+    </header>
+
+    <main class="admin-layout">
+      <section class="panel" id="panel-summary">
+        <header class="panel-header">
+          <div>
+            <p class="eyebrow">Live snapshot</p>
+            <h2>Storewide metrics</h2>
+          </div>
+          <span class="status-dot status-dot--online">Secure</span>
+        </header>
+        <div class="metrics-grid" id="metric-grid">
+          <article class="metric-card">
+            <p class="metric-label">Products</p>
+            <p class="metric-value" data-metric="products">0</p>
+            <p class="metric-sub">Active listings</p>
+          </article>
+          <article class="metric-card">
+            <p class="metric-label">Revenue (৳)</p>
+            <p class="metric-value" data-metric="revenue">0</p>
+            <p class="metric-sub">Lifetime customer value</p>
+          </article>
+          <article class="metric-card">
+            <p class="metric-label">Categories</p>
+            <p class="metric-value" data-metric="categories">0</p>
+            <p class="metric-sub">Public storefront groups</p>
+          </article>
+          <article class="metric-card">
+            <p class="metric-label">VIP customers</p>
+            <p class="metric-value" data-metric="vip_users">0</p>
+            <p class="metric-sub">High-value users</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-categories">
+        <header class="panel-header">
+          <div>
+            <p class="eyebrow">Catalog</p>
+            <h2>Categories</h2>
+          </div>
+          <span class="badge">Manage</span>
+        </header>
+        <form id="category-form" class="form-inline">
+          <input type="text" name="name" placeholder="Add new category" required />
+          <select name="visibility">
+            <option value="public">Public</option>
+            <option value="hidden">Hidden</option>
+          </select>
+          <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Visibility</th>
+                <th>Updated</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="category-table"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-products">
+        <header class="panel-header">
+          <div>
+            <p class="eyebrow">Inventory</p>
+            <h2>Products</h2>
+          </div>
+          <span class="badge badge--info">CRUD</span>
+        </header>
+        <form id="product-form" class="form-grid">
+          <input type="text" name="name" placeholder="Product name" required />
+          <input type="number" name="price" placeholder="Price" min="0" step="0.01" required />
+          <select name="category" id="product-category-select" required></select>
+          <input type="number" name="stock" placeholder="Stock" min="0" step="1" />
+          <input type="url" name="image" placeholder="Image URL" />
+          <select name="status">
+            <option value="active">Active</option>
+            <option value="draft">Draft</option>
+            <option value="archived">Archived</option>
+          </select>
+          <textarea name="description" placeholder="Short description"></textarea>
+          <button type="submit" class="btn btn-primary">Create product</button>
+        </form>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="product-table"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-sellers">
+        <header class="panel-header">
+          <div>
+            <p class="eyebrow">Partners</p>
+            <h2>Sellers</h2>
+          </div>
+          <span class="badge">Trust &amp; safety</span>
+        </header>
+        <form id="seller-form" class="form-grid">
+          <input type="text" name="id" placeholder="Seller ID" required />
+          <input type="text" name="shop_name" placeholder="Shop name" required />
+          <input type="text" name="owner_name" placeholder="Owner" required />
+          <input type="email" name="email" placeholder="Email" required />
+          <select name="status">
+            <option value="active">Active</option>
+            <option value="under-review">Under review</option>
+            <option value="suspended">Suspended</option>
+          </select>
+          <input type="number" name="rating" placeholder="Rating" min="0" max="5" step="0.1" />
+          <input type="number" name="total_products" placeholder="# products" min="0" />
+          <button type="submit" class="btn btn-primary">Add seller</button>
+        </form>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Shop</th>
+                <th>Status</th>
+                <th>Rating</th>
+                <th>Products</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="seller-table"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-settings">
+        <header class="panel-header">
+          <div>
+            <p class="eyebrow">Global</p>
+            <h2>Store settings</h2>
+          </div>
+          <span class="badge badge--info">Live</span>
+        </header>
+        <form id="settings-form" class="form-grid">
+          <input type="text" name="site_name" placeholder="Site name" />
+          <input type="email" name="support_email" placeholder="Support email" />
+          <input type="number" name="inventory_alert" placeholder="Inventory alert" min="1" />
+          <textarea name="hero_message" placeholder="Hero message"></textarea>
+          <label class="toggle">
+            <input type="checkbox" name="maintenance_mode" />
+            <span>Maintenance mode</span>
+          </label>
+          <button type="submit" class="btn btn-ghost">Save settings</button>
+        </form>
+      </section>
+
+      <section class="panel" id="panel-security">
+        <header class="panel-header">
+          <div>
+            <p class="eyebrow">Audit trail</p>
+            <h2>Security log</h2>
+          </div>
+          <span class="badge badge--muted">Live feed</span>
+        </header>
+        <ul class="log-feed" id="log-feed"></ul>
+      </section>
+    </main>
+
+    <div id="admin-toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script defer src="{{ url_for('static', filename='js/admin.js') }}"></script>
+  </body>
+</html>

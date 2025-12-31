@@ -7,3 +7,5 @@ data/*.json
 *.log
 settings.json
 .DS_Store
+.venv/
+backend/.venv/

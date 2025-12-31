@@ -1,55 +1,169 @@
-// search.js - real-time product search on home page
+// search.js - real-time product search using C# backend API
 (function(){
-  // Products data (extracted from the page or hardcoded)
-  const PRODUCTS = [
-    { name: 'Smartphone X10', price: '৳ 15,999', image: 'https://i.ibb.co/S6qMxwr/phone.jpg' },
-    { name: 'Sports Shoes', price: '৳ 2,499', image: 'https://i.ibb.co/fqzGyvY/shoes.jpg' },
-    { name: 'Digital Watch', price: '৳ 1,299', image: 'https://i.ibb.co/wwzCzKR/watch.jpg' },
-    { name: 'Wireless Headphones', price: '৳ 3,999', image: 'https://i.ibb.co/dM2Hv5S/headphones.jpg' },
-    // Antique coins
-    { name: 'Singapore 50 cents (1978)', price: '৳ 150', image: './assets/images/coin1.jpeg' },
-    { name: 'Bahrain 100 Fils (2010)', price: '৳ 150', image: './assets/images/coin2.jpeg' },
-    { name: 'Saudi Arabia 50 Halala', price: '৳ 150', image: './assets/images/coin4.jpeg' },
-  ];
-
   const searchInput = document.getElementById('searchInput');
   const searchResults = document.getElementById('searchResults');
+  let searchTimeout;
+  let currentQuery = '';
 
   if (!searchInput || !searchResults) return;
 
-  // Filter and display results on input
-  searchInput.addEventListener('input', function() {
-    const query = this.value.trim().toLowerCase();
-    
-    if (query.length === 0) {
+  // API Configuration
+  const API_BASE = 'http://localhost:5010/api/search';
+  const DEBOUNCE_DELAY = 300; // Wait 300ms after user stops typing
+
+  /**
+   * Fetch search results from backend API
+   */
+  async function fetchSearchResults(query) {
+    if (!query || query.length < 1) {
       searchResults.classList.remove('open');
       searchResults.setAttribute('aria-hidden', 'true');
       return;
     }
 
-    // Filter products by name (case-insensitive substring match)
-    const matches = PRODUCTS.filter(p => p.name.toLowerCase().includes(query));
+    try {
+      searchResults.innerHTML = '<div class="search-loading">Searching...</div>';
+      searchResults.classList.add('open');
+      searchResults.setAttribute('aria-hidden', 'false');
 
-    // Render results
-    if (matches.length === 0) {
+      const response = await fetch(`${API_BASE}?query=${encodeURIComponent(query)}&pageSize=8&sortBy=relevance`);
+      
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.success && data.data && data.data.results.length > 0) {
+        renderSearchResults(data.data.results);
+      } else {
+        searchResults.innerHTML = '<div class="search-no-results">No products found for "' + query + '"</div>';
+      }
+    } catch (error) {
+      console.error('Search error:', error);
+      searchResults.innerHTML = '<div class="search-error">Error loading results</div>';
+    }
+  }
+
+  /**
+   * Fetch search suggestions for autocomplete
+   */
+  async function fetchSuggestions(query) {
+    if (!query || query.length < 2) return;
+
+    try {
+      const response = await fetch(`${API_BASE}/suggestions?q=${encodeURIComponent(query)}`);
+      
+      if (!response.ok) return;
+
+      const data = await response.json();
+      
+      if (data.success && data.data && data.data.suggestions.length > 0) {
+        renderSuggestions(data.data.suggestions, query);
+      }
+    } catch (error) {
+      console.error('Suggestions error:', error);
+    }
+  }
+
+  /**
+   * Render search results as dropdown items
+   */
+  function renderSearchResults(results) {
+    if (!results || results.length === 0) {
       searchResults.innerHTML = '<div class="search-no-results">No products found</div>';
-    } else {
-      searchResults.innerHTML = matches.map((p, idx) => `
-        <div class="search-result-item" role="option" aria-label="${p.name}, ${p.price}">
-          <img src="${p.image}" alt="${p.name}" />
-          <div class="search-result-info">
-            <div class="search-result-name">${p.name}</div>
-            <div class="search-result-price">${p.price}</div>
-          </div>
-        </div>
-      `).join('');
+      return;
     }
 
-    searchResults.classList.add('open');
-    searchResults.setAttribute('aria-hidden', 'false');
+    const html = results.map((product, idx) => {
+      const discountBadge = product.discount > 0 
+        ? `<div class="search-result-discount">-${product.discount}%</div>` 
+        : '';
+      
+      const ratingStars = product.rating > 0 
+        ? `<div class="search-result-rating">⭐ ${product.rating}</div>`
+        : '';
+
+      return `
+  <div class="search-result-item" role="option" tabindex="0" data-id="${product.id}" aria-label="${product.name}, ${product.final_price}">
+          <div class="search-result-image-wrapper">
+            <img src="${product.image_path || 'https://via.placeholder.com/80?text=No+Image'}" 
+                 alt="${product.name}" 
+                 class="search-result-image"
+                 onerror="this.src='https://via.placeholder.com/80?text=No+Image'" />
+            ${discountBadge}
+          </div>
+          <div class="search-result-info">
+            <div class="search-result-name">${product.name}</div>
+            <div class="search-result-category">📦 ${product.category}</div>
+            <div class="search-result-price-row">
+              <span class="search-result-price">৳ ${product.final_price}</span>
+              ${product.discount > 0 ? `<span class="search-result-original">৳ ${product.price}</span>` : ''}
+            </div>
+            ${ratingStars}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    searchResults.innerHTML = html;
+
+    // Add click handlers to results - redirect to product details page
+    document.querySelectorAll('.search-result-item').forEach(item => {
+      item.addEventListener('click', function() {
+        const id = this.getAttribute('data-id');
+        if (id) {
+          window.location.href = `product.html?id=${encodeURIComponent(id)}`;
+          return;
+        }
+        const productName = this.querySelector('.search-result-name').textContent;
+        searchInput.value = productName;
+        fetchSearchResults(productName);
+      });
+
+      item.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          this.click();
+        }
+      });
+    });
+  }
+
+  /**
+   * Render search suggestions
+   */
+  function renderSuggestions(suggestions, query) {
+    // You can extend this to show suggestions above results
+    console.log('Suggestions:', suggestions);
+  }
+
+  /**
+   * Handle search input with debouncing
+   */
+  searchInput.addEventListener('input', function() {
+    currentQuery = this.value.trim().toLowerCase();
+    
+    // Clear previous timeout
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+
+    if (currentQuery.length === 0) {
+      searchResults.classList.remove('open');
+      searchResults.setAttribute('aria-hidden', 'true');
+      return;
+    }
+
+    // Debounce API call
+    searchTimeout = setTimeout(() => {
+      fetchSearchResults(currentQuery);
+      fetchSuggestions(currentQuery);
+    }, DEBOUNCE_DELAY);
   });
 
-  // Close results when clicking outside
+  /**
+   * Close dropdown when clicking outside
+   */
   document.addEventListener('click', function(e) {
     if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
       searchResults.classList.remove('open');
@@ -57,16 +171,21 @@
     }
   });
 
-  // Close results on Escape key
+  /**
+   * Close dropdown on Escape key
+   */
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && searchResults.classList.contains('open')) {
       searchResults.classList.remove('open');
       searchResults.setAttribute('aria-hidden', 'true');
       searchInput.value = '';
+      currentQuery = '';
     }
   });
 
-  // Allow keyboard navigation (optional: arrow keys to select, Enter to submit)
+  /**
+   * Keyboard navigation in dropdown
+   */
   searchInput.addEventListener('keydown', function(e) {
     const items = searchResults.querySelectorAll('.search-result-item');
     if (items.length === 0) return;
@@ -74,6 +193,36 @@
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       items[0].focus();
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      fetchSearchResults(this.value);
+    }
+  });
+
+  /**
+   * Arrow key navigation between results
+   */
+  document.addEventListener('keydown', function(e) {
+    if (!searchResults.classList.contains('open')) return;
+
+    const items = Array.from(searchResults.querySelectorAll('.search-result-item'));
+    const focused = document.activeElement;
+    const currentIndex = items.indexOf(focused);
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (currentIndex < items.length - 1) {
+        items[currentIndex + 1].focus();
+      } else if (currentIndex >= 0) {
+        items[0].focus();
+      }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (currentIndex > 0) {
+        items[currentIndex - 1].focus();
+      } else {
+        searchInput.focus();
+      }
     }
   });
 })();

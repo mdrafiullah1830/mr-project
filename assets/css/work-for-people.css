@@ -23,19 +23,6 @@
   --wfp-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.theme-dark {
-  --wfp-text: #f1f5f9;
-  --wfp-text-light: #cbd5e1;
-  --wfp-bg: #0f172a;
-  --wfp-bg-secondary: #1e293b;
-  --wfp-bg-tertiary: #334155;
-  --wfp-border: #334155;
-  --wfp-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --wfp-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --wfp-shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
-  --wfp-shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.6);
-}
-
 * {
   margin: 0;
   padding: 0;
@@ -119,24 +106,6 @@ body {
   color: var(--wfp-primary);
 }
 
-.wfp-theme-btn {
-  width: 40px;
-  height: 40px;
-  border: none;
-  border-radius: 50%;
-  background: var(--wfp-bg-tertiary);
-  font-size: 1.3rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--wfp-transition);
-}
-.wfp-theme-btn:hover {
-  background: var(--wfp-primary);
-  transform: scale(1.1);
-}
-
 /* === Hero Section === */
 .wfp-hero {
   position: relative;
@@ -149,10 +118,6 @@ body {
   inset: 0;
   background: linear-gradient(135deg, #fef3f8 0%, #e0f2fe 100%);
   overflow: hidden;
-}
-
-.theme-dark .wfp-hero-bg {
-  background: linear-gradient(135deg, #1e1b4b 0%, #0c4a6e 100%);
 }
 
 .wfp-gradient-orb {
@@ -221,10 +186,6 @@ body {
   box-shadow: var(--wfp-shadow-md);
   margin-bottom: 32px;
   animation: fadeInDown 0.6s ease;
-}
-
-.theme-dark .wfp-hero-badge {
-  background: rgba(15, 23, 42, 0.8);
 }
 
 .wfp-badge-icon {
@@ -859,6 +820,85 @@ body {
   color: var(--wfp-text);
 }
 
+.wfp-donation-form {
+  border: 1px solid var(--wfp-border);
+  border-radius: var(--wfp-radius);
+  background: var(--wfp-bg-secondary);
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--wfp-shadow-sm);
+}
+
+.wfp-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.wfp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.wfp-field label {
+  font-weight: 600;
+  color: var(--wfp-text);
+  font-size: 0.9rem;
+}
+
+.wfp-field input,
+.wfp-field textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid var(--wfp-border);
+  border-radius: 10px;
+  background: var(--wfp-bg);
+  color: var(--wfp-text);
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.wfp-field input:focus,
+.wfp-field textarea:focus {
+  outline: none;
+  border-color: var(--wfp-primary);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+.wfp-field textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.wfp-form-hint {
+  font-size: 0.85rem;
+  color: var(--wfp-text-light);
+  margin-bottom: 0;
+}
+
+.wfp-feedback {
+  min-height: 24px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--wfp-text);
+}
+
+.wfp-feedback.error {
+  color: #dc2626;
+}
+
+.wfp-feedback.success {
+  color: var(--wfp-success);
+}
+
+.wfp-feedback.info {
+  color: var(--wfp-text-light);
+}
+
 .wfp-submit-btn {
   width: 100%;
   padding: 16px;
@@ -875,6 +915,13 @@ body {
 .wfp-submit-btn:hover {
   transform: translateY(-2px);
   box-shadow: var(--wfp-shadow-lg);
+}
+
+.wfp-submit-btn[disabled] {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 /* === Footer === */
@@ -938,6 +985,10 @@ body {
 
   .wfp-nav a {
     font-size: 0.9rem;
+  }
+
+  .wfp-form-grid {
+    grid-template-columns: 1fr;
   }
 
   .wfp-brand-text {

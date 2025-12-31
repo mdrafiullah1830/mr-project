@@ -1,30 +1,13 @@
-// Theme Toggle
-const themeToggle = document.getElementById('themeToggle');
-const themeIcon = document.querySelector('.theme-icon');
-const html = document.documentElement;
-
-// Initialize theme from localStorage
-const savedTheme = localStorage.getItem('mr_shop_theme') || 'light';
-html.setAttribute('data-theme', savedTheme);
-updateThemeIcon(savedTheme);
-
-themeToggle.addEventListener('click', () => {
-  const currentTheme = html.getAttribute('data-theme');
-  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-  
-  html.setAttribute('data-theme', newTheme);
-  localStorage.setItem('mr_shop_theme', newTheme);
-  updateThemeIcon(newTheme);
-  
-  // Add bounce animation
-  themeToggle.style.animation = 'none';
-  setTimeout(() => {
-    themeToggle.style.animation = 'bounce 0.5s ease';
-  }, 10);
-});
-
-function updateThemeIcon(theme) {
-  themeIcon.textContent = theme === 'light' ? '🌙' : '☀️';
+// Authentication Check - Ensure user is logged in
+function checkUserAuthentication() {
+  const userData = localStorage.getItem('mr_shop_user');
+  if (!userData) {
+    // User not logged in, redirect to auth
+    alert('Please log in first to access your profile');
+    window.location.href = 'auth.html#login';
+    return false;
+  }
+  return true;
 }
 
 // Section Navigation
@@ -48,7 +31,232 @@ function switchSection(sectionId) {
     loadWishlist();
   } else if (sectionId === 'recently-viewed') {
     loadRecentlyViewed();
+  } else if (sectionId === 'seller-approvals') {
+    loadAdminNotifications();
   }
+}
+
+// ===== ADMIN: SELLER APPROVALS FUNCTIONALITY =====
+
+// Load admin notifications for seller requests
+async function loadAdminNotifications() {
+  try {
+    const response = await fetch('http://localhost:5010/api/sellerrequest/admin/notifications');
+    const result = await response.json();
+    
+    if (!result.success) {
+      document.getElementById('approvalsContainer').innerHTML = `
+        <div style="padding: 20px; background: #fff3cd; border-radius: 8px; color: #856404;">
+          <p>⚠️ ${result.error || 'Failed to load notifications'}</p>
+        </div>
+      `;
+      return;
+    }
+    
+    const notifications = result.data || [];
+    const container = document.getElementById('approvalsContainer');
+    
+    // Update count
+    document.getElementById('pendingCount').textContent = notifications.length;
+    if (notifications.length > 0) {
+      document.getElementById('approvalBadge').textContent = notifications.length;
+      document.getElementById('approvalBadge').style.display = 'inline-block';
+    } else {
+      document.getElementById('approvalBadge').style.display = 'none';
+    }
+    
+    if (notifications.length === 0) {
+      container.innerHTML = `
+        <div style="padding: 40px 20px; text-align: center; background: #f8f9fa; border-radius: 8px;">
+          <p style="font-size: 48px; margin-bottom: 10px;">✅</p>
+          <p style="color: #666; font-size: 16px;">No pending seller requests</p>
+          <p style="color: #999; font-size: 12px;">All seller applications have been reviewed!</p>
+        </div>
+      `;
+      return;
+    }
+    
+    // Render each notification as a card
+    container.innerHTML = notifications.map(notif => `
+      <div style="
+        background: white;
+        border: 2px solid ${notif.status === 'Unread' ? '#ff6b6b' : '#e2e8f0'};
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+      ">
+        <div style="flex: 1;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <h4 style="margin: 0; font-size: 16px; font-weight: 600; color: #1e293b;">
+              ${escapeHtml(notif.fullName)}
+            </h4>
+            ${notif.status === 'Unread' ? '<span style="background: #ff6b6b; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">NEW</span>' : ''}
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+            <div>
+              <span style="color: #999; font-size: 12px;">📧 Email</span>
+              <p style="margin: 5px 0 0 0; color: #1e293b; font-size: 14px;">${escapeHtml(notif.email)}</p>
+            </div>
+            <div>
+              <span style="color: #999; font-size: 12px;">📞 Phone</span>
+              <p style="margin: 5px 0 0 0; color: #1e293b; font-size: 14px;">${escapeHtml(notif.phone)}</p>
+            </div>
+            <div>
+              <span style="color: #999; font-size: 12px;">🏪 Business Name</span>
+              <p style="margin: 5px 0 0 0; color: #1e293b; font-size: 14px;">${escapeHtml(notif.shopName)}</p>
+            </div>
+            <div>
+              <span style="color: #999; font-size: 12px;">📅 Submitted</span>
+              <p style="margin: 5px 0 0 0; color: #1e293b; font-size: 14px;">${new Date(notif.submittedAt).toLocaleString()}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div style="display: flex; flex-direction: column; gap: 8px; min-width: 140px;">
+          <button onclick="approveSellerRequest('${notif.requestId}')" style="
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+          " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(40,167,69,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow=''">
+            ✅ Approve
+          </button>
+          <button onclick="rejectSellerRequest('${notif.requestId}')" style="
+            background: linear-gradient(135deg, #dc3545, #e83e8c);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+          " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(220,53,69,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow=''">
+            ❌ Reject
+          </button>
+          <button onclick="markAsRead('${notif.requestId}')" style="
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+          " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+            👁️ Mark Read
+          </button>
+        </div>
+      </div>
+    `).join('');
+    
+  } catch (error) {
+    console.error('Error loading admin notifications:', error);
+    document.getElementById('approvalsContainer').innerHTML = `
+      <div style="padding: 20px; background: #f8d7da; border-radius: 8px; color: #721c24;">
+        <p>❌ Error loading notifications: ${error.message}</p>
+      </div>
+    `;
+  }
+}
+
+// Approve seller request
+async function approveSellerRequest(requestId) {
+  if (!confirm('Are you sure you want to approve this seller?')) return;
+  
+  try {
+    const response = await fetch(`http://localhost:5010/api/sellerrequest/admin/${requestId}/status`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        status: 'Approved',
+        notes: 'Approved by admin on ' + new Date().toLocaleString()
+      })
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      showNotification('✅ Seller approved successfully!', 'success');
+      loadAdminNotifications(); // Reload the list
+    } else {
+      showNotification('❌ Error approving seller: ' + (result.error || 'Unknown error'), 'error');
+    }
+  } catch (error) {
+    console.error('Error approving seller:', error);
+    showNotification('❌ Error: ' + error.message, 'error');
+  }
+}
+
+// Reject seller request
+async function rejectSellerRequest(requestId) {
+  const reason = prompt('Enter rejection reason (optional):');
+  if (reason === null) return; // User cancelled
+  
+  try {
+    const response = await fetch(`http://localhost:5010/api/sellerrequest/admin/${requestId}/status`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        status: 'Rejected',
+        notes: reason || 'Rejected by admin on ' + new Date().toLocaleString()
+      })
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      showNotification('❌ Seller request rejected', 'warning');
+      loadAdminNotifications(); // Reload the list
+    } else {
+      showNotification('❌ Error rejecting seller: ' + (result.error || 'Unknown error'), 'error');
+    }
+  } catch (error) {
+    console.error('Error rejecting seller:', error);
+    showNotification('❌ Error: ' + error.message, 'error');
+  }
+}
+
+// Mark notification as read
+async function markAsRead(requestId) {
+  try {
+    const response = await fetch(`http://localhost:5010/api/sellerrequest/admin/acknowledge/${requestId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      loadAdminNotifications(); // Reload the list
+    } else {
+      console.warn('Error marking as read:', result.error);
+    }
+  } catch (error) {
+    console.error('Error marking as read:', error);
+  }
+}
+
+// Helper function to escape HTML special characters
+function escapeHtml(text) {
+  if (!text) return '';
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  return String(text).replace(/[&<>"']/g, m => map[m]);
 }
 
 // Edit Profile
@@ -76,48 +284,201 @@ function toggleEdit() {
   }
 }
 
-infoForm.addEventListener('submit', (e) => {
+infoForm.addEventListener('submit', async (e) => {
   e.preventDefault();
+  
+  // Get current user ID
+  const userData = localStorage.getItem('mr_shop_user');
+  if (!userData) {
+    showNotification('Please log in first', 'error');
+    return;
+  }
+  
+  const user = JSON.parse(userData);
+  const userId = user.id || user.username;
   
   // Get form data
   const formData = {
-    fullName: document.getElementById('fullName').value,
-    phoneNumber: document.getElementById('phoneNumber').value,
-    emailAddress: document.getElementById('emailAddress').value,
+    full_name: document.getElementById('fullName').value,
+    phone_number: document.getElementById('phoneNumber').value,
+    email_address: document.getElementById('emailAddress').value,
     address: document.getElementById('address').value,
-    dob: document.getElementById('dob').value,
+    date_of_birth: document.getElementById('dob').value,
     gender: document.getElementById('gender').value
   };
   
-  // Save to localStorage
-  localStorage.setItem('mr_shop_user_profile', JSON.stringify(formData));
-  
-  // Update profile display
-  document.getElementById('profileName').textContent = formData.fullName.split(' ')[0] + ' ' + (formData.fullName.split(' ')[1] || '');
-  document.getElementById('profileEmail').textContent = formData.emailAddress;
-  
-  // Show success message
-  showNotification('Profile updated successfully! ✅', 'success');
-  
-  // Exit edit mode
-  toggleEdit();
+  try {
+    // Save to backend API
+    const response = await fetch(`http://localhost:5010/api/profile/${userId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      // Also save to localStorage for offline access
+      localStorage.setItem('mr_shop_user_profile', JSON.stringify(formData));
+      
+      // Update profile display
+      document.getElementById('profileName').textContent = formData.full_name.split(' ')[0] + ' ' + (formData.full_name.split(' ')[1] || '');
+      document.getElementById('profileEmail').textContent = formData.email_address;
+      
+      // Show success message
+      showNotification('Profile updated successfully! ✅', 'success');
+      
+      // Exit edit mode
+      toggleEdit();
+    } else {
+      showNotification('Failed to update profile: ' + result.message, 'error');
+    }
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    // Still save to localStorage even if backend fails
+    localStorage.setItem('mr_shop_user_profile', JSON.stringify(formData));
+    
+    // Update profile display
+    document.getElementById('profileName').textContent = formData.full_name.split(' ')[0] + ' ' + (formData.full_name.split(' ')[1] || '');
+    document.getElementById('profileEmail').textContent = formData.email_address;
+    
+    // Show message about offline mode
+    showNotification('Profile saved locally. (Offline Mode)', 'info');
+    
+    // Exit edit mode
+    toggleEdit();
+  }
 });
 
-// Load saved profile data
-function loadProfileData() {
-  const savedData = localStorage.getItem('mr_shop_user_profile');
-  if (savedData) {
-    const data = JSON.parse(savedData);
-    document.getElementById('fullName').value = data.fullName;
-    document.getElementById('phoneNumber').value = data.phoneNumber;
-    document.getElementById('emailAddress').value = data.emailAddress;
-    document.getElementById('address').value = data.address;
-    document.getElementById('dob').value = data.dob;
-    document.getElementById('gender').value = data.gender;
+// Load saved profile data from backend
+async function loadProfileData() {
+  // Get current user ID
+  const userData = localStorage.getItem('mr_shop_user');
+  if (!userData) return;
+  
+  const user = JSON.parse(userData);
+  const userId = user.id || user.username;
+  
+  // Update status indicator
+  updateBackendStatus('connecting', '🔄 Connecting...');
+  
+  try {
+    // Check if profile exists in backend
+    const checkResponse = await fetch(`http://localhost:5010/api/profile/${userId}/exists`);
+    const checkResult = await checkResponse.json();
     
-    document.getElementById('profileName').textContent = data.fullName.split(' ')[0] + ' ' + (data.fullName.split(' ')[1] || '');
-    document.getElementById('profileEmail').textContent = data.emailAddress;
+    if (!checkResult.data.exists) {
+      // Create new profile with default data
+      updateBackendStatus('creating', '✨ Creating profile...');
+      
+      const newProfile = {
+        user_id: userId,
+        full_name: user.username || 'User',
+        email_address: user.email || '',
+        phone_number: '',
+        address: '',
+        date_of_birth: '',
+        gender: 'male'
+      };
+      
+      const createResponse = await fetch(`http://localhost:5010/api/profile`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newProfile)
+      });
+      
+      const createResult = await createResponse.json();
+      if (createResult.success) {
+        console.log('✅ Profile created successfully');
+        showNotification('Welcome! Your profile has been created. 🎉', 'success');
+      }
+    }
+    
+    // Fetch profile from backend
+    const response = await fetch(`http://localhost:5010/api/profile/${userId}`);
+    const result = await response.json();
+    
+    if (result.success && result.data) {
+      const data = result.data;
+      
+      // Auto-fill inputs with backend data
+      if (data.full_name) document.getElementById('fullName').value = data.full_name;
+      if (data.phone_number) document.getElementById('phoneNumber').value = data.phone_number;
+      if (data.email_address) document.getElementById('emailAddress').value = data.email_address;
+      if (data.address) document.getElementById('address').value = data.address;
+      if (data.date_of_birth) document.getElementById('dob').value = data.date_of_birth;
+      if (data.gender) document.getElementById('gender').value = data.gender;
+      
+      // Update sidebar display
+      if (data.full_name) {
+        document.getElementById('profileName').textContent = data.full_name;
+      }
+      if (data.email_address) {
+        document.getElementById('profileEmail').textContent = data.email_address;
+      }
+      
+      // Load profile photo
+      if (data.profile_photo_path) {
+        const photoUrl = `http://localhost:5010${data.profile_photo_path}`;
+        console.log('🖼️ Loading profile photo from:', photoUrl);
+        document.getElementById('profilePhoto').src = photoUrl;
+      }
+      
+      // Also save to localStorage for backup
+      localStorage.setItem('mr_shop_user_profile', JSON.stringify(data));
+      
+      // Update status to connected
+      updateBackendStatus('connected', '✅ Connected to Backend');
+    } else {
+      // If profile doesn't exist in backend, try loading from localStorage
+      updateBackendStatus('offline', '⚠️ Offline Mode');
+      
+      const savedData = localStorage.getItem('mr_shop_user_profile');
+      if (savedData) {
+        const data = JSON.parse(savedData);
+        document.getElementById('fullName').value = data.fullName || data.full_name || '';
+        document.getElementById('phoneNumber').value = data.phoneNumber || data.phone_number || '';
+        document.getElementById('emailAddress').value = data.emailAddress || data.email_address || '';
+        document.getElementById('address').value = data.address || '';
+        document.getElementById('dob').value = data.dob || data.date_of_birth || '';
+        document.getElementById('gender').value = data.gender || 'male';
+      }
+    }
+  } catch (error) {
+    console.error('Error loading profile:', error);
+    updateBackendStatus('offline', '⚠️ Working Offline');
+    
+    // Fallback to localStorage - use data from login
+    const savedData = localStorage.getItem('mr_shop_user_profile');
+    if (savedData) {
+      const data = JSON.parse(savedData);
+      document.getElementById('fullName').value = data.fullName || data.full_name || '';
+      document.getElementById('phoneNumber').value = data.phoneNumber || data.phone_number || '';
+      document.getElementById('emailAddress').value = data.emailAddress || data.email_address || '';
+      document.getElementById('address').value = data.address || '';
+      document.getElementById('dob').value = data.dob || data.date_of_birth || '';
+      document.getElementById('gender').value = data.gender || 'male';
+    }
   }
+}
+
+// Update backend status indicator
+function updateBackendStatus(status, text) {
+  const statusDot = document.getElementById('statusDot');
+  const statusText = document.getElementById('statusText');
+  
+  if (!statusDot || !statusText) return;
+  
+  const colors = {
+    connecting: '#ffc107',
+    creating: '#17a2b8',
+    connected: '#28a745',
+    offline: '#ff9800',
+    error: '#dc3545'
+  };
+  
+  statusDot.style.background = colors[status] || '#6c757d';
+  statusText.textContent = text;
 }
 
 // Change Profile Photo
@@ -125,28 +486,159 @@ function changeProfilePhoto() {
   const input = document.createElement('input');
   input.type = 'file';
   input.accept = 'image/*';
+  input.style.display = 'none';
   
-  input.onchange = (e) => {
+  input.onchange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        document.getElementById('profilePhoto').src = event.target.result;
-        localStorage.setItem('mr_shop_profile_photo', event.target.result);
-        showNotification('Profile photo updated! 📸', 'success');
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+    
+    console.log('📸 Photo selected:', file.name, 'Size:', file.size, 'Type:', file.type);
+    
+    // Get current user ID
+    const userData = localStorage.getItem('mr_shop_user');
+    if (!userData) {
+      showNotification('Please log in first', 'error');
+      console.error('❌ No user data found in localStorage');
+      return;
     }
+    
+    const user = JSON.parse(userData);
+    const userId = user.id || user.username;
+    console.log('👤 User ID:', userId);
+    
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      showNotification('File size exceeds 5MB limit', 'error');
+      console.error('❌ File too large:', file.size);
+      return;
+    }
+    
+    // Show preview immediately
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      document.getElementById('profilePhoto').src = event.target.result;
+      console.log('✅ Preview loaded');
+    };
+    reader.readAsDataURL(file);
+    
+    try {
+      console.log('🔍 Checking if profile exists...');
+      
+      // FIRST: Ensure profile exists before uploading photo
+      const checkResponse = await fetch(`http://localhost:5010/api/profile/${userId}/exists`);
+      const checkResult = await checkResponse.json();
+      
+      console.log('Profile exists:', checkResult.data.exists);
+      
+      if (!checkResult.data.exists) {
+        console.log('✨ Creating profile first...');
+        
+        // Create profile first
+        const newProfile = {
+          user_id: userId,
+          full_name: user.username || 'User',
+          email_address: user.email || '',
+          phone_number: '',
+          address: '',
+          date_of_birth: '',
+          gender: 'male'
+        };
+        
+        const createResponse = await fetch(`http://localhost:5010/api/profile`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newProfile)
+        });
+        
+        const createResult = await createResponse.json();
+        console.log('Profile creation result:', createResult);
+        
+        if (!createResult.success) {
+          showNotification('Failed to create profile: ' + createResult.message, 'error');
+          console.error('❌ Profile creation failed:', createResult.message);
+          return;
+        }
+        
+        console.log('✅ Profile created successfully');
+      }
+      
+      console.log('📤 Uploading photo to backend...');
+      
+      // NOW: Upload photo
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await fetch(`http://localhost:5010/api/profile/${userId}/photo`, {
+        method: 'POST',
+        body: formData
+      });
+      
+      console.log('Upload response status:', response.status);
+      
+      const result = await response.json();
+      console.log('Upload result:', result);
+      
+      if (result.success) {
+        // Save the server path
+        localStorage.setItem('mr_shop_profile_photo_path', result.data.photo_path);
+        showNotification('Profile photo updated! 📸', 'success');
+        console.log('✅ Photo uploaded successfully:', result.data.photo_path);
+        
+        // Reload the photo from server to verify
+        const photoUrl = `http://localhost:5010${result.data.photo_path}`;
+        console.log('🖼️ Loading photo from:', photoUrl);
+        document.getElementById('profilePhoto').src = photoUrl;
+      } else {
+        showNotification('Failed to upload photo: ' + result.message, 'error');
+        console.error('❌ Upload failed:', result.message);
+      }
+    } catch (error) {
+      console.error('❌ Error uploading photo:', error);
+      showNotification('Error uploading photo. Please try again.', 'error');
+    }
+    
+    // Clean up - remove the input from DOM
+    document.body.removeChild(input);
   };
   
+  // IMPORTANT: Add to DOM before clicking - fixes browser compatibility issues
+  document.body.appendChild(input);
   input.click();
 }
 
-// Load saved profile photo
-function loadProfilePhoto() {
-  const savedPhoto = localStorage.getItem('mr_shop_profile_photo');
-  if (savedPhoto) {
-    document.getElementById('profilePhoto').src = savedPhoto;
+// Load saved profile photo from backend
+async function loadProfilePhoto() {
+  // Get current user ID
+  const userData = localStorage.getItem('mr_shop_user');
+  if (!userData) return;
+  
+  const user = JSON.parse(userData);
+  const userId = user.id || user.username;
+  
+  try {
+    // Fetch profile from backend to get photo path
+    const response = await fetch(`http://localhost:5010/api/profile/${userId}`);
+    const result = await response.json();
+    
+    if (result.success && result.data && result.data.profile_photo_path) {
+      // Load image from backend server
+      const photoUrl = `http://localhost:5010${result.data.profile_photo_path}`;
+      document.getElementById('profilePhoto').src = photoUrl;
+      localStorage.setItem('mr_shop_profile_photo_path', result.data.profile_photo_path);
+    } else {
+      // Fallback to localStorage base64 if exists
+      const savedPhoto = localStorage.getItem('mr_shop_profile_photo');
+      if (savedPhoto) {
+        document.getElementById('profilePhoto').src = savedPhoto;
+      }
+    }
+  } catch (error) {
+    console.error('Error loading profile photo:', error);
+    // Fallback to localStorage
+    const savedPhoto = localStorage.getItem('mr_shop_profile_photo');
+    if (savedPhoto) {
+      document.getElementById('profilePhoto').src = savedPhoto;
+    }
   }
 }
 
@@ -428,12 +920,15 @@ function clearHistory() {
 // Logout
 function logout() {
   if (confirm('Are you sure you want to logout?')) {
-    // Clear user session
+    // Clear all session data
     localStorage.removeItem('mr_shop_user');
+    localStorage.removeItem('mr_shop_user_profile');
+    sessionStorage.removeItem('reset_email');
     
     showNotification('Logging out... 👋', 'info');
     setTimeout(() => {
-      window.location.href = 'auth.html';
+      // Redirect to home page instead of auth page
+      window.location.href = 'index.html';
     }, 1000);
   }
 }
@@ -500,7 +995,31 @@ document.addEventListener('DOMContentLoaded', () => {
   loadProfileData();
   loadProfilePhoto();
   loadOrders();
+  initializeAdminFeatures();
 });
+
+// Initialize admin features (seller approvals)
+function initializeAdminFeatures() {
+  const userData = localStorage.getItem('mr_shop_user');
+  if (!userData) return;
+  
+  const user = JSON.parse(userData);
+  const isAdmin = user.username === 'mrshop'; // Admin check
+  
+  // Show seller approvals menu only for admin
+  const sellerApprovalsMenu = document.getElementById('sellerApprovalsMenu');
+  if (isAdmin && sellerApprovalsMenu) {
+    sellerApprovalsMenu.style.display = 'block';
+    
+    // Auto-load notifications every 30 seconds if admin
+    setInterval(() => {
+      const currentSection = document.querySelector('.menu-item.active');
+      if (currentSection && currentSection.dataset.section === 'seller-approvals') {
+        loadAdminNotifications();
+      }
+    }, 30000);
+  }
+}
 
 // Check if user is logged in
 function checkAuthentication() {

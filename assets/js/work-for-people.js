@@ -1,22 +1,5 @@
 /* === Work for People JavaScript === */
 
-// === Theme Toggle ===
-const themeToggle = document.getElementById('themeToggle');
-const htmlEl = document.documentElement;
-
-const savedTheme = localStorage.getItem('mrshop-theme') || 'light';
-if (savedTheme === 'dark') {
-  htmlEl.classList.add('theme-dark');
-  themeToggle.textContent = '☀️';
-}
-
-themeToggle.addEventListener('click', () => {
-  htmlEl.classList.toggle('theme-dark');
-  const isDark = htmlEl.classList.contains('theme-dark');
-  themeToggle.textContent = isDark ? '☀️' : '🌙';
-  localStorage.setItem('mrshop-theme', isDark ? 'dark' : 'light');
-});
-
 // === Animated Counter ===
 function animateCounter(element, target, duration = 2000) {
   const start = 0;
@@ -129,6 +112,29 @@ const donateModal = document.getElementById('donateModal');
 const modalOverlay = document.getElementById('modalOverlay');
 const modalClose = document.getElementById('modalClose');
 const submitDonation = document.getElementById('submitDonation');
+const customAmountInput = document.getElementById('customAmount');
+const donorNameInput = document.getElementById('donorName');
+const donorEmailInput = document.getElementById('donorEmail');
+const senderPhoneInput = document.getElementById('senderPhone');
+const senderLastFourInput = document.getElementById('senderLastFour');
+const transactionIdInput = document.getElementById('transactionId');
+const donationMessageInput = document.getElementById('donationMessage');
+const donationFeedback = document.getElementById('donationFeedback');
+
+const DONATION_API_URL = window.MR_DONATION_API || 'http://localhost:5001/api/donations';
+const PHONE_REGEX = /^01[3-9]\d{8}$/;
+
+function setDonationFeedback(status, message) {
+  if (!donationFeedback) return;
+  donationFeedback.textContent = message || '';
+  donationFeedback.className = status ? `wfp-feedback ${status}` : 'wfp-feedback';
+}
+
+function toggleSubmitLoading(isLoading) {
+  if (!submitDonation) return;
+  submitDonation.disabled = isLoading;
+  submitDonation.textContent = isLoading ? 'Processing...' : 'Donate Now';
+}
 
 let selectedAmount = null;
 let selectedPaymentMethod = null;
@@ -153,7 +159,13 @@ function resetDonateForm() {
   document.querySelectorAll('.wfp-payment-btn').forEach((btn) => {
     btn.classList.remove('selected');
   });
-  document.getElementById('customAmount').value = '';
+  if (customAmountInput) customAmountInput.value = '';
+  [donorNameInput, donorEmailInput, senderPhoneInput, senderLastFourInput, transactionIdInput, donationMessageInput]
+    .filter(Boolean)
+    .forEach((input) => {
+      input.value = '';
+    });
+  setDonationFeedback('', '');
 }
 
 modalClose.addEventListener('click', closeDonateModal);
@@ -173,18 +185,21 @@ document.querySelectorAll('.wfp-amount-btn').forEach((btn) => {
       b.classList.remove('selected');
     });
     btn.classList.add('selected');
-    selectedAmount = parseInt(btn.dataset.amount);
-    document.getElementById('customAmount').value = '';
+    selectedAmount = Number(btn.dataset.amount);
+    if (customAmountInput) customAmountInput.value = '';
   });
 });
 
 // Custom amount
-document.getElementById('customAmount').addEventListener('input', (e) => {
-  selectedAmount = parseInt(e.target.value);
-  document.querySelectorAll('.wfp-amount-btn').forEach((btn) => {
-    btn.classList.remove('selected');
+if (customAmountInput) {
+  customAmountInput.addEventListener('input', (e) => {
+    const value = Number(e.target.value);
+    selectedAmount = Number.isFinite(value) && value > 0 ? value : null;
+    document.querySelectorAll('.wfp-amount-btn').forEach((btn) => {
+      btn.classList.remove('selected');
+    });
   });
-});
+}
 
 // Payment method selection
 document.querySelectorAll('.wfp-payment-btn').forEach((btn) => {
@@ -198,31 +213,101 @@ document.querySelectorAll('.wfp-payment-btn').forEach((btn) => {
 });
 
 // Submit donation
-submitDonation.addEventListener('click', () => {
-  if (!selectedAmount || selectedAmount < 10) {
-    alert('Please select or enter a donation amount (minimum ৳10)');
+submitDonation.addEventListener('click', async () => {
+  setDonationFeedback('', '');
+
+  if (!Number.isFinite(selectedAmount) || selectedAmount < 10) {
+    setDonationFeedback('error', 'Please select or enter a donation amount (minimum ৳10).');
     return;
   }
 
   if (!selectedPaymentMethod) {
-    alert('Please select a payment method');
+    setDonationFeedback('error', 'Please choose a payment method.');
     return;
   }
 
-  // Show success message
-  showSuccessNotification(`Thank you! Your donation of ৳${selectedAmount} via ${selectedPaymentMethod.toUpperCase()} will help transform lives.`);
+  const donorName = donorNameInput?.value.trim() || '';
+  if (donorName.length < 2) {
+    setDonationFeedback('error', 'Please enter your full name.');
+    donorNameInput?.focus();
+    return;
+  }
 
-  // Log donation (in real app, send to backend)
-  console.log({
-    amount: selectedAmount,
-    method: selectedPaymentMethod,
-    timestamp: new Date().toISOString(),
-    source: 'work-for-people-page'
-  });
+  const senderNumber = senderPhoneInput?.value.trim() || '';
+  if (!PHONE_REGEX.test(senderNumber)) {
+    setDonationFeedback('error', 'Enter a valid Bangladeshi wallet number (01XXXXXXXXX).');
+    senderPhoneInput?.focus();
+    return;
+  }
 
-  // Close modal
-  closeDonateModal();
+  let senderLastFour = senderLastFourInput?.value.trim() || '';
+  if (!senderLastFour) {
+    senderLastFour = senderNumber.slice(-4);
+    if (senderLastFourInput) senderLastFourInput.value = senderLastFour;
+  }
+
+  if (!/^\d{4}$/.test(senderLastFour)) {
+    setDonationFeedback('error', 'Last four digits must be exactly 4 numbers.');
+    senderLastFourInput?.focus();
+    return;
+  }
+
+  const transactionId = transactionIdInput?.value.trim() || '';
+  if (transactionId.length < 5) {
+    setDonationFeedback('error', 'Please provide the transaction ID from your send money receipt.');
+    transactionIdInput?.focus();
+    return;
+  }
+
+  const payload = {
+    amount: Number(selectedAmount.toFixed(2)),
+    provider: selectedPaymentMethod,
+    donorName,
+    donorEmail: donorEmailInput?.value.trim() || '',
+    senderNumber,
+    senderLastFour,
+    transactionId,
+    message: donationMessageInput?.value.trim() || '',
+    source: 'work-for-people-page',
+  };
+
+  await submitDonationRequest(payload);
 });
+
+async function submitDonationRequest(payload) {
+  try {
+    toggleSubmitLoading(true);
+    setDonationFeedback('info', 'Submitting your donation...');
+    const response = await fetch(DONATION_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    const result = await response.json();
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || 'Unable to submit donation right now.');
+    }
+
+    const receipt = result.receipt || {};
+    const providerLabel = payload.provider?.toUpperCase() || 'bKASH';
+    showSuccessNotification(`Thank you, ${payload.donorName}! ৳${payload.amount} via ${providerLabel} was recorded. TxID: ${payload.transactionId}.`);
+    setDonationFeedback('success', result.message || 'Donation recorded successfully.');
+
+    // Close modal after a short pause so the user can read the message
+    setTimeout(() => {
+      closeDonateModal();
+    }, 800);
+
+    console.log('Donation receipt', receipt);
+  } catch (error) {
+    const message = error.message || 'Unable to submit donation right now.';
+    setDonationFeedback('error', message);
+    showErrorNotification(message);
+  } finally {
+    toggleSubmitLoading(false);
+  }
+}
 
 // Success notification
 function showSuccessNotification(message) {
@@ -278,6 +363,34 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
+function showErrorNotification(message) {
+  const notification = document.createElement('div');
+  notification.style.cssText = `
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    max-width: 400px;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+    color: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+    font-weight: 600;
+    z-index: 300;
+    animation: slideInRight 0.4s ease;
+  `;
+  notification.textContent = message;
+
+  document.body.appendChild(notification);
+
+  setTimeout(() => {
+    notification.style.animation = 'slideOutRight 0.4s ease';
+    setTimeout(() => {
+      notification.remove();
+    }, 400);
+  }, 4000);
+}
 
 // === Smooth Scroll for Internal Links ===
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {

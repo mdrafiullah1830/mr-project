@@ -1,26 +1,5 @@
 // === Support Children - Interactive Features ===
 
-// Theme Toggle
-const themeToggle = document.querySelector('.wfc-theme-btn');
-const body = document.body;
-
-// Load saved theme
-const savedTheme = localStorage.getItem('mrshop-theme');
-if (savedTheme === 'dark') {
-  body.classList.add('theme-dark');
-  if (themeToggle) themeToggle.textContent = '☀️';
-}
-
-// Theme toggle handler
-if (themeToggle) {
-  themeToggle.addEventListener('click', () => {
-    body.classList.toggle('theme-dark');
-    const isDark = body.classList.contains('theme-dark');
-    themeToggle.textContent = isDark ? '☀️' : '🌙';
-    localStorage.setItem('mrshop-theme', isDark ? 'dark' : 'light');
-  });
-}
-
 // === Animated Counters ===
 function animateCounter(element, target, duration = 2000) {
   const start = 0;

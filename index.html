@@ -582,7 +582,7 @@
           <span class="category-badge">${getCategoryDisplay(product.category)}</span>
           <h3>${product.name}</h3>
           <p class="price">৳ ${product.price.toLocaleString('en-BD')}</p>
-          <button onclick="location.href='product.html?name=${encodeURIComponent(product.name)}'">View Details</button>
+          <button onclick="location.href='product.html?id=${encodeURIComponent(product.id)}'">View Details</button>
         `;
         grid.appendChild(productCard);
       });

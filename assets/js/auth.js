@@ -4,17 +4,47 @@
   if(!wrapper) return;
 
   // links inside the auth page
-  const loginLink = document.querySelector('.login-link');
+  const loginLinks = document.querySelectorAll('.login-link');
   const registerLink = document.querySelector('.register-link');
+  const forgotLinks = document.querySelectorAll('.forgot-link');
 
-  if(registerLink){ registerLink.addEventListener('click', (e)=>{ e.preventDefault(); wrapper.classList.add('active'); history.replaceState(null,'', '#register'); }); }
-  if(loginLink){ loginLink.addEventListener('click', (e)=>{ e.preventDefault(); wrapper.classList.remove('active'); history.replaceState(null,'', '#login'); }); }
+  if(registerLink){ 
+    registerLink.addEventListener('click', (e)=>{ 
+      e.preventDefault(); 
+      wrapper.classList.remove('forgot', 'reset');
+      wrapper.classList.add('active'); 
+      history.replaceState(null,'', '#register'); 
+    }); 
+  }
+  
+  loginLinks.forEach(link => {
+    if(link){ 
+      link.addEventListener('click', (e)=>{ 
+        e.preventDefault(); 
+        wrapper.classList.remove('active', 'forgot', 'reset'); 
+        history.replaceState(null,'', '#login'); 
+      }); 
+    }
+  });
+
+  forgotLinks.forEach(link => {
+    if(link){ 
+      link.addEventListener('click', (e)=>{ 
+        e.preventDefault(); 
+        wrapper.classList.remove('active', 'reset');
+        wrapper.classList.add('forgot'); 
+        history.replaceState(null,'', '#forgot-password'); 
+      }); 
+    }
+  });
 
   // when page loads, open appropriate panel based on hash
   function applyInitial(){
     const h = location.hash.replace('#','');
+    wrapper.classList.remove('active', 'forgot', 'reset');
     if(h==='register') wrapper.classList.add('active');
-    else wrapper.classList.remove('active');
+    else if(h==='forgot-password') wrapper.classList.add('forgot');
+    else if(h==='reset-password') wrapper.classList.add('reset');
   }
 
   applyInitial();
@@ -24,32 +54,67 @@
   // Handle Login Form Submission
   const loginForm = document.getElementById('loginForm');
   if(loginForm){
-    loginForm.addEventListener('submit', (e)=>{
+    loginForm.addEventListener('submit', async (e)=>{
       e.preventDefault();
       
       const username = document.getElementById('login-username').value;
       const password = document.getElementById('login-password').value;
       
       // Simple validation
-      if(username && password){
-        // Store user session (in real app, this would be done by backend)
+      if(!username || !password){
+        showAuthNotification('Please fill in all fields', 'error');
+        return;
+      }
+
+      try {
+        // Allow anyone to login - accept any username/password combination
+        // Store user session with provided credentials
+        
+        // Check if username is "mrshop" - make them admin
+        const isAdmin = username.toLowerCase() === 'mrshop';
+        
         const userData = {
+          id: 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
           username: username,
           email: username.includes('@') ? username : username + '@mrshop.com',
+          role: isAdmin ? 'admin' : 'user',
           loggedIn: true,
           loginTime: new Date().toISOString()
         };
         localStorage.setItem('mr_shop_user', JSON.stringify(userData));
         
+        // Also save profile data for offline access
+        const profileData = {
+          full_name: username,
+          email_address: userData.email,
+          phone_number: '',
+          address: '',
+          date_of_birth: '',
+          gender: 'male'
+        };
+        localStorage.setItem('mr_shop_user_profile', JSON.stringify(profileData));
+        
+        // If admin, also set adminInfo in localStorage
+        if (isAdmin) {
+          const adminInfo = {
+            username: username,
+            email: userData.email,
+            isAdmin: true,
+            loginTime: new Date().toISOString()
+          };
+          localStorage.setItem('adminInfo', JSON.stringify(adminInfo));
+        }
+        
         // Show success message
-        showAuthNotification('Login successful! Redirecting...', 'success');
+        showAuthNotification(isAdmin ? '👑 Welcome Admin!' : 'Login successful! Redirecting...', 'success');
         
         // Redirect to user profile after short delay
         setTimeout(()=>{
           window.location.href = 'userprofile.html';
         }, 1000);
-      } else {
-        showAuthNotification('Please fill in all fields', 'error');
+      } catch(error) {
+        console.error('Login error:', error);
+        showAuthNotification('An error occurred. Please try again.', 'error');
       }
     });
   }
@@ -57,7 +122,7 @@
   // Handle Register Form Submission
   const registerForm = document.getElementById('registerForm');
   if(registerForm){
-    registerForm.addEventListener('submit', (e)=>{
+    registerForm.addEventListener('submit', async (e)=>{
       e.preventDefault();
       
       const username = document.getElementById('reg-username').value;
@@ -65,49 +130,197 @@
       const password = document.getElementById('reg-password').value;
       
       // Simple validation
-      if(username && email && password){
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if(!emailRegex.test(email)){
-          showAuthNotification('Please enter a valid email address', 'error');
-          return;
-        }
-        
-        // Validate password length
-        if(password.length < 6){
-          showAuthNotification('Password must be at least 6 characters', 'error');
-          return;
-        }
-        
-        // Store user data (in real app, this would be done by backend)
-        const userData = {
-          username: username,
-          email: email,
-          loggedIn: true,
-          loginTime: new Date().toISOString()
-        };
-        localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-        
-        // Store in profile data as well
-        const profileData = {
-          fullName: username,
-          phoneNumber: '',
-          emailAddress: email,
-          address: '',
-          dob: '',
-          gender: 'male'
-        };
-        localStorage.setItem('mr_shop_user_profile', JSON.stringify(profileData));
-        
-        // Show success message
-        showAuthNotification('Registration successful! Redirecting...', 'success');
-        
-        // Redirect to user profile after short delay
-        setTimeout(()=>{
-          window.location.href = 'userprofile.html';
-        }, 1000);
-      } else {
+      if(!username || !email || !password){
         showAuthNotification('Please fill in all fields', 'error');
+        return;
+      }
+        
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if(!emailRegex.test(email)){
+        showAuthNotification('Please enter a valid email address', 'error');
+        return;
+      }
+      
+      // Validate password length
+      if(password.length < 6){
+        showAuthNotification('Password must be at least 6 characters', 'error');
+        return;
+      }
+
+      try {
+        // Call C# API for sign up
+        const response = await fetch('http://localhost:5010/api/auth/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: username,
+            email: email,
+            password: password
+          })
+        });
+
+        const result = await response.json();
+
+        if(result.success){
+          // Store user data
+          const userData = {
+            id: result.data.id,
+            username: result.data.username,
+            email: result.data.email,
+            loggedIn: true,
+            loginTime: result.data.created_at
+          };
+          localStorage.setItem('mr_shop_user', JSON.stringify(userData));
+          
+          // Store in profile data as well
+          const profileData = {
+            fullName: username,
+            phoneNumber: '',
+            emailAddress: email,
+            address: '',
+            dob: '',
+            gender: 'male'
+          };
+          localStorage.setItem('mr_shop_user_profile', JSON.stringify(profileData));
+          
+          // Show success message
+          showAuthNotification(result.message || 'Registration successful! Redirecting...', 'success');
+          
+          // Redirect to user profile after short delay
+          setTimeout(()=>{
+            window.location.href = 'userprofile.html';
+          }, 1000);
+        } else {
+          showAuthNotification(result.message || 'Registration failed', 'error');
+        }
+      } catch(error) {
+        console.error('Registration error:', error);
+        showAuthNotification('Connection error. Please try again.', 'error');
+      }
+    });
+  }
+
+  // Handle Forgot Password Form Submission
+  const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+  if(forgotPasswordForm){
+    forgotPasswordForm.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      
+      const email = document.getElementById('forgot-email').value;
+      
+      // Simple validation
+      if(!email){
+        showAuthNotification('Please enter your email address', 'error');
+        return;
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if(!emailRegex.test(email)){
+        showAuthNotification('Please enter a valid email address', 'error');
+        return;
+      }
+
+      try {
+        // Call C# API for forgot password
+        const response = await fetch('http://localhost:5010/api/auth/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email })
+        });
+
+        const result = await response.json();
+
+        if(result.success){
+          showAuthNotification(result.message || 'Password reset instructions sent!', 'success');
+          
+          // Redirect to reset password form after short delay
+          setTimeout(()=>{
+            // Store email for reset form
+            sessionStorage.setItem('reset_email', email);
+            wrapper.classList.remove('forgot');
+            wrapper.classList.add('reset');
+            history.replaceState(null,'', '#reset-password');
+            // Pre-fill email in reset form
+            document.getElementById('reset-email').value = email;
+          }, 2000);
+        } else {
+          showAuthNotification(result.message || 'An error occurred', 'error');
+        }
+      } catch(error) {
+        console.error('Forgot password error:', error);
+        showAuthNotification('Connection error. Please try again.', 'error');
+      }
+    });
+  }
+
+  // Handle Reset Password Form Submission
+  const resetPasswordForm = document.getElementById('resetPasswordForm');
+  if(resetPasswordForm){
+    resetPasswordForm.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      
+      const email = document.getElementById('reset-email').value;
+      const newPassword = document.getElementById('reset-new-password').value;
+      const confirmPassword = document.getElementById('reset-confirm-password').value;
+      
+      // Simple validation
+      if(!email || !newPassword || !confirmPassword){
+        showAuthNotification('Please fill in all fields', 'error');
+        return;
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if(!emailRegex.test(email)){
+        showAuthNotification('Please enter a valid email address', 'error');
+        return;
+      }
+      
+      // Validate password length
+      if(newPassword.length < 6){
+        showAuthNotification('Password must be at least 6 characters', 'error');
+        return;
+      }
+
+      // Check if passwords match
+      if(newPassword !== confirmPassword){
+        showAuthNotification('Passwords do not match', 'error');
+        return;
+      }
+
+      try {
+        // Call C# API for reset password
+        const response = await fetch('http://localhost:5010/api/auth/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: email,
+            new_password: newPassword,
+            confirm_password: confirmPassword
+          })
+        });
+
+        const result = await response.json();
+
+        if(result.success){
+          showAuthNotification(result.message || 'Password reset successful!', 'success');
+          
+          // Clear session storage
+          sessionStorage.removeItem('reset_email');
+          
+          // Redirect to login after short delay
+          setTimeout(()=>{
+            wrapper.classList.remove('reset');
+            history.replaceState(null,'', '#login');
+          }, 2000);
+        } else {
+          showAuthNotification(result.message || 'Password reset failed', 'error');
+        }
+      } catch(error) {
+        console.error('Reset password error:', error);
+        showAuthNotification('Connection error. Please try again.', 'error');
       }
     });
   }

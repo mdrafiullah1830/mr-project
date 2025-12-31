@@ -24,20 +24,6 @@
   --wfc-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.theme-dark {
-  --wfc-text: #f1f5f9;
-  --wfc-text-light: #cbd5e1;
-  --wfc-bg: #0f172a;
-  --wfc-bg-secondary: #1e293b;
-  --wfc-bg-tertiary: #334155;
-  --wfc-bg-blue: #1e3a5f;
-  --wfc-border: #334155;
-  --wfc-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --wfc-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --wfc-shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
-  --wfc-shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.6);
-}
-
 * {
   margin: 0;
   padding: 0;
@@ -117,10 +103,6 @@ body {
   box-shadow: var(--wfc-shadow-sm);
 }
 
-.theme-dark .wfc-header {
-  background: rgba(15, 23, 42, 0.9);
-}
-
 .wfc-header-inner {
   max-width: 1400px;
   margin: 0 auto;
@@ -168,24 +150,6 @@ body {
 .wfc-nav a:hover,
 .wfc-nav a.active {
   color: var(--wfc-primary);
-}
-
-.wfc-theme-btn {
-  width: 40px;
-  height: 40px;
-  border: none;
-  border-radius: 50%;
-  background: var(--wfc-bg-blue);
-  font-size: 1.3rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--wfc-transition);
-}
-.wfc-theme-btn:hover {
-  background: var(--wfc-primary);
-  transform: scale(1.1) rotate(15deg);
 }
 
 /* === Hero Section === */
