@@ -627,9 +627,7 @@
 				<span>MR Shop</span>
 			</a>
 			<div class="header-links">
-				<a href="index.html">Home</a>
-				<a href="signup.html">Sign up</a>
-				<a href="signin.html">Sign in</a>
+				<a href="index.html" id="backHomeLink">Back to home</a>
 			</div>
 		</div>
 	</header>
@@ -1155,42 +1153,90 @@
 			loadingOverlay.classList.add('show');
 
 			// Collect form data
-			const formData = new FormData(this);
-			
-			// Add selected categories as array
 			const selectedCategories = Array.from(categories).map(cb => cb.value);
-			formData.append('selectedCategories', JSON.stringify(selectedCategories));
+			
+			const requestData = {
+				fullName: document.getElementById('fullName').value,
+				phone: document.getElementById('phone').value,
+				email: document.getElementById('email').value,
+				shopName: document.getElementById('shopName').value,
+				paymentMethod: document.querySelector('input[name="paymentMethod"]:checked').value,
+				bankName: document.getElementById('bankName').value || null,
+				accountNumber: document.getElementById('accountNumber').value,
+				latitude: parseFloat(document.getElementById('latitude').value),
+				longitude: parseFloat(document.getElementById('longitude').value),
+				categories: selectedCategories,
+				documentType: document.querySelector('input[name="docType"]:checked').value,
+				additionalInfo: document.getElementById('additionalInfo').value
+			};
 
-			// Simulate form submission (replace with actual API call)
-			setTimeout(() => {
-				loadingOverlay.classList.remove('show');
-				alert('✅ Application submitted successfully! We will review and contact you soon.');
-				// Optionally redirect or reset form
-				// window.location.href = 'index.html';
-				// sellerForm.reset();
-			}, 2000);
-
-			// TODO: Replace the above with actual fetch API call
-			/*
-			fetch('/api/seller-registration', {
+			// Send to backend API
+			fetch('http://localhost:5010/api/sellerrequest/submit', {
 				method: 'POST',
-				body: formData
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(requestData)
 			})
-			.then(response => response.json())
-			.then(data => {
+			.then(async response => {
 				loadingOverlay.classList.remove('show');
-				if (data.success) {
-					alert('✅ Application submitted successfully!');
-					window.location.href = 'index.html';
+				// Try to parse JSON if available
+				let body = null;
+				try { body = await response.json(); } catch (e) { body = null; }
+				if (!response.ok) {
+					const msg = (body && (body.message || body.error)) || `Server returned ${response.status}`;
+					alert('❌ Submission failed: ' + msg);
+					return;
+				}
+				// OK response
+				if (body && body.success) {
+					const regId = body.data && body.data.requestId ? body.data.requestId : '';
+					// Friendly success message then redirect to seller profile page
+					alert('✅ Registration complete!\n\nRegistration ID: ' + regId + '\n\nYou will be redirected to your seller profile.');
+					// Redirect to seller profile page with id
+					window.location.href = 'seller.html?id=' + encodeURIComponent(regId);
 				} else {
-					alert('❌ Error: ' + data.message);
+					const msg = (body && (body.message || body.error)) || 'Unknown server response.';
+					alert('❌ Error: ' + msg);
 				}
 			})
 			.catch(error => {
 				loadingOverlay.classList.remove('show');
-				alert('❌ Network error. Please try again.');
+				console.error('Error:', error);
+				// Save pending submission locally so user doesn't lose data
+				try {
+					const offlineKey = 'seller_pending_submission';
+					localStorage.setItem(offlineKey, JSON.stringify({ data: requestData, timestamp: new Date().toISOString() }));
+					alert('⚠️ Network error. Your application has been saved locally and will be retried when the connection is restored.\n\nPlease check your internet connection.');
+				} catch (e) {
+					alert('⚠️ Network error and failed to save locally. Please copy your data and try again when online.\n\nError: ' + error.message);
+				}
+
+				// Optional: attempt auto-retry when navigator.onLine changes to true
+				window.addEventListener('online', function retryPending() {
+					window.removeEventListener('online', retryPending);
+					const pending = localStorage.getItem('seller_pending_submission');
+					if (!pending) return;
+					try {
+						const payload = JSON.parse(pending).data;
+						fetch('http://localhost:5010/api/sellerrequest/submit', {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify(payload)
+						})
+						.then(r => r.json())
+						.then(res => {
+							if (res && res.success) {
+								localStorage.removeItem('seller_pending_submission');
+								alert('✅ Your previously saved seller application was submitted successfully.\nRegistration ID: ' + (res.data && res.data.id ? res.data.id : '')); 
+							}
+						})
+						.catch(err => console.warn('Auto-retry failed:', err));
+					} catch (err) {
+						console.warn('Failed to parse pending submission:', err);
+					}
+				});
 			});
-			*/
 		});
 	</script>
 </body>

@@ -21,7 +21,6 @@
         <a href="index.html">Home</a>
         <a href="workforpeople.html" class="active">Work for People</a>
         <a href="cart.html">Cart</a>
-        <button id="themeToggle" class="wfp-theme-btn">🌙</button>
       </nav>
     </div>
   </header>
@@ -315,6 +314,38 @@
             <span>Rocket</span>
           </button>
         </div>
+        <div class="wfp-donation-form">
+          <div class="wfp-form-grid">
+            <div class="wfp-field">
+              <label for="donorName">Full Name</label>
+              <input type="text" id="donorName" placeholder="Your full name" required>
+            </div>
+            <div class="wfp-field">
+              <label for="donorEmail">Email (optional)</label>
+              <input type="email" id="donorEmail" placeholder="you@example.com">
+            </div>
+          </div>
+          <div class="wfp-form-grid">
+            <div class="wfp-field">
+              <label for="senderPhone">Sender wallet number</label>
+              <input type="tel" id="senderPhone" placeholder="01XXXXXXXXX" pattern="01[3-9][0-9]{8}" required>
+            </div>
+            <div class="wfp-field">
+              <label for="senderLastFour">Last 4 digits</label>
+              <input type="text" id="senderLastFour" placeholder="1234" maxlength="4" pattern="\d{4}" required>
+            </div>
+          </div>
+          <div class="wfp-field">
+            <label for="transactionId">Transaction ID</label>
+            <input type="text" id="transactionId" placeholder="Enter the bKash/Nagad/Rocket TxID" required>
+          </div>
+          <div class="wfp-field">
+            <label for="donationMessage">Message (optional)</label>
+            <textarea id="donationMessage" rows="3" placeholder="Add a note or intention"></textarea>
+          </div>
+          <p class="wfp-form-hint">Send money first, then share the transaction ID and the last four digits so we can verify your donation quickly.</p>
+        </div>
+        <div id="donationFeedback" class="wfp-feedback" role="status" aria-live="polite"></div>
         <button class="wfp-submit-btn" id="submitDonation">Donate Now</button>
       </div>
     </div>

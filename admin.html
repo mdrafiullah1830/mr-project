@@ -1,0 +1,979 @@
+<!DOCTYPE html><!DOCTYPE html><!DOCTYPE html>
+
+<html lang="en">
+
+<head><html lang="en"><html lang="en">
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><head>	<head>
+
+    <title>Admin Panel — MR Shop</title>
+
+    <link rel="stylesheet" href="assets/css/admin.css">    <meta charset="UTF-8">		<meta charset="utf-8" />
+
+</head>
+
+<body>    <meta name="viewport" content="width=device-width, initial-scale=1.0">		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Header -->
+
+    <header class="admin-header">    <title>Admin Panel — MR Shop</title>		<title>MR Shop Admin Dashboard</title>
+
+        <div class="header-container">
+
+            <div class="header-left">    <link rel="stylesheet" href="assets/css/admin.css">		<link rel="preconnect" href="https://fonts.googleapis.com" />
+
+                <h1 class="admin-title">
+
+                    <a href="index.html" class="brand-link"></head>		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+                        <span style="font-size:28px">🛍️</span>
+
+                        <span>MR Shop Admin</span><body>		<link
+
+                    </a>
+
+                </h1>    <!-- Header -->			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+
+            </div>
+
+            <div class="header-right">    <header class="admin-header">			rel="stylesheet"
+
+                <div class="admin-info">
+
+                    <span class="admin-role">👑 Administrator</span>        <div class="header-container">		/>
+
+                    <span class="admin-username" id="adminUsername">Admin</span>
+
+                </div>            <div class="header-left">		<link rel="stylesheet" href="assets/css/admin.css" />
+
+            </div>
+
+        </div>                <h1 class="admin-title">	</head>
+
+    </header>
+
+                    <a href="index.html" class="brand-link">		<body data-view="hybrid" data-base-url="/mrshop-admin-a847ks09">
+
+    <!-- Sidebar Navigation -->
+
+    <div class="admin-container">                        <span style="font-size:28px">🛍️</span>				<section id="login-view" class="auth-shell" hidden>
+
+        <aside class="admin-sidebar">
+
+            <nav class="admin-nav">                        <span>MR Shop Admin</span>					<div class="login-card">
+
+                <div class="nav-item active" data-section="dashboard">
+
+                    <span class="icon">📊</span>                    </a>						<div class="login-card__header">
+
+                    <span>Dashboard</span>
+
+                </div>                </h1>							<div class="brand-mark">MR</div>
+
+                <div class="nav-item" data-section="categories">
+
+                    <span class="icon">🏷️</span>            </div>							<div>
+
+                    <span>Categories</span>
+
+                </div>            <div class="header-right">								<p class="eyebrow">Secure Access</p>
+
+                <div class="nav-item" data-section="products">
+
+                    <span class="icon">📦</span>                <div class="admin-info">								<h1>MR Shop Admin</h1>
+
+                    <span>Products</span>
+
+                </div>                    <span class="admin-role">👑 Administrator</span>								<p class="subcopy">Hidden console · Localhost only</p>
+
+                <div class="nav-item" data-section="orders">
+
+                    <span class="icon">📋</span>                    <span class="admin-username" id="adminUsername">Admin</span>							</div>
+
+                    <span>Orders</span>
+
+                </div>                </div>						</div>
+
+                <div class="nav-item" data-section="users">
+
+                    <span class="icon">👥</span>                <button class="logout-btn" onclick="logoutAdmin()">Logout</button>
+
+                    <span>Users</span>
+
+                </div>            </div>						<div class="auth-tabs">
+
+                <div class="nav-item" data-section="settings">
+
+                    <span class="icon">⚙️</span>        </div>							<button type="button" class="auth-tab is-active" data-panel-toggle="login">
+
+                    <span>Settings</span>
+
+                </div>    </header>								Sign in
+
+            </nav>
+
+        </aside>							</button>
+
+
+
+        <!-- Main Content Area -->    <!-- Main Container -->							<button type="button" class="auth-tab" data-panel-toggle="forgot">
+
+        <main class="admin-content">
+
+            <!-- Dashboard Section -->    <div class="admin-container">								Forgot password
+
+            <section id="dashboard" class="content-section active">
+
+                <h2>Dashboard</h2>        <!-- Sidebar Navigation -->							</button>
+
+                <div class="dashboard-grid">
+
+                    <div class="stat-card">        <aside class="admin-sidebar">						</div>
+
+                        <div class="stat-label">Total Categories</div>
+
+                        <div class="stat-value" id="totalCategories">0</div>            <nav class="admin-nav">
+
+                    </div>
+
+                    <div class="stat-card">                <button class="nav-item active" data-section="dashboard" onclick="switchSection('dashboard')">						<div id="login-panel" data-panel="login">
+
+                        <div class="stat-label">Total Products</div>
+
+                        <div class="stat-value" id="totalProducts">0</div>                    <span class="nav-icon">📊</span>							<div id="login-error" class="alert alert--error" role="alert" hidden></div>
+
+                    </div>
+
+                    <div class="stat-card">                    <span class="nav-text">Dashboard</span>							<form id="admin-login-form" class="form-stack" autocomplete="off">
+
+                        <div class="stat-label">Total Orders</div>
+
+                        <div class="stat-value" id="totalOrders">0</div>                </button>								<label class="form-label">
+
+                    </div>
+
+                    <div class="stat-card">                <button class="nav-item" data-section="categories" onclick="switchSection('categories')">									Username
+
+                        <div class="stat-label">Total Users</div>
+
+                        <div class="stat-value" id="totalUsers">0</div>                    <span class="nav-icon">📂</span>									<input type="text" name="username" class="form-input" autocomplete="username" required />
+
+                    </div>
+
+                </div>                    <span class="nav-text">Categories</span>								</label>
+
+            </section>
+
+                </button>								<label class="form-label">
+
+            <!-- Categories Section -->
+
+            <section id="categories" class="content-section">                <button class="nav-item" data-section="products" onclick="switchSection('products')">									Password
+
+                <h2>Category Management</h2>
+
+                <div class="section-toolbar">                    <span class="nav-icon">📦</span>									<input type="password" name="password" class="form-input" autocomplete="current-password" required />
+
+                    <button class="btn btn-primary" id="addCategoryBtn">+ Add Category</button>
+
+                </div>                    <span class="nav-text">Products</span>								</label>
+
+                <div class="form-container" id="categoryFormContainer" style="display:none;">
+
+                    <h3>Add New Category</h3>                </button>								<button type="submit" class="btn btn-primary">Unlock dashboard</button>
+
+                    <form id="categoryForm">
+
+                        <div class="form-group">                <button class="nav-item" data-section="orders" onclick="switchSection('orders')">							</form>
+
+                            <label>Category Name</label>
+
+                            <input type="text" id="categoryName" required>                    <span class="nav-icon">🛒</span>							<p class="hint">
+
+                        </div>
+
+                        <div class="form-group">                    <span class="nav-text">Orders</span>								Requests are audited and restricted to <code>127.0.0.1</code> only.
+
+                            <label>Description</label>
+
+                            <textarea id="categoryDescription"></textarea>                </button>							</p>
+
+                        </div>
+
+                        <div class="form-group">                <button class="nav-item" data-section="users" onclick="switchSection('users')">						</div>
+
+                            <label>Image</label>
+
+                            <input type="file" id="categoryImage" accept="image/*">                    <span class="nav-icon">👥</span>
+
+                        </div>
+
+                        <div class="form-actions">                    <span class="nav-text">Users</span>						<div id="forgot-panel" data-panel="forgot" hidden>
+
+                            <button type="submit" class="btn btn-success">Save</button>
+
+                            <button type="button" class="btn btn-secondary" id="cancelCategoryBtn">Cancel</button>                </button>							<div class="alert alert--success" id="forgot-success" role="status" hidden></div>
+
+                        </div>
+
+                    </form>                <button class="nav-item" data-section="settings" onclick="switchSection('settings')">							<div class="alert alert--error" id="forgot-error" role="alert" hidden></div>
+
+                </div>
+
+                <div id="categoriesTable">                    <span class="nav-icon">⚙️</span>							<p class="eyebrow" data-recovery-question>Answer the recovery question to set a new password.</p>
+
+                    <table>
+
+                        <thead>                    <span class="nav-text">Settings</span>							<p class="hint" data-recovery-hint></p>
+
+                            <tr>
+
+                                <th>ID</th>                </button>							<form id="forgot-form" class="form-stack" autocomplete="off">
+
+                                <th>Name</th>
+
+                                <th>Description</th>            </nav>								<label class="form-label">
+
+                                <th>Status</th>
+
+                                <th>Actions</th>        </aside>									Username
+
+                            </tr>
+
+                        </thead>									<input type="text" name="username" class="form-input" required />
+
+                        <tbody id="categoriesList"></tbody>
+
+                    </table>        <!-- Main Content -->								</label>
+
+                </div>
+
+            </section>        <main class="admin-content">								<label class="form-label">
+
+
+
+            <!-- Products Section -->            <!-- Dashboard Section -->									Recovery code
+
+            <section id="products" class="content-section">
+
+                <h2>Product Management</h2>            <section class="content-section active" id="dashboard">									<input
+
+                <div class="section-toolbar">
+
+                    <button class="btn btn-primary" id="addProductBtn">+ Add Product</button>                <div class="section-header">										type="text"
+
+                </div>
+
+                <div class="form-container" id="productFormContainer" style="display:none;">                    <h2>Dashboard</h2>										name="recovery_answer"
+
+                    <h3>Add New Product</h3>
+
+                    <form id="productForm">                    <p class="section-subtitle">Welcome to MR Shop Admin Panel</p>										class="form-input"
+
+                        <div class="form-group">
+
+                            <label>Product Name</label>                </div>										placeholder="Enter your secure recovery code"
+
+                            <input type="text" id="productName" required>
+
+                        </div>										required
+
+                        <div class="form-group">
+
+                            <label>Category</label>                <div class="dashboard-stats">									/>
+
+                            <select id="productCategory" required></select>
+
+                        </div>                    <div class="stat-card">								</label>
+
+                        <div class="form-group">
+
+                            <label>Price</label>                        <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">📦</div>								<label class="form-label">
+
+                            <input type="number" id="productPrice" step="0.01" required>
+
+                        </div>                        <div class="stat-info">									New password
+
+                        <div class="form-group">
+
+                            <label>Stock</label>                            <h3>Total Categories</h3>									<input type="password" name="new_password" class="form-input" minlength="10" required />
+
+                            <input type="number" id="productStock" required>
+
+                        </div>                            <p class="stat-number" id="totalCategories">0</p>								</label>
+
+                        <div class="form-group">
+
+                            <label>Description</label>                        </div>								<label class="form-label">
+
+                            <textarea id="productDescription"></textarea>
+
+                        </div>                    </div>									Confirm password
+
+                        <div class="form-group">
+
+                            <label>Image</label>                    <div class="stat-card">									<input type="password" name="confirm_password" class="form-input" minlength="10" required />
+
+                            <input type="file" id="productImage" accept="image/*">
+
+                        </div>                        <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">🛍️</div>								</label>
+
+                        <div class="form-group">
+
+                            <label>Discount (%)</label>                        <div class="stat-info">								<button type="submit" class="btn btn-primary">Reset password</button>
+
+                            <input type="number" id="productDiscount" min="0" max="100">
+
+                        </div>                            <h3>Total Products</h3>							</form>
+
+                        <div class="form-actions">
+
+                            <button type="submit" class="btn btn-success">Save</button>                            <p class="stat-number" id="totalProducts">0</p>						</div>
+
+                            <button type="button" class="btn btn-secondary" id="cancelProductBtn">Cancel</button>
+
+                        </div>                        </div>					</div>
+
+                    </form>
+
+                </div>                    </div>				</section>
+
+                <div id="productsTable">
+
+                    <table>                    <div class="stat-card">
+
+                        <thead>
+
+                            <tr>                        <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">🛒</div>			<div id="dashboard-view" hidden>
+
+                                <th>ID</th>
+
+                                <th>Name</th>                        <div class="stat-info">				<header class="top-bar">
+
+                                <th>Category</th>
+
+                                <th>Price</th>                            <h3>Total Orders</h3>					<div>
+
+                                <th>Stock</th>
+
+                                <th>Status</th>                            <p class="stat-number" id="totalOrders">0</p>						<p class="eyebrow">Welcome back</p>
+
+                                <th>Actions</th>
+
+                            </tr>                        </div>						<h1>Control Center</h1>
+
+                        </thead>
+
+                        <tbody id="productsList"></tbody>                    </div>					</div>
+
+                    </table>
+
+                </div>                    <div class="stat-card">					<div class="top-bar__actions">
+
+            </section>
+
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">👥</div>						<span class="badge" data-metric="products">0 products</span>
+
+            <!-- Orders Section -->
+
+            <section id="orders" class="content-section">                        <div class="stat-info">						<span class="badge badge--muted" data-metric="sellers">0 sellers</span>
+
+                <h2>Order Management</h2>
+
+                <div class="filter-toolbar">                            <h3>Total Users</h3>						<button type="button" id="logout-button" class="btn btn-ghost">Logout</button>
+
+                    <select id="orderStatusFilter">
+
+                        <option value="">All Orders</option>                            <p class="stat-number" id="totalUsers">0</p>					</div>
+
+                        <option value="pending">Pending</option>
+
+                        <option value="completed">Completed</option>                        </div>				</header>
+
+                        <option value="cancelled">Cancelled</option>
+
+                    </select>                    </div>
+
+                </div>
+
+                <div id="ordersTable">                </div>				<main class="admin-layout">
+
+                    <table>
+
+                        <thead>			<section class="panel" id="panel-summary">
+
+                            <tr>
+
+                                <th>Order ID</th>                <div class="dashboard-grid">				<header class="panel-header">
+
+                                <th>Customer</th>
+
+                                <th>Total</th>                    <div class="dashboard-card">					<div>
+
+                                <th>Status</th>
+
+                                <th>Date</th>                        <h3>Recent Activity</h3>						<p class="eyebrow">Live snapshot</p>
+
+                            </tr>
+
+                        </thead>                        <div id="recentActivity">						<h2>Storewide metrics</h2>
+
+                        <tbody id="ordersList"></tbody>
+
+                    </table>                            <p class="no-data">No recent activity</p>					</div>
+
+                </div>
+
+            </section>                        </div>					<span class="status-dot status-dot--online">Secure</span>
+
+
+
+            <!-- Users Section -->                    </div>				</header>
+
+            <section id="users" class="content-section">
+
+                <h2>User Management</h2>                    <div class="dashboard-card">				<div class="metrics-grid" id="metric-grid">
+
+                <div class="filter-toolbar">
+
+                    <input type="text" id="userSearchInput" placeholder="Search users...">                        <h3>Quick Actions</h3>					<article class="metric-card">
+
+                    <button class="btn btn-secondary" id="searchUsersBtn">Search</button>
+
+                </div>                        <div class="quick-actions">						<p class="metric-label">Products</p>
+
+                <div id="usersTable">
+
+                    <table>                            <button class="action-btn" onclick="switchSection('categories')">						<p class="metric-value" data-metric="products">0</p>
+
+                        <thead>
+
+                            <tr>                                <span>➕</span> Add Category						<p class="metric-sub">Active listings</p>
+
+                                <th>ID</th>
+
+                                <th>Username</th>                            </button>					</article>
+
+                                <th>Email</th>
+
+                                <th>Created At</th>                            <button class="action-btn" onclick="switchSection('products')">					<article class="metric-card">
+
+                            </tr>
+
+                        </thead>                                <span>➕</span> Add Product						<p class="metric-label">Revenue (৳)</p>
+
+                        <tbody id="usersList"></tbody>
+
+                    </table>                            </button>						<p class="metric-value" data-metric="revenue">0</p>
+
+                </div>
+
+            </section>                            <button class="action-btn" onclick="exportData()">						<p class="metric-sub">Lifetime customer value</p>
+
+
+
+            <!-- Settings Section -->                                <span>📥</span> Export Data					</article>
+
+            <section id="settings" class="content-section">
+
+                <h2>Settings & Maintenance</h2>                            </button>					<article class="metric-card">
+
+                <div class="settings-container">
+
+                    <div class="settings-section">                        </div>						<p class="metric-label">Categories</p>
+
+                        <h3>Site Configuration</h3>
+
+                        <form id="settingsForm">                    </div>						<p class="metric-value" data-metric="categories">0</p>
+
+                            <div class="form-group">
+
+                                <label>Site Name</label>                </div>						<p class="metric-sub">Public storefront groups</p>
+
+                                <input type="text" id="siteName">
+
+                            </div>            </section>					</article>
+
+                            <div class="form-group">
+
+                                <label>Site Description</label>					<article class="metric-card">
+
+                                <textarea id="siteDescription"></textarea>
+
+                            </div>            <!-- Categories Section -->						<p class="metric-label">VIP customers</p>
+
+                            <div class="form-group">
+
+                                <label>Contact Email</label>            <section class="content-section" id="categories">						<p class="metric-value" data-metric="vip_users">0</p>
+
+                                <input type="email" id="contactEmail">
+
+                            </div>                <div class="section-header">						<p class="metric-sub">High-value users</p>
+
+                            <button type="submit" class="btn btn-success">Save Settings</button>
+
+                        </form>                    <h2>Manage Categories</h2>					</article>
+
+                    </div>
+
+                    <button class="btn btn-primary" onclick="openCategoryModal()">+ Add New Category</button>				</div>
+
+                    <div class="settings-section">
+
+                        <h3>Data Management</h3>                </div>			</section>
+
+                        <div class="button-group">
+
+                            <button class="btn btn-info" id="backupBtn">💾 Backup Data</button>
+
+                            <button class="btn btn-warning" id="clearDataBtn">🗑️ Clear Admin Data</button>
+
+                        </div>                <div class="form-container">			<section class="panel" id="panel-categories">
+
+                    </div>
+
+                </div>                    <form id="categoryForm" class="admin-form">				<header class="panel-header">
+
+            </section>
+
+        </main>                        <div class="form-grid">					<div>
+
+    </div>
+
+                            <div class="form-group full-width">						<p class="eyebrow">Catalog</p>
+
+    <!-- Notification Container -->
+
+    <div id="notificationContainer"></div>                                <label>Category Name *</label>						<h2>Categories</h2>
+
+
+
+    <!-- Modal for Confirmations -->                                <input type="text" id="categoryName" placeholder="e.g., Electronics, Fashion" required>					</div>
+
+    <div id="confirmModal" class="modal" style="display:none;">
+
+        <div class="modal-content">                            </div>					<span class="badge">Manage</span>
+
+            <h3 id="confirmTitle">Confirm Action</h3>
+
+            <p id="confirmMessage"></p>				</header>
+
+            <div class="modal-actions">
+
+                <button class="btn btn-danger" id="confirmYes">Yes</button>                            <div class="form-group full-width">				<form id="category-form" class="form-inline">
+
+                <button class="btn btn-secondary" id="confirmNo">Cancel</button>
+
+            </div>                                <label>Description</label>					<input type="text" name="name" placeholder="Add new category" required />
+
+        </div>
+
+    </div>                                <textarea id="categoryDescription" placeholder="Enter category description" rows="3"></textarea>					<select name="visibility">
+
+
+
+    <!-- Scripts -->                            </div>						<option value="public">Public</option>
+
+    <script src="assets/js/admin.js"></script>
+
+</body>						<option value="hidden">Hidden</option>
+
+</html>
+                            <div class="form-group">					</select>
+
+                                <label>Category Icon/Image</label>					<button type="submit" class="btn btn-primary">Add</button>
+
+                                <input type="file" id="categoryImage" accept="image/*">				</form>
+
+                            </div>				<div class="table-wrapper">
+
+					<table>
+
+                            <div class="form-group">						<thead>
+
+                                <label>Display Order</label>							<tr>
+
+                                <input type="number" id="categoryOrder" value="1" min="1">								<th>Name</th>
+
+                            </div>								<th>Visibility</th>
+
+								<th>Updated</th>
+
+                            <div class="form-group">								<th></th>
+
+                                <label>Status</label>							</tr>
+
+                                <select id="categoryStatus">						</thead>
+
+                                    <option value="active">Active</option>						<tbody id="category-table"></tbody>
+
+                                    <option value="inactive">Inactive</option>					</table>
+
+                                </select>				</div>
+
+                            </div>			</section>
+
+                        </div>
+
+			<section class="panel" id="panel-products">
+
+                        <div class="form-actions">				<header class="panel-header">
+
+                            <button type="submit" class="btn btn-primary">Save Category</button>					<div>
+
+                            <button type="reset" class="btn btn-secondary">Clear</button>						<p class="eyebrow">Inventory</p>
+
+                        </div>						<h2>Products</h2>
+
+                    </form>					</div>
+
+                </div>					<span class="badge badge--info">CRUD</span>
+
+				</header>
+
+                <div class="categories-list">				<form id="product-form" class="form-grid">
+
+                    <h3>Existing Categories</h3>					<input type="text" name="name" placeholder="Product name" required />
+
+                    <table class="admin-table">					<input type="number" name="price" placeholder="Price" min="0" step="0.01" required />
+
+                        <thead>					<select name="category" id="product-category-select" required></select>
+
+                            <tr>					<input type="number" name="stock" placeholder="Stock" min="0" step="1" />
+
+                                <th>#</th>					<input type="url" name="image" placeholder="Image URL" />
+
+                                <th>Name</th>					<select name="status">
+
+                                <th>Description</th>						<option value="active">Active</option>
+
+                                <th>Status</th>						<option value="draft">Draft</option>
+
+                                <th>Created</th>						<option value="archived">Archived</option>
+
+                                <th>Actions</th>					</select>
+
+                            </tr>					<textarea name="description" placeholder="Short description"></textarea>
+
+                        </thead>					<button type="submit" class="btn btn-primary">Create product</button>
+
+                        <tbody id="categoriesTableBody">				</form>
+
+                            <tr>				<div class="table-wrapper">
+
+                                <td colspan="6" class="no-data">No categories yet. Create one above!</td>					<table>
+
+                            </tr>						<thead>
+
+                        </tbody>							<tr>
+
+                    </table>								<th>Product</th>
+
+                </div>								<th>Price</th>
+
+            </section>								<th>Stock</th>
+
+								<th>Status</th>
+
+            <!-- Products Section -->								<th></th>
+
+            <section class="content-section" id="products">							</tr>
+
+                <div class="section-header">						</thead>
+
+                    <h2>Manage Products</h2>						<tbody id="product-table"></tbody>
+
+                    <button class="btn btn-primary" onclick="openProductModal()">+ Add New Product</button>					</table>
+
+                </div>				</div>
+
+			</section>
+
+                <div class="form-container">
+
+                    <form id="productForm" class="admin-form">			<section class="panel" id="panel-sellers">
+
+                        <div class="form-grid">				<header class="panel-header">
+
+                            <div class="form-group full-width">					<div>
+
+                                <label>Product Name *</label>						<p class="eyebrow">Partners</p>
+
+                                <input type="text" id="productName" placeholder="Enter product name" required>						<h2>Sellers</h2>
+
+                            </div>					</div>
+
+					<span class="badge">Trust &amp; safety</span>
+
+                            <div class="form-group">				</header>
+
+                                <label>Category *</label>				<form id="seller-form" class="form-grid">
+
+                                <select id="productCategory" required>					<input type="text" name="id" placeholder="Seller ID" required />
+
+                                    <option value="">Select Category</option>					<input type="text" name="shop_name" placeholder="Shop name" required />
+
+                                </select>					<input type="text" name="owner_name" placeholder="Owner" required />
+
+                            </div>					<input type="email" name="email" placeholder="Email" required />
+
+					<select name="status">
+
+                            <div class="form-group">						<option value="active">Active</option>
+
+                                <label>Price (BDT) *</label>						<option value="under-review">Under review</option>
+
+                                <input type="number" id="productPrice" placeholder="0.00" step="0.01" min="0" required>						<option value="suspended">Suspended</option>
+
+                            </div>					</select>
+
+					<input type="number" name="rating" placeholder="Rating" min="0" max="5" step="0.1" />
+
+                            <div class="form-group">					<input type="number" name="total_products" placeholder="# products" min="0" />
+
+                                <label>Stock Quantity</label>					<button type="submit" class="btn btn-primary">Add seller</button>
+
+                                <input type="number" id="productStock" value="0" min="0">				</form>
+
+                            </div>				<div class="table-wrapper">
+
+					<table>
+
+                            <div class="form-group full-width">						<thead>
+
+                                <label>Description *</label>							<tr>
+
+                                <textarea id="productDescription" placeholder="Enter detailed product description" rows="4" required></textarea>								<th>Shop</th>
+
+                            </div>								<th>Status</th>
+
+								<th>Rating</th>
+
+                            <div class="form-group full-width">								<th>Products</th>
+
+                                <label>Product Image</label>								<th></th>
+
+                                <input type="file" id="productImage" accept="image/*">							</tr>
+
+                                <small>Recommended: 500x500px, max 5MB</small>						</thead>
+
+                            </div>						<tbody id="seller-table"></tbody>
+
+					</table>
+
+                            <div class="form-group">				</div>
+
+                                <label>Discount (%)</label>			</section>
+
+                                <input type="number" id="productDiscount" value="0" min="0" max="100">
+
+                            </div>			<section class="panel" id="panel-settings">
+
+				<header class="panel-header">
+
+                            <div class="form-group">					<div>
+
+                                <label>Status</label>						<p class="eyebrow">Global</p>
+
+                                <select id="productStatus">						<h2>Store settings</h2>
+
+                                    <option value="active">Active</option>					</div>
+
+                                    <option value="inactive">Inactive</option>					<span class="badge badge--info">Live</span>
+
+                                </select>				</header>
+
+                            </div>				<form id="settings-form" class="form-grid">
+
+                        </div>					<input type="text" name="site_name" placeholder="Site name" />
+
+					<input type="email" name="support_email" placeholder="Support email" />
+
+                        <div class="form-actions">					<input type="number" name="inventory_alert" placeholder="Inventory alert" min="1" />
+
+                            <button type="submit" class="btn btn-primary">Save Product</button>					<textarea name="hero_message" placeholder="Hero message"></textarea>
+
+                            <button type="reset" class="btn btn-secondary">Clear</button>					<label class="toggle">
+
+                        </div>						<input type="checkbox" name="maintenance_mode" />
+
+                    </form>						<span>Maintenance mode</span>
+
+                </div>					</label>
+
+					<button type="submit" class="btn btn-ghost">Save settings</button>
+
+                <div class="products-list">				</form>
+
+                    <h3>All Products</h3>			</section>
+
+                    <table class="admin-table">
+
+                        <thead>			<section class="panel" id="panel-security">
+
+                            <tr>				<header class="panel-header">
+
+                                <th>#</th>					<div>
+
+                                <th>Name</th>						<p class="eyebrow">Audit trail</p>
+
+                                <th>Category</th>						<h2>Security log</h2>
+
+                                <th>Price</th>					</div>
+
+                                <th>Stock</th>					<span class="badge badge--muted">Live feed</span>
+
+                                <th>Status</th>				</header>
+
+                                <th>Actions</th>				<ul class="log-feed" id="log-feed"></ul>
+
+                            </tr>			</section>
+
+                        </thead>				</main>
+
+                        <tbody id="productsTableBody">			</div>
+
+                            <tr>
+
+                                <td colspan="7" class="no-data">No products yet. Create one above!</td>		<div id="admin-toast" class="toast" role="status" aria-live="polite"></div>
+
+                            </tr>
+
+                        </tbody>		<script defer src="assets/js/admin.js"></script>
+
+                    </table>	</body>
+
+                </div></html>
+
+            </section>
+
+            <!-- Orders Section -->
+            <section class="content-section" id="orders">
+                <div class="section-header">
+                    <h2>Manage Orders</h2>
+                    <select onchange="filterOrders(this.value)" class="filter-select">
+                        <option value="all">All Orders</option>
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+
+                <div class="orders-list">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <tr>
+                                <td colspan="6" class="no-data">No orders found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section class="content-section" id="users">
+                <div class="section-header">
+                    <h2>Manage Users</h2>
+                    <input type="search" id="userSearch" placeholder="Search users..." class="search-box">
+                </div>
+
+                <div class="users-list">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Joined</th>
+                                <th>Orders</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <tr>
+                                <td colspan="7" class="no-data">No users found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section class="content-section" id="settings">
+                <div class="section-header">
+                    <h2>Admin Settings</h2>
+                </div>
+
+                <div class="settings-container">
+                    <div class="settings-card">
+                        <h3>Site Settings</h3>
+                        <form id="settingsForm" class="admin-form">
+                            <div class="form-group">
+                                <label>Site Name</label>
+                                <input type="text" id="siteName" placeholder="MR Shop" value="MR Shop">
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label>Site Description</label>
+                                <textarea id="siteDescription" placeholder="Enter site description" rows="3"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Contact Email</label>
+                                <input type="email" id="contactEmail" placeholder="support@mrshop.com">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Contact Phone</label>
+                                <input type="tel" id="contactPhone" placeholder="+880-1234-567890">
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Save Settings</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="settings-card danger-zone">
+                        <h3>⚠️ Danger Zone</h3>
+                        <p>These actions cannot be undone!</p>
+                        <div class="danger-actions">
+                            <button class="btn btn-danger" onclick="backupData()">Backup All Data</button>
+                            <button class="btn btn-danger" onclick="clearAllData()">Clear All Data</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Edit Item</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Dynamic content loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/admin.js"></script>
+</body>
+</html>
