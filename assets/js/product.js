@@ -13,6 +13,10 @@
     const params = new URLSearchParams(window.location.search);
     return params.get('id');
   }
+  function getNameFromQuery(){
+    const params = new URLSearchParams(window.location.search);
+    return params.get('name');
+  }
 
   function renderProduct(product){
     if(!product){
@@ -24,12 +28,13 @@
     }
 
     $('#productName').textContent = product.name || '';
-    $('#productPrice').textContent = '৳' + (product.price || 0);
-    $('#productCategory').textContent = product.category || '';
-    $('#productDescription').textContent = product.description || '';
+  const price = (product.final_price !== undefined) ? product.final_price : (product.price || 0);
+  $('#productPrice').textContent = '৳' + price;
+  $('#productCategory').textContent = product.category || '';
+  $('#productDescription').textContent = product.description || '';
 
-    const img = document.createElement('img');
-    img.src = product.image || '/assets/images/placeholder.jpg';
+  const img = document.createElement('img');
+  img.src = product.image || product.image_path || '/assets/images/placeholder.jpg';
     img.alt = product.name || 'Product image';
     $('#productImage').innerHTML = '';
     $('#productImage').appendChild(img);
@@ -40,9 +45,10 @@
       const key = 'mrshop_cart';
       const raw = localStorage.getItem(key);
       const cart = raw ? JSON.parse(raw) : [];
+      const price = (product.final_price !== undefined) ? product.final_price : (product.price || 0);
       const existing = cart.find(i=>String(i.id)===String(product.id));
       if(existing){ existing.quantity = (existing.quantity||0) + qty; }
-      else { cart.push({ id: product.id, name: product.name, price: product.price, quantity: qty }); }
+      else { cart.push({ id: product.id, name: product.name, price: price, quantity: qty }); }
       localStorage.setItem(key, JSON.stringify(cart));
       showMessage('Added to cart');
     }catch(err){
@@ -69,12 +75,37 @@
 
   // Init
   document.addEventListener('DOMContentLoaded', async function(){
-    const id = getIdFromQuery();
-    if(!id){ showMessage('No product id provided in URL'); return; }
-    const product = await window.MRShop.Products.getProductById(id);
-    renderProduct(product);
+    try{
+      const id = getIdFromQuery();
+      if(!id){ showMessage('No product id provided in URL'); return; }
 
-    $('#addToCartBtn').addEventListener('click', function(){ addToCart(product, 1) });
-    $('#buyNowBtn').addEventListener('click', function(){ buyNow(product) });
+      if (!window.MRShop || !window.MRShop.Products || typeof window.MRShop.Products.getProductById !== 'function'){
+        showMessage('Product loader not available. Make sure assets/js/products.js is loaded.');
+        return;
+      }
+
+      let product = await window.MRShop.Products.getProductById(id);
+      // If product not found by id, try name fallback
+      if(!product){
+        const name = getNameFromQuery();
+        if(name && window.MRShop.Products.getProductByName){
+          product = await window.MRShop.Products.getProductByName(name);
+        }
+      }
+      renderProduct(product);
+
+      if(!product){
+        $('#addToCartBtn').disabled = true;
+        $('#buyNowBtn').disabled = true;
+        showMessage('Product not found.');
+        return;
+      }
+
+      $('#addToCartBtn').addEventListener('click', function(){ addToCart(product, 1) });
+      $('#buyNowBtn').addEventListener('click', function(){ buyNow(product) });
+    }catch(err){
+      console.error('product.js init error', err);
+      showMessage('An error occurred while loading the product. Check console for details.');
+    }
   });
 })();

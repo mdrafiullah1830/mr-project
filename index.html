@@ -94,12 +94,6 @@
   .chat-icon{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;background:linear-gradient(90deg,#7c3aed,#06b6d4);color:#fff;font-weight:700;box-shadow:0 6px 18px rgba(16,24,40,0.12);transition:transform .18s ease,box-shadow .18s ease}
   .chat-link:hover .chat-icon{transform:translateY(-3px);box-shadow:0 18px 40px rgba(16,42,67,0.14)}
 
-  /* Notification icon */
-  .notification-link{display:inline-flex;align-items:center;margin-left:8px;position:relative}
-  .notification-icon{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;background:rgba(255,255,255,0.15);color:#fff;font-weight:700;box-shadow:0 6px 18px rgba(16,24,40,0.12);transition:transform .18s ease,box-shadow .18s ease;font-size:18px;border:none;cursor:pointer}
-  .notification-link:hover .notification-icon{transform:translateY(-3px);box-shadow:0 18px 40px rgba(16,42,67,0.14)}
-  .notification-badge{position:absolute;top:-4px;right:-4px;background:#ef4444;color:#fff;border-radius:999px;font-size:10px;font-weight:700;padding:2px 6px;min-width:18px;text-align:center;box-shadow:0 2px 8px rgba(239,68,68,0.4)}
-
   /* Cart icon border to match logo */
   .cart-icon{border:2px solid rgba(255,255,255,0.12);padding:4px;background:rgba(255,255,255,0.02)}
   /* Home nav button styling */
@@ -157,19 +151,36 @@
   .platform-item img{width:22px;height:22px;object-fit:cover;border-radius:6px}
 
   /* Search wrapper and dropdown styles */
-  .search-wrapper{position:relative;display:inline-block;width:240px}
-  .search-input{width:100%;padding:8px 12px;border:1px solid #e6e9ee;border-radius:8px;background:rgba(255,255,255,0.85);color:#102a43;font-size:14px}
-  .search-input:focus{outline:none;border-color:var(--accent);background:white;box-shadow:0 0 0 2px rgba(124,58,237,0.1)}
-  .search-results{position:absolute;top:calc(100% + 8px);left:0;right:0;max-height:360px;overflow-y:auto;background:white;border-radius:10px;box-shadow:0 12px 36px rgba(16,42,67,0.12);z-index:70;display:none}
-  .search-results.open{display:block}
-  .search-result-item{padding:12px;border-bottom:1px solid #f0f0f0;cursor:pointer;transition:all .18s ease;display:flex;align-items:center;gap:12px}
+  .search-wrapper{position:relative;display:inline-block;width:280px}
+  .search-input{width:100%;padding:10px 14px;border:2px solid #e6e9ee;border-radius:8px;background:rgba(255,255,255,0.95);color:#102a43;font-size:14px;font-weight:500;transition:all .2s ease}
+  .search-input:focus{outline:none;border-color:var(--accent);background:white;box-shadow:0 0 0 3px rgba(124,58,237,0.15)}
+  .search-input::placeholder{color:#9ca3af}
+  /* Search dropdown container */
+  .search-results{position:absolute;top:calc(100% + 6px);left:0;right:0;max-height:480px;overflow-y:auto;background:white;border-radius:12px;box-shadow:0 16px 48px rgba(0,0,0,0.15);z-index:100;display:none;border:1px solid #f0f0f0}
+  .search-results.open{display:block;animation:slideDown .2s ease}
+  @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+  /* Result items */
+  .search-result-item{padding:14px;border-bottom:1px solid #f3f4f6;cursor:pointer;transition:all .15s ease;display:flex;align-items:center;gap:12px;outline:none}
   .search-result-item:last-child{border-bottom:none}
-  .search-result-item:hover{background:rgba(124,58,237,0.04)}
-  .search-result-item img{width:40px;height:40px;object-fit:cover;border-radius:6px;background:#f3f4f6}
-  .search-result-info{flex:1}
-  .search-result-name{font-weight:600;color:#102a43;font-size:14px}
-  .search-result-price{font-size:12px;color:var(--accent);font-weight:700}
-  .search-no-results{padding:16px;text-align:center;color:var(--muted);font-size:14px}
+  .search-result-item:hover,.search-result-item:focus{background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(6,182,212,0.08))}
+  .search-result-item:active{background:rgba(124,58,237,0.12)}
+  /* Image wrapper with discount badge */
+  .search-result-image-wrapper{position:relative;flex-shrink:0}
+  .search-result-image{width:60px;height:60px;object-fit:cover;border-radius:8px;background:#f3f4f6;border:1px solid #e5e7eb}
+  .search-result-discount{position:absolute;top:-4px;right:-4px;background:linear-gradient(135deg,#ef4444,#dc2626);color:white;font-size:11px;font-weight:700;padding:3px 6px;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,0.2)}
+  /* Result info */
+  .search-result-info{flex:1;min-width:0}
+  .search-result-name{font-weight:600;color:#102a43;font-size:14px;line-height:1.3;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .search-result-category{font-size:12px;color:#6b7280;margin-bottom:4px}
+  .search-result-price-row{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+  .search-result-price{font-size:14px;color:var(--accent);font-weight:700}
+  .search-result-original{font-size:11px;color:#9ca3af;text-decoration:line-through}
+  .search-result-rating{font-size:12px;color:#f59e0b;font-weight:600}
+  /* Status messages */
+  .search-no-results,.search-error,.search-loading{padding:24px 16px;text-align:center;font-size:14px}
+  .search-no-results{color:#6b7280}
+  .search-error{color:#ef4444;font-weight:600}
+  .search-loading{color:#9ca3af;font-style:italic}
 
     /* Smooth scrolling */
     html { scroll-behavior: smooth; }
@@ -246,20 +257,6 @@
       nav{padding:8px 18px;flex-wrap:wrap}
       nav a{font-size:14px;padding:6px 8px}
     }
-    /* Chat overlay (mobile messenger) */
-    .chat-overlay{position:fixed;inset:0;display:none;align-items:flex-end;justify-content:center;padding:16px;z-index:120}
-    .chat-overlay.open{display:flex}
-    .chat-window{width:360px;max-width:100%;height:80vh;background:white;border-radius:18px;box-shadow:0 30px 80px rgba(2,6,23,0.3);display:flex;flex-direction:column;overflow:hidden}
-    .chat-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:linear-gradient(90deg,#7c3aed,#06b6d4);color:#fff}
-    .chat-messages{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px;background:linear-gradient(180deg,#f9fafb,#fff)}
-    .msg{max-width:78%;padding:10px 12px;border-radius:12px;font-size:14px}
-    .msg.user{align-self:flex-end;background:linear-gradient(90deg,#7c3aed,#06b6d4);color:#fff;border-bottom-right-radius:4px}
-    .msg.bot{align-self:flex-start;background:#f1f5f9;color:#0f172a;border-bottom-left-radius:4px}
-    .chat-input{display:flex;padding:10px;border-top:1px solid #eee;gap:8px}
-    .chat-input input{flex:1;padding:10px;border-radius:10px;border:1px solid #e6e9ee}
-    .chat-input button{padding:8px 12px;border-radius:10px;border:none;background:linear-gradient(90deg,#7c3aed,#06b6d4);color:#fff;cursor:pointer}
-    .chat-close{background:transparent;border:none;color:#fff;font-size:18px;cursor:pointer}
-    @media (max-width:420px){.chat-window{width:100%;height:88vh;border-radius:12px}}
   </style>
 </head>
 <body>
@@ -269,16 +266,12 @@
     <div style="display:flex;align-items:center;gap:8px">
       <input type="text" placeholder="Search for products..." />
       <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
-      <button class="notification-link" aria-label="View notifications">
-        <div class="notification-icon">🔔</div>
-        <span class="notification-badge" id="notificationBadge">3</span>
-      </button>
-      <a href="cart.html" class="cart-link" aria-label="View cart">
-        <img src="./assets/images/cart.jpg" alt="Cart" class="cart-icon" />
+      <a href="orders.html" class="cart-link" aria-label="View orders" title="Track Orders">
+        <img src="./assets/images/cart.jpg" alt="Orders" class="cart-icon" style="filter: hue-rotate(200deg);" />
       </a>
-      <button id="openChatBtn" class="chat-link" aria-label="Open chat">
+      <a href="chat.html" class="chat-link" aria-label="Open chat">
         <div class="chat-icon">💬</div>
-      </button>
+      </a>
     </div>
   </header>
 
@@ -332,7 +325,8 @@
     </div>
     <div class="nav-right">
       <!-- Shown when user is signed in -->
-      <a href="#" class="auth-when-signed-in">Dashboard</a>
+      <a href="userprofile.html" class="auth-when-signed-in" id="dashboardLink">👤 Profile</a>
+      <a href="admin.html" class="auth-when-signed-in" id="adminLink">⚙️ Admin</a>
       <a href="#" class="auth-when-signed-in toggle-auth">Log out</a>
       <!-- Shown when user is signed out -->
       <a href="auth.html#login" class="auth-when-signed-out button">Sign in</a>
@@ -509,7 +503,7 @@
       
       // Handicrafts Category
       { id: 201, name: "Nakshi Kantha", price: 1200, category: "handicrafts", image: "./assets/images/nakshi.jpg", link: "nakshi.html" },
-      { id: 202, name: "Bamboo Basket", price: 450, category: "handicrafts", image: "./assets/images/basket.jpg", link: "basket.html" },
+      
       { id: 203, name: "Clay Pot Set", price: 350, category: "handicrafts", image: "./assets/images/clay.jpg", link: "clay.html" },
       { id: 204, name: "Jute Bag", price: 280, category: "handicrafts", image: "./assets/images/jute.jpg", link: "jute.html" },
       { id: 205, name: "Wooden Showpiece", price: 650, category: "handicrafts", image: "./assets/images/wood.jpg", link: "wood.html" },
@@ -588,7 +582,7 @@
           <span class="category-badge">${getCategoryDisplay(product.category)}</span>
           <h3>${product.name}</h3>
           <p class="price">৳ ${product.price.toLocaleString('en-BD')}</p>
-          <button onclick="location.href='${product.link}'">View Details</button>
+          <button onclick="location.href='product.html?name=${encodeURIComponent(product.name)}'">View Details</button>
         `;
         grid.appendChild(productCard);
       });
@@ -681,24 +675,92 @@
   </section>
 
   <footer>
-    © 2025 MR Shop | Powered by Md Rafi Ullah
+    <div>© 2025 MR Shop | Powered by Md Rafi Ullah</div>
+    <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy &amp; Policy</a>
   </footer>
 
   <script>
-    // UI-only demo: toggle between signed-in and signed-out link sets
+    // Enhanced authentication system with localStorage session management
     let isAuthenticated = false;
+    let currentUser = null;
+
+    function checkLoginStatus() {
+      // Check if user data exists in localStorage
+      const userData = localStorage.getItem('mr_shop_user');
+      if (userData) {
+        try {
+          currentUser = JSON.parse(userData);
+          isAuthenticated = true;
+          return true;
+        } catch (e) {
+          console.error('Failed to parse user data:', e);
+          isAuthenticated = false;
+          return false;
+        }
+      }
+      isAuthenticated = false;
+      return false;
+    }
+
     function renderAuth() {
-      document.querySelectorAll('.auth-when-signed-in').forEach(el => el.style.display = isAuthenticated ? 'inline-block' : 'none');
-      document.querySelectorAll('.auth-when-signed-out').forEach(el => el.style.display = isAuthenticated ? 'none' : 'inline-block');
+      // Show/hide auth buttons based on login status
+      document.querySelectorAll('.auth-when-signed-in').forEach(el => {
+        el.style.display = isAuthenticated ? 'inline-block' : 'none';
+      });
+      document.querySelectorAll('.auth-when-signed-out').forEach(el => {
+        el.style.display = isAuthenticated ? 'none' : 'inline-block';
+      });
+      
+      // Update Dashboard link to go to user profile if authenticated
+      const dashboardLink = document.querySelector('.auth-when-signed-in:not(.toggle-auth)');
+      if (dashboardLink && isAuthenticated && currentUser) {
+        dashboardLink.href = 'userprofile.html';
+        dashboardLink.textContent = `👤 ${currentUser.username || 'Profile'}`;
+        dashboardLink.title = `Welcome, ${currentUser.username}!`;
+      }
+      
+      // Show/hide admin link based on admin status
+      const adminLink = document.getElementById('adminLink');
+      if (adminLink && isAuthenticated && currentUser) {
+        // Check if user is admin (check localStorage for adminInfo or admin flag)
+        const adminInfo = localStorage.getItem('adminInfo');
+        const isAdmin = currentUser.role === 'admin' || (adminInfo && JSON.parse(adminInfo).isAdmin);
+        adminLink.style.display = isAdmin ? 'inline-block' : 'none';
+      } else if (adminLink) {
+        adminLink.style.display = 'none';
+      }
     }
-    function toggleAuth(e) {
+
+    function logout(e) {
       e.preventDefault();
-      isAuthenticated = !isAuthenticated;
+      // Clear session data
+      localStorage.removeItem('mr_shop_user');
+      localStorage.removeItem('mr_shop_user_profile');
+      sessionStorage.removeItem('reset_email');
+      
+      // Reset state
+      isAuthenticated = false;
+      currentUser = null;
+      
+      // Update UI
       renderAuth();
+      
+      // Show logout confirmation
+      alert('You have been logged out successfully!');
+      
+      // Redirect to home page
+      window.location.href = 'index.html';
     }
+
     document.addEventListener('DOMContentLoaded', () => {
+      // Check login status on page load
+      checkLoginStatus();
       renderAuth();
-      document.querySelectorAll('.toggle-auth').forEach(el => el.addEventListener('click', toggleAuth));
+      
+      // Attach logout handler
+      document.querySelectorAll('.toggle-auth').forEach(el => {
+        el.addEventListener('click', logout);
+      });
     });
   </script>
 
@@ -812,112 +874,6 @@
         localStorage.setItem(key, next);
         apply(next);
       });
-    })();
-    
-    // Chat overlay behavior
-    (function(){
-      const openBtn = document.getElementById('openChatBtn');
-      const overlay = document.createElement('div');
-      overlay.innerHTML = `
-        <div class="chat-overlay" id="chatOverlay" aria-hidden="true">
-          <div class="chat-window" role="dialog" aria-modal="true" aria-label="Chat with MR Shop">
-            <div class="chat-header">
-              <div style="display:flex;align-items:center;gap:10px">
-                <img src="./assets/images/mrlogo.png" alt="MR" style="width:36px;height:36px;border-radius:8px"/>
-                <div><strong>MR Shop</strong><div style="font-size:12px;opacity:0.85">How can we help?</div></div>
-              </div>
-              <div>
-                <button id="minimizeChat" class="chat-close" aria-label="Minimize chat">—</button>
-                <button id="closeChat" class="chat-close" aria-label="Close chat">✕</button>
-              </div>
-            </div>
-            <div class="chat-messages" id="chatMessages"></div>
-            <div class="chat-input">
-              <input id="chatInput" type="text" placeholder="Type a message..." aria-label="Type a message" />
-              <button id="sendChatBtn">Send</button>
-            </div>
-          </div>
-        </div>
-      `;
-      // Append overlay to body
-      document.body.appendChild(overlay);
-
-      const chatOverlay = document.getElementById('chatOverlay');
-      const chatMessages = document.getElementById('chatMessages');
-      const chatInput = document.getElementById('chatInput');
-      const sendBtn = document.getElementById('sendChatBtn');
-      const closeBtn = document.getElementById('closeChat');
-      const minBtn = document.getElementById('minimizeChat');
-
-      function openChat(){
-        chatOverlay.classList.add('open');
-        chatOverlay.setAttribute('aria-hidden','false');
-        setTimeout(()=>{ chatInput.focus(); }, 120);
-        // Insert welcome message if empty
-        if(!chatMessages.querySelector('.msg')){
-          appendBot('Hi! I am MR Shop bot. Ask about products, orders, or shipping.');
-        }
-      }
-      function closeChat(){ chatOverlay.classList.remove('open'); chatOverlay.setAttribute('aria-hidden','true'); }
-
-      function appendUser(text){
-        if(!text) return;
-        const d = document.createElement('div'); d.className='msg user'; d.textContent = text; chatMessages.appendChild(d); chatMessages.scrollTop = chatMessages.scrollHeight; }
-      function appendBot(text){ const d=document.createElement('div'); d.className='msg bot'; d.textContent=text; chatMessages.appendChild(d); chatMessages.scrollTop = chatMessages.scrollHeight; }
-
-      if(openBtn) openBtn.addEventListener('click', (e)=>{ e.preventDefault(); openChat(); });
-      if(closeBtn) closeBtn.addEventListener('click', closeChat);
-      if(minBtn) minBtn.addEventListener('click', closeChat);
-
-      sendBtn.addEventListener('click', async ()=>{
-        const val = chatInput.value && chatInput.value.trim();
-        if(!val) return;
-        appendUser(val);
-        chatInput.value = '';
-
-        // show a loading placeholder from the bot
-        const loading = document.createElement('div');
-        loading.className = 'msg bot';
-        loading.textContent = '...';
-        chatMessages.appendChild(loading);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-
-        try {
-          const res = await fetch('/api/query', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query: val })
-          });
-
-          if(!res.ok) throw new Error('Server responded with ' + res.status);
-
-          // try to parse JSON response
-          const data = await res.json();
-
-          // flexible parsing depending on server shape
-          let answer = '';
-          if(typeof data === 'string') answer = data;
-          else if(data.answer) answer = data.answer;
-          else if(Array.isArray(data.answers)) answer = data.answers.join('\n\n');
-          else if(Array.isArray(data.results)) answer = data.results.map(r => r.text || r.snippet || r.answer || JSON.stringify(r)).join('\n\n');
-          else if(data.reply) answer = data.reply;
-          else answer = JSON.stringify(data);
-
-          loading.remove();
-          appendBot(answer);
-        } catch (err) {
-          // network or parse error
-          loading.remove();
-          appendBot('Sorry, I could not reach the assistant — please check your connection and try again.');
-          console.error('Chat query error:', err);
-        }
-      });
-
-      // Enter key to send
-      chatInput.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); sendBtn.click(); } if(e.key==='Escape'){ closeChat(); } });
-
-      // click outside chat window to close
-      document.addEventListener('click', function(e){ if(chatOverlay.classList.contains('open') && !document.querySelector('.chat-window').contains(e.target) && e.target !== openBtn){ closeChat(); } });
     })();
   </script>
   <script src="assets/js/search.js"></script>

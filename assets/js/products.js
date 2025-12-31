@@ -12,17 +12,30 @@
       cache.products = Array.isArray(data) ? data : [];
       return cache.products;
     }catch(err){
-      console.warn('products.js: /api/products fetch failed, trying /data/products.json', err);
-      try{
-        const res2 = await fetch('/data/products.json');
-        if (res2.ok){
-          const data2 = await res2.json();
-          cache.products = Array.isArray(data2) ? data2 : [];
-          return cache.products;
+      console.warn('products.js: /api/products fetch failed, will try local fallbacks', err);
+
+      // Try relative data paths (works when opening files directly without a server)
+      const candidates = [
+        'data/products.json',
+        './data/products.json',
+        window.location.origin ? (window.location.origin + '/data/products.json') : null
+      ].filter(Boolean);
+
+      for (const path of candidates){
+        try{
+          const r = await fetch(path);
+          if (r.ok){
+            const d = await r.json();
+            cache.products = Array.isArray(d) ? d : [];
+            console.info('products.js: loaded products from', path);
+            return cache.products;
+          }
+        }catch(e){
+          console.warn('products.js: fetch failed for', path, e);
         }
-      }catch(err2){
-        console.warn('products.js: /data/products.json fetch failed', err2);
       }
+
+      // As a last resort, return empty array
       cache.products = [];
       return cache.products;
     }
@@ -33,9 +46,22 @@
     return list.find(p => String(p.id) === String(id)) || null;
   }
 
+  async function getProductByName(name){
+    if(!name) return null;
+    const list = await fetchProducts();
+    const lower = name.trim().toLowerCase();
+    // Exact match first
+    let found = list.find(p => (p.name || '').trim().toLowerCase() === lower);
+    if(found) return found;
+    // Partial match
+    found = list.find(p => (p.name || '').trim().toLowerCase().includes(lower));
+    return found || null;
+  }
+
   window.MRShop = window.MRShop || {};
   window.MRShop.Products = {
     fetchProducts,
     getProductById
+    ,getProductByName
   };
 })(window);
