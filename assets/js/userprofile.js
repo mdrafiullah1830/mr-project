@@ -996,23 +996,131 @@ document.addEventListener('DOMContentLoaded', () => {
   loadProfilePhoto();
   loadOrders();
   initializeAdminFeatures();
-  animateHeroStats();
+  updateAndAnimateStats();
 });
 
 // Animate hero stat counters
+async function updateAndAnimateStats(){
+  try {
+    await updateHeroStats();
+  } catch (e) {
+    console.warn('updateHeroStats failed, falling back to local data', e);
+  }
+  animateHeroStats();
+}
+
+// Update hero stats values from backend or local data
+async function updateHeroStats(){
+  const userId = getUserId();
+  let orders = null;
+  let wishlist = null;
+  let reviews = null;
+
+  // Try backend first (best-effort, various endpoint patterns)
+  if (userId) {
+    try {
+      // Orders endpoint (try multiple patterns)
+      const orderPaths = [`/api/orders/user/${userId}`, `/api/orders/${userId}`, `/api/orders?userId=${userId}`];
+      for (const p of orderPaths){
+        try {
+          const res = await fetch(p);
+          if (!res.ok) continue;
+          const json = await res.json();
+          if (json && (Array.isArray(json) || Array.isArray(json.data))) {
+            orders = Array.isArray(json) ? json : json.data;
+            break;
+          }
+        } catch(e) { /* ignore and try next */ }
+      }
+
+      // Wishlist
+      try {
+        const res = await fetch(`/api/wishlist/${userId}`);
+        if (res.ok){
+          const json = await res.json();
+          wishlist = json && (Array.isArray(json) ? json : json.data) || null;
+        }
+      } catch (e) { /* ignore */ }
+
+      // Reviews (optional)
+      try {
+        const res = await fetch(`/api/reviews/user/${userId}`);
+        if (res.ok){
+          const json = await res.json();
+          reviews = json && (Array.isArray(json) ? json : json.data) || null;
+        }
+      } catch (e) { /* ignore */ }
+    } catch (error) {
+      console.warn('Backend stat fetch failed:', error);
+    }
+  }
+
+  // Fallback to local page data
+  if (!orders) orders = window.ordersData || JSON.parse(localStorage.getItem('mr_shop_orders') || '[]');
+  if (!wishlist) wishlist = window.wishlistData || JSON.parse(localStorage.getItem('mr_shop_wishlist') || '[]');
+  if (!reviews) reviews = JSON.parse(localStorage.getItem('mr_shop_reviews') || '[]');
+
+  // Update DOM data-count attributes
+  const ordersCount = Array.isArray(orders) ? orders.length : 0;
+  const wishlistCount = Array.isArray(wishlist) ? wishlist.length : 0;
+  const reviewsCount = Array.isArray(reviews) ? reviews.length : 0;
+  const spent = computeTotalSpent(orders);
+
+  const elOrders = document.getElementById('statOrders');
+  const elWishlist = document.getElementById('statWishlist');
+  const elReviews = document.getElementById('statReviews');
+  const elSpent = document.getElementById('statSpent');
+
+  if (elOrders) elOrders.setAttribute('data-count', ordersCount);
+  if (elWishlist) elWishlist.setAttribute('data-count', wishlistCount);
+  if (elReviews) elReviews.setAttribute('data-count', reviewsCount);
+  if (elSpent) elSpent.setAttribute('data-count', spent);
+}
+
+function getUserId(){
+  const userData = localStorage.getItem('mr_shop_user');
+  if (!userData) return null;
+  try{ const user = JSON.parse(userData); return user.id || user.username; } catch(e){ return null; }
+}
+
+function computeTotalSpent(ordersArray){
+  if (!Array.isArray(ordersArray)) return 0;
+  let total = 0;
+  for (const o of ordersArray){
+    // Look for numeric total in order.total or order.amount
+    const v = o.total || o.amount || o.price || 0;
+    const n = parseCurrency(v);
+    total += n;
+  }
+  // return rounded K value (thousands) if large? keep raw amount
+  return Math.round(total);
+}
+
+function parseCurrency(value){
+  if (!value) return 0;
+  if (typeof value === 'number') return value;
+  // strip non-digit except dot
+  const s = String(value).replace(/[^0-9.\-]+/g, '');
+  const n = parseFloat(s);
+  return Number.isFinite(n) ? n : 0;
+}
+
 function animateHeroStats(){
   const counters = document.querySelectorAll('.stat-value[data-count]');
   counters.forEach(el => {
     const target = Number(el.getAttribute('data-count')) || 0;
     let start = 0;
     const duration = 900;
-    const stepTime = Math.max(15, Math.floor(duration / Math.max(1, target)));
+    const steps = Math.max(1, Math.min(120, target));
+    const stepTime = Math.max(12, Math.floor(duration / steps));
+    const increment = Math.max(1, Math.floor(target / steps));
     const timer = setInterval(() => {
-      start += 1;
+      start += increment;
+      if (start >= target) start = target;
       if (el.id === 'statSpent') {
-        el.textContent = '৳' + start;
+        el.textContent = '৳' + start.toLocaleString();
       } else {
-        el.textContent = start;
+        el.textContent = start.toLocaleString();
       }
       if (start >= target) clearInterval(timer);
     }, stepTime);
