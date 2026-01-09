@@ -1,12 +1,12 @@
 :root{
-  --site-width-desktop: 1200px;
-  --site-width-tablet: 900px;
-  --site-width-mobile: 420px;
+  --site-max-desktop: 1200px;
+  --site-max-tablet: 900px;
+  --site-max-mobile: 420px;
+  --site-gutter: 20px;
 }
 
-/* Apply a fixed-width container for main site regions so layout is consistent
-   across desktop, tablet and mobile preview sizes. Uses !important so it
-   overrides inline 'max-width' styles used in some pages for consistent testing. */
+/* Fluid layout: use max-width so containers scale down on smaller viewports
+   to avoid horizontal scrolling while keeping a consistent max page width. */
 .container-fixed,
 main,
 .page-container,
@@ -17,10 +17,11 @@ main,
 .messenger-container,
 .page,
 .bc-container {
-  margin-left: auto !important;
-  margin-right: auto !important;
-  box-sizing: border-box !important;
-  width: var(--site-width-desktop) !important;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+  width: calc(100% - (var(--site-gutter) * 2));
+  max-width: var(--site-max-desktop);
 }
 
 @media (max-width: 1199px) {
@@ -34,7 +35,7 @@ main,
   .messenger-container,
   .page,
   .bc-container {
-    width: var(--site-width-tablet) !important;
+    max-width: var(--site-max-tablet);
   }
 }
 
@@ -49,7 +50,8 @@ main,
   .messenger-container,
   .page,
   .bc-container {
-    width: var(--site-width-mobile) !important;
+    max-width: 100%;
+    width: calc(100% - (var(--site-gutter) * 2));
   }
 }
 
