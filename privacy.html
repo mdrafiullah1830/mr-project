@@ -205,7 +205,9 @@
       <div style="font-size:13px">Need help? <a href="contact.html">Contact support</a></div>
     </footer>
 
-    <script>
+  <script>
+    <link rel="stylesheet" href="assets/css/devview.css">
+    <script src="assets/js/devview.js"></script>
       // Smooth scrolling and TOC highlight
       document.querySelectorAll('.toc-list a').forEach(a=>{
         a.addEventListener('click', e=>{ e.preventDefault(); const id=a.getAttribute('href').slice(1); document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'}); });
