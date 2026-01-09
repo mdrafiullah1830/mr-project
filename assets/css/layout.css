@@ -1,0 +1,57 @@
+:root{
+  --site-width-desktop: 1200px;
+  --site-width-tablet: 900px;
+  --site-width-mobile: 420px;
+}
+
+/* Apply a fixed-width container for main site regions so layout is consistent
+   across desktop, tablet and mobile preview sizes. Uses !important so it
+   overrides inline 'max-width' styles used in some pages for consistent testing. */
+.container-fixed,
+main,
+.page-container,
+.profile-container,
+.policy,
+.products,
+.products-grid,
+.messenger-container,
+.page,
+.bc-container {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  box-sizing: border-box !important;
+  width: var(--site-width-desktop) !important;
+}
+
+@media (max-width: 1199px) {
+  .container-fixed,
+  main,
+  .page-container,
+  .profile-container,
+  .policy,
+  .products,
+  .products-grid,
+  .messenger-container,
+  .page,
+  .bc-container {
+    width: var(--site-width-tablet) !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .container-fixed,
+  main,
+  .page-container,
+  .profile-container,
+  .policy,
+  .products,
+  .products-grid,
+  .messenger-container,
+  .page,
+  .bc-container {
+    width: var(--site-width-mobile) !important;
+  }
+}
+
+/* Allow content inside to still be responsive (don't force overflow): */
+.container-fixed * { max-width: 100%; }
