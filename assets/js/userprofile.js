@@ -996,7 +996,37 @@ document.addEventListener('DOMContentLoaded', () => {
   loadProfilePhoto();
   loadOrders();
   initializeAdminFeatures();
+  animateHeroStats();
 });
+
+// Animate hero stat counters
+function animateHeroStats(){
+  const counters = document.querySelectorAll('.stat-value[data-count]');
+  counters.forEach(el => {
+    const target = Number(el.getAttribute('data-count')) || 0;
+    let start = 0;
+    const duration = 900;
+    const stepTime = Math.max(15, Math.floor(duration / Math.max(1, target)));
+    const timer = setInterval(() => {
+      start += 1;
+      if (el.id === 'statSpent') {
+        el.textContent = '৳' + start;
+      } else {
+        el.textContent = start;
+      }
+      if (start >= target) clearInterval(timer);
+    }, stepTime);
+  });
+  // Sync hero name and mini info from sidebar
+  const name = document.getElementById('profileName')?.textContent || 'User';
+  const email = document.getElementById('profileEmail')?.textContent || '';
+  document.getElementById('heroName').textContent = name.split(' ')[0] || name;
+  document.getElementById('miniName').textContent = name;
+  document.getElementById('miniEmail').textContent = email;
+  // If profile photo already loaded, copy to hero
+  const photo = document.getElementById('profilePhoto')?.src;
+  if (photo) document.getElementById('heroPhoto').src = photo;
+}
 
 // Initialize admin features (seller approvals)
 function initializeAdminFeatures() {

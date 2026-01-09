@@ -97,6 +97,49 @@
     <!-- Main Content -->
     <section class="profile-content">
 
+      <!-- Hero / Dashboard Header -->
+      <div class="profile-hero" aria-hidden="false">
+        <div class="hero-left">
+          <h2 class="hero-title">Welcome back, <span id="heroName">Rafi</span> 👋</h2>
+          <p class="hero-sub">Manage orders, wishlist, and account settings from your dashboard.</p>
+
+          <div class="hero-stats" aria-hidden="false">
+            <div class="stat">
+              <div class="stat-value" data-count="24" id="statOrders">0</div>
+              <div class="stat-label">Orders</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value" data-count="12" id="statWishlist">0</div>
+              <div class="stat-label">Wishlist</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value" data-count="45" id="statReviews">0</div>
+              <div class="stat-label">Reviews</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value" data-count="28" id="statSpent">৳0</div>
+              <div class="stat-label">Spent (K)</div>
+            </div>
+          </div>
+
+          <div class="hero-actions">
+            <button class="action-btn" onclick="switchSection('order-history')">📦 View Orders</button>
+            <button class="action-btn" onclick="switchSection('wishlist')">❤️ Wishlist</button>
+            <button class="action-btn" onclick="switchSection('settings')">⚙️ Settings</button>
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <div class="profile-mini">
+            <img src="https://i.pravatar.cc/120?img=33" alt="Profile" id="heroPhoto" />
+            <div class="mini-info">
+              <div class="mini-name" id="miniName">Md. Rafi Ullah</div>
+              <div class="mini-email" id="miniEmail">rafi@mrshop.com</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Personal Info Section -->
       <div class="content-section active" id="personal-info">
         <div class="section-header">
