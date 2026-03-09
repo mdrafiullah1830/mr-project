@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Seller Dashboard — MR Shop</title>
+  <link rel="stylesheet" href="assets/css/seller-dashboard.css">
+  <style>
+    /* small helper for inline SVG area */
+    .spark-wrap{height:72px}
+    .orders-list{max-height:320px;overflow:auto}
+  </style>
+</head>
+<body class="seller">
+  <header class="sd-header">
+  <div class="sd-brand"><img src="../images/mrlogo.png" alt="MR"/> Seller Dashboard</div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="small muted">Welcome, Seller</div>
+      <button class="btn">New product</button>
+      <button class="btn">Messages</button>
+    </div>
+  </header>
+
+  <div class="sd-layout">
+    <aside class="sd-sidebar" aria-label="Seller navigation">
+      <nav class="sd-nav">
+        <a href="#" class="active" data-target="overview">Overview</a>
+        <a href="#" data-target="products">Products</a>
+        <a href="#" data-target="orders">Orders</a>
+        <a href="#" data-target="inventory">Inventory</a>
+        <a href="#" data-target="payments">Payments</a>
+        <a href="#" data-target="customers">Customers</a>
+        <a href="#" data-target="marketing">Marketing</a>
+        <a href="#" data-target="reports">Reports</a>
+        <a href="#" data-target="settings">Settings</a>
+        <a href="#" data-target="support">Support</a>
+      </nav>
+      <div style="margin-top:18px" class="small muted">Tips: Click any item to view</div>
+    </aside>
+
+    <main class="sd-main">
+      <section id="overview" class="sd-section">
+        <div class="sd-cards">
+          <div class="sd-card"><h3>Total Orders</h3><div class="value" id="statOrders">—</div></div>
+          <div class="sd-card"><h3>Total Sales</h3><div class="value" id="statSales">—</div></div>
+          <div class="sd-card"><h3>Revenue</h3><div class="value" id="statRevenue">—</div></div>
+          <div class="sd-card"><h3>Pending Payouts</h3><div class="value" id="statPayouts">—</div></div>
+        </div>
+
+        <div class="sd-grid">
+          <div class="panel">
+            <h4>Analytics</h4>
+            <div class="spark-wrap"><svg id="sparkline" width="100%" height="60" aria-hidden="true"></svg></div>
+            <div class="muted small" style="margin-top:8px">Revenue trend (last 30 days)</div>
+          </div>
+
+          <div class="panel">
+            <h4>Notifications</h4>
+            <div class="metrics-list">
+              <div class="metric-item"><div class="small">New messages</div><div class="value">3</div></div>
+              <div class="metric-item"><div class="small">Low stock alerts</div><div class="value">7</div></div>
+              <div class="metric-item"><div class="small">Pending orders</div><div class="value">5</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="products" class="sd-section" style="display:none">
+        <div class="panel">
+          <h4>Product Management</h4>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div class="search-box"><input placeholder="Search products" aria-label="Search products"/></div>
+            <div><button class="btn primary">Add product</button></div>
+          </div>
+          <table class="orders-table" aria-label="Product list">
+            <thead><tr><th>ID</th><th>Product</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr data-stock="12"><td>#101</td><td>Herbal Honey</td><td>৳ 320</td><td>12</td><td><button class="product-edit btn">Edit</button> <button data-id="101" class="product-delete btn">Delete</button></td></tr>
+              <tr data-stock="4"><td>#102</td><td>Antique Coin A</td><td>৳ 150</td><td class="low-stock">4</td><td><button data-id="102" class="product-edit btn">Edit</button> <button data-id="102" class="product-delete btn">Delete</button></td></tr>
+              <tr data-stock="0"><td>#103</td><td>Vintage Pot</td><td>৳ 550</td><td class="low-stock">0</td><td><button data-id="103" class="product-edit btn">Edit</button> <button data-id="103" class="product-delete btn">Delete</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="orders" class="sd-section" style="display:none">
+        <div class="panel">
+          <h4>Recent Orders</h4>
+          <div class="orders-list">
+            <table class="orders-table" aria-label="Orders">
+              <thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>#5001</td><td>Rashed</td><td>৳ 1,200</td><td><span class="badge pending">Pending</span></td></tr>
+                <tr><td>#5000</td><td>Tania</td><td>৳ 520</td><td><span class="badge shipped">Shipped</span></td></tr>
+                <tr><td>#4999</td><td>Sam</td><td>৳ 2,340</td><td><span class="badge pending">Processing</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="inventory" class="sd-section" style="display:none">
+        <div class="panel">
+          <h4>Inventory</h4>
+          <p class="small muted">Real-time stock counts and low-stock alerts.</p>
+          <div style="margin-top:10px"><button id="filterLowStock" class="btn">Show low stock (≤5)</button></div>
+        </div>
+      </section>
+
+      <section id="payments" class="sd-section" style="display:none">
+        <div class="panel">
+          <h4>Payments & Finance</h4>
+          <p class="small muted">Total earnings, pending payouts and transaction history (placeholder).</p>
+        </div>
+      </section>
+
+      <section id="customers" class="sd-section" style="display:none">
+        <div class="panel">
+          <h4>Customers</h4>
+          <p class="small muted">Customer list, recent orders, messages and reviews.</p>
+        </div>
+      </section>
+
+      <section id="marketing" class="sd-section" style="display:none">
+        <div class="panel">
+          <h4>Marketing Tools</h4>
+          <p class="small muted">Coupons, offers, SEO settings and promotions management.</p>
+        </div>
+      </section>
+
+      <section id="reports" class="sd-section" style="display:none">
+        <div class="panel">
+          <h4>Reports</h4>
+          <p class="small muted">Sales, product performance and revenue reports (exportable).</p>
+        </div>
+      </section>
+
+      <section id="settings" class="sd-section" style="display:none">
+        <div class="panel">
+          <h4>Settings</h4>
+          <p class="small muted">Shop profile, logos, payment methods and security settings.</p>
+        </div>
+      </section>
+
+      <section id="support" class="sd-section" style="display:none">
+        <div class="panel">
+          <h4>Support</h4>
+          <p class="small muted">Help center, FAQs, report issues and live chat access.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="assets/js/seller-dashboard.js"></script>
+</body>
+</html>

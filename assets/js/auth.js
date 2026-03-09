@@ -67,9 +67,7 @@
       }
 
       try {
-        // Allow anyone to login - accept any username/password combination
-        // Store user session with provided credentials
-        
+        // Offline mode - accept any username/password combination
         // Check if username is "mrshop" - make them admin
         const isAdmin = username.toLowerCase() === 'mrshop';
         
@@ -83,16 +81,47 @@
         };
         localStorage.setItem('mr_shop_user', JSON.stringify(userData));
         
+        // Also save to users list for password reset compatibility
+        let users = JSON.parse(localStorage.getItem('mr_shop_users')) || [];
+        const existingUserIndex = users.findIndex(u => u.username === username);
+        if (existingUserIndex >= 0) {
+          users[existingUserIndex].lastLogin = new Date().toISOString();
+        } else {
+          users.push({
+            id: userData.id,
+            username: username,
+            email: userData.email,
+            password: password,
+            loginTime: new Date().toISOString()
+          });
+        }
+        localStorage.setItem('mr_shop_users', JSON.stringify(users));
+        
         // Also save profile data for offline access
         const profileData = {
-          full_name: username,
+          user_id: userData.id,
+          username: username,
           email_address: userData.email,
+          full_name: username,
           phone_number: '',
           address: '',
           date_of_birth: '',
-          gender: 'male'
+          gender: 'male',
+          profile_photo_path: null,
+          bio: '',
+          orders: [],
+          wishlist: [],
+          recently_viewed: [],
+          reviews: []
         };
         localStorage.setItem('mr_shop_user_profile', JSON.stringify(profileData));
+        
+        // Save profile to API (if available)
+        try {
+          await saveProfile(profileData);
+        } catch (error) {
+          console.warn('Profile API unavailable, using localStorage', error);
+        }
         
         // If admin, also set adminInfo in localStorage
         if (isAdmin) {
@@ -149,54 +178,52 @@
       }
 
       try {
-        // Call C# API for sign up
-        const response = await fetch('http://localhost:5010/api/auth/signup', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            username: username,
-            email: email,
-            password: password
-          })
-        });
-
-        const result = await response.json();
-
-        if(result.success){
-          // Store user data
-          const userData = {
-            id: result.data.id,
-            username: result.data.username,
-            email: result.data.email,
-            loggedIn: true,
-            loginTime: result.data.created_at
-          };
-          localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-          
-          // Store in profile data as well
-          const profileData = {
-            fullName: username,
-            phoneNumber: '',
-            emailAddress: email,
-            address: '',
-            dob: '',
-            gender: 'male'
-          };
-          localStorage.setItem('mr_shop_user_profile', JSON.stringify(profileData));
-          
-          // Show success message
-          showAuthNotification(result.message || 'Registration successful! Redirecting...', 'success');
-          
-          // Redirect to user profile after short delay
-          setTimeout(()=>{
-            window.location.href = 'userprofile.html';
-          }, 1000);
-        } else {
-          showAuthNotification(result.message || 'Registration failed', 'error');
+        // Store user data in localStorage (offline mode - no backend required)
+        const userData = {
+          id: 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+          username: username,
+          email: email,
+          loggedIn: true,
+          loginTime: new Date().toISOString()
+        };
+        localStorage.setItem('mr_shop_user', JSON.stringify(userData));
+        
+        // Store in profile data as well
+        const profileData = {
+          user_id: userData.id,
+          username: username,
+          email_address: email,
+          full_name: username,
+          phone_number: '',
+          address: '',
+          date_of_birth: '',
+          gender: 'male',
+          profile_photo_path: null,
+          bio: '',
+          orders: [],
+          wishlist: [],
+          recently_viewed: [],
+          reviews: []
+        };
+        localStorage.setItem('mr_shop_user_profile', JSON.stringify(profileData));
+        
+        // Save profile to API (if available)
+        try {
+          await saveProfile(profileData);
+        } catch (error) {
+          console.warn('Profile API unavailable, using localStorage', error);
         }
+        
+        // Show success message
+        showAuthNotification('Registration successful! Redirecting...', 'success');
+        
+        // Redirect to user profile after short delay
+        setTimeout(()=>{
+          window.location.href = 'userprofile.html';
+        }, 1000);
       } catch(error) {
         console.error('Registration error:', error);
-        showAuthNotification('Connection error. Please try again.', 'error');
+        showAuthNotification('An error occurred. Please try again.', 'error');
       }
     });
   }
@@ -223,34 +250,22 @@
       }
 
       try {
-        // Call C# API for forgot password
-        const response = await fetch('http://localhost:5010/api/auth/forgot-password', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email })
-        });
-
-        const result = await response.json();
-
-        if(result.success){
-          showAuthNotification(result.message || 'Password reset instructions sent!', 'success');
-          
-          // Redirect to reset password form after short delay
-          setTimeout(()=>{
-            // Store email for reset form
-            sessionStorage.setItem('reset_email', email);
-            wrapper.classList.remove('forgot');
-            wrapper.classList.add('reset');
-            history.replaceState(null,'', '#reset-password');
-            // Pre-fill email in reset form
-            document.getElementById('reset-email').value = email;
-          }, 2000);
-        } else {
-          showAuthNotification(result.message || 'An error occurred', 'error');
-        }
+        // Offline mode - simulate password reset by storing in localStorage
+        showAuthNotification('Password reset instructions would be sent! Moving to reset form...', 'success');
+        
+        // Redirect to reset password form after short delay
+        setTimeout(()=>{
+          // Store email for reset form
+          sessionStorage.setItem('reset_email', email);
+          wrapper.classList.remove('forgot');
+          wrapper.classList.add('reset');
+          history.replaceState(null,'', '#reset-password');
+          // Pre-fill email in reset form
+          document.getElementById('reset-email').value = email;
+        }, 1500);
       } catch(error) {
         console.error('Forgot password error:', error);
-        showAuthNotification('Connection error. Please try again.', 'error');
+        showAuthNotification('An error occurred. Please try again.', 'error');
       }
     });
   }
@@ -291,36 +306,41 @@
       }
 
       try {
-        // Call C# API for reset password
-        const response = await fetch('http://localhost:5010/api/auth/reset-password', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: email,
-            new_password: newPassword,
-            confirm_password: confirmPassword
-          })
-        });
-
-        const result = await response.json();
-
-        if(result.success){
-          showAuthNotification(result.message || 'Password reset successful!', 'success');
-          
-          // Clear session storage
-          sessionStorage.removeItem('reset_email');
-          
-          // Redirect to login after short delay
-          setTimeout(()=>{
-            wrapper.classList.remove('reset');
-            history.replaceState(null,'', '#login');
-          }, 2000);
+        // Offline mode - update password in localStorage for the user
+        // Get all stored users from localStorage
+        let users = JSON.parse(localStorage.getItem('mr_shop_users')) || [];
+        
+        // Find and update the user with the matching email
+        const userIndex = users.findIndex(u => u.email === email);
+        
+        if (userIndex >= 0) {
+          users[userIndex].password = newPassword;
+          localStorage.setItem('mr_shop_users', JSON.stringify(users));
         } else {
-          showAuthNotification(result.message || 'Password reset failed', 'error');
+          // If no user found, create a new one
+          users.push({
+            id: 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+            email: email,
+            password: newPassword,
+            username: email.split('@')[0],
+            loginTime: new Date().toISOString()
+          });
+          localStorage.setItem('mr_shop_users', JSON.stringify(users));
         }
+        
+        showAuthNotification('Password reset successful!', 'success');
+        
+        // Clear session storage
+        sessionStorage.removeItem('reset_email');
+        
+        // Redirect to login after short delay
+        setTimeout(()=>{
+          wrapper.classList.remove('reset');
+          history.replaceState(null,'', '#login');
+        }, 1500);
       } catch(error) {
         console.error('Reset password error:', error);
-        showAuthNotification('Connection error. Please try again.', 'error');
+        showAuthNotification('An error occurred. Please try again.', 'error');
       }
     });
   }
@@ -331,20 +351,153 @@
 
 // Social Login Functions
 function loginWithGoogle(){
-  showAuthNotification('Connecting to Google...', 'info');
-  // In production, integrate with Google OAuth API
-  // For demo purposes, simulate successful login
-  setTimeout(()=>{
+  if (typeof GoogleOAuth !== 'undefined') {
+    GoogleOAuth.login();
+  } else {
+    console.error('GoogleOAuth manager not loaded');
+    simulateGoogleLogin();
+  }
+}
+
+// Initiate Google OAuth Flow
+function initiateGoogleOAuth() {
+  // Configuration
+  // Replace with your actual Google Client ID from Google Cloud Console
+  // Format: XXXXX-YYYYY.apps.googleusercontent.com
+  const CLIENT_ID = 'YOUR_CLIENT_ID_HERE'; // TODO: Add your actual Client ID
+  const PROJECT_ID = 'mr-shop-480319';
+  const REDIRECT_URI = window.location.origin + '/assets/html/auth.html';
+  const SCOPE = 'email profile';
+  const RESPONSE_TYPE = 'token';
+  const STATE = generateRandomState();
+
+  // Save state for CSRF protection
+  sessionStorage.setItem('oauth_state', STATE);
+
+  // Check if CLIENT_ID is configured
+  if (CLIENT_ID.includes('YOUR_CLIENT_ID') || CLIENT_ID.includes('YOUR_GOOGLE')) {
+    console.warn('⚠️ Google Client ID not configured. Using demo mode.');
+    console.log('📝 To setup real OAuth:');
+    console.log('1. Go to: https://console.cloud.google.com');
+    console.log('2. Select project: ' + PROJECT_ID);
+    console.log('3. Create OAuth 2.0 Client ID');
+    console.log('4. Update CLIENT_ID in /assets/js/auth.js (line ~337)');
+    simulateGoogleLogin();
+    return;
+  }
+
+  // Build OAuth URL for real Google OAuth
+  const authURL = new URL('https://accounts.google.com/o/oauth2/v2/auth');
+  authURL.searchParams.append('client_id', CLIENT_ID);
+  authURL.searchParams.append('redirect_uri', REDIRECT_URI);
+  authURL.searchParams.append('response_type', RESPONSE_TYPE);
+  authURL.searchParams.append('scope', SCOPE);
+  authURL.searchParams.append('state', STATE);
+  authURL.searchParams.append('access_type', 'online');
+  authURL.searchParams.append('prompt', 'consent');
+
+  // Redirect to Google OAuth
+  window.location.href = authURL.toString();
+}
+
+// Generate random state for CSRF protection
+function generateRandomState() {
+  return Math.random().toString(36).substring(2, 15) + 
+         Math.random().toString(36).substring(2, 15);
+}
+
+// Handle Google OAuth Callback
+function handleGoogleCallback() {
+  // This would be called after OAuth redirect
+  const hash = window.location.hash.substring(1);
+  if (!hash) return;
+
+  const params = new URLSearchParams(hash);
+  const accessToken = params.get('access_token');
+  const state = params.get('state');
+  const savedState = sessionStorage.getItem('oauth_state');
+
+  // Verify state for CSRF protection
+  if (state !== savedState) {
+    showAuthNotification('Security validation failed. Please try again.', 'error');
+    return;
+  }
+
+  if (!accessToken) {
+    showAuthNotification('Authorization failed. Please try again.', 'error');
+    return;
+  }
+
+  // Get user info with access token
+  fetchGoogleUserInfo(accessToken);
+}
+
+// Fetch user info from Google
+async function fetchGoogleUserInfo(accessToken) {
+  try {
+    const response = await fetch('https://www.googleapis.com/oauth2/v2/userinfo?access_token=' + accessToken);
+    const googleUser = await response.json();
+
+    if (googleUser.error) {
+      throw new Error(googleUser.error_description);
+    }
+
+    // Create user data from Google response
     const userData = {
-      username: 'Google User',
-      email: 'user@gmail.com',
+      id: 'user_' + googleUser.id,
+      username: googleUser.name || googleUser.email.split('@')[0],
+      email: googleUser.email,
+      firstName: googleUser.given_name,
+      lastName: googleUser.family_name,
+      avatar: googleUser.picture,
       loggedIn: true,
       loginTime: new Date().toISOString(),
-      provider: 'google'
+      provider: 'google',
+      googleId: googleUser.id,
+      accessToken: accessToken
+    };
+
+    localStorage.setItem('mr_shop_user', JSON.stringify(userData));
+    localStorage.setItem('google_access_token', accessToken);
+
+    // Clear sensitive data from session storage
+    sessionStorage.removeItem('oauth_state');
+
+    showAuthNotification('Google login successful! Redirecting...', 'success');
+    setTimeout(() => { 
+      window.location.href = 'userprofile.html'; 
+    }, 1000);
+  } catch (error) {
+    console.error('Google OAuth error:', error);
+    showAuthNotification('Failed to get user info: ' + error.message, 'error');
+  }
+}
+
+// Simulate Google login for demo purposes (when Google API is not available)
+function simulateGoogleLogin() {
+  setTimeout(() => {
+    // Create realistic demo data
+    const demoGoogleUsers = [
+      { name: 'Ahmed Khan', email: 'ahmed.khan@gmail.com', picture: 'https://via.placeholder.com/200?text=Ahmed' },
+      { name: 'Fatima Ali', email: 'fatima.ali@gmail.com', picture: 'https://via.placeholder.com/200?text=Fatima' },
+      { name: 'Muhammad Hassan', email: 'hassan.m@gmail.com', picture: 'https://via.placeholder.com/200?text=Hassan' }
+    ];
+    
+    const randomUser = demoGoogleUsers[Math.floor(Math.random() * demoGoogleUsers.length)];
+    
+    const userData = {
+      username: randomUser.name,
+      email: randomUser.email,
+      avatar: randomUser.picture,
+      loggedIn: true,
+      loginTime: new Date().toISOString(),
+      provider: 'google',
+      isDemo: true,
+      demoNote: 'This is a demo login. Configure Google OAuth for real authentication.'
     };
     localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-    showAuthNotification('Google login successful! Redirecting...', 'success');
-    setTimeout(()=>{ window.location.href = 'userprofile.html'; }, 1000);
+    showAuthNotification('✓ Demo Google login successful! Redirecting...', 'success');
+    setTimeout(() => { window.location.href = 'userprofile.html'; }, 1500);
   }, 1500);
 }
 
@@ -382,7 +535,7 @@ function loginWithApple(){
   }, 1500);
 }
 
-// Signup social functions (same as login for demo)
+// Signup social functions (same as login for Google)
 function signupWithGoogle(){ loginWithGoogle(); }
 function signupWithFacebook(){ loginWithFacebook(); }
 function signupWithApple(){ loginWithApple(); }

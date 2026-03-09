@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Categories — MR Shop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/book-categories.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="bc-header">
+    <div class="bc-header-inner">
+      <a href="index.html" class="bc-brand">
+  <img src="../images/mrlogo.png" alt="MR" class="bc-logo">
+        <span class="bc-brand-text">MR Shop</span>
+      </a>
+      <nav class="bc-nav">
+        <a href="index.html">Home</a>
+        <a href="javascript:history.back()">Back</a>
+        <button id="themeToggle" class="bc-theme-btn">🌙</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="bc-main">
+    <div class="bc-container">
+      <!-- Search Bar -->
+      <div class="bc-search-section">
+        <h1 class="bc-page-title">Explore Book Categories</h1>
+        <div class="bc-search-wrapper">
+          <svg class="bc-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input type="text" id="categorySearch" class="bc-search-input" placeholder="Search categories...">
+        </div>
+      </div>
+
+      <!-- Categories Layout -->
+      <div class="bc-layout">
+        <!-- Left Sidebar - Main Categories -->
+        <aside class="bc-sidebar">
+          <div class="bc-sidebar-header">
+            <h2>Categories</h2>
+            <span class="bc-category-count" id="categoryCount">12</span>
+          </div>
+          <ul class="bc-category-list" id="categoryList">
+            <!-- Categories rendered by JS -->
+          </ul>
+        </aside>
+
+        <!-- Right Content - Subcategories -->
+        <section class="bc-content">
+          <div class="bc-content-header">
+            <h2 class="bc-content-title" id="contentTitle">Literature</h2>
+            <span class="bc-subcategory-count" id="subcategoryCount">8 subcategories</span>
+          </div>
+          <div class="bc-subcategory-grid" id="subcategoryGrid">
+            <!-- Subcategories rendered by JS -->
+          </div>
+
+          <!-- Empty State -->
+          <div class="bc-empty-state" id="emptyState" style="display: none;">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+              <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+            </svg>
+            <h3>No categories found</h3>
+            <p>Try adjusting your search terms</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bc-footer">
+    <p>© 2025 MR Shop — Your trusted bookstore</p>
+  </footer>
+
+  <script src="assets/js/book-categories.js"></script>
+</body>
+</html>

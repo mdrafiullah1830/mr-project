@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search API Test</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
+    .test-box { border: 1px solid #ccc; padding: 15px; margin: 10px 0; border-radius: 5px; }
+    input { padding: 8px; width: 300px; font-size: 16px; }
+    button { padding: 8px 15px; font-size: 16px; cursor: pointer; }
+    .results { margin-top: 20px; }
+    .error { color: red; font-weight: bold; }
+    .success { color: green; font-weight: bold; }
+    .product { border: 1px solid #ddd; padding: 10px; margin: 10px 0; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>🔍 Search API Test</h1>
+  
+  <div class="test-box">
+    <h2>Test Search</h2>
+    <input type="text" id="testQuery" placeholder="Type 'honey'..." value="honey" />
+    <button onclick="testSearch()">Search</button>
+  </div>
+
+  <div class="test-box">
+    <h2>API Connection Test</h2>
+    <button onclick="testConnection()">Test Connection</button>
+  </div>
+
+  <div id="results" class="results"></div>
+
+  <script>
+    const API_BASE = 'http://localhost:5010/api/search';
+
+    async function testConnection() {
+      const results = document.getElementById('results');
+      results.innerHTML = '<p>Testing connection...</p>';
+
+      try {
+        const response = await fetch(`${API_BASE}/categories`);
+        const data = await response.json();
+        
+        if (data.success) {
+          results.innerHTML = `
+            <p class="success">✅ API Connected!</p>
+            <p>Categories: ${data.data.join(', ')}</p>
+          `;
+        } else {
+          results.innerHTML = `<p class="error">❌ API Error: ${data.message}</p>`;
+        }
+      } catch (error) {
+        results.innerHTML = `<p class="error">❌ Connection Failed: ${error.message}</p>`;
+      }
+    }
+
+    async function testSearch() {
+      const query = document.getElementById('testQuery').value;
+      const results = document.getElementById('results');
+      
+      if (!query) {
+        results.innerHTML = '<p class="error">Please enter a search query</p>';
+        return;
+      }
+
+      results.innerHTML = '<p>Searching for "' + query + '"...</p>';
+
+      try {
+        const response = await fetch(`${API_BASE}?query=${encodeURIComponent(query)}`);
+        const data = await response.json();
+
+        if (data.success) {
+          const count = data.data.results.length;
+          let html = `<p class="success">✅ Found ${count} products</p>`;
+          
+          if (count > 0) {
+            data.data.results.forEach(product => {
+              html += `
+                <div class="product">
+                  <strong>${product.name}</strong><br>
+                  Price: ৳${product.final_price}<br>
+                  Category: ${product.category}<br>
+                  Rating: ⭐ ${product.rating}
+                </div>
+              `;
+            });
+          }
+          results.innerHTML = html;
+        } else {
+          results.innerHTML = `<p class="error">❌ ${data.message}</p>`;
+        }
+      } catch (error) {
+        results.innerHTML = `<p class="error">❌ Error: ${error.message}</p>`;
+      }
+    }
+
+    // Auto-test on load
+    window.addEventListener('load', testConnection);
+  </script>
+</body>
+</html>

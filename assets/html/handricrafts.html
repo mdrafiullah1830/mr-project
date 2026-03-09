@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bangladeshi Handicrafts — MR Shop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent: #7c3aed; /* purple */
+      --accent-2: #06b6d4; /* cyan */
+      --bg-1: #fff7fb;
+      --bg-2: #f0fbff;
+      --text-1: #0f172a;
+      --text-2: #475569;
+      --muted: #6b7280;
+      --card: #ffffff;
+      --ring: rgba(124,58,237,0.25);
+      --shadow: 0 10px 30px rgba(16,24,40,0.08);
+      --shadow-2: 0 14px 40px rgba(16,24,40,0.12);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:'Poppins', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: linear-gradient(135deg,var(--bg-1),var(--bg-2));
+      color: var(--text-1);
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    }
+    /* Header */
+    .site-header{position:sticky;top:0;z-index:30;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;box-shadow:var(--shadow);padding:18px 36px}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:8px;color:inherit;text-decoration:none;font-weight:700;font-size:20px}
+    .logo{height:40px;width:auto;border-radius:8px;padding:4px;border:2px solid rgba(255,255,255,.18);background:rgba(255,255,255,.03)}
+  .header-actions{display:flex;gap:12px;align-items:center;margin-left:auto}
+    .header-actions a{appearance:none;border:none;background:transparent;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer;text-decoration:none;font-weight:600;transition:all .2s ease}
+    .header-actions a:hover{background:rgba(255,255,255,.15)}
+
+    /* Hero */
+    .hero{position:relative;overflow:hidden}
+    .hero-bg{position:absolute;inset:0;background:radial-gradient(1200px 400px at 10% -10%, rgba(124,58,237,.15), transparent 60%), radial-gradient(1200px 400px at 90% 110%, rgba(6,182,212,.18), transparent 60%)}
+    .hero-inner{position:relative;max-width:1200px;margin:0 auto;padding:40px 20px;display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center}
+    .hero-text h1{margin:0 0 10px;font-size:34px;line-height:1.15;background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hero-text p{margin:0;color:var(--text-2)}
+    .hero-cta{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+    .btn{border:none;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer}
+    .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;box-shadow:0 8px 22px rgba(124,58,237,.25)}
+    .btn-secondary{background:#fff;color:var(--accent);border:2px solid rgba(124,58,237,.25)}
+    .hero-media{position:relative}
+    .hero-card{background:#fff;border-radius:18px;overflow:hidden;box-shadow:var(--shadow-2);border:1px solid rgba(2,6,23,.06)}
+    .hero-card img{display:block;width:100%;height:260px;object-fit:cover}
+    .hero-card .caption{padding:10px 12px;color:var(--text-2);font-size:13px}
+
+    /* Filters */
+    .toolbar{max-width:1200px;margin:0 auto;padding:6px 20px 0}
+    .filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .pill{border:1px solid rgba(2,6,23,.08);background:rgba(255,255,255,.65);backdrop-filter:blur(6px);padding:8px 12px;border-radius:999px;cursor:pointer;font-weight:600;color:var(--text-2);transition:.2s}
+    .pill:hover{border-color:var(--accent);color:var(--accent)}
+    .pill.active{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;border-color:transparent}
+
+    /* Grid */
+    .page{max-width:1200px;margin:0 auto;padding:18px 20px 40px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+    .card{background:var(--card);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);border:1px solid rgba(2,6,23,.06);display:flex;flex-direction:column}
+    .thumb{position:relative}
+    .thumb img{display:block;width:100%;height:170px;object-fit:cover}
+    .badge{position:absolute;left:10px;top:10px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;font-size:12px;padding:6px 10px;border-radius:999px;box-shadow:0 6px 18px rgba(124,58,237,.25)}
+    .info{padding:12px 12px 0}
+    .title{font-weight:700;font-size:16px;margin:0 0 4px}
+    .meta{font-size:12px;color:var(--muted)}
+    .desc{color:var(--text-2);font-size:13px;margin:10px 0}
+    .price{font-weight:800;color:var(--accent);font-size:18px;margin-top:auto}
+    .actions{display:flex;gap:8px;align-items:center;margin:12px;padding:10px;border-top:1px dashed rgba(2,6,23,.08)}
+    .qty{display:flex;align-items:center;border:1px solid rgba(2,6,23,.08);border-radius:10px;overflow:hidden}
+    .qty button{border:none;background:#fff;padding:8px 10px;cursor:pointer;font-weight:800}
+    .qty input{width:40px;text-align:center;border:none;padding:8px 0}
+    .add{flex:1}
+    .add button{width:100%;padding:10px 12px;border:none;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;font-weight:800;cursor:pointer;box-shadow:0 8px 22px rgba(124,58,237,.18);transition:.2s}
+    .add button:hover{transform:translateY(-1px)}
+
+    /* Toast */
+    .toast{position:fixed;right:20px;bottom:20px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:12px 16px;border-radius:12px;box-shadow:var(--shadow-2);font-weight:700;z-index:50;opacity:0;transform:translateY(10px);transition:.25s}
+    .toast.show{opacity:1;transform:translateY(0)}
+
+    /* Footer */
+    footer{background:linear-gradient(90deg,#eef2ff,#f0f9ff);color:var(--muted);text-align:center;padding:26px;margin-top:10px;border-top:1px solid rgba(2,6,23,.06)}
+
+    @media (max-width:900px){
+      .hero-inner{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="MR Shop home">
+  <img src="../images/mrlogo.png" alt="MR" class="logo" />
+        <span>MR Shop</span>
+      </a>
+      <div class="header-actions">
+        <a href="index.html">Home</a>
+        <a href="javascript:history.back()">Back</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <div class="hero-text">
+        <h1>Handcrafted Treasures of Bangladesh</h1>
+        <p>Celebrate artisanship: Nakshi Kantha, Shital Pati, Terracotta, Jute & Bamboo crafts — ethically sourced from local makers.</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary" onclick="scrollToGrid()">Shop Handicrafts</button>
+        </div>
+      </div>
+      <div class="hero-media">
+        <div class="hero-card">
+          <img src="https://images.unsplash.com/photo-1582894201517-246fe4a30e64?q=80&w=1600&auto=format&fit=crop" alt="Bangladeshi handicrafts" />
+          <div class="caption">Each piece tells a story — woven, carved and crafted with care.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="toolbar">
+    <div class="filters" id="filters">
+      <button class="pill active" data-filter="all">All</button>
+      <button class="pill" data-filter="textiles">Textiles</button>
+      <button class="pill" data-filter="bamboo">Bamboo & Cane</button>
+      <button class="pill" data-filter="clay">Clay & Terracotta</button>
+      <button class="pill" data-filter="jute">Jute & Fiber</button>
+      <button class="pill" data-filter="metalwood">Metal & Wood</button>
+    </div>
+  </div>
+
+  <main class="page">
+    <div class="grid" id="productsGrid"></div>
+  </main>
+
+  <footer>© 2025 MR Shop — Supporting artisan livelihoods across Bangladesh</footer>
+
+  <div class="toast" id="toast">Added to cart</div>
+
+  <script>
+    // Product catalog
+    const products = [
+      {id:201, name:'Nakshi Kantha (নকশী কাঁথা)', price: 1450, tag:'textiles', img:'https://picsum.photos/seed/nakshi/600', desc:'Hand-embroidered quilt, traditional motifs and stories.'},
+      
+      {id:203, name:'Shital Pati Mat (শীতল পাটি)', price: 1250, tag:'bamboo', img:'https://picsum.photos/seed/pati/600', desc:'Cool mat handwoven from murta reeds of Sylhet.'},
+      {id:204, name:'Bamboo Basket (বাঁশের ঝুড়ি)', price: 520, tag:'bamboo', img:'https://picsum.photos/seed/basket/600', desc:'Sturdy kitchen basket, sustainable bamboo craft.'},
+      {id:205, name:'Cane Tray Set (বেতের ট্রে সেট)', price: 840, tag:'bamboo', img:'https://picsum.photos/seed/canetray/600', desc:'Set of 2 trays with woven cane detailing.'},
+      {id:206, name:'Terracotta Vase (টেরাকোটা ফুলদানী)', price: 760, tag:'clay', img:'https://picsum.photos/seed/terracotta/600', desc:'Hand-thrown and fired in village kilns.'},
+      {id:207, name:'Clay Dinner Set (মাটির বাসন)', price: 1490, tag:'clay', img:'https://picsum.photos/seed/clayset/600', desc:'Lead-free glazed clay plates & bowls.'},
+      {id:208, name:'Jute Tote Bag (জুটের ব্যাগ)', price: 450, tag:'jute', img:'https://picsum.photos/seed/jutebag/600', desc:'Eco-friendly tote with natural texture.'},
+      {id:209, name:'Jute Table Runner', price: 380, tag:'jute', img:'https://picsum.photos/seed/juterunner/600', desc:'Rustic runner for modern tablescapes.'},
+      {id:210, name:'Wood Carved Mask', price: 1350, tag:'metalwood', img:'https://picsum.photos/seed/woodmask/600', desc:'Folk-inspired mask carved from neem wood.'},
+      {id:211, name:'Brass Diyas (পিতলের প্রদীপ)', price: 690, tag:'metalwood', img:'https://picsum.photos/seed/brass/600', desc:'Polished brass lamps for rituals and decor.'},
+      {id:212, name:'Rickshaw Art Poster', price: 320, tag:'metalwood', img:'https://picsum.photos/seed/rickshaw/600', desc:'Vibrant rickshaw painting reproduced on board.'},
+    ];
+
+    const grid = document.getElementById('productsGrid');
+    const toast = document.getElementById('toast');
+
+    function render(list){
+      grid.innerHTML = list.map(p => `
+        <article class="card" data-tag="${p.tag}">
+          <div class="thumb">
+            <img src="${p.img}" alt="${p.name}" loading="lazy"/>
+            <span class="badge">${humanTag(p.tag)}</span>
+          </div>
+          <div class="info">
+            <h3 class="title">${p.name}</h3>
+            <div class="meta">Artisan craft • Fair trade</div>
+            <p class="desc">${p.desc}</p>
+            <div class="price">৳${p.price}</div>
+          </div>
+          <div class="actions">
+            <div class="qty">
+              <button aria-label="Decrease" onclick="changeQty(${p.id}, -1)">−</button>
+              <input id="qty-${p.id}" type="text" value="1" inputmode="numeric" />
+              <button aria-label="Increase" onclick="changeQty(${p.id}, 1)">+</button>
+            </div>
+            <div class="add"><button onclick="addToCart(${p.id})">Add to Cart</button></div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function humanTag(tag){
+      switch(tag){
+        case 'textiles': return 'Textiles';
+        case 'bamboo': return 'Bamboo & Cane';
+        case 'clay': return 'Clay & Terracotta';
+        case 'jute': return 'Jute & Fiber';
+        case 'metalwood': return 'Metal & Wood';
+        default: return 'Handicrafts';
+      }
+    }
+
+    function scrollToGrid(){
+      document.querySelector('.page').scrollIntoView({behavior:'smooth'});
+    }
+
+    // Filters
+    document.getElementById('filters').addEventListener('click', (e)=>{
+      const btn = e.target.closest('.pill');
+      if(!btn) return;
+      document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      if(f === 'all') render(products);
+      else render(products.filter(p=>p.tag===f));
+    });
+
+    // Qty
+    function changeQty(id, delta){
+      const el = document.getElementById('qty-'+id);
+      let v = parseInt(el.value||'1',10) + delta;
+      if(isNaN(v) || v < 1) v = 1; if(v>99) v = 99;
+      el.value = v;
+    }
+
+    // Cart
+    function getCart(){
+      try{ return JSON.parse(localStorage.getItem('mr_shop_cart')) || []; }catch{ return []; }
+    }
+    function setCart(c){ localStorage.setItem('mr_shop_cart', JSON.stringify(c)); }
+
+    function addToCart(id){
+      const p = products.find(x=>x.id===id);
+      if(!p) return;
+      const qty = parseInt(document.getElementById('qty-'+id).value||'1',10) || 1;
+      const cart = getCart();
+      const idx = cart.findIndex(i=>i.id===id);
+      if(idx>-1){ cart[idx].quantity += qty; }
+      else{
+        cart.push({id:p.id, name:p.name, price:p.price, image:p.img, description:p.desc, quantity:qty});
+      }
+      setCart(cart);
+      showToast('Added '+qty+' × '+p.name);
+    }
+
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(()=>toast.classList.remove('show'), 1800);
+    }
+
+    // Initial render
+    render(products);
+  </script>
+</body>
+</html>

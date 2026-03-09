@@ -1,0 +1,9 @@
+[]{
+
+  "username": "mrshop18",
+  "password_hash": "scrypt:32768:8:1$b2RkxOKoQTHj5S3Y$2373eb5cf27347be343c68019d711d7744a20126ddc490cb3595f26c3ea286e51a0e9b1b36c95e4548f2ad42f343f94d2a0ff28e97b558a917355dfc9783ca48",
+  "recovery_question": "What is the emergency access code you saved during setup?",
+  "recovery_hint": "It's printed on your secure setup card.",
+  "recovery_answer_hash": "scrypt:32768:8:1$LcSHBUJlz5oPCcbP$1169a47998b404376c8fcf5e5fc3df82192e5317e9a56bac55b7ee3a48c62b4776e585e76be253c78c3eb5c7f18a619098aa997fddb23ad4fe41c44a76e10638",
+  "last_password_reset": "2025-12-06T16:36:13.839157Z"
+}

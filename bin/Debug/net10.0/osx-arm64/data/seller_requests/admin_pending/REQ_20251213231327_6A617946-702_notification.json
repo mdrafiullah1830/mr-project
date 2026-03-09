@@ -1,0 +1,19 @@
+{
+  "requestId": "REQ_20251213231327_6A617946-702",
+  "userId": "USR_639012644074507890_528784d7",
+  "fullName": "jhsbcehwb",
+  "email": "UECjhbdjhq@gmail.com",
+  "shopName": "wefhuqeihf",
+  "submittedAt": "2025-12-13T23:13:27.452277Z",
+  "status": "Pending",
+  "categories": [
+    "food"
+  ],
+  "location": {
+    "lat": 23.819096689011843,
+    "lng": 90.36692164312028
+  },
+  "notificationSentAt": "2025-12-13T23:13:27.466851Z",
+  "acknowledged": false,
+  "acknowledgedAt": null
+}

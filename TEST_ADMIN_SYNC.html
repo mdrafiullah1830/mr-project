@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Products Sync Test</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 20px;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    h1 {
+      color: white;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    h2 {
+      color: #667eea;
+      margin-bottom: 16px;
+      font-size: 20px;
+    }
+    .buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    button {
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+    .status {
+      background: #f0f9ff;
+      border-left: 4px solid #06b6d4;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .success {
+      border-left-color: #22c55e;
+      background: #f0fdf4;
+      color: #166534;
+    }
+    .error {
+      border-left-color: #ef4444;
+      background: #fef2f2;
+      color: #b91c1c;
+    }
+    .info {
+      border-left-color: #3b82f6;
+      background: #eff6ff;
+      color: #1e40af;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    th {
+      background: #f3f4f6;
+      font-weight: 600;
+      color: #374151;
+    }
+    tr:hover {
+      background: #f9fafb;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-success {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .badge-warning {
+      background: #fef3c7;
+      color: #b45309;
+    }
+    .test-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 768px) {
+      .test-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔄 Admin Products Sync Test Dashboard</h1>
+
+    <div class="test-grid">
+      <!-- Test Section 1: Add Test Product -->
+      <div class="card">
+        <h2>➕ Add Test Product</h2>
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; margin-bottom: 8px;">Product Name:</label>
+          <input type="text" id="productName" placeholder="e.g., Test Saree" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        </div>
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; margin-bottom: 8px;">Category:</label>
+          <select id="productCategory" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+            <option value="food">🍯 Food & Natural</option>
+            <option value="sweets">🍰 Sweets & Dairy</option>
+            <option value="handicrafts">🎨 Handicrafts</option>
+            <option value="clothing">👗 Clothing</option>
+            <option value="books">📚 Books</option>
+            <option value="antique">🪙 Antique</option>
+          </select>
+        </div>
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; margin-bottom: 8px;">Price (৳):</label>
+          <input type="number" id="productPrice" placeholder="1000" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        </div>
+        <div class="buttons">
+          <button onclick="addTestProduct()">✅ Add & Sync</button>
+          <button onclick="addTestProductWithDelay()">⏱️ Add with Delay</button>
+        </div>
+      </div>
+
+      <!-- Test Section 2: Check localStorage -->
+      <div class="card">
+        <h2>📦 localStorage Status</h2>
+        <div class="buttons">
+          <button onclick="checkLocalStorage()">🔍 Check</button>
+          <button onclick="clearLocalStorage()">🗑️ Clear</button>
+          <button onclick="openIndexInNewTab()">📂 Open Index</button>
+        </div>
+        <div id="storageStatus" class="status info">Checking...</div>
+      </div>
+
+      <!-- Test Section 3: Communication Methods -->
+      <div class="card">
+        <h2>📡 Test Communication</h2>
+        <div class="buttons">
+          <button onclick="testCustomEvent()">🎯 Test CustomEvent</button>
+          <button onclick="testBroadcastChannel()">📻 Test BroadcastChannel</button>
+          <button onclick="testPostMessage()">💬 Test PostMessage</button>
+        </div>
+        <div id="commStatus" class="status info">Ready to test</div>
+      </div>
+
+      <!-- Test Section 4: Sync to All Windows -->
+      <div class="card">
+        <h2>🌐 Broadcast to All</h2>
+        <div class="buttons">
+          <button onclick="broadcastToIndex()">📤 Broadcast to index.html</button>
+          <button onclick="broadcastWithEvent()">🎆 Fire Custom Event</button>
+        </div>
+        <div id="broadcastStatus" class="status info">Ready</div>
+      </div>
+    </div>
+
+    <!-- Test Section 5: Current Data -->
+    <div class="card">
+      <h2>📊 Current Admin Products (localStorage)</h2>
+      <div class="buttons">
+        <button onclick="displayStoredProducts()">🔄 Refresh</button>
+      </div>
+      <div id="productsTable"></div>
+    </div>
+
+    <!-- Test Section 6: Event Log -->
+    <div class="card">
+      <h2>📝 Event Log</h2>
+      <div class="buttons">
+        <button onclick="clearEventLog()">Clear Log</button>
+      </div>
+      <div id="eventLog" class="status info" style="height: 200px;">Event log ready...</div>
+    </div>
+  </div>
+
+  <script>
+    // ===== UTILITY FUNCTIONS =====
+    const eventLog = [];
+    
+    function log(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      const entry = `[${timestamp}] ${type.toUpperCase()}: ${message}`;
+      eventLog.unshift(entry);
+      eventLog.splice(20); // Keep last 20 entries
+      
+      const logEl = document.getElementById('eventLog');
+      logEl.textContent = eventLog.join('\n');
+      logEl.className = `status ${type === 'error' ? 'error' : type === 'success' ? 'success' : 'info'}`;
+      
+      console.log(entry);
+    }
+
+    function clearEventLog() {
+      eventLog.length = 0;
+      document.getElementById('eventLog').textContent = 'Log cleared';
+      log('Log cleared');
+    }
+
+    // ===== LOCALSTORAGE FUNCTIONS =====
+    function checkLocalStorage() {
+      const status = document.getElementById('storageStatus');
+      const key = 'mrshop_admin_products';
+      const stored = localStorage.getItem(key);
+      
+      if (stored) {
+        try {
+          const products = JSON.parse(stored);
+          const size = new Blob([stored]).size;
+          status.textContent = `✅ FOUND\n\nKey: ${key}\nProducts: ${products.length}\nSize: ${size} bytes\n\nFirst Product:\n${JSON.stringify(products[0], null, 2)}`;
+          status.className = 'status success';
+          log(`Found ${products.length} products in localStorage (${size} bytes)`, 'success');
+        } catch (e) {
+          status.textContent = `❌ ERROR PARSING\n${e.message}`;
+          status.className = 'status error';
+          log(`Error parsing localStorage: ${e.message}`, 'error');
+        }
+      } else {
+        status.textContent = `⚠️ NOT FOUND\n\nKey: ${key}\nNo products in localStorage yet.\nAdd a product in adminrafi.html first.`;
+        status.className = 'status info';
+        log('No products in localStorage yet', 'warning');
+      }
+    }
+
+    function clearLocalStorage() {
+      const key = 'mrshop_admin_products';
+      localStorage.removeItem(key);
+      log('Cleared localStorage', 'success');
+      checkLocalStorage();
+    }
+
+    function displayStoredProducts() {
+      const key = 'mrshop_admin_products';
+      const stored = localStorage.getItem(key);
+      const table = document.getElementById('productsTable');
+      
+      if (!stored) {
+        table.innerHTML = '<p style="color: #6b7280;">No products in localStorage</p>';
+        return;
+      }
+
+      try {
+        const products = JSON.parse(stored);
+        let html = '<table><thead><tr><th>ID</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Seller</th></tr></thead><tbody>';
+        
+        products.forEach(p => {
+          html += `<tr>
+            <td>#${p.id}</td>
+            <td>${p.name}</td>
+            <td><span class="badge badge-success">${p.category}</span></td>
+            <td>৳ ${p.price}</td>
+            <td>${p.stock}</td>
+            <td>${p.seller || 'N/A'}</td>
+          </tr>`;
+        });
+        
+        html += '</tbody></table>';
+        table.innerHTML = html;
+        log(`Displayed ${products.length} products from localStorage`, 'success');
+      } catch (e) {
+        table.innerHTML = `<p style="color: #ef4444;">Error: ${e.message}</p>`;
+        log(`Error displaying products: ${e.message}`, 'error');
+      }
+    }
+
+    // ===== COMMUNICATION TEST FUNCTIONS =====
+    function testCustomEvent() {
+      const event = new CustomEvent('mrshopProductsUpdated', {
+        detail: { products: [{ id: 99, name: 'Test Product', category: 'test' }] }
+      });
+      window.dispatchEvent(event);
+      const el = document.getElementById('commStatus');
+      el.textContent = '✅ CustomEvent dispatched\n\nEvent: mrshopProductsUpdated\nProducts: 1';
+      el.className = 'status success';
+      log('CustomEvent dispatched successfully', 'success');
+    }
+
+    function testBroadcastChannel() {
+      if (!window.BroadcastChannel) {
+        const el = document.getElementById('commStatus');
+        el.textContent = '❌ BroadcastChannel not supported in this browser';
+        el.className = 'status error';
+        log('BroadcastChannel not supported', 'error');
+        return;
+      }
+
+      const channel = new BroadcastChannel('mrshop_products');
+      channel.postMessage({
+        type: 'productsUpdated',
+        data: [{ id: 98, name: 'Broadcast Test', category: 'test' }]
+      });
+      channel.close();
+
+      const el = document.getElementById('commStatus');
+      el.textContent = '✅ BroadcastChannel message sent\n\nChannel: mrshop_products\nMessage type: productsUpdated';
+      el.className = 'status success';
+      log('BroadcastChannel message sent successfully', 'success');
+    }
+
+    function testPostMessage() {
+      if (window.opener) {
+        window.opener.postMessage({
+          type: 'productsUpdated',
+          data: [{ id: 97, name: 'PostMessage Test' }]
+        }, '*');
+        log('PostMessage sent to opener window', 'success');
+      } else {
+        log('No opener window available', 'warning');
+      }
+      
+      const el = document.getElementById('commStatus');
+      el.textContent = '✅ PostMessage tested\n\nCheck browser console for details';
+      el.className = 'status info';
+    }
+
+    // ===== PRODUCT FUNCTIONS =====
+    function addTestProduct() {
+      const name = document.getElementById('productName').value || 'Test Product';
+      const category = document.getElementById('productCategory').value;
+      const price = parseInt(document.getElementById('productPrice').value) || 1000;
+
+      const newProduct = {
+        id: Date.now(),
+        name: name,
+        category: category,
+        price: price,
+        stock: 50,
+        seller: 'Admin Test',
+        imageBase64: null
+      };
+
+      const key = 'mrshop_admin_products';
+      const stored = localStorage.getItem(key);
+      let products = stored ? JSON.parse(stored) : [];
+      
+      products.push(newProduct);
+      localStorage.setItem(key, JSON.stringify(products));
+
+      // Broadcast to all
+      broadcastProductsUpdated(products);
+
+      log(`Added product: ${name} (${category})`, 'success');
+      displayStoredProducts();
+      checkLocalStorage();
+
+      // Clear inputs
+      document.getElementById('productName').value = '';
+      document.getElementById('productPrice').value = '';
+    }
+
+    function addTestProductWithDelay() {
+      const el = document.getElementById('storageStatus');
+      el.textContent = 'Adding product with 2 second delay...';
+      el.className = 'status info';
+      
+      setTimeout(() => {
+        addTestProduct();
+        el.textContent = '✅ Product added!';
+        el.className = 'status success';
+      }, 2000);
+    }
+
+    function broadcastProductsUpdated(products) {
+      // Method 1: localStorage
+      localStorage.setItem('mrshop_admin_products', JSON.stringify(products));
+
+      // Method 2: CustomEvent
+      const event = new CustomEvent('mrshopProductsUpdated', { detail: { products: products } });
+      window.dispatchEvent(event);
+
+      // Method 3: BroadcastChannel
+      if (window.BroadcastChannel) {
+        const channel = new BroadcastChannel('mrshop_products');
+        channel.postMessage({ type: 'productsUpdated', data: products });
+        channel.close();
+      }
+
+      log('Broadcast using all available methods', 'success');
+    }
+
+    function broadcastToIndex() {
+      const key = 'mrshop_admin_products';
+      const stored = localStorage.getItem(key);
+      const products = stored ? JSON.parse(stored) : [];
+
+      const el = document.getElementById('broadcastStatus');
+      el.textContent = `✅ Broadcasting ${products.length} products to index.html\n\nMethods used:\n✓ localStorage\n✓ CustomEvent\n✓ BroadcastChannel\n✓ PostMessage`;
+      el.className = 'status success';
+
+      broadcastProductsUpdated(products);
+    }
+
+    function broadcastWithEvent() {
+      const key = 'mrshop_admin_products';
+      const stored = localStorage.getItem(key);
+      const products = stored ? JSON.parse(stored) : [];
+
+      const event = new CustomEvent('mrshopProductsUpdated', {
+        detail: { products: products, timestamp: new Date().toISOString() }
+      });
+      window.dispatchEvent(event);
+
+      const el = document.getElementById('broadcastStatus');
+      el.textContent = `✅ CustomEvent fired with ${products.length} products`;
+      el.className = 'status success';
+      log('CustomEvent fired to all listeners', 'success');
+    }
+
+    function openIndexInNewTab() {
+      const index = window.open('index.html', 'MRShop_Index');
+      if (index) {
+        log('Opened index.html in new window', 'success');
+      } else {
+        log('Could not open new window (popup blocked?)', 'error');
+      }
+    }
+
+    // ===== INITIALIZE =====
+    window.addEventListener('load', () => {
+      log('Admin Sync Test Dashboard loaded', 'success');
+      checkLocalStorage();
+      displayStoredProducts();
+    });
+
+    // Listen for product updates from other sources
+    window.addEventListener('mrshopProductsUpdated', (event) => {
+      log('Received mrshopProductsUpdated event!', 'success');
+      displayStoredProducts();
+    });
+
+    if (window.BroadcastChannel) {
+      const channel = new BroadcastChannel('mrshop_products');
+      channel.onmessage = (event) => {
+        log(`Received BroadcastChannel message: ${event.data.type}`, 'success');
+        displayStoredProducts();
+      };
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - MR Shop | Product Management</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #7c3aed;
+      --secondary: #06b6d4;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --bg-dark: #0f172a;
+      --bg-light: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+    }
+
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, #f0f9ff 0%, #fef3c7 100%);
+      color: var(--text-dark);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 25px 30px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .header-info {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .user-info {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .logout-btn {
+      background: rgba(255, 255, 255, 0.3);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Main Layout */
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 30px;
+    }
+
+    /* Left Panel - Category List */
+    .category-panel {
+      background: var(--card-bg);
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      height: fit-content;
+    }
+
+    .category-panel h2 {
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: var(--primary);
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 10px;
+    }
+
+    .category-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .category-item {
+      padding: 12px 15px;
+      background: var(--bg-light);
+      border: 2px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .category-item:hover {
+      background: #f0e6ff;
+      border-color: var(--primary);
+      transform: translateX(5px);
+    }
+
+    .category-item.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* Right Panel - Product Form */
+    .form-panel {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .form-panel h2 {
+      font-size: 22px;
+      margin-bottom: 25px;
+      color: var(--primary);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--text-dark);
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    /* Image Upload */
+    .image-upload-area {
+      border: 2px dashed var(--primary);
+      border-radius: 8px;
+      padding: 30px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: rgba(124, 58, 237, 0.05);
+    }
+
+    .image-upload-area:hover {
+      border-color: var(--secondary);
+      background: rgba(6, 182, 212, 0.05);
+    }
+
+    .image-upload-area.dragover {
+      border-color: var(--secondary);
+      background: rgba(6, 182, 212, 0.1);
+    }
+
+    .upload-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    .upload-text {
+      color: var(--text-light);
+      font-size: 14px;
+    }
+
+    #imageInput {
+      display: none;
+    }
+
+    .image-preview {
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .image-preview img {
+      max-width: 200px;
+      max-height: 200px;
+      border-radius: 8px;
+      border: 2px solid var(--border);
+    }
+
+    /* Form Row (for side-by-side inputs) */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    /* Buttons */
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+      flex: 1;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #6d28d9;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(124, 58, 237, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--secondary);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #0891b2;
+      transform: translateY(-2px);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #059669;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+
+    /* Products Table */
+    .products-section {
+      margin-top: 40px;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .products-section h3 {
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+
+    .products-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .products-table thead {
+      background: var(--bg-light);
+      border-bottom: 2px solid var(--primary);
+    }
+
+    .products-table th {
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .products-table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .products-table tbody tr:hover {
+      background: rgba(124, 58, 237, 0.05);
+    }
+
+    .product-img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .price-badge {
+      background: var(--success);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .edit-btn, .delete-btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: 0.3s;
+      margin-right: 5px;
+    }
+
+    .edit-btn {
+      background: var(--secondary);
+      color: white;
+    }
+
+    .edit-btn:hover {
+      background: #0891b2;
+    }
+
+    .delete-btn {
+      background: var(--danger);
+      color: white;
+    }
+
+    .delete-btn:hover {
+      background: #dc2626;
+    }
+
+    /* Alert Messages */
+    .alert {
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .alert-success {
+      background: #d1fae5;
+      color: #047857;
+      border-left: 4px solid var(--success);
+    }
+
+    .alert-error {
+      background: #fee2e2;
+      color: #991b1b;
+      border-left: 4px solid var(--danger);
+    }
+
+    .alert-warning {
+      background: #fef3c7;
+      color: #92400e;
+      border-left: 4px solid var(--warning);
+    }
+
+    /* Loading Spinner */
+    .spinner {
+      border: 4px solid var(--border);
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+
+      .category-panel {
+        height: auto;
+      }
+    }
+
+    @media (max-width: 640px) {
+      header {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .header-info {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .products-table {
+        font-size: 12px;
+      }
+
+      .products-table th,
+      .products-table td {
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div>
+      <h1>👨‍💼 Admin Panel - Product Management</h1>
+      <p style="font-size: 12px; opacity: 0.8;">MR Shop - Rafi's Admin Control Center</p>
+    </div>
+    <div class="header-info">
+      <div class="user-info">
+        <div>Logged in as: <strong id="adminName">Admin</strong></div>
+        <div style="font-size: 12px; margin-top: 3px;">Category: <strong id="currentCategory">Select a category</strong></div>
+      </div>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Alert Messages -->
+    <div id="alertContainer"></div>
+
+    <div class="main-content">
+      <!-- Left: Category Selection -->
+      <div class="category-panel">
+        <h2>📂 Categories</h2>
+        <div class="category-list" id="categoryList">
+          <p style="color: var(--text-light); font-size: 14px;">Loading categories...</p>
+        </div>
+      </div>
+
+      <!-- Right: Add Product Form -->
+      <div class="form-panel">
+        <h2>➕ Add New Product</h2>
+
+        <form id="productForm" onsubmit="handleAddProduct(event)">
+          <!-- Category (Read-only, selected from left panel) -->
+          <div class="form-group">
+            <label for="category">Category *</label>
+            <input 
+              type="text" 
+              id="category" 
+              placeholder="Select a category from the left panel" 
+              readonly
+              required
+            >
+          </div>
+
+          <!-- Product Name -->
+          <div class="form-group">
+            <label for="productName">Product Name *</label>
+            <input 
+              type="text" 
+              id="productName" 
+              placeholder="Enter product name (e.g., Traditional Saree)" 
+              required
+            >
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+            <label for="productDesc">Description</label>
+            <textarea 
+              id="productDesc" 
+              placeholder="Enter product description..."
+            ></textarea>
+          </div>
+
+          <!-- Price and Stock (Side by side) -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="productPrice">Price (৳) *</label>
+              <input 
+                type="number" 
+                id="productPrice" 
+                placeholder="e.g., 5000" 
+                min="0" 
+                step="0.01"
+                required
+              >
+            </div>
+            <div class="form-group">
+              <label for="productStock">Stock Quantity *</label>
+              <input 
+                type="number" 
+                id="productStock" 
+                placeholder="e.g., 50" 
+                min="0" 
+                value="1"
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Seller Info -->
+          <div class="form-group">
+            <label for="sellerName">Seller Name *</label>
+            <input 
+              type="text" 
+              id="sellerName" 
+              placeholder="Your shop name" 
+              required
+            >
+          </div>
+
+          <!-- Image Upload -->
+          <div class="form-group">
+            <label>Product Image</label>
+            <div class="image-upload-area" id="imageUploadArea" onclick="document.getElementById('imageInput').click()">
+              <div class="upload-icon">📸</div>
+              <div class="upload-text">Click to upload or drag & drop</div>
+              <div style="font-size: 12px; color: var(--text-light); margin-top: 5px;">PNG, JPG, JPEG (Max 5MB)</div>
+            </div>
+            <input 
+              type="file" 
+              id="imageInput" 
+              accept="image/*"
+              onchange="handleImageSelect(event)"
+            >
+            <div class="image-preview">
+              <img id="previewImage" style="display: none;">
+            </div>
+          </div>
+
+          <!-- Hidden input for base64 image -->
+          <input type="hidden" id="imageBase64" value="">
+
+          <!-- Buttons -->
+          <div class="button-group">
+            <button type="submit" class="btn btn-success">✅ Save Product</button>
+            <button type="reset" class="btn btn-secondary">🔄 Reset Form</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Products Table -->
+    <div class="products-section">
+      <h3>📦 Products in <strong id="tableCategory">Selected Category</strong></h3>
+      <div style="overflow-x: auto;">
+        <table class="products-table" id="productsTable">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Product Name</th>
+              <th>Description</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Seller</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="productsTableBody">
+            <tr>
+              <td colspan="7" style="text-align: center; color: var(--text-light); padding: 30px;">
+                Select a category to view products
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    // Global state
+    let categories = [];
+    let selectedCategory = null;
+    let allProducts = {};
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      loadCategories();
+      loadAdminName();
+      setupDragDrop();
+    });
+
+    // Load categories from index.html
+    function loadCategories() {
+      fetch('../html/index.html')
+        .then(response => response.text())
+        .then(html => {
+          extractCategories(html);
+        })
+        .catch(error => {
+          console.error('Error loading categories:', error);
+          // Still show categories even if fetch fails
+          extractCategories('');
+        });
+    }
+
+    // Extract categories from index.html content
+    function extractCategories(html) {
+      // Only 6 main categories as shown in index.html
+      const categoryNames = [
+        '🍯 Food & Natural',
+        '🎨 Handicrafts',
+        '📚 Books',
+        '🍰 Sweets & Dairy',
+        '👗 Clothing',
+        '🪙 Antique & Collectibles'
+      ];
+
+      categories = categoryNames;
+      renderCategories();
+      loadProductsFromLocalStorage();
+    }
+
+    // Render category list
+    function renderCategories() {
+      const categoryList = document.getElementById('categoryList');
+      categoryList.innerHTML = '';
+
+      categories.forEach(category => {
+        const div = document.createElement('div');
+        div.className = 'category-item';
+        div.textContent = category;
+        div.onclick = () => selectCategory(category);
+        categoryList.appendChild(div);
+      });
+    }
+
+    // Select category
+    function selectCategory(category) {
+      selectedCategory = category;
+      document.getElementById('category').value = category;
+      document.getElementById('currentCategory').textContent = category;
+      document.getElementById('tableCategory').textContent = category;
+
+      // Update active state
+      document.querySelectorAll('.category-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      event.target.classList.add('active');
+
+      // Load products for this category
+      loadProductsForCategory(category);
+    }
+
+    // Load products from localStorage
+    function loadProductsFromLocalStorage() {
+      const stored = localStorage.getItem('mrshop_products');
+      if (stored) {
+        allProducts = JSON.parse(stored);
+      } else {
+        allProducts = {};
+        categories.forEach(cat => {
+          allProducts[cat] = [];
+        });
+      }
+      
+      // Sync to index.html on load
+      syncToIndexPage();
+    }
+
+    // Load products for selected category
+    function loadProductsForCategory(category) {
+      if (!selectedCategory) return;
+
+      const tableBody = document.getElementById('productsTableBody');
+      const products = allProducts[category] || [];
+
+      if (products.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align: center; color: var(--text-light); padding: 30px;">
+              No products in this category yet
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tableBody.innerHTML = products.map((product, index) => `
+        <tr>
+          <td>
+            ${product.imageBase64 ? 
+              `<img src="${product.imageBase64}" class="product-img" alt="${product.name}">` :
+              '📷'}
+          </td>
+          <td><strong>${product.name}</strong></td>
+          <td>${product.description || '-'}</td>
+          <td><span class="price-badge">৳${parseInt(product.price).toLocaleString()}</span></td>
+          <td>${product.stock || 0}</td>
+          <td>${product.seller || 'Unknown'}</td>
+          <td>
+            <button class="edit-btn" onclick="editProduct('${category}', ${index})">Edit</button>
+            <button class="delete-btn" onclick="deleteProduct('${category}', ${index})">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Handle form submission
+    function handleAddProduct(event) {
+      event.preventDefault();
+
+      if (!selectedCategory) {
+        showAlert('Please select a category first', 'warning');
+        return;
+      }
+
+      const product = {
+        name: document.getElementById('productName').value,
+        description: document.getElementById('productDesc').value,
+        price: document.getElementById('productPrice').value,
+        stock: document.getElementById('productStock').value,
+        seller: document.getElementById('sellerName').value,
+        imageBase64: document.getElementById('imageBase64').value,
+        createdAt: new Date().toISOString()
+      };
+
+      // Initialize category if not exists
+      if (!allProducts[selectedCategory]) {
+        allProducts[selectedCategory] = [];
+      }
+
+      // Add product
+      allProducts[selectedCategory].push(product);
+
+      // Save to localStorage
+      localStorage.setItem('mrshop_products', JSON.stringify(allProducts));
+
+      // Show success message
+      showAlert(`✅ Product "${product.name}" added to ${selectedCategory}!`, 'success');
+
+      // Reset form
+      document.getElementById('productForm').reset();
+      document.getElementById('previewImage').style.display = 'none';
+      document.getElementById('imageBase64').value = '';
+
+      // Reload products table
+      loadProductsForCategory(selectedCategory);
+
+      // Update index.html (auto-sync)
+      syncToIndexPage();
+    }
+
+    // Handle image selection
+    function handleImageSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        showAlert('Image size must be less than 5MB', 'error');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const imageBase64 = e.target.result;
+        document.getElementById('imageBase64').value = imageBase64;
+        document.getElementById('previewImage').src = imageBase64;
+        document.getElementById('previewImage').style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Drag and drop
+    function setupDragDrop() {
+      const area = document.getElementById('imageUploadArea');
+      
+      area.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        area.classList.add('dragover');
+      });
+
+      area.addEventListener('dragleave', () => {
+        area.classList.remove('dragover');
+      });
+
+      area.addEventListener('drop', (e) => {
+        e.preventDefault();
+        area.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          document.getElementById('imageInput').files = files;
+          handleImageSelect({ target: { files: files } });
+        }
+      });
+    }
+
+    // Delete product
+    function deleteProduct(category, index) {
+      if (!confirm('Are you sure you want to delete this product?')) return;
+
+      allProducts[category].splice(index, 1);
+      localStorage.setItem('mrshop_products', JSON.stringify(allProducts));
+      showAlert('Product deleted successfully', 'success');
+      loadProductsForCategory(category);
+      syncToIndexPage();
+    }
+
+    // Edit product (placeholder)
+    function editProduct(category, index) {
+      const product = allProducts[category][index];
+      alert(`Edit feature coming soon!\n\nProduct: ${product.name}\nPrice: ৳${product.price}`);
+    }
+
+    // Sync to index page (Multiple methods for better compatibility)
+    function syncToIndexPage() {
+      // Convert category-based products to flat array for index.html
+      // Matching the category names used in index.html
+      const adminProducts = [];
+      
+      // Map adminrafi categories to index.html categories
+      const categoryMap = {
+        '🍯 Food & Natural': 'food',
+        '🎨 Handicrafts': 'handicrafts',
+        '📚 Books': 'books',
+        '🍰 Sweets & Dairy': 'sweets',
+        '👗 Clothing': 'clothing',
+        '🪙 Antique & Collectibles': 'antique'
+      };
+
+      // Flatten the product structure
+      for (const [categoryDisplay, products] of Object.entries(allProducts)) {
+        const categoryCode = categoryMap[categoryDisplay] || categoryDisplay.toLowerCase().replace(/\s+/g, '');
+        
+        products.forEach(product => {
+          adminProducts.push({
+            id: product.id || Date.now(),
+            name: product.name,
+            category: categoryCode,
+            price: parseFloat(product.price) || 0,
+            stock: parseInt(product.stock) || 0,
+            seller: product.seller || 'Admin',
+            imageBase64: product.imageBase64 || null,
+            description: product.description || '',
+            createdAt: product.createdAt || new Date().toISOString()
+          });
+        });
+      }
+
+      console.log('📊 Flattened products:', adminProducts);
+
+      // Method 1: Store in localStorage (PRIMARY)
+      localStorage.setItem('mrshop_admin_products', JSON.stringify(adminProducts));
+      console.log('✅ Products saved to localStorage with key: mrshop_admin_products');
+
+      // Method 2: PostMessage to parent window (for iframe scenarios)
+      if (window.parent !== window) {
+        window.parent.postMessage({ 
+          type: 'productsUpdated', 
+          data: adminProducts,
+          timestamp: new Date().toISOString()
+        }, '*');
+        console.log('✅ Products synced to parent window');
+      }
+
+      // Method 3: Dispatch global event
+      const syncEvent = new CustomEvent('mrshopProductsUpdated', { 
+        detail: { 
+          products: adminProducts,
+          timestamp: new Date().toISOString()
+        }
+      });
+      window.dispatchEvent(syncEvent);
+      console.log('✅ Global event dispatched: mrshopProductsUpdated');
+
+      // Method 4: Broadcast to all tabs/windows
+      if (window.BroadcastChannel) {
+        try {
+          const channel = new BroadcastChannel('mrshop_products');
+          channel.postMessage({ 
+            type: 'productsUpdated', 
+            data: adminProducts,
+            timestamp: new Date().toISOString()
+          });
+          channel.close();
+          console.log('✅ Products broadcast to other tabs via BroadcastChannel');
+        } catch(e) {
+          console.log('⚠️ BroadcastChannel not available:', e);
+        }
+      }
+
+      // Method 5: Direct window reference (if index is in same domain)
+      if (window.opener && !window.opener.closed) {
+        window.opener.postMessage({ 
+          type: 'productsUpdated', 
+          data: adminProducts,
+          source: 'adminrafi'
+        }, '*');
+        console.log('✅ Products sent to opener window');
+      }
+
+      console.log('🎉 Sync complete! Total products synced:', adminProducts.length);
+      showAlert(`✅ ${adminProducts.length} products synced to index.html!`, 'success');
+    }
+
+    // Show alert
+    function showAlert(message, type = 'success') {
+      const container = document.getElementById('alertContainer');
+      const alert = document.createElement('div');
+      alert.className = `alert alert-${type}`;
+      alert.textContent = message;
+      container.appendChild(alert);
+
+      setTimeout(() => {
+        alert.remove();
+      }, 4000);
+    }
+
+    // Load admin name
+    function loadAdminName() {
+      const adminName = localStorage.getItem('mr_shop_admin_name') || 'Rafi';
+      document.getElementById('adminName').textContent = adminName;
+    }
+
+    // Logout
+    function logout() {
+      if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('mr_shop_admin_logged_in');
+        window.location.href = './auth.html';
+      }
+    }
+  </script>
+</body>
+</html>

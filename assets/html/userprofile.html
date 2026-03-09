@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile — MR Shop</title>
+  <link rel="stylesheet" href="../css/userprofile.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <h1>
+      <a href="index.html" class="brand-link" aria-label="MR Shop home" style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:32px">🛍️</span>
+  <img src="../images/mrlogo.png" alt="MR" class="mr-logo" />
+        <span style="font-weight:700;font-size:20px;color:#fff">MR Shop</span>
+      </a>
+    </h1>
+    <nav class="header-nav">
+      <a href="orders.html" class="cart-link" aria-label="View orders" title="Track Orders">
+        <img src="./assets/images/cart.jpg" alt="Orders" class="cart-icon" style="filter: hue-rotate(200deg);" />
+      </a>
+      <a href="notification.html" class="notification-link" aria-label="View notifications">
+        <span class="notification-icon">🔔</span>
+      </a>
+    </nav>
+  </header>
+
+  <!-- Main Container -->
+  <main class="profile-container">
+    
+    <!-- Sidebar -->
+    <aside class="profile-sidebar">
+      <div class="profile-card">
+        <div class="profile-photo-wrapper">
+          <img src="https://i.pravatar.cc/200?img=33" alt="User" class="profile-photo" id="profilePhoto">
+          <button class="photo-edit-btn" onclick="changeProfilePhoto()">
+            <span>📷</span>
+          </button>
+        </div>
+        <h2 class="profile-name" id="profileName">Rafi Ullah</h2>
+        <p class="profile-email" id="profileEmail">rafi@mrshop.com</p>
+        <div class="profile-stats">
+          <div class="stat-item">
+            <span class="stat-value">24</span>
+            <span class="stat-label">Orders</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-value">12</span>
+            <span class="stat-label">Wishlist</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-value">45</span>
+            <span class="stat-label">Reviews</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav class="profile-menu">
+        <button class="menu-item active" data-section="personal-info" onclick="switchSection('personal-info')">
+          <span class="menu-icon">👤</span>
+          <span class="menu-text">Personal Info</span>
+        </button>
+        <button class="menu-item" data-section="order-history" onclick="switchSection('order-history')">
+          <span class="menu-icon">📦</span>
+          <span class="menu-text">Order History</span>
+        </button>
+        <button class="menu-item" data-section="wishlist" onclick="switchSection('wishlist')">
+          <span class="menu-icon">❤️</span>
+          <span class="menu-text">Wishlist</span>
+        </button>
+        <button class="menu-item" data-section="recently-viewed" onclick="switchSection('recently-viewed')">
+          <span class="menu-icon">👁️</span>
+          <span class="menu-text">Recently Viewed</span>
+        </button>
+        <button class="menu-item" data-section="settings" onclick="switchSection('settings')">
+          <span class="menu-icon">⚙️</span>
+          <span class="menu-text">Settings</span>
+        </button>
+        <!-- Admin Only: Seller Approvals -->
+        <button class="menu-item" id="sellerApprovalsMenu" data-section="seller-approvals" onclick="switchSection('seller-approvals')" style="display: none; color: #ff6b6b; border-color: #ff6b6b;">
+          <span class="menu-icon">✅</span>
+          <span class="menu-text">Seller Approvals</span>
+          <span class="notification-badge" id="approvalBadge" style="display: none; background: #ff6b6b; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: auto;">0</span>
+        </button>
+        <button class="menu-item logout-btn" onclick="logout()">
+          <span class="menu-icon">🚪</span>
+          <span class="menu-text">Logout</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <section class="profile-content">
+
+      <!-- Hero / Dashboard Header -->
+      <div class="profile-hero" aria-hidden="false">
+        <div class="hero-left">
+          <h2 class="hero-title">Welcome back, <span id="heroName">Rafi</span> 👋</h2>
+          <p class="hero-sub">Manage orders, wishlist, and account settings from your dashboard.</p>
+
+          <div class="hero-stats" aria-hidden="false">
+            <div class="stat">
+              <div class="stat-value" data-count="24" id="statOrders">0</div>
+              <div class="stat-label">Orders</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value" data-count="12" id="statWishlist">0</div>
+              <div class="stat-label">Wishlist</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value" data-count="45" id="statReviews">0</div>
+              <div class="stat-label">Reviews</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value" data-count="28" id="statSpent">৳0</div>
+              <div class="stat-label">Spent (K)</div>
+            </div>
+          </div>
+
+          <div class="hero-actions">
+            <button class="action-btn" onclick="switchSection('order-history')">📦 View Orders</button>
+            <button class="action-btn" onclick="switchSection('wishlist')">❤️ Wishlist</button>
+            <button class="action-btn" onclick="switchSection('settings')">⚙️ Settings</button>
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <div class="profile-mini">
+            <img src="https://i.pravatar.cc/120?img=33" alt="Profile" id="heroPhoto" />
+            <div class="mini-info">
+              <div class="mini-name" id="miniName">Md. Rafi Ullah</div>
+              <div class="mini-email" id="miniEmail">rafi@mrshop.com</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Personal Info Section -->
+      <div class="content-section active" id="personal-info">
+        <div class="section-header">
+          <h2 class="section-title">Personal Information</h2>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span id="backendStatus" style="font-size: 12px; color: #666; display: flex; align-items: center; gap: 5px;">
+              <span style="width: 8px; height: 8px; border-radius: 50%; background: #28a745;" id="statusDot"></span>
+              <span id="statusText">Connected to Backend</span>
+            </span>
+            <button class="edit-btn" id="editBtn" onclick="toggleEdit()">
+              <span class="edit-icon">✏️</span>
+              <span class="edit-text">Edit</span>
+            </button>
+          </div>
+        </div>
+        
+        <form class="info-form" id="infoForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-input" id="fullName" value="Md. Rafi Ullah" disabled>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input type="tel" class="form-input" id="phoneNumber" value="+880 1712-345678" disabled>
+            </div>
+            
+            <div class="form-group full-width">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" id="emailAddress" value="rafi@mrshop.com" disabled>
+            </div>
+            
+            <div class="form-group full-width">
+              <label class="form-label">Address</label>
+              <textarea class="form-textarea" id="address" rows="3" disabled>House 12, Road 5, Dhanmondi
+Dhaka - 1205, Bangladesh</textarea>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Date of Birth</label>
+              <input type="date" class="form-input" id="dob" value="1995-05-15" disabled>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Gender</label>
+              <select class="form-input" id="gender" disabled>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          
+          <button type="submit" class="save-btn hidden" id="saveBtn">
+            <span>💾</span>
+            Save Changes
+          </button>
+        </form>
+      </div>
+
+      <!-- Order History Section -->
+      <div class="content-section" id="order-history">
+        <div class="section-header">
+          <h2 class="section-title">Order History</h2>
+          <div class="order-filters">
+            <button class="filter-btn active" onclick="filterOrders('all')">All</button>
+            <button class="filter-btn" onclick="filterOrders('delivered')">Delivered</button>
+            <button class="filter-btn" onclick="filterOrders('pending')">Pending</button>
+            <button class="filter-btn" onclick="filterOrders('cancelled')">Cancelled</button>
+          </div>
+        </div>
+        
+        <div class="orders-container" id="ordersContainer">
+          <!-- Orders will be dynamically inserted -->
+        </div>
+      </div>
+
+      <!-- Wishlist Section -->
+      <div class="content-section" id="wishlist">
+        <div class="section-header">
+          <h2 class="section-title">My Wishlist</h2>
+          <button class="clear-btn" onclick="clearWishlist()">Clear All</button>
+        </div>
+        
+        <div class="products-grid" id="wishlistContainer">
+          <!-- Wishlist items will be dynamically inserted -->
+        </div>
+      </div>
+
+      <!-- Recently Viewed Section -->
+      <div class="content-section" id="recently-viewed">
+        <div class="section-header">
+          <h2 class="section-title">Recently Viewed Products</h2>
+          <button class="clear-btn" onclick="clearHistory()">Clear History</button>
+        </div>
+        
+        <div class="products-grid" id="recentlyViewedContainer">
+          <!-- Recently viewed items will be dynamically inserted -->
+        </div>
+      </div>
+
+      <!-- Settings Section -->
+      <div class="content-section" id="settings">
+        <div class="section-header">
+          <h2 class="section-title">Account Settings</h2>
+        </div>
+        
+        <div class="settings-container">
+          <div class="settings-card">
+            <div class="settings-item">
+              <div class="settings-info">
+                <h3 class="settings-title">Email Notifications</h3>
+                <p class="settings-desc">Receive order updates via email</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="settings-item">
+              <div class="settings-info">
+                <h3 class="settings-title">SMS Notifications</h3>
+                <p class="settings-desc">Get SMS alerts for deliveries</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="settings-item">
+              <div class="settings-info">
+                <h3 class="settings-title">Promotional Emails</h3>
+                <p class="settings-desc">Receive deals and offers</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <h3 class="card-title">Privacy & Security</h3>
+            <button class="settings-action-btn">
+              <span>🔒</span>
+              Change Password
+            </button>
+            <button class="settings-action-btn">
+              <span>🛡️</span>
+              Two-Factor Authentication
+            </button>
+            <button class="settings-action-btn">
+              <span>📱</span>
+              Connected Devices
+            </button>
+          </div>
+
+          <div class="settings-card danger-zone">
+            <h3 class="card-title">Danger Zone</h3>
+            <button class="settings-action-btn danger">
+              <span>⚠️</span>
+              Deactivate Account
+            </button>
+            <button class="settings-action-btn danger">
+              <span>🗑️</span>
+              Delete Account
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Only: Seller Approvals Section -->
+      <div class="content-section" id="seller-approvals" style="display: none;">
+        <div class="section-header">
+          <h2 class="section-title">Pending Seller Approvals</h2>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span id="approvalCount" style="font-size: 12px; color: #666;">
+              <span id="pendingCount">0</span> pending requests
+            </span>
+            <button class="edit-btn" onclick="loadAdminNotifications()" style="background: #28a745; color: white;">
+              <span>🔄</span>
+              Refresh
+            </button>
+          </div>
+        </div>
+
+        <div id="approvalsContainer" style="display: flex; flex-direction: column; gap: 12px;">
+          <!-- Seller approval cards will be loaded here -->
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <script src="../js/profile-manager.js"></script>
+  <script src="../js/userprofile.js"></script>
+</body>
+</html>

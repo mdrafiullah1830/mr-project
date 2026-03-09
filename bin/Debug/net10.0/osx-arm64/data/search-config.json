@@ -1,0 +1,30 @@
+{
+  "dataSource": "./data/products.json",
+  "searchFields": ["name", "description", "category"],
+  "categories": [
+    "electronics",
+    "clothing",
+    "handicrafts",
+    "antiques",
+    "books",
+    "food",
+    "sweets",
+    "dairy",
+    "natural"
+  ],
+  "indexFields": {
+    "id": "Unique product ID",
+    "name": "Product name",
+    "price": "Original price",
+    "final_price": "Discounted price",
+    "description": "Product description",
+    "category": "Product category",
+    "image_path": "Product image URL/path",
+    "discount": "Discount percentage",
+    "rating": "Product rating",
+    "stock": "Stock quantity",
+    "status": "Product status (active/inactive)"
+  },
+  "version": "1.0",
+  "lastUpdated": "2026-01-27"
+}

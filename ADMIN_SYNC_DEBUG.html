@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Sync Diagnostic Tool</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Courier New', monospace;
+      background: #1a1a1a;
+      color: #00ff00;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: #0a0a0a;
+      border: 2px solid #00ff00;
+      padding: 20px;
+      border-radius: 5px;
+    }
+    h1 {
+      color: #ffff00;
+      margin-bottom: 20px;
+      text-align: center;
+      text-shadow: 0 0 10px #ffff00;
+    }
+    h2 {
+      color: #00ccff;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #00ccff;
+      padding-bottom: 5px;
+    }
+    .section {
+      margin-bottom: 30px;
+      border-left: 3px solid #00ff00;
+      padding-left: 15px;
+    }
+    .status {
+      padding: 10px;
+      border-radius: 3px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    .success { background: #001a00; color: #00ff00; border-left: 3px solid #00ff00; }
+    .error { background: #3a0000; color: #ff4444; border-left: 3px solid #ff4444; }
+    .warning { background: #3a3a00; color: #ffff00; border-left: 3px solid #ffff00; }
+    .info { background: #003a3a; color: #00ffff; border-left: 3px solid #00ffff; }
+    pre {
+      background: #1a1a1a;
+      padding: 15px;
+      border-radius: 3px;
+      overflow-x: auto;
+      border: 1px solid #444;
+      margin: 10px 0;
+    }
+    button {
+      background: #00ff00;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 3px;
+    }
+    button:hover {
+      background: #00ccff;
+    }
+    .button-group {
+      margin: 15px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+    }
+    th, td {
+      border: 1px solid #444;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background: #003a3a;
+      color: #00ffff;
+    }
+    tr:hover { background: #1a1a1a; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔧 Admin Sync Diagnostic Tool</h1>
+    
+    <div class="section">
+      <h2>📋 Step 1: Check Browser & localStorage</h2>
+      <div id="step1"></div>
+      <div class="button-group">
+        <button onclick="checkBrowser()">▶ Run Check</button>
+        <button onclick="clearAllData()">🗑️ Clear All Data</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>💾 Step 2: Check localStorage Keys</h2>
+      <div id="step2"></div>
+      <div class="button-group">
+        <button onclick="checkLocalStorage()">▶ Check localStorage</button>
+        <button onclick="showAllLocalStorage()">📊 Show All Keys</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🔄 Step 3: Simulate Admin Add Product</h2>
+      <div id="step3"></div>
+      <div class="button-group">
+        <button onclick="simulateAdminAdd()">▶ Simulate Add</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>📡 Step 4: Check Event Listeners</h2>
+      <div id="step4"></div>
+      <div class="button-group">
+        <button onclick="checkEventListeners()">▶ Check Listeners</button>
+        <button onclick="testFireEvent()">🎯 Fire Test Event</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🧪 Step 5: Full Sync Test</h2>
+      <div id="step5"></div>
+      <div class="button-group">
+        <button onclick="runFullTest()">▶ Run Full Sync Test</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>📝 Step 6: Category Mapping Check</h2>
+      <div id="step6"></div>
+      <div class="button-group">
+        <button onclick="checkCategoryMapping()">▶ Check Categories</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🔗 Step 7: Test Actual Files</h2>
+      <div id="step7"></div>
+      <div class="button-group">
+        <button onclick="testAdminFile()">📄 Test adminrafi.html</button>
+        <button onclick="testIndexFile()">📄 Test index.html</button>
+        <button onclick="openAdminPanel()">🖥️ Open Admin Panel</button>
+        <button onclick="openIndex()">🖥️ Open Index</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Log output function
+    function log(sectionId, message, type = 'info') {
+      const section = document.getElementById(sectionId);
+      const div = document.createElement('div');
+      div.className = `status ${type}`;
+      div.textContent = message;
+      section.appendChild(div);
+      console.log(`[${type.toUpperCase()}] ${message}`);
+    }
+
+    function clearSection(sectionId) {
+      document.getElementById(sectionId).innerHTML = '';
+    }
+
+    // Step 1: Check Browser
+    function checkBrowser() {
+      clearSection('step1');
+      
+      log('step1', `✅ Browser: ${navigator.userAgent.split(' ').slice(-1)[0]}`, 'success');
+      log('step1', `✅ localStorage: ${typeof localStorage}`, 'success');
+      log('step1', `✅ sessionStorage: ${typeof sessionStorage}`, 'success');
+      log('step1', `✅ BroadcastChannel: ${typeof BroadcastChannel}`, 'success');
+      log('step1', `✅ CustomEvent: ${typeof CustomEvent}`, 'success');
+      log('step1', `✅ JSON: ${typeof JSON}`, 'success');
+      
+      try {
+        localStorage.setItem('__test__', 'test');
+        localStorage.removeItem('__test__');
+        log('step1', '✅ localStorage write/read working', 'success');
+      } catch(e) {
+        log('step1', `❌ localStorage error: ${e.message}`, 'error');
+      }
+    }
+
+    // Step 2: Check localStorage
+    function checkLocalStorage() {
+      clearSection('step2');
+      
+      const keys = [
+        'mrshop_products',
+        'mrshop_admin_products',
+        'mca_admin_products'
+      ];
+
+      keys.forEach(key => {
+        const value = localStorage.getItem(key);
+        if (value) {
+          log('step2', `✅ Found: ${key}`, 'success');
+          try {
+            const parsed = JSON.parse(value);
+            log('step2', `   └─ Type: ${Array.isArray(parsed) ? 'Array' : 'Object'}`, 'info');
+            if (Array.isArray(parsed)) {
+              log('step2', `   └─ Items: ${parsed.length}`, 'info');
+              if (parsed.length > 0) {
+                log('step2', `   └─ First item: ${JSON.stringify(parsed[0]).substring(0, 80)}...`, 'info');
+              }
+            } else {
+              log('step2', `   └─ Keys: ${Object.keys(parsed).join(', ')}`, 'info');
+            }
+          } catch(e) {
+            log('step2', `   ❌ Parse error: ${e.message}`, 'error');
+          }
+        } else {
+          log('step2', `⚠️  Not found: ${key}`, 'warning');
+        }
+      });
+    }
+
+    function showAllLocalStorage() {
+      clearSection('step2');
+      
+      if (localStorage.length === 0) {
+        log('step2', '⚠️ localStorage is empty', 'warning');
+        return;
+      }
+
+      let table = '<table><tr><th>Key</th><th>Size</th><th>Type</th></tr>';
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const value = localStorage.getItem(key);
+        const size = (new Blob([value]).size / 1024).toFixed(2);
+        const type = value.startsWith('[') ? 'Array' : 'Object';
+        table += `<tr><td>${key}</td><td>${size} KB</td><td>${type}</td></tr>`;
+      }
+      table += '</table>';
+      
+      document.getElementById('step2').innerHTML += table;
+      log('step2', `📊 Total keys: ${localStorage.length}`, 'info');
+    }
+
+    // Step 3: Simulate Admin Add
+    function simulateAdminAdd() {
+      clearSection('step3');
+      
+      log('step3', '🔄 Simulating product add in adminrafi...', 'info');
+
+      // Simulate the allProducts structure from adminrafi.html
+      const allProducts = {
+        '🍯 Food & Natural': [],
+        '🎨 Handicrafts': [],
+        '📚 Books': [],
+        '🍰 Sweets & Dairy': [],
+        '👗 Clothing': [
+          {
+            name: 'Test Saree',
+            description: 'Beautiful cotton saree',
+            price: '2500',
+            stock: '10',
+            seller: 'Test Seller',
+            imageBase64: 'data:image/png;base64,...',
+            createdAt: new Date().toISOString()
+          }
+        ],
+        '🪙 Antique & Collectibles': []
+      };
+
+      // Save to localStorage (as adminrafi would)
+      localStorage.setItem('mrshop_products', JSON.stringify(allProducts));
+      log('step3', '✅ Saved to mrshop_products (adminrafi format)', 'success');
+
+      // Simulate syncToIndexPage
+      const categoryMap = {
+        '🍯 Food & Natural': 'food',
+        '🎨 Handicrafts': 'handicrafts',
+        '📚 Books': 'books',
+        '🍰 Sweets & Dairy': 'sweets',
+        '👗 Clothing': 'clothing',
+        '🪙 Antique & Collectibles': 'antique'
+      };
+
+      const adminProducts = [];
+      for (const [categoryDisplay, products] of Object.entries(allProducts)) {
+        const categoryCode = categoryMap[categoryDisplay];
+        products.forEach(product => {
+          adminProducts.push({
+            id: Date.now(),
+            name: product.name,
+            category: categoryCode,
+            price: parseFloat(product.price),
+            stock: parseInt(product.stock),
+            seller: product.seller,
+            imageBase64: product.imageBase64,
+            description: product.description,
+            createdAt: product.createdAt
+          });
+        });
+      }
+
+      localStorage.setItem('mrshop_admin_products', JSON.stringify(adminProducts));
+      log('step3', '✅ Converted and saved to mrshop_admin_products (index format)', 'success');
+      log('step3', `📦 Total products: ${adminProducts.length}`, 'info');
+
+      // Fire event
+      const event = new CustomEvent('mrshopProductsUpdated', {
+        detail: { products: adminProducts }
+      });
+      window.dispatchEvent(event);
+      log('step3', '✅ Fired mrshopProductsUpdated event', 'success');
+
+      // Show the data
+      log('step3', `📋 Data saved:`, 'info');
+      document.getElementById('step3').innerHTML += `<pre>${JSON.stringify(adminProducts, null, 2).substring(0, 500)}...</pre>`;
+    }
+
+    // Step 4: Check Event Listeners
+    function checkEventListeners() {
+      clearSection('step4');
+      
+      log('step4', 'Checking for event listeners...', 'info');
+      
+      // Create a test event
+      let listenerDetected = false;
+      
+      const testEvent = new CustomEvent('mrshopProductsUpdated', {
+        detail: { test: true }
+      });
+
+      window.addEventListener('mrshopProductsUpdated', function testListener(e) {
+        listenerDetected = true;
+        window.removeEventListener('mrshopProductsUpdated', testListener);
+      });
+
+      window.dispatchEvent(testEvent);
+
+      if (listenerDetected) {
+        log('step4', '✅ Event listener detected for mrshopProductsUpdated', 'success');
+      } else {
+        log('step4', '❌ NO event listener found for mrshopProductsUpdated', 'error');
+        log('step4', 'This means index.html might not have the listener setup', 'warning');
+      }
+
+      // Check BroadcastChannel
+      if (window.BroadcastChannel) {
+        log('step4', '✅ BroadcastChannel API available', 'success');
+      } else {
+        log('step4', '⚠️ BroadcastChannel API not available', 'warning');
+      }
+    }
+
+    function testFireEvent() {
+      clearSection('step4');
+      
+      const testData = [
+        {
+          id: 123,
+          name: 'Event Test Product',
+          category: 'clothing',
+          price: 1999,
+          stock: 5,
+          seller: 'Test'
+        }
+      ];
+
+      const event = new CustomEvent('mrshopProductsUpdated', {
+        detail: { products: testData }
+      });
+
+      window.dispatchEvent(event);
+      log('step4', '✅ Test event fired', 'success');
+      log('step4', `Event detail: ${JSON.stringify(testData)}`, 'info');
+    }
+
+    // Step 5: Full Sync Test
+    function runFullTest() {
+      clearSection('step5');
+      
+      log('step5', '🚀 Running full sync test...', 'info');
+
+      // 1. Check localStorage
+      const stored = localStorage.getItem('mrshop_admin_products');
+      if (stored) {
+        try {
+          const products = JSON.parse(stored);
+          log('step5', `✅ Found mrshop_admin_products with ${products.length} items`, 'success');
+        } catch(e) {
+          log('step5', `❌ Error parsing: ${e.message}`, 'error');
+        }
+      } else {
+        log('step5', '⚠️ mrshop_admin_products not found in localStorage', 'warning');
+        log('step5', 'Try: 1) Add product in adminrafi.html first', 'info');
+        log('step5', '     2) Or click "Simulate Add" above', 'info');
+      }
+
+      // 2. Test conversion
+      const adminFormat = localStorage.getItem('mrshop_products');
+      if (adminFormat) {
+        log('step5', '✅ Found mrshop_products (adminrafi format)', 'success');
+      } else {
+        log('step5', '⚠️ mrshop_products not found', 'warning');
+      }
+
+      // 3. Check index.html listener
+      if (window.top === window) {
+        log('step5', '📌 This is a top-level window (not iframe)', 'info');
+      } else {
+        log('step5', '📌 This is inside an iframe', 'info');
+      }
+
+      // 4. Test event
+      let eventFired = false;
+      window.addEventListener('mrshopProductsUpdated', function() {
+        eventFired = true;
+      });
+
+      const testEvent = new CustomEvent('mrshopProductsUpdated', {
+        detail: { test: true }
+      });
+      window.dispatchEvent(testEvent);
+
+      if (eventFired) {
+        log('step5', '✅ Event listener working', 'success');
+      } else {
+        log('step5', '❌ Event not triggering listeners', 'error');
+      }
+    }
+
+    // Step 6: Category Mapping
+    function checkCategoryMapping() {
+      clearSection('step6');
+      
+      const categoryMap = {
+        '🍯 Food & Natural': 'food',
+        '🎨 Handicrafts': 'handicrafts',
+        '📚 Books': 'books',
+        '🍰 Sweets & Dairy': 'sweets',
+        '👗 Clothing': 'clothing',
+        '🪙 Antique & Collectibles': 'antique'
+      };
+
+      let table = '<table><tr><th>Admin Display</th><th>→</th><th>Index Code</th></tr>';
+      for (const [display, code] of Object.entries(categoryMap)) {
+        table += `<tr><td>${display}</td><td>→</td><td><strong>${code}</strong></td></tr>`;
+      }
+      table += '</table>';
+
+      document.getElementById('step6').innerHTML += table;
+      log('step6', '✅ Category mapping defined', 'success');
+    }
+
+    // Step 7: Test Files
+    function testAdminFile() {
+      clearSection('step7');
+      log('step7', '📄 Checking adminrafi.html...', 'info');
+      
+      fetch('/assets/html/adminrafi.html')
+        .then(r => r.text())
+        .then(html => {
+          if (html.includes('syncToIndexPage')) {
+            log('step7', '✅ syncToIndexPage function found', 'success');
+          } else {
+            log('step7', '❌ syncToIndexPage function NOT found', 'error');
+          }
+
+          if (html.includes('mrshop_admin_products')) {
+            log('step7', '✅ mrshop_admin_products key found', 'success');
+          } else {
+            log('step7', '❌ mrshop_admin_products key NOT found', 'error');
+          }
+
+          if (html.includes('localStorage.setItem')) {
+            log('step7', '✅ localStorage.setItem found', 'success');
+          } else {
+            log('step7', '❌ localStorage.setItem NOT found', 'error');
+          }
+        })
+        .catch(e => log('step7', `❌ Error loading: ${e.message}`, 'error'));
+    }
+
+    function testIndexFile() {
+      clearSection('step7');
+      log('step7', '📄 Checking index.html...', 'info');
+      
+      fetch('/assets/html/index.html')
+        .then(r => r.text())
+        .then(html => {
+          if (html.includes('mrshopProductsUpdated')) {
+            log('step7', '✅ mrshopProductsUpdated listener found', 'success');
+          } else {
+            log('step7', '❌ mrshopProductsUpdated listener NOT found', 'error');
+          }
+
+          if (html.includes('mrshop_admin_products')) {
+            log('step7', '✅ mrshop_admin_products key found', 'success');
+          } else {
+            log('step7', '❌ mrshop_admin_products key NOT found', 'error');
+          }
+
+          if (html.includes('loadAdminProducts')) {
+            log('step7', '✅ loadAdminProducts function found', 'success');
+          } else {
+            log('step7', '❌ loadAdminProducts function NOT found', 'error');
+          }
+        })
+        .catch(e => log('step7', `❌ Error loading: ${e.message}`, 'error'));
+    }
+
+    function openAdminPanel() {
+      window.open('/assets/html/adminrafi.html', 'AdminPanel');
+    }
+
+    function openIndex() {
+      window.open('/assets/html/index.html', 'Index');
+    }
+
+    // Clear all data
+    function clearAllData() {
+      const keys = ['mrshop_products', 'mrshop_admin_products', 'mca_admin_products'];
+      keys.forEach(key => localStorage.removeItem(key));
+      clearSection('step1');
+      log('step1', '✅ All sync data cleared', 'success');
+    }
+
+    // Run initial check
+    window.addEventListener('load', () => {
+      checkBrowser();
+      checkLocalStorage();
+      checkCategoryMapping();
+    });
+  </script>
+</body>
+</html>

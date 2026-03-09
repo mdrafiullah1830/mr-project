@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Product Details — MR Shop</title>
+  <link rel="stylesheet" href="/assets/css/product.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+  <a class="brand" href="index.html"><img src="../images/mrlogo.png" alt="MR" class="logo"/><span>MR Shop</span></a>
+      <div class="header-actions"><a href="/index.html">Back to home</a></div>
+    </div>
+  </header>
+
+  <main class="product-page">
+    <div id="productContainer" class="product-container">
+      <div class="product-image" id="productImage">
+        <!-- Image rendered here -->
+      </div>
+      <div class="product-info" id="productInfo">
+        <h1 id="productName">Loading…</h1>
+        <div class="meta">
+          <span class="price" id="productPrice">-</span>
+          <span class="category" id="productCategory">-</span>
+        </div>
+        <p class="description" id="productDescription"></p>
+
+        <div class="actions">
+          <button id="addToCartBtn" class="btn primary">Add to Cart</button>
+          <button id="buyNowBtn" class="btn">Buy Now</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="message" class="message" aria-live="polite"></div>
+  </main>
+
+  <script src="/assets/js/products.js"></script>
+  <script src="/assets/js/product.js"></script>
+</body>
+</html>

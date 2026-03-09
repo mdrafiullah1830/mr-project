@@ -1,0 +1,1243 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Become a Seller — MR Shop</title>
+	<style>
+		/* ============================================
+		   GLOBAL STYLES & COLOR THEME
+		   Edit colors here to match your brand
+		   ============================================ */
+		:root {
+			--primary-blue: #7c3aed;
+			--secondary-cyan: #06b6d4;
+			--text-dark: #1e293b;
+			--text-muted: #64748b;
+			--bg-light: #f8fafc;
+			--white: #ffffff;
+			--border-color: #e2e8f0;
+			--shadow: 0 4px 20px rgba(0,0,0,0.08);
+			--shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+		}
+		
+		* { box-sizing: border-box; margin: 0; padding: 0; }
+		
+		body {
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+			color: var(--text-dark);
+			line-height: 1.6;
+		}
+
+		/* ============================================
+		   HEADER STYLES
+		   ============================================ */
+		header {
+			position: sticky;
+			top: 0;
+			z-index: 30;
+			background: linear-gradient(90deg, var(--primary-blue), var(--secondary-cyan));
+			color: var(--white);
+			box-shadow: var(--shadow);
+			padding: 18px 36px;
+		}
+		
+		.header-inner {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 16px;
+		}
+		
+		.brand-link {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			color: inherit;
+			text-decoration: none;
+			font-weight: 700;
+			font-size: 20px;
+		}
+		
+		.mr-logo {
+			height: 40px;
+			border-radius: 8px;
+			padding: 4px;
+			border: 2px solid rgba(255,255,255,0.18);
+			background: rgba(255,255,255,0.03);
+		}
+		
+		.header-links {
+			display: flex;
+			gap: 12px;
+			align-items: center;
+		}
+		
+		.header-links a {
+			color: var(--white);
+			text-decoration: none;
+			padding: 8px 12px;
+			border-radius: 8px;
+			font-weight: 600;
+			transition: all 0.2s ease;
+		}
+		
+		.header-links a:hover {
+			background: rgba(255,255,255,0.15);
+		}
+
+		/* ============================================
+		   TYPEWRITER WELCOME MESSAGE
+		   ============================================ */
+		.welcome-box {
+			max-width: 1100px;
+			margin: 24px auto 0;
+			padding: 0 20px;
+		}
+		
+		.welcome-card {
+			background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(247,251,255,0.95));
+			border-radius: 16px;
+			padding: 24px 32px;
+			box-shadow: 0 8px 24px rgba(124,58,237,0.08);
+			border: 1px solid rgba(124,58,237,0.12);
+			position: relative;
+			overflow: hidden;
+		}
+		
+		.welcome-card::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 3px;
+			background: linear-gradient(90deg, var(--primary-blue), var(--secondary-cyan));
+		}
+		
+		.typewriter-line {
+			font-size: 15px;
+			line-height: 1.8;
+			color: var(--text-dark);
+			margin: 0 0 12px 0;
+			font-family: 'Courier New', Courier, monospace;
+			min-height: 27px;
+		}
+		
+		.typewriter-line:last-child { margin-bottom: 0; }
+		
+		.typewriter-line .cursor {
+			display: inline-block;
+			width: 2px;
+			height: 18px;
+			background: var(--primary-blue);
+			margin-left: 2px;
+			animation: blink 0.7s infinite;
+			vertical-align: middle;
+		}
+		
+		@keyframes blink {
+			0%, 49% { opacity: 1; }
+			50%, 100% { opacity: 0; }
+		}
+
+		/* ============================================
+		   MAIN FORM CONTAINER
+		   ============================================ */
+		.page {
+			max-width: 1100px;
+			margin: 24px auto 40px;
+			padding: 0 20px;
+		}
+		
+		.form-card {
+			background: var(--white);
+			border-radius: 16px;
+			padding: 32px;
+			box-shadow: var(--shadow-lg);
+			border-left: 4px solid var(--primary-blue);
+			border-right: 4px solid var(--secondary-cyan);
+		}
+		
+		.form-title {
+			font-size: 28px;
+			font-weight: 700;
+			background: linear-gradient(90deg, var(--primary-blue), var(--secondary-cyan));
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+			margin-bottom: 8px;
+		}
+		
+		.form-subtitle {
+			color: var(--text-muted);
+			font-size: 14px;
+			margin-bottom: 28px;
+		}
+
+		/* ============================================
+		   FORM LAYOUT - Two columns on desktop
+		   ============================================ */
+		.form-grid {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 20px;
+		}
+		
+		.form-group {
+			display: flex;
+			flex-direction: column;
+		}
+		
+		.form-group.full {
+			grid-column: 1 / -1;
+		}
+		
+		label {
+			font-weight: 600;
+			margin-bottom: 8px;
+			color: var(--text-dark);
+			font-size: 14px;
+		}
+		
+		label .required {
+			color: #ef4444;
+			margin-left: 2px;
+		}
+		
+		input[type="text"],
+		input[type="tel"],
+		input[type="email"],
+		select,
+		textarea {
+			width: 100%;
+			padding: 12px 14px;
+			border: 2px solid var(--border-color);
+			border-radius: 10px;
+			font-size: 14px;
+			transition: all 0.2s ease;
+			font-family: inherit;
+		}
+		
+		input:focus,
+		select:focus,
+		textarea:focus {
+			outline: none;
+			border-color: var(--primary-blue);
+			box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+		}
+		
+		textarea {
+			min-height: 80px;
+			resize: vertical;
+		}
+		
+		.input-hint {
+			font-size: 12px;
+			color: var(--text-muted);
+			margin-top: 4px;
+		}
+
+		/* ============================================
+		   PAYMENT METHOD SELECTION
+		   Uses images for visual selection
+		   ============================================ */
+		.payment-options {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+			gap: 12px;
+			margin-top: 8px;
+		}
+		
+		.payment-option {
+			position: relative;
+			cursor: pointer;
+		}
+		
+		.payment-option input[type="radio"] {
+			position: absolute;
+			opacity: 0;
+		}
+		
+		.payment-option label {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding: 16px 12px;
+			border: 2px solid var(--border-color);
+			border-radius: 12px;
+			cursor: pointer;
+			transition: all 0.2s ease;
+			background: var(--white);
+		}
+		
+		.payment-option img {
+			width: 60px;
+			height: 60px;
+			object-fit: contain;
+			margin-bottom: 8px;
+		}
+		
+		.payment-option span {
+			font-size: 13px;
+			font-weight: 600;
+			color: var(--text-dark);
+		}
+		
+		.payment-option input[type="radio"]:checked + label {
+			border-color: var(--primary-blue);
+			background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(6,182,212,0.08));
+			box-shadow: 0 4px 12px rgba(124,58,237,0.15);
+		}
+		
+		.payment-option label:hover {
+			border-color: var(--secondary-cyan);
+			transform: translateY(-2px);
+		}
+		
+		.bank-select {
+			margin-top: 12px;
+			display: none;
+		}
+		
+		.bank-select.show {
+			display: block;
+		}
+
+		/* ============================================
+		   LOCATION PICKER
+		   ============================================ */
+		.location-picker {
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+		}
+		
+		.location-btn {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 12px 20px;
+			background: linear-gradient(90deg, var(--primary-blue), var(--secondary-cyan));
+			color: var(--white);
+			border: none;
+			border-radius: 10px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.2s ease;
+			font-size: 14px;
+		}
+		
+		.location-btn:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 6px 20px rgba(124,58,237,0.3);
+		}
+		
+		.location-btn:disabled {
+			opacity: 0.6;
+			cursor: not-allowed;
+			transform: none;
+		}
+		
+		.location-display {
+			padding: 12px;
+			background: var(--bg-light);
+			border-radius: 8px;
+			font-size: 13px;
+			color: var(--text-muted);
+			display: none;
+		}
+		
+		.location-display.show {
+			display: block;
+		}
+		
+		.map-preview {
+			width: 100%;
+			height: 200px;
+			border-radius: 10px;
+			border: 2px solid var(--border-color);
+			display: none;
+		}
+		
+		.map-preview.show {
+			display: block;
+		}
+
+		/* ============================================
+		   FILE UPLOAD & PREVIEW
+		   ============================================ */
+		.file-upload-group {
+			display: flex;
+			gap: 16px;
+			align-items: flex-start;
+			flex-wrap: wrap;
+		}
+		
+		.file-input-wrapper {
+			flex: 1;
+			min-width: 200px;
+		}
+		
+		.file-input-wrapper input[type="file"] {
+			display: block;
+			width: 100%;
+			padding: 10px;
+			border: 2px dashed var(--border-color);
+			border-radius: 10px;
+			cursor: pointer;
+			font-size: 13px;
+		}
+		
+		.file-preview {
+			width: 120px;
+			height: 120px;
+			border-radius: 12px;
+			border: 2px dashed var(--border-color);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			overflow: hidden;
+			background: var(--bg-light);
+		}
+		
+		.file-preview img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+		
+		.file-preview .placeholder {
+			font-size: 12px;
+			color: var(--text-muted);
+			text-align: center;
+		}
+
+		/* ============================================
+		   DOCUMENT TYPE SELECTOR (NID or Birth Cert)
+		   ============================================ */
+		.doc-type-selector {
+			display: flex;
+			gap: 12px;
+			margin-bottom: 16px;
+		}
+		
+		.doc-type-option {
+			flex: 1;
+		}
+		
+		.doc-type-option input[type="radio"] {
+			display: none;
+		}
+		
+		.doc-type-option label {
+			display: block;
+			padding: 12px;
+			border: 2px solid var(--border-color);
+			border-radius: 10px;
+			text-align: center;
+			cursor: pointer;
+			transition: all 0.2s ease;
+			font-weight: 600;
+		}
+		
+		.doc-type-option input[type="radio"]:checked + label {
+			border-color: var(--primary-blue);
+			background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(6,182,212,0.08));
+			color: var(--primary-blue);
+		}
+		
+		.doc-upload-section {
+			display: none;
+		}
+		
+		.doc-upload-section.show {
+			display: block;
+		}
+
+		/* ============================================
+		   CATEGORY CHECKBOXES
+		   ============================================ */
+		.category-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+			gap: 12px;
+			margin-top: 8px;
+		}
+		
+		.category-item {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			padding: 10px 12px;
+			border: 2px solid var(--border-color);
+			border-radius: 8px;
+			cursor: pointer;
+			transition: all 0.2s ease;
+		}
+		
+		.category-item:hover {
+			border-color: var(--secondary-cyan);
+			background: var(--bg-light);
+		}
+		
+		.category-item input[type="checkbox"] {
+			width: 18px;
+			height: 18px;
+			cursor: pointer;
+		}
+		
+		.category-item label {
+			cursor: pointer;
+			margin: 0;
+			font-weight: 500;
+			font-size: 14px;
+		}
+
+		/* ============================================
+		   SUBMIT BUTTON
+		   ============================================ */
+		.submit-section {
+			margin-top: 32px;
+			padding-top: 24px;
+			border-top: 2px solid var(--border-color);
+			display: flex;
+			gap: 12px;
+			justify-content: flex-end;
+		}
+		
+		.btn-submit {
+			padding: 14px 32px;
+			background: linear-gradient(90deg, var(--primary-blue), var(--secondary-cyan));
+			color: var(--white);
+			border: none;
+			border-radius: 10px;
+			font-size: 16px;
+			font-weight: 700;
+			cursor: pointer;
+			transition: all 0.2s ease;
+			box-shadow: 0 4px 16px rgba(124,58,237,0.25);
+		}
+		
+		.btn-submit:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 6px 24px rgba(124,58,237,0.35);
+		}
+		
+		.btn-cancel {
+			padding: 14px 32px;
+			background: transparent;
+			color: var(--text-muted);
+			border: 2px solid var(--border-color);
+			border-radius: 10px;
+			font-size: 16px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.2s ease;
+		}
+		
+		.btn-cancel:hover {
+			border-color: var(--text-dark);
+			color: var(--text-dark);
+		}
+
+		/* ============================================
+		   LOADING OVERLAY
+		   ============================================ */
+		.loading-overlay {
+			position: fixed;
+			inset: 0;
+			background: rgba(0,0,0,0.5);
+			display: none;
+			align-items: center;
+			justify-content: center;
+			z-index: 9999;
+		}
+		
+		.loading-overlay.show {
+			display: flex;
+		}
+		
+		.spinner {
+			width: 60px;
+			height: 60px;
+			border: 4px solid rgba(255,255,255,0.3);
+			border-top-color: var(--white);
+			border-radius: 50%;
+			animation: spin 0.8s linear infinite;
+		}
+		
+		@keyframes spin {
+			to { transform: rotate(360deg); }
+		}
+
+		/* ============================================
+		   RESPONSIVE - Mobile View
+		   ============================================ */
+		@media (max-width: 768px) {
+			header {
+				padding: 12px 16px;
+			}
+			
+			.brand-link {
+				font-size: 18px;
+			}
+			
+			.form-grid {
+				grid-template-columns: 1fr;
+			}
+			
+			.form-card {
+				padding: 24px 20px;
+			}
+			
+			.payment-options {
+				grid-template-columns: repeat(2, 1fr);
+			}
+			
+			.file-upload-group {
+				flex-direction: column;
+			}
+			
+			.file-preview {
+				width: 100px;
+				height: 100px;
+			}
+			
+			.submit-section {
+				flex-direction: column-reverse;
+			}
+			
+			.btn-submit,
+			.btn-cancel {
+				width: 100%;
+			}
+		}
+	</style>
+</head>
+<body>
+	<!-- ============================================
+	     HEADER SECTION
+	     ============================================ -->
+	<header>
+		<div class="header-inner">
+			<a href="index.html" class="brand-link" aria-label="MR Shop home">
+				<img src="../images/mrlogo.png" alt="MR" class="mr-logo" />
+				<span>MR Shop</span>
+			</a>
+			<div class="header-links">
+				<a href="index.html" id="backHomeLink">Back to home</a>
+			</div>
+		</div>
+	</header>
+
+	<!-- ============================================
+	     TYPEWRITER WELCOME MESSAGE
+	     ============================================ -->
+	<div class="welcome-box">
+		<div class="welcome-card">
+			<div class="typewriter-line" id="line1"></div>
+			<div class="typewriter-line" id="line2"></div>
+			<div class="typewriter-line" id="line3"></div>
+		</div>
+	</div>
+
+	<!-- ============================================
+	     MAIN FORM CONTAINER
+	     ============================================ -->
+	<main class="page">
+		<div class="form-card">
+			<h2 class="form-title">Become a Seller</h2>
+			<p class="form-subtitle">Fill out the form below to start selling on MR Shop. All fields marked with * are required.</p>
+
+			<form id="sellerForm">
+				<div class="form-grid">
+					<!-- Full Name -->
+					<div class="form-group">
+						<label for="fullName">Full Name <span class="required">*</span></label>
+						<input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required />
+					</div>
+
+					<!-- Phone Number -->
+					<div class="form-group">
+						<label for="phone">Phone Number <span class="required">*</span></label>
+						<input type="tel" id="phone" name="phone" placeholder="01XXXXXXXXX" pattern="01[0-9]{9}" required />
+						<span class="input-hint">Bangladeshi format: 01XXXXXXXXX</span>
+					</div>
+
+					<!-- Email Address -->
+					<div class="form-group">
+						<label for="email">Email Address <span class="required">*</span></label>
+						<input type="email" id="email" name="email" placeholder="your@email.com" required />
+					</div>
+
+					<!-- Business/Shop Name -->
+					<div class="form-group">
+						<label for="shopName">Business / Shop Name <span class="required">*</span></label>
+						<input type="text" id="shopName" name="shopName" placeholder="Enter your shop name" required />
+					</div>
+
+					<!-- Payment Receiving Method -->
+					<div class="form-group full">
+						<label>Payment Receiving Method <span class="required">*</span></label>
+						<div class="payment-options">
+							<!-- bKash Option -->
+							<div class="payment-option">
+								<input type="radio" id="bkash" name="paymentMethod" value="bkash" required />
+								<label for="bkash">
+									<img src="../images/bkash.jpg" alt="bKash" />
+									<span>bKash</span>
+								</label>
+							</div>
+
+							<!-- Nagad Option -->
+							<div class="payment-option">
+								<input type="radio" id="nagad" name="paymentMethod" value="nagad" />
+								<label for="nagad">
+									<img src="../images/nagad.jpg" alt="Nagad" />
+									<span>Nagad</span>
+								</label>
+							</div>
+
+							<!-- Rocket Option -->
+							<div class="payment-option">
+								<input type="radio" id="rocket" name="paymentMethod" value="rocket" />
+								<label for="rocket">
+									<img src="../images/rocket.jpg" alt="Rocket" />
+									<span>Rocket</span>
+								</label>
+							</div>
+
+							<!-- Bank Transfer Option -->
+							<div class="payment-option">
+								<input type="radio" id="bank" name="paymentMethod" value="bank" />
+								<label for="bank">
+									<img src="../images/bank.jpg" alt="Bank" />
+									<span>Bank Transfer</span>
+								</label>
+							</div>
+						</div>
+
+						<!-- Bank Selection (shows only when Bank Transfer selected) -->
+						<div class="bank-select" id="bankSelect">
+							<label for="bankName">Select Your Bank</label>
+							<select id="bankName" name="bankName">
+								<option value="">Choose a bank</option>
+								<option value="brac">BRAC Bank</option>
+								<option value="islami">Islami Bank Bangladesh</option>
+								<option value="dbbl">Dutch-Bangla Bank (DBBL)</option>
+								<option value="sonali">Sonali Bank</option>
+								<option value="prime">Prime Bank</option>
+								<option value="ebl">Eastern Bank Ltd (EBL)</option>
+								<option value="ucb">United Commercial Bank (UCB)</option>
+								<option value="ab">AB Bank</option>
+								<option value="agrani">Agrani Bank</option>
+								<option value="city">City Bank</option>
+							</select>
+						</div>
+					</div>
+
+					<!-- Account Number for Payment -->
+					<div class="form-group">
+						<label for="accountNumber">Payment Account Number <span class="required">*</span></label>
+						<input type="text" id="accountNumber" name="accountNumber" placeholder="Enter account/wallet number" required />
+					</div>
+
+					<!-- Shop Location -->
+					<div class="form-group">
+						<label>Shop Location <span class="required">*</span></label>
+						<div class="location-picker">
+							<button type="button" class="location-btn" id="locationBtn">
+								<span>📍</span> Choose Your Live Location
+							</button>
+							<div class="location-display" id="locationDisplay">
+								<strong>Location:</strong> <span id="locationText">Not selected</span><br>
+								<strong>Coordinates:</strong> <span id="locationCoords">-</span>
+							</div>
+							<div id="mapPreview" class="map-preview"></div>
+							<input type="hidden" id="latitude" name="latitude" />
+							<input type="hidden" id="longitude" name="longitude" />
+						</div>
+					</div>
+
+					<!-- Seller Categories -->
+					<div class="form-group full">
+						<label>What will you sell? <span class="required">*</span></label>
+						<span class="input-hint">Select all categories that apply</span>
+						<div class="category-grid">
+							<div class="category-item">
+								<input type="checkbox" id="cat-food" name="categories" value="food" />
+								<label for="cat-food">Food & Natural</label>
+							</div>
+							<div class="category-item">
+								<input type="checkbox" id="cat-sweets" name="categories" value="sweets" />
+								<label for="cat-sweets">Sweets & Dairy</label>
+							</div>
+							<div class="category-item">
+								<input type="checkbox" id="cat-handicrafts" name="categories" value="handicrafts" />
+								<label for="cat-handicrafts">Handicrafts</label>
+							</div>
+							<div class="category-item">
+								<input type="checkbox" id="cat-clothing" name="categories" value="clothing" />
+								<label for="cat-clothing">Clothing & Fashion</label>
+							</div>
+							<div class="category-item">
+								<input type="checkbox" id="cat-books" name="categories" value="books" />
+								<label for="cat-books">Books</label>
+							</div>
+							<div class="category-item">
+								<input type="checkbox" id="cat-antique" name="categories" value="antique" />
+								<label for="cat-antique">Antique</label>
+							</div>
+							<div class="category-item">
+								<input type="checkbox" id="cat-electronics" name="categories" value="electronics" />
+								<label for="cat-electronics">Electronics</label>
+							</div>
+							<div class="category-item">
+								<input type="checkbox" id="cat-others" name="categories" value="others" />
+								<label for="cat-others">Others</label>
+							</div>
+						</div>
+					</div>
+
+					<!-- Profile Photo Upload -->
+					<div class="form-group full">
+						<label for="profilePhoto">Profile Photo (Optional)</label>
+						<div class="file-upload-group">
+							<div class="file-input-wrapper">
+								<input type="file" id="profilePhoto" name="profilePhoto" accept="image/*" />
+							</div>
+							<div class="file-preview" id="profilePreview">
+								<span class="placeholder">No image</span>
+							</div>
+						</div>
+					</div>
+
+					<!-- Document Type Selection (NID or Birth Certificate) -->
+					<div class="form-group full">
+						<label>Identity Document <span class="required">*</span></label>
+						<div class="doc-type-selector">
+							<div class="doc-type-option">
+								<input type="radio" id="docNID" name="docType" value="nid" checked />
+								<label for="docNID">National ID (NID)</label>
+							</div>
+							<div class="doc-type-option">
+								<input type="radio" id="docBirth" name="docType" value="birth" />
+								<label for="docBirth">Birth Certificate</label>
+							</div>
+						</div>
+					</div>
+
+					<!-- NID Upload Section -->
+					<div class="form-group full doc-upload-section show" id="nidSection">
+						<label>Upload NID (Front & Back) <span class="required">*</span></label>
+						<div class="form-grid">
+							<div class="form-group">
+								<label for="nidFront">NID Front Side</label>
+								<div class="file-upload-group">
+									<div class="file-input-wrapper">
+										<input type="file" id="nidFront" name="nidFront" accept="image/*,application/pdf" />
+									</div>
+									<div class="file-preview" id="nidFrontPreview">
+										<span class="placeholder">No file</span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="nidBack">NID Back Side</label>
+								<div class="file-upload-group">
+									<div class="file-input-wrapper">
+										<input type="file" id="nidBack" name="nidBack" accept="image/*,application/pdf" />
+									</div>
+									<div class="file-preview" id="nidBackPreview">
+										<span class="placeholder">No file</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Birth Certificate Upload Section -->
+					<div class="form-group full doc-upload-section" id="birthSection">
+						<label for="birthCert">Upload Birth Certificate <span class="required">*</span></label>
+						<div class="file-upload-group">
+							<div class="file-input-wrapper">
+								<input type="file" id="birthCert" name="birthCert" accept="image/*,application/pdf" />
+							</div>
+							<div class="file-preview" id="birthPreview">
+								<span class="placeholder">No file</span>
+							</div>
+						</div>
+					</div>
+
+					<!-- Additional Information -->
+					<div class="form-group full">
+						<label for="additionalInfo">Additional Information (Optional)</label>
+						<textarea id="additionalInfo" name="additionalInfo" placeholder="Tell us more about your business, products, or any special requirements..."></textarea>
+					</div>
+
+				</div>
+
+				<!-- Submit Section -->
+				<div class="submit-section">
+					<button type="button" class="btn-cancel" onclick="history.back();">Cancel</button>
+					<button type="submit" class="btn-submit">Submit for Seller Approval</button>
+				</div>
+			</form>
+		</div>
+	</main>
+
+	<!-- Loading Overlay -->
+	<div class="loading-overlay" id="loadingOverlay">
+		<div class="spinner"></div>
+	</div>
+
+	<!-- ============================================
+	     JAVASCRIPT
+	     ============================================ -->
+	<script>
+		// ============================================
+		// TYPEWRITER EFFECT
+		// ============================================
+		(function() {
+			const messages = [
+				"Thanks for visiting our Become a Seller page.",
+				"Your profit is completely yours. However, if you wish, you can voluntarily donate 5% for our charity program.",
+				"We always appreciate your support."
+			];
+			
+			function typeWriter(element, text, speed, callback) {
+				let i = 0;
+				element.textContent = '';
+				const cursor = document.createElement('span');
+				cursor.className = 'cursor';
+				
+				function type() {
+					if (i < text.length) {
+						element.textContent = text.substring(0, i + 1);
+						element.appendChild(cursor);
+						i++;
+						setTimeout(type, speed);
+					} else {
+						setTimeout(() => {
+							cursor.remove();
+							if (callback) callback();
+						}, 400);
+					}
+				}
+				type();
+			}
+			
+			function startTypewriter() {
+				const line1 = document.getElementById('line1');
+				const line2 = document.getElementById('line2');
+				const line3 = document.getElementById('line3');
+				
+				if (!line1 || !line2 || !line3) return;
+				
+				typeWriter(line1, messages[0], 40, () => {
+					typeWriter(line2, messages[1], 25, () => {
+						typeWriter(line3, messages[2], 40);
+					});
+				});
+			}
+			
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', startTypewriter);
+			} else {
+				startTypewriter();
+			}
+		})();
+
+		// ============================================
+		// PAYMENT METHOD SELECTION
+		// Show bank dropdown only when Bank Transfer is selected
+		// ============================================
+		const paymentRadios = document.querySelectorAll('input[name="paymentMethod"]');
+		const bankSelect = document.getElementById('bankSelect');
+		
+		paymentRadios.forEach(radio => {
+			radio.addEventListener('change', function() {
+				if (this.value === 'bank') {
+					bankSelect.classList.add('show');
+				} else {
+					bankSelect.classList.remove('show');
+				}
+			});
+		});
+
+		// ============================================
+		// GEOLOCATION - Live Location Picker
+		// ============================================
+		const locationBtn = document.getElementById('locationBtn');
+		const locationDisplay = document.getElementById('locationDisplay');
+		const locationText = document.getElementById('locationText');
+		const locationCoords = document.getElementById('locationCoords');
+		const mapPreview = document.getElementById('mapPreview');
+		const latInput = document.getElementById('latitude');
+		const lonInput = document.getElementById('longitude');
+
+		locationBtn.addEventListener('click', function() {
+			if (!navigator.geolocation) {
+				alert('Geolocation is not supported by your browser.');
+				return;
+			}
+
+			locationBtn.disabled = true;
+			locationBtn.textContent = '🔄 Getting location...';
+
+			navigator.geolocation.getCurrentPosition(
+				function(position) {
+					const lat = position.coords.latitude;
+					const lon = position.coords.longitude;
+
+					// Store coordinates in hidden inputs
+					latInput.value = lat;
+					lonInput.value = lon;
+
+					// Display coordinates
+					locationCoords.textContent = `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
+					locationText.textContent = 'Location detected successfully';
+					locationDisplay.classList.add('show');
+
+					// Show map preview with marker
+					// Using OpenStreetMap static image as fallback (no API key needed)
+					mapPreview.innerHTML = `
+						<iframe 
+							width="100%" 
+							height="100%" 
+							frameborder="0" 
+							style="border:0;border-radius:10px;" 
+							src="https://www.openstreetmap.org/export/embed.html?bbox=${lon-0.01},${lat-0.01},${lon+0.01},${lat+0.01}&layer=mapnik&marker=${lat},${lon}" 
+							allowfullscreen>
+						</iframe>
+					`;
+					mapPreview.classList.add('show');
+
+					locationBtn.textContent = '✅ Location Selected';
+					locationBtn.disabled = false;
+				},
+				function(error) {
+					alert('Unable to get your location. Please enable location services.');
+					locationBtn.textContent = '📍 Choose Your Live Location';
+					locationBtn.disabled = false;
+				}
+			);
+		});
+
+		// ============================================
+		// FILE PREVIEW - Profile Photo
+		// ============================================
+		const profilePhoto = document.getElementById('profilePhoto');
+		const profilePreview = document.getElementById('profilePreview');
+
+		profilePhoto.addEventListener('change', function() {
+			const file = this.files[0];
+			if (file && file.type.startsWith('image/')) {
+				const reader = new FileReader();
+				reader.onload = function(e) {
+					profilePreview.innerHTML = `<img src="${e.target.result}" alt="Profile preview" />`;
+				};
+				reader.readAsDataURL(file);
+			}
+		});
+
+		// ============================================
+		// FILE PREVIEW - NID Front
+		// ============================================
+		const nidFront = document.getElementById('nidFront');
+		const nidFrontPreview = document.getElementById('nidFrontPreview');
+
+		nidFront.addEventListener('change', function() {
+			const file = this.files[0];
+			if (file && file.type.startsWith('image/')) {
+				const reader = new FileReader();
+				reader.onload = function(e) {
+					nidFrontPreview.innerHTML = `<img src="${e.target.result}" alt="NID front" />`;
+				};
+				reader.readAsDataURL(file);
+			} else if (file) {
+				nidFrontPreview.innerHTML = '<span class="placeholder">PDF uploaded</span>';
+			}
+		});
+
+		// ============================================
+		// FILE PREVIEW - NID Back
+		// ============================================
+		const nidBack = document.getElementById('nidBack');
+		const nidBackPreview = document.getElementById('nidBackPreview');
+
+		nidBack.addEventListener('change', function() {
+			const file = this.files[0];
+			if (file && file.type.startsWith('image/')) {
+				const reader = new FileReader();
+				reader.onload = function(e) {
+					nidBackPreview.innerHTML = `<img src="${e.target.result}" alt="NID back" />`;
+				};
+				reader.readAsDataURL(file);
+			} else if (file) {
+				nidBackPreview.innerHTML = '<span class="placeholder">PDF uploaded</span>';
+			}
+		});
+
+		// ============================================
+		// FILE PREVIEW - Birth Certificate
+		// ============================================
+		const birthCert = document.getElementById('birthCert');
+		const birthPreview = document.getElementById('birthPreview');
+
+		birthCert.addEventListener('change', function() {
+			const file = this.files[0];
+			if (file && file.type.startsWith('image/')) {
+				const reader = new FileReader();
+				reader.onload = function(e) {
+					birthPreview.innerHTML = `<img src="${e.target.result}" alt="Birth certificate" />`;
+				};
+				reader.readAsDataURL(file);
+			} else if (file) {
+				birthPreview.innerHTML = '<span class="placeholder">PDF uploaded</span>';
+			}
+		});
+
+		// ============================================
+		// DOCUMENT TYPE TOGGLE (NID vs Birth Certificate)
+		// ============================================
+		const docTypeRadios = document.querySelectorAll('input[name="docType"]');
+		const nidSection = document.getElementById('nidSection');
+		const birthSection = document.getElementById('birthSection');
+
+		docTypeRadios.forEach(radio => {
+			radio.addEventListener('change', function() {
+				if (this.value === 'nid') {
+					nidSection.classList.add('show');
+					birthSection.classList.remove('show');
+					// Make NID required, birth cert optional
+					document.getElementById('nidFront').required = true;
+					document.getElementById('nidBack').required = true;
+					document.getElementById('birthCert').required = false;
+				} else {
+					nidSection.classList.remove('show');
+					birthSection.classList.add('show');
+					// Make birth cert required, NID optional
+					document.getElementById('nidFront').required = false;
+					document.getElementById('nidBack').required = false;
+					document.getElementById('birthCert').required = true;
+				}
+			});
+		});
+
+		// ============================================
+		// FORM SUBMISSION
+		// ============================================
+		const sellerForm = document.getElementById('sellerForm');
+		const loadingOverlay = document.getElementById('loadingOverlay');
+
+		sellerForm.addEventListener('submit', function(e) {
+			e.preventDefault();
+
+			// Validate categories (at least one must be selected)
+			const categories = document.querySelectorAll('input[name="categories"]:checked');
+			if (categories.length === 0) {
+				alert('Please select at least one category you want to sell in.');
+				return;
+			}
+
+			// Validate location is selected
+			if (!latInput.value || !lonInput.value) {
+				alert('Please select your shop location using the location button.');
+				return;
+			}
+
+			// Show loading overlay
+			loadingOverlay.classList.add('show');
+
+			// Collect form data
+			const selectedCategories = Array.from(categories).map(cb => cb.value);
+			
+			const requestData = {
+				fullName: document.getElementById('fullName').value,
+				phone: document.getElementById('phone').value,
+				email: document.getElementById('email').value,
+				shopName: document.getElementById('shopName').value,
+				paymentMethod: document.querySelector('input[name="paymentMethod"]:checked').value,
+				bankName: document.getElementById('bankName').value || null,
+				accountNumber: document.getElementById('accountNumber').value,
+				latitude: parseFloat(document.getElementById('latitude').value),
+				longitude: parseFloat(document.getElementById('longitude').value),
+				categories: selectedCategories,
+				documentType: document.querySelector('input[name="docType"]:checked').value,
+				additionalInfo: document.getElementById('additionalInfo').value
+			};
+
+			// Send to backend API
+			fetch('http://localhost:5010/api/sellerrequest/submit', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(requestData)
+			})
+			.then(async response => {
+				loadingOverlay.classList.remove('show');
+				// Try to parse JSON if available
+				let body = null;
+				try { body = await response.json(); } catch (e) { body = null; }
+				if (!response.ok) {
+					const msg = (body && (body.message || body.error)) || `Server returned ${response.status}`;
+					alert('❌ Submission failed: ' + msg);
+					return;
+				}
+				// OK response
+				if (body && body.success) {
+					const regId = body.data && body.data.requestId ? body.data.requestId : '';
+					// Friendly success message then redirect to seller profile page
+					alert('✅ Registration complete!\n\nRegistration ID: ' + regId + '\n\nYou will be redirected to your seller profile.');
+					// Redirect to seller profile page with id
+					window.location.href = 'seller.html?id=' + encodeURIComponent(regId);
+				} else {
+					const msg = (body && (body.message || body.error)) || 'Unknown server response.';
+					alert('❌ Error: ' + msg);
+				}
+			})
+			.catch(error => {
+				loadingOverlay.classList.remove('show');
+				console.error('Error:', error);
+				// Save pending submission locally so user doesn't lose data
+				try {
+					const offlineKey = 'seller_pending_submission';
+					localStorage.setItem(offlineKey, JSON.stringify({ data: requestData, timestamp: new Date().toISOString() }));
+					alert('⚠️ Network error. Your application has been saved locally and will be retried when the connection is restored.\n\nPlease check your internet connection.');
+				} catch (e) {
+					alert('⚠️ Network error and failed to save locally. Please copy your data and try again when online.\n\nError: ' + error.message);
+				}
+
+				// Optional: attempt auto-retry when navigator.onLine changes to true
+				window.addEventListener('online', function retryPending() {
+					window.removeEventListener('online', retryPending);
+					const pending = localStorage.getItem('seller_pending_submission');
+					if (!pending) return;
+					try {
+						const payload = JSON.parse(pending).data;
+						fetch('http://localhost:5010/api/sellerrequest/submit', {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify(payload)
+						})
+						.then(r => r.json())
+						.then(res => {
+							if (res && res.success) {
+								localStorage.removeItem('seller_pending_submission');
+								alert('✅ Your previously saved seller application was submitted successfully.\nRegistration ID: ' + (res.data && res.data.id ? res.data.id : '')); 
+							}
+						})
+						.catch(err => console.warn('Auto-retry failed:', err));
+					} catch (err) {
+						console.warn('Failed to parse pending submission:', err);
+					}
+				});
+			});
+		});
+	</script>
+</body>
+</html>

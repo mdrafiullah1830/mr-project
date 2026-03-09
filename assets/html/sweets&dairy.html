@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sweets & Dairy — MR Shop</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+    :root{
+      --accent: #7c3aed;
+      --accent-2: #06b6d4;
+      --bg-1: #fff7fb;
+      --bg-2: #f0fbff;
+      --muted: #6b7280;
+      --shadow: 0 10px 30px rgba(18,38,63,0.08);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: 'Poppins', Arial, sans-serif;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background: linear-gradient(135deg,var(--bg-1),var(--bg-2));
+      color:#102a43;
+      line-height:1.4;
+    }
+
+    /* Header */
+    header{
+      background: linear-gradient(90deg,var(--accent),var(--accent-2));
+      color: white;
+      padding: 18px 36px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      box-shadow: var(--shadow);
+    }
+    header h1{font-size:20px;letter-spacing:0.2px}
+    .brand-link{color:inherit;text-decoration:none;font-weight:700;display:inline-flex;align-items:center;gap:8px}
+    .brand-link:focus{outline:2px solid rgba(255,255,255,0.15);border-radius:6px;padding:4px}
+    .mr-logo{box-sizing:border-box;height:40px;width:auto;display:block;object-fit:contain;border-radius:8px;padding:4px;border:2px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.03);box-shadow:0 6px 18px rgba(16,24,40,0.08)}
+    .header-links{display:flex;gap:12px;align-items:center}
+    .header-links a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:8px;background:transparent;transition:all .2s ease}
+    .header-links a:hover{background:rgba(255,255,255,0.15)}
+
+    /* Page layout */
+    .page-container{max-width:1200px;margin:0 auto;padding:36px 20px}
+    
+    /* Page title */
+    .page-title{display:inline-block;line-height:1;letter-spacing:0.02em;font-weight:700;background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:12px;font-size:32px}
+    .page-subtitle{color:var(--muted);margin-bottom:28px;font-size:14px}
+
+    /* Product grid */
+    .products-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+      gap:24px;
+      margin-bottom:28px;
+    }
+
+    /* Product card */
+    .product-card{
+      background:#fff;
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow: var(--shadow);
+      transition:all .3s cubic-bezier(.2,.9,.2,1);
+      display:flex;
+      flex-direction:column;
+      height:100%;
+    }
+    
+    .product-card:hover{
+      transform:translateY(-8px);
+      box-shadow:0 20px 50px rgba(18,38,63,0.15);
+    }
+
+    .product-image{
+      width:100%;
+      height:200px;
+      object-fit:cover;
+      background:linear-gradient(135deg,rgba(124,58,237,0.1),rgba(6,182,212,0.1));
+    }
+
+    .product-card:hover .product-image{
+      transform:scale(1.06);
+      transition:transform .35s ease;
+    }
+
+    .product-info{
+      flex:1;
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
+    .product-name{
+      font-size:16px;
+      font-weight:700;
+      color:#102a43;
+      margin-bottom:8px;
+      line-height:1.3;
+    }
+
+    .product-desc{
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:10px;
+      line-height:1.4;
+    }
+
+    .product-price{
+      font-size:18px;
+      font-weight:800;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      margin-bottom:12px;
+    }
+
+    .product-actions{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+
+    .qty-selector{
+      display:flex;
+      align-items:center;
+      border:1px solid #e6e9ee;
+      border-radius:8px;
+      background:#f9fafb;
+    }
+
+    .qty-selector button{
+      background:transparent;
+      border:none;
+      padding:6px 8px;
+      cursor:pointer;
+      font-weight:700;
+      color:var(--muted);
+      transition:all .2s ease;
+    }
+
+    .qty-selector button:hover{
+      color:var(--accent);
+      background:rgba(124,58,237,0.05);
+    }
+
+    .qty-selector input{
+      border:none;
+      background:transparent;
+      width:30px;
+      text-align:center;
+      font-weight:600;
+      font-size:14px;
+    }
+
+    .add-to-cart-btn{
+      flex:1;
+      padding:10px;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      color:#fff;
+      border:none;
+      border-radius:8px;
+      font-weight:700;
+      cursor:pointer;
+      font-size:13px;
+      transition:all .2s ease;
+    }
+
+    .add-to-cart-btn:hover{
+      transform:translateX(2px);
+      box-shadow:0 8px 24px rgba(124,58,237,0.35);
+    }
+
+    /* Footer */
+    footer{
+      background:linear-gradient(90deg,#eef2ff,#f0f9ff);
+      color:var(--muted);
+      text-align:center;
+      padding:28px;
+      margin-top:28px;
+    }
+
+    /* Responsive */
+    @media (max-width:768px){
+      header{padding:12px 18px}
+      .page-title{font-size:24px}
+      .products-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+      .page-container{padding:20px}
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+  <h1><a href="index.html" class="brand-link" aria-label="MR Shop home" style="display:flex;align-items:center;gap:8px"><img src="../images/mrlogo.png" alt="MR" class="mr-logo" /><span style="font-weight:700;font-size:20px">MR Shop</span></a></h1>
+    <div class="header-links">
+      <a href="index.html">Home</a>
+      <a href="javascript:history.back()">Back</a>
+    </div>
+  </header>
+
+  <main class="page-container">
+    <h2 class="page-title">Sweets & Dairy</h2>
+    <p class="page-subtitle">Traditional Bengali sweets and fresh dairy products from authentic local producers</p>
+
+    <div class="products-grid" id="productsGrid">
+      <!-- Product cards will be inserted here by JS -->
+    </div>
+  </main>
+
+  <footer>
+    © 2025 MR Shop | Sweets & Dairy Products
+  </footer>
+
+  <script>
+    // Product data - Bengali sweets and dairy
+    const products = [
+      {
+        id: 101,
+        name: "Rasgulla (রসগোল্লা)",
+        price: 180,
+        image: "https://picsum.photos/seed/rasgulla-sweet/400/300",
+        description: "Soft, spongy cottage cheese balls soaked in light sugar syrup. The most iconic Bengali sweet, melts in your mouth."
+      },
+      {
+        id: 102,
+        name: "Sandesh (সন্দেশ)",
+        price: 220,
+        image: "https://picsum.photos/seed/sandesh-sweet/400/300",
+        description: "Traditional Bengali sweet made from fresh cottage cheese and sugar. Delicate texture and authentic taste."
+      },
+      {
+        id: 103,
+        name: "Mishti Doi (মিষ্টি দই)",
+        price: 120,
+        image: "https://picsum.photos/seed/mishti-doi/400/300",
+        description: "Sweetened fermented yogurt, caramelized to perfection. Creamy, thick, and served chilled in clay pots."
+      },
+      {
+        id: 104,
+        name: "Gulab Jamun (গোলাপ জামুন)",
+        price: 200,
+        image: "https://picsum.photos/seed/gulab-jamun/400/300",
+        description: "Deep-fried milk solid balls soaked in rose-flavored sugar syrup. Soft, sweet, and aromatic."
+      },
+      {
+        id: 105,
+        name: "Kalojam (কালোজাম)",
+        price: 190,
+        image: "https://picsum.photos/seed/kalojam/400/300",
+        description: "Dark brown sweet made from khoya, deep-fried and soaked in sugar syrup. Rich and indulgent."
+      },
+      {
+        id: 106,
+        name: "Pantua (পান্তুয়া)",
+        price: 170,
+        image: "https://picsum.photos/seed/pantua/400/300",
+        description: "Similar to gulab jamun but with a firmer texture. A Kolkata specialty, dark and delicious."
+      },
+      {
+        id: 107,
+        name: "Cham Cham (চমচম)",
+        price: 200,
+        image: "https://picsum.photos/seed/chamcham/400/300",
+        description: "Oval-shaped sweet made from chhena, coated with khoya and topped with coconut flakes."
+      },
+      {
+        id: 108,
+        name: "Fresh Paneer (পনির)",
+        price: 280,
+        image: "https://picsum.photos/seed/fresh-paneer/400/300",
+        description: "Homemade fresh cottage cheese (paneer). Perfect for cooking or making sweets. 500g pack."
+      },
+      {
+        id: 109,
+        name: "Kheer (ক্ষীর)",
+        price: 150,
+        image: "https://picsum.photos/seed/kheer-dessert/400/300",
+        description: "Traditional rice pudding made with milk, rice, and sugar. Flavored with cardamom and nuts."
+      },
+      {
+        id: 110,
+        name: "Lassi (লাস্যি)",
+        price: 80,
+        image: "https://picsum.photos/seed/lassi-drink/400/300",
+        description: "Refreshing yogurt-based drink. Sweet, creamy, and perfect for hot days. 300ml bottle."
+      },
+      {
+        id: 111,
+        name: "Malai Chop (মালাই চপ)",
+        price: 240,
+        image: "https://picsum.photos/seed/malai-chop/400/300",
+        description: "Creamy sweet filled with thick malai (cream), coated and deep-fried. Rich and luxurious."
+      },
+      {
+        id: 112,
+        name: "Langcha (লাংচা)",
+        price: 180,
+        image: "https://picsum.photos/seed/langcha/400/300",
+        description: "Cylindrical sweet from Shaktigarh, made with khoya and soaked in sugar syrup. Dark and delicious."
+      },
+      {
+        id: 113,
+        name: "Sita Bhog (সীতা ভোগ)",
+        price: 160,
+        image: "https://picsum.photos/seed/sitabhog/400/300",
+        description: "Thread-like sweet made from rice flour and coconut. Light, delicate, and uniquely textured."
+      },
+      {
+        id: 114,
+        name: "Malpua (মালপোয়া)",
+        price: 140,
+        image: "https://picsum.photos/seed/malpua/400/300",
+        description: "Pan-fried pancakes soaked in sugar syrup. Soft, sweet, and perfect with rabri (thickened milk)."
+      },
+      {
+        id: 115,
+        name: "Balushahi (বালুশাহী)",
+        price: 160,
+        image: "https://picsum.photos/seed/balushahi/400/300",
+        description: "Flaky, glazed sweet pastry. Crispy on outside, soft inside, and coated with sugar syrup."
+      },
+      {
+        id: 116,
+        name: "Fresh Ghee (ঘি)",
+        price: 450,
+        image: "https://picsum.photos/seed/fresh-ghee/400/300",
+        description: "Pure clarified butter (ghee) made from cow's milk. Aromatic and perfect for cooking. 500g jar."
+      }
+    
+];
+
+    // Cart management
+    let cart = JSON.parse(localStorage.getItem('mr_shop_cart')) || [];
+
+    function saveCart() {
+      localStorage.setItem('mr_shop_cart', JSON.stringify(cart));
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById('productsGrid');
+      grid.innerHTML = products.map(p => `
+        <div class="product-card">
+          <img src="${p.image}" alt="${p.name}" class="product-image" />
+          <div class="product-info">
+            <div>
+              <h3 class="product-name">${p.name}</h3>
+              <p class="product-desc">${p.description}</p>
+              <div class="product-price">৳ ${p.price}</div>
+            </div>
+            <div class="product-actions">
+              <div class="qty-selector">
+                <button onclick="changeQty(${p.id}, -1)">−</button>
+                <input type="number" id="qty-${p.id}" value="1" min="1" readonly />
+                <button onclick="changeQty(${p.id}, 1)">+</button>
+              </div>
+              <button class="add-to-cart-btn" onclick="addToCart(${p.id})">Add</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function changeQty(productId, delta) {
+      const input = document.getElementById(`qty-${productId}`);
+      const newVal = Math.max(1, parseInt(input.value) + delta);
+      input.value = newVal;
+    }
+
+    function addToCart(productId) {
+      const product = products.find(p => p.id === productId);
+      const qtyInput = document.getElementById(`qty-${productId}`);
+      const qty = parseInt(qtyInput.value);
+
+      const existingItem = cart.find(item => item.id === productId);
+      if (existingItem) {
+        existingItem.quantity += qty;
+      } else {
+        cart.push({ ...product, quantity: qty });
+      }
+      
+      saveCart();
+      qtyInput.value = 1;
+      alert(`${product.name} added to cart!`);
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', renderProducts);
+  </script>
+
+</body>
+</html>

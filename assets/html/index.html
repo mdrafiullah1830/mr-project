@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MR Shop | Online Store</title>
+  <style>
+    /* Remove underlines from all links */
+    a, a:link, a:visited, a:hover, a:active { text-decoration: none !important; }
+
+    /* Import a clean, modern font */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+    :root{
+      --bg-1: #fff7fb;
+      --bg-2: #f0fbff;
+      --accent: #7c3aed; /* violet */
+      --accent-2: #06b6d4; /* teal */
+      --muted: #6b7280;
+      --card-bg: rgba(255,255,255,0.72);
+      --glass: rgba(255,255,255,0.55);
+      --shadow: 0 10px 30px rgba(18,38,63,0.08);
+    }
+
+    /* Responsive Layouts */
+    /* Desktop: >1024px, Tablet: 641-1024px, Mobile: <=640px */
+    @media (max-width: 1024px) {
+      header, nav, .banner, section[style*="max-width:1200px"] {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+      }
+      .products, #dynamicProductsGrid {
+        gap: 16px !important;
+        padding: 10px !important;
+      }
+      .banner { height: 180px !important; }
+    }
+    @media (max-width: 800px) {
+      .products, #dynamicProductsGrid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+        gap: 12px !important;
+      }
+      .banner { height: 120px !important; }
+      header, nav, section[style*="max-width:1200px"] {
+        padding-left: 4px !important;
+        padding-right: 4px !important;
+      }
+      .category-tab { font-size: 12px !important; padding: 6px 10px !important; }
+    }
+    @media (max-width: 640px) {
+      header, nav, .banner, section[style*="max-width:1200px"] {
+        padding-left: 2px !important;
+        padding-right: 2px !important;
+      }
+      .products, #dynamicProductsGrid {
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+        padding: 2px !important;
+      }
+      .banner { height: 80px !important; font-size: 14px !important; }
+      header h1 span, .brand-link span { font-size: 16px !important; }
+      .mr-logo { height: 24px !important; }
+      .category-tab { font-size: 11px !important; padding: 4px 6px !important; }
+      .dynamic-product img, .product img { height: 90px !important; }
+      .dynamic-product h3, .product h3 { font-size: 13px !important; }
+    }
+
+    /* Dark theme overrides (apply by adding .theme-dark to <html> or <body>) */
+    .theme-dark{
+      --bg-1: #0b1220;
+      --bg-2: #071026;
+      --accent: #8b5cf6;
+      --accent-2: #14b8a6;
+      --muted: #9aa6b2;
+      --card-bg: rgba(10,16,24,0.45);
+      --glass: rgba(255,255,255,0.04);
+      --shadow: 0 12px 30px rgba(2,6,23,0.6);
+      color-scheme: dark;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: 'Poppins', Arial, sans-serif;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background: linear-gradient(135deg,var(--bg-1),var(--bg-2));
+      color:#102a43;
+      line-height:1.4;
+    }
+
+    /* Header */
+    header{
+      background: linear-gradient(90deg,var(--accent),var(--accent-2));
+      color: white;
+      padding: 18px 36px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      box-shadow: var(--shadow);
+    }
+    header h1{font-size:20px;letter-spacing:0.2px}
+    header input{display:none} /* hide search in header for a cleaner look */
+
+  /* brand link style (clickable title) */
+  .brand-link{color:inherit;text-decoration:none;font-weight:700;display:inline-flex;align-items:center;gap:8px}
+  .brand-link:focus{outline:2px solid rgba(255,255,255,0.15);border-radius:6px;padding:4px}
+
+  /* Logo border style */
+  .mr-logo{
+    box-sizing: border-box;
+    height:40px; /* total height including padding/border */
+    width:auto;
+    display:block;
+    object-fit:contain;
+    border-radius:8px;
+    padding:4px;
+    border:2px solid rgba(255,255,255,0.18);
+    background:rgba(255,255,255,0.03);
+    box-shadow:0 6px 18px rgba(16,24,40,0.08);
+  }
+
+    /* theme toggle button */
+    .theme-toggle{
+      background:transparent;border:none;color:inherit;font-size:18px;cursor:pointer;padding:8px;border-radius:8px;margin-left:8px
+    }
+    .theme-toggle:focus{outline:2px solid rgba(255,255,255,0.15)}
+  /* Cart icon in header (top-right) */
+  .cart-link{display:inline-flex;align-items:center;margin-left:8px}
+  .cart-icon{box-sizing:border-box;width:40px;height:40px;object-fit:cover;border-radius:8px;box-shadow:0 6px 18px rgba(16,24,40,0.12);transition:transform .18s ease,box-shadow .18s ease;display:block}
+  .cart-link:hover .cart-icon{transform:translateY(-3px);box-shadow:0 18px 40px rgba(16,42,67,0.14)}
+  /* Chat icon placed beside cart in header */
+  .chat-link{display:inline-flex;align-items:center;margin-left:8px}
+  .chat-icon{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;background:linear-gradient(90deg,#7c3aed,#06b6d4);color:#fff;font-weight:700;box-shadow:0 6px 18px rgba(16,24,40,0.12);transition:transform .18s ease,box-shadow .18s ease}
+  .chat-link:hover .chat-icon{transform:translateY(-3px);box-shadow:0 18px 40px rgba(16,42,67,0.14)}
+
+  /* Cart icon border to match logo */
+  .cart-icon{border:2px solid rgba(255,255,255,0.12);padding:4px;background:rgba(255,255,255,0.02)}
+  /* Home nav button styling */
+  .nav-home{display:inline-flex;align-items:center;padding:6px 10px;border-radius:8px;border:2px solid transparent;transition:all .18s ease;color:var(--muted);background:transparent}
+  .nav-home:hover{border-color:rgba(124,58,237,0.14);background:rgba(124,58,237,0.04);color:#111}
+  @media (max-width:640px){.cart-icon{width:30px;height:30px}}
+
+    /* Top nav (below header) */
+    nav{
+      background:transparent;
+      color:var(--muted);
+      padding:10px 36px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+    }
+    nav a{
+      color:var(--muted);
+      text-decoration:none;
+      margin-right:12px;
+      font-size:15px;
+      padding:8px 10px;
+      border-radius:8px;
+      transition:all .18s ease;
+    }
+    nav a:hover{background:rgba(255,255,255,0.6);color:#111}
+    .nav-left{display:flex;align-items:center;gap:10px}
+    .nav-right{display:flex;align-items:center;gap:10px}
+    .nav-right a.button{background:white;color:var(--accent-2)}
+
+    /* Categories dropdown styles */
+    .categories-wrapper{position:relative}
+    .categories-toggle{cursor:pointer;color:var(--muted);text-decoration:none;padding:8px 10px;border-radius:8px;transition:all .18s ease;display:inline-flex;align-items:center;gap:8px}
+    .categories-toggle:hover{background:rgba(255,255,255,0.6);color:#111}
+    .categories-menu{
+      position:absolute;top:calc(100% + 10px);left:0;min-width:320px;background:linear-gradient(180deg,rgba(255,255,255,0.98),var(--card-bg));box-shadow:0 14px 40px rgba(16,42,67,0.12);border-radius:12px;padding:14px;z-index:60;display:none;
+    }
+    .categories-menu.open{display:block}
+    .category-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+    .category-card{display:block;padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff,#fbfbff);color:#102a43;text-decoration:none;font-weight:600;box-shadow:0 6px 18px rgba(12,20,30,0.06);transition:transform .18s ease,box-shadow .18s ease}
+    .category-card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(16,42,67,0.12)}
+    .category-card .sub{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-top:6px}
+    @media (max-width:640px){.categories-menu{left:auto;right:0;min-width:260px}}
+    
+  /* Our Platform dropdown styles */
+  .platform-wrapper{position:relative}
+  .platform-toggle{cursor:pointer;color:var(--muted);text-decoration:none;padding:8px 10px;border-radius:8px;transition:all .18s ease;display:inline-flex;align-items:center;gap:8px}
+  .platform-toggle:hover{background:rgba(255,255,255,0.6);color:#111}
+  .platform-menu{position:absolute;top:calc(100% + 10px);left:0;min-width:220px;background:linear-gradient(180deg,rgba(255,255,255,0.98),var(--card-bg));box-shadow:0 14px 40px rgba(16,42,67,0.12);border-radius:12px;padding:10px;z-index:60;display:none}
+  .platform-menu.open{display:block}
+  .platform-item{display:flex;gap:10px;align-items:center;padding:8px;border-radius:8px;color:#102a43;text-decoration:none}
+  .platform-item:hover{background:rgba(0,0,0,0.03)}
+  .platform-item svg{width:18px;height:18px}
+  .platform-item img{width:22px;height:22px;object-fit:cover;border-radius:6px}
+
+  /* Search wrapper and dropdown styles */
+  .search-wrapper{position:relative;display:inline-block;width:280px}
+  .search-input{width:100%;padding:10px 14px;border:2px solid #e6e9ee;border-radius:8px;background:rgba(255,255,255,0.95);color:#102a43;font-size:14px;font-weight:500;transition:all .2s ease}
+  .search-input:focus{outline:none;border-color:var(--accent);background:white;box-shadow:0 0 0 3px rgba(124,58,237,0.15)}
+  .search-input::placeholder{color:#9ca3af}
+  /* Search dropdown container */
+  .search-results{position:absolute;top:calc(100% + 6px);left:0;right:0;max-height:480px;overflow-y:auto;background:white;border-radius:12px;box-shadow:0 16px 48px rgba(0,0,0,0.15);z-index:100;display:none;border:1px solid #f0f0f0}
+  .search-results.open{display:block;animation:slideDown .2s ease}
+  @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+  /* Result items */
+  .search-result-item{padding:14px;border-bottom:1px solid #f3f4f6;cursor:pointer;transition:all .15s ease;display:flex;align-items:center;gap:12px;outline:none}
+  .search-result-item:last-child{border-bottom:none}
+  .search-result-item:hover,.search-result-item:focus{background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(6,182,212,0.08))}
+  .search-result-item:active{background:rgba(124,58,237,0.12)}
+  /* Image wrapper with discount badge */
+  .search-result-image-wrapper{position:relative;flex-shrink:0}
+  .search-result-image{width:60px;height:60px;object-fit:cover;border-radius:8px;background:#f3f4f6;border:1px solid #e5e7eb}
+  .search-result-discount{position:absolute;top:-4px;right:-4px;background:linear-gradient(135deg,#ef4444,#dc2626);color:white;font-size:11px;font-weight:700;padding:3px 6px;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,0.2)}
+  /* Result info */
+  .search-result-info{flex:1;min-width:0}
+  .search-result-name{font-weight:600;color:#102a43;font-size:14px;line-height:1.3;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .search-result-category{font-size:12px;color:#6b7280;margin-bottom:4px}
+  .search-result-price-row{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+  .search-result-price{font-size:14px;color:var(--accent);font-weight:700}
+  .search-result-original{font-size:11px;color:#9ca3af;text-decoration:line-through}
+  .search-result-rating{font-size:12px;color:#f59e0b;font-weight:600}
+  /* Status messages */
+  .search-no-results,.search-error,.search-loading{padding:24px 16px;text-align:center;font-size:14px}
+  .search-no-results{color:#6b7280}
+  .search-error{color:#ef4444;font-weight:600}
+  .search-loading{color:#9ca3af;font-style:italic}
+
+    /* Smooth scrolling */
+    html { scroll-behavior: smooth; }
+
+    /* Banner (slideshow) */
+    .banner{
+      position:relative;
+      height:320px;
+      overflow:hidden;
+      border-radius:12px;
+      margin:18px 36px;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .banner .slides{position:absolute;inset:0}
+    .banner .slide{
+      position:absolute;inset:0;background-position:center;background-size:cover;background-repeat:no-repeat;
+      opacity:0;transform:scale(1.03);transition:opacity .9s ease, transform .9s ease;filter:contrast(.98) saturate(1.02);
+    }
+    .banner .slide.active{opacity:1;transform:scale(1)}
+    .banner::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.22),rgba(0,0,0,0.5));pointer-events:none}
+    .banner .caption{
+      position:relative;
+      z-index:2;
+      color:white;
+      font-size:28px;
+      font-weight:700;
+      text-align:left;
+      padding:0 18px;
+      display:flex;
+      align-items:center;
+      gap:.5rem;
+      min-height:1.4em;
+    }
+
+    /* typing effect styles */
+    .caption-text{display:inline-block;white-space:nowrap;overflow:hidden;letter-spacing:0.2px}
+    .caption-cursor{display:inline-block;color:rgba(255,255,255,0.95);font-weight:700;animation:blink 1s steps(2,start) infinite}
+    @keyframes blink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
+
+    /* Reveal (scroll) animations */
+    .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s ease;will-change:opacity,transform}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+
+    /* Products grid */
+    .products{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:24px;padding:36px;max-width:1200px;margin:0 auto;
+    }
+    .product{
+      background:var(--card-bg);
+      border-radius:14px;
+      box-shadow: var(--shadow);
+      text-align:center;padding:18px;transition:transform .25s ease,box-shadow .25s ease;
+      backdrop-filter: blur(6px);
+      overflow:hidden;
+      display:flex;flex-direction:column;gap:12px;align-items:center;
+    }
+    .product:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(16,42,67,0.12)}
+    .product img{width:100%;height:160px;object-fit:cover;border-radius:10px}
+    .product h3{margin:6px 0;font-size:16px}
+    .product p{color:var(--muted);font-weight:600}
+    .price-pill{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;padding:6px 10px;border-radius:999px;font-weight:700}
+    .product button{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;border:none;padding:10px 16px;border-radius:10px;cursor:pointer}
+
+    /* Footer */
+    footer{background:linear-gradient(90deg,#eef2ff,#f0f9ff);color:var(--muted);text-align:center;padding:28px;margin-top:28px}
+
+    /* Responsive tweaks */
+    @media (max-width:800px){
+      .banner{height:200px;margin:12px}
+      .products{padding:20px}
+      header{padding:12px 18px}
+      nav{padding:8px 18px;flex-wrap:wrap}
+      nav a{font-size:14px;padding:6px 8px}
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+  <h1><a href="index.html" class="brand-link" aria-label="MR Shop home" style="display:flex;align-items:center;gap:8px"><span style="font-size:32px">🛍️</span><img src="../images/mrlogo.png" alt="MR" class="mr-logo" /><span style="font-weight:700;font-size:20px;color:#fff">MR Shop</span></a></h1>
+    <div style="display:flex;align-items:center;gap:8px">
+      <input type="text" placeholder="Search for products..." />
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
+      <a href="orders.html" class="cart-link" aria-label="View orders" title="Track Orders">
+  <img src="../images/cart.jpg" alt="Orders" class="cart-icon" style="filter: hue-rotate(200deg);" />
+      </a>
+      <a href="chat.html" class="chat-link" aria-label="Open chat">
+        <div class="chat-icon">💬</div>
+      </a>
+    </div>
+  </header>
+
+  <nav>
+    <div class="nav-left">
+      <a href="index.html" class="nav-home">home</a>
+      <div class="categories-wrapper">
+        <a href="#" id="categoriesToggle" class="categories-toggle">catagories ▾</a>
+        <div class="categories-menu" id="categoriesMenu" aria-hidden="true">
+          <div class="category-grid">
+            <a href="food&natural.html" class="category-card">Food & Natural<span class="sub">Fresh & organic items</span></a>
+            <a href="sweets&dairy.html" class="category-card">Sweets & Dairy<span class="sub">Local treats & milk products</span></a>
+            <a href="handricrafts.html" class="category-card">Handicrafts<span class="sub">Artisan-made goods</span></a>
+            <a href="clothing.html" class="category-card">Clothing<span class="sub">Traditional & modern wear</span></a>
+            <a href="book.html" class="category-card">📚 Books<span class="sub">Novels, textbooks & more</span></a>
+            <a href="Antique.html" class="category-card">Antique & Collectibles<span class="sub">Rare finds & vintage treasures</span></a>
+          </div>
+        </div>
+      </div>
+      <a href="becomeseller.html" aria-label="Become a seller">become a seller</a>
+
+      <div class="platform-wrapper">
+        <a href="#" id="platformToggle" class="platform-toggle">Our Platform ▾</a>
+        <div class="platform-menu" id="platformMenu" aria-hidden="true">
+          <a class="platform-item" href="https://www.facebook.com/profile.php?id=61583616496782" target="_blank" rel="noopener noreferrer">
+            <img src="../images/facebook.jpg" alt="Facebook" />
+            <div>
+              <div class="label">Facebook</div>
+              <div class="muted">MR Shop</div>
+            </div>
+          </a>
+          <a class="platform-item" href="https://www.instagram.com/mrshopbd18/" target="_blank" rel="noopener noreferrer">
+            <img src="../images/instagram.jpg" alt="Instagram" />            <div>
+              <div class="label">Instagram</div>
+              <div class="muted">@mrshopbd18</div>
+            </div>
+          </a>
+          <a class="platform-item" href="https://www.youtube.com/@mrshop3018" target="_blank" rel="noopener noreferrer">
+            <img src="../images/youtube.jpg" alt="YouTube" />
+            <div>
+              <div class="label">YouTube</div>
+              <div class="muted">@mrshop3018</div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="search-wrapper">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search products..." aria-label="Search products" />
+        <div class="search-results" id="searchResults" aria-hidden="true" aria-label="Search results"></div>
+      </div>
+    </div>
+    <div class="nav-right">
+      <!-- Shown when user is signed in -->
+      <a href="userprofile.html" class="auth-when-signed-in" id="dashboardLink">👤 Profile</a>
+      <a href="admin.html" class="auth-when-signed-in" id="adminLink">⚙️ Admin</a>
+      <a href="#" class="auth-when-signed-in toggle-auth">Log out</a>
+      <!-- Shown when user is signed out -->
+      <a href="auth.html#login" class="auth-when-signed-out button">Sign in</a>
+      <a href="auth.html#register" class="auth-when-signed-out button">Sign up</a>
+    </div>
+  </nav>
+
+  <div class="banner" aria-roledescription="carousel">
+    <div class="slides">
+  <div class="slide" data-src="../images/saree.jpg" data-caption="Soft, breathable cotton weave—perfect for everyday comfort with a classic touch." style="background-image:url('../images/saree.jpg')"></div>
+  <div class="slide" data-src="../images/doi.jpg" data-caption="Authentic Bogura Doi—thick, creamy, and naturally delicious." style="background-image:url('../images/doi.jpg')"></div>
+  <div class="slide" data-src="../images/honey.jpg" data-caption="Pure wild honey from the deep Sundarbans—raw, natural, and truly authentic." style="background-image:url('../images/honey.jpg')"></div>
+  <div class="slide" data-src="../images/tatshilpo.jpg" style="background-image:url('../images/tatshilpo.jpg')"></div>
+    </div>
+  <div class="caption"><span class="caption-text" aria-live="polite"></span><span class="caption-cursor" aria-hidden="true">▍</span></div>
+  </div>
+
+  <!-- Dynamic Products Section with Category Filter -->
+  <section style="max-width:1200px;margin:40px auto;padding:0 36px">
+    <div style="text-align:center;margin-bottom:32px">
+      <h2 style="font-size:32px;font-weight:700;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px">🛍️ Shop By Category</h2>
+      <p style="color:var(--muted);font-size:16px">Browse our curated collection from all categories</p>
+    </div>
+
+    <!-- Category Filter Tabs -->
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:32px;padding:0 20px" id="categoryTabs">
+      <button class="category-tab active" data-category="all" style="padding:10px 24px;border:2px solid var(--accent);background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;border-radius:999px;font-weight:600;cursor:pointer;transition:all .3s ease;font-size:14px">All Products</button>
+      <button class="category-tab" data-category="food" style="padding:10px 24px;border:2px solid var(--border-color);background:transparent;color:var(--text-primary);border-radius:999px;font-weight:600;cursor:pointer;transition:all .3s ease;font-size:14px">🍯 Food & Natural</button>
+      <button class="category-tab" data-category="sweets" style="padding:10px 24px;border:2px solid var(--border-color);background:transparent;color:var(--text-primary);border-radius:999px;font-weight:600;cursor:pointer;transition:all .3s ease;font-size:14px">🍰 Sweets & Dairy</button>
+      <button class="category-tab" data-category="handicrafts" style="padding:10px 24px;border:2px solid var(--border-color);background:transparent;color:var(--text-primary);border-radius:999px;font-weight:600;cursor:pointer;transition:all .3s ease;font-size:14px">🎨 Handicrafts</button>
+      <button class="category-tab" data-category="clothing" style="padding:10px 24px;border:2px solid var(--border-color);background:transparent;color:var(--text-primary);border-radius:999px;font-weight:600;cursor:pointer;transition:all .3s ease;font-size:14px">👗 Clothing</button>
+      <button class="category-tab" data-category="books" style="padding:10px 24px;border:2px solid var(--border-color);background:transparent;color:var(--text-primary);border-radius:999px;font-weight:600;cursor:pointer;transition:all .3s ease;font-size:14px">📚 Books</button>
+      <button class="category-tab" data-category="antique" style="padding:10px 24px;border:2px solid var(--border-color);background:transparent;color:var(--text-primary);border-radius:999px;font-weight:600;cursor:pointer;transition:all .3s ease;font-size:14px">🪙 Antique</button>
+    </div>
+
+    <!-- Products Grid -->
+    <div id="dynamicProductsGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px">
+      <!-- Products will be dynamically inserted here -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" style="display:none;text-align:center;padding:60px 20px">
+      <div style="font-size:64px;margin-bottom:16px;opacity:0.5">📦</div>
+      <h3 style="font-size:20px;font-weight:600;color:var(--text-primary);margin-bottom:8px">No Products Found</h3>
+      <p style="color:var(--muted);font-size:14px">Try selecting a different category</p>
+    </div>
+  </section>
+
+  <style>
+    /* Category Tab Styles */
+    .category-tab:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(124,58,237,0.15);
+    }
+    .category-tab.active {
+      border-color: var(--accent);
+      background: linear-gradient(90deg,var(--accent),var(--accent-2));
+      color: white;
+      box-shadow: 0 4px 12px rgba(124,58,237,0.25);
+    }
+    
+    /* Dynamic Product Card Styles - tightened sizes for more compact layout */
+    .dynamic-product {
+      background: var(--card-bg);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      padding: 12px;
+      text-align: center;
+      transition: transform .22s ease, box-shadow .22s ease;
+      backdrop-filter: blur(4px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      animation: fadeInUp 0.42s ease;
+      max-width: 380px;
+      margin: 0 auto;
+    }
+    .dynamic-product:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 14px 30px rgba(16,42,67,0.10);
+    }
+    .dynamic-product img {
+      width: 100%;
+      height: 140px;
+      max-height: 140px;
+      object-fit: cover;
+      border-radius: 8px;
+      display: block;
+    }
+    .dynamic-product h3 {
+      margin: 6px 0;
+      font-size: 15px;
+      color: var(--text-primary);
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .dynamic-product .category-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      background: linear-gradient(90deg,rgba(124,58,237,0.08),rgba(6,182,212,0.08));
+      color: var(--accent);
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .dynamic-product .price {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 16px;
+    }
+    .dynamic-product button {
+      background: linear-gradient(90deg,var(--accent),var(--accent-2));
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      width: auto;
+      min-width: 120px;
+      align-self: center;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .dynamic-product button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(124,58,237,0.18);
+    }
+
+    /* Make the grid slightly denser so cards don't stretch too wide */
+    #dynamicProductsGrid {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+      gap: 16px !important;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @media (max-width:800px) {
+      #categoryTabs {
+        padding: 0 10px;
+      }
+      .category-tab {
+        font-size: 13px !important;
+        padding: 8px 16px !important;
+      }
+    }
+  </style>
+
+  <script>
+    // ========================================
+    // CLEAN CATEGORY FILTERING SYSTEM
+    // ========================================
+    
+    // Product Database - All Categories (INCLUDING antique products)
+    const allProducts = [
+      // Food & Natural Category
+      { id: 1, name: "Sundarbans Wild Honey", price: 850, category: "food", image: "./assets/images/honey.jpg", link: "honey.html" },
+      { id: 2, name: "Pure Mustard Oil", price: 320, category: "food", image: "./assets/images/oil.jpg", link: "oil.html" },
+      { id: 3, name: "Organic Rice", price: 180, category: "food", image: "./assets/images/rice.jpg", link: "rice.html" },
+      { id: 4, name: "Natural Ghee", price: 950, category: "food", image: "./assets/images/ghee.jpg", link: "ghee.html" },
+      { id: 5, name: "Fresh Vegetables", price: 120, category: "food", image: "./assets/images/vegetables.jpg", link: "vegetables.html" },
+      { id: 6, name: "Organic Tea", price: 250, category: "food", image: "./assets/images/tea.jpg", link: "tea.html" },
+      
+      // Sweets & Dairy Category
+      { id: 101, name: "Bogura Doi", price: 180, category: "sweets", image: "./assets/images/doi.jpg", link: "doi.html" },
+      { id: 102, name: "Roshogolla", price: 250, category: "sweets", image: "./assets/images/roshogolla.jpg", link: "roshogolla.html" },
+      { id: 103, name: "Chomchom", price: 300, category: "sweets", image: "./assets/images/chomchom.jpg", link: "chomchom.html" },
+      { id: 104, name: "Sandesh", price: 220, category: "sweets", image: "./assets/images/sandesh.jpg", link: "sandesh.html" },
+      { id: 105, name: "Fresh Milk", price: 95, category: "sweets", image: "./assets/images/milk.jpg", link: "milk.html" },
+      { id: 106, name: "Paneer", price: 380, category: "sweets", image: "./assets/images/paneer.jpg", link: "paneer.html" },
+      
+      // Handicrafts Category
+      { id: 201, name: "Nakshi Kantha", price: 1200, category: "handicrafts", image: "./assets/images/nakshi.jpg", link: "nakshi.html" },
+      
+      { id: 203, name: "Clay Pot Set", price: 350, category: "handicrafts", image: "./assets/images/clay.jpg", link: "clay.html" },
+      { id: 204, name: "Jute Bag", price: 280, category: "handicrafts", image: "./assets/images/jute.jpg", link: "jute.html" },
+      { id: 205, name: "Wooden Showpiece", price: 650, category: "handicrafts", image: "./assets/images/wood.jpg", link: "wood.html" },
+      { id: 206, name: "Handmade Pottery", price: 520, category: "handicrafts", image: "./assets/images/pottery.jpg", link: "pottery.html" },
+      
+      // Clothing Category
+      { id: 301, name: "Jamdani Saree", price: 4500, category: "clothing", image: "./assets/images/saree.jpg", link: "saree.html" },
+      { id: 302, name: "Cotton Panjabi", price: 850, category: "clothing", image: "./assets/images/panjabi.jpg", link: "panjabi.html" },
+      { id: 303, name: "Silk Salwar Kameez", price: 2200, category: "clothing", image: "./assets/images/salwar.jpg", link: "salwar.html" },
+      { id: 304, name: "Traditional Lungi", price: 420, category: "clothing", image: "./assets/images/lungi.jpg", link: "lungi.html" },
+      
+      // Books Category
+      { id: 401, name: "Bengali Literature", price: 350, category: "books", image: "./assets/images/book1.jpg", link: "book.html" },
+      { id: 402, name: "History of Bengal", price: 480, category: "books", image: "./assets/images/book2.jpg", link: "book.html" },
+      { id: 403, name: "Poetry Collection", price: 290, category: "books", image: "./assets/images/book3.jpg", link: "book.html" },
+      { id: 404, name: "Children's Stories", price: 220, category: "books", image: "./assets/images/book4.jpg", link: "book.html" },
+      
+      // Antique Category
+      { id: 501, name: "Antique Coin — coin1", price: 150, category: "antique", image: "./assets/images/coin1.jpeg", link: "coin1.html" },
+      { id: 502, name: "Antique Coin — coin2", price: 150, category: "antique", image: "./assets/images/coin2.jpeg", link: "coin2.html" },
+      { id: 503, name: "Antique Coin — coin3", price: 150, category: "antique", image: "./assets/images/coin3.jpeg", link: "coin3.html" },
+      { id: 504, name: "Antique Coin — coin4", price: 150, category: "antique", image: "./assets/images/coin4.jpeg", link: "coin4.html" },
+      { id: 505, name: "Antique Coin — coin5", price: 150, category: "antique", image: "./assets/images/coin5.jpeg", link: "coin5.html" },
+      { id: 506, name: "Antique Coin — coin6", price: 150, category: "antique", image: "./assets/images/coin6.jpeg", link: "coin6.html" }
+    ];
+
+    // Category display names mapping
+    function getCategoryDisplay(category) {
+      const categoryMap = {
+        'food': 'Food & Natural',
+        'sweets': 'Sweets & Dairy',
+        'handicrafts': 'Handicrafts',
+        'clothing': 'Clothing',
+        'books': 'Books',
+        'antique': 'Antique & Collectibles'
+      };
+      return categoryMap[category] || category;
+    }
+
+    // Main render function - Clean filtering implementation
+    function renderProducts(selectedCategory) {
+      const grid = document.getElementById('dynamicProductsGrid');
+      const emptyState = document.getElementById('emptyState');
+      
+      // STEP 1: Clear the product container completely
+      grid.innerHTML = '';
+      
+      // STEP 2: Filter products based on selected category
+      let filteredProducts;
+      if (selectedCategory === 'all') {
+        // Show all products (no antiques)
+        filteredProducts = allProducts;
+      } else {
+        // Show only products matching the selected category
+        filteredProducts = allProducts.filter(product => product.category === selectedCategory);
+      }
+      
+      // STEP 3: Handle empty state
+      if (filteredProducts.length === 0) {
+        grid.style.display = 'none';
+        emptyState.style.display = 'block';
+        console.log('❌ No products found for category:', selectedCategory);
+        return;
+      }
+      
+      // STEP 4: Show grid and hide empty state
+      grid.style.display = 'grid';
+      emptyState.style.display = 'none';
+      
+      // STEP 5: Insert only the matching products (no duplicates)
+      filteredProducts.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'dynamic-product';
+        productCard.innerHTML = `
+          <img loading="lazy" decoding="async" src="../images/${product.image.replace('../images/','').replace('./assets/images/','')}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/160x160?text=No+Image'">
+          <span class="category-badge">${getCategoryDisplay(product.category)}</span>
+          <h3>${product.name}</h3>
+          <p class="price">৳ ${product.price.toLocaleString('en-BD')}</p>
+          <button onclick="location.href='product.html?id=${encodeURIComponent(product.id)}'">View Details</button>
+        `;
+        grid.appendChild(productCard);
+      });
+      
+      // Log for debugging
+      console.log(`✅ Rendered ${filteredProducts.length} products for category: ${selectedCategory}`);
+    }
+
+    // Initialize category filtering on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const tabs = document.querySelectorAll('.category-tab');
+      
+      // Add click event to each category tab
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          // Remove active styling from all tabs
+          tabs.forEach(t => {
+            t.classList.remove('active');
+            t.style.background = 'transparent';
+            t.style.color = 'var(--text-primary)';
+          });
+          
+          // Add active styling to clicked tab
+          this.classList.add('active');
+          
+          // Get the selected category from data attribute
+          const selectedCategory = this.getAttribute('data-category');
+          
+          // Render products for selected category
+          renderProducts(selectedCategory);
+          
+          // Smooth scroll to products section
+          setTimeout(() => {
+            document.getElementById('dynamicProductsGrid').scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'nearest' 
+            });
+          }, 100);
+        });
+      });
+      
+      // Initial render - show all products by default
+      renderProducts('all');
+      
+      console.log('✅ Category filtering system initialized with', allProducts.length, 'total products');
+      console.log('📦 Categories available:', ['food', 'sweets', 'handicrafts', 'clothing', 'books']);
+    });
+  </script>
+
+  <!-- STATIC ANTIQUE SECTION HIDDEN - Only dynamic filtered products will show above -->
+  <section class="products" style="display:none;">
+    <div class="product reveal">
+  <img src="../images/coin1.jpeg" alt="Coin 1">
+      <h3>Antique Coin — coin1</h3>
+      <p>৳ 150</p>
+      <button onclick="location.href='coin1.html'">View</button>
+    </div>
+    <div class="product reveal">
+  <img src="../images/coin2.jpeg" alt="Coin 2">
+      <h3>Antique Coin — coin2</h3>
+      <p>৳ 150</p>
+      <button onclick="location.href='coin2.html'">View</button>
+    </div>
+    <div class="product reveal">
+  <img src="../images/coin3.jpeg" alt="Coin 3">
+      <h3>Antique Coin — coin3</h3>
+      <p>৳ 150</p>
+      <button onclick="location.href='coin3.html'">View</button>
+    </div>
+    <div class="product reveal">
+  <img src="../images/coin4.jpeg" alt="Coin 4">
+      <h3>Antique Coin — coin4</h3>
+      <p>৳ 150</p>
+      <button onclick="location.href='coin4.html'">View</button>
+    </div>
+    <div class="product reveal">
+  <img src="../images/coin5.jpeg" alt="Coin 5">
+      <h3>Antique Coin — coin5</h3>
+      <p>৳ 150</p>
+      <button onclick="location.href='coin5.html'">View</button>
+    </div>
+    <div class="product reveal">
+  <img src="../images/coin6.jpeg" alt="Coin 6">
+      <h3>Antique Coin — coin6</h3>
+      <p>৳ 150</p>
+      <button onclick="location.href='coin6.html'">View</button>
+    </div>
+  </section>
+
+  <footer>
+    <div>© 2025 MR Shop | Powered by Md Rafi Ullah</div>
+    <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy &amp; Policy</a>
+  </footer>
+
+  <script>
+    // Enhanced authentication system with localStorage session management
+    let isAuthenticated = false;
+    let currentUser = null;
+
+    function checkLoginStatus() {
+      // Check if user data exists in localStorage
+      const userData = localStorage.getItem('mr_shop_user');
+      if (userData) {
+        try {
+          currentUser = JSON.parse(userData);
+          isAuthenticated = true;
+          return true;
+        } catch (e) {
+          console.error('Failed to parse user data:', e);
+          isAuthenticated = false;
+          return false;
+        }
+      }
+      isAuthenticated = false;
+      return false;
+    }
+
+    function renderAuth() {
+      // Show/hide auth buttons based on login status
+      document.querySelectorAll('.auth-when-signed-in').forEach(el => {
+        el.style.display = isAuthenticated ? 'inline-block' : 'none';
+      });
+      document.querySelectorAll('.auth-when-signed-out').forEach(el => {
+        el.style.display = isAuthenticated ? 'none' : 'inline-block';
+      });
+      
+      // Update Dashboard link to go to user profile if authenticated
+      const dashboardLink = document.querySelector('.auth-when-signed-in:not(.toggle-auth)');
+      if (dashboardLink && isAuthenticated && currentUser) {
+        dashboardLink.href = 'userprofile.html';
+        dashboardLink.textContent = `👤 ${currentUser.username || 'Profile'}`;
+        dashboardLink.title = `Welcome, ${currentUser.username}!`;
+      }
+      
+      // Show/hide admin link based on admin status
+      const adminLink = document.getElementById('adminLink');
+      if (adminLink && isAuthenticated && currentUser) {
+        // Check if user is admin (check localStorage for adminInfo or admin flag)
+        const adminInfo = localStorage.getItem('adminInfo');
+        const isAdmin = currentUser.role === 'admin' || (adminInfo && JSON.parse(adminInfo).isAdmin);
+        adminLink.style.display = isAdmin ? 'inline-block' : 'none';
+      } else if (adminLink) {
+        adminLink.style.display = 'none';
+      }
+    }
+
+    function logout(e) {
+      e.preventDefault();
+      // Clear session data
+      localStorage.removeItem('mr_shop_user');
+      localStorage.removeItem('mr_shop_user_profile');
+      sessionStorage.removeItem('reset_email');
+      
+      // Reset state
+      isAuthenticated = false;
+      currentUser = null;
+      
+      // Update UI
+      renderAuth();
+      
+      // Show logout confirmation
+      alert('You have been logged out successfully!');
+      
+      // Redirect to home page
+      window.location.href = 'index.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check login status on page load
+      checkLoginStatus();
+      renderAuth();
+      
+      // Attach logout handler
+      document.querySelectorAll('.toggle-auth').forEach(el => {
+        el.addEventListener('click', logout);
+      });
+    });
+  </script>
+
+  <script>
+    // Slideshow for banner with typing effect for captions
+    (function(){
+      const slides = Array.from(document.querySelectorAll('.banner .slide'));
+      const captionText = document.querySelector('.banner .caption .caption-text');
+      const cursor = document.querySelector('.banner .caption .caption-cursor');
+      let idx = 0;
+      let typingTimer = null;
+      let cancelled = false;
+      const TYPING_SPEED = 35; // ms per char
+      const PAUSE_AFTER = 900; // ms after full caption
+
+      function clearTyping(){
+        cancelled = true;
+        if(typingTimer){ clearTimeout(typingTimer); typingTimer = null; }
+      }
+
+      function typeCaption(text){
+        clearTyping();
+        cancelled = false;
+        captionText.textContent = '';
+        let i = 0;
+        function step(){
+          if(cancelled) return;
+          if(i < text.length){
+            captionText.textContent += text.charAt(i);
+            i++;
+            typingTimer = setTimeout(step, TYPING_SPEED);
+          } else {
+            // finished typing, keep cursor blinking for a short pause
+            typingTimer = setTimeout(()=>{ /* noop - allow next slide to take over */ }, PAUSE_AFTER);
+          }
+        }
+        step();
+      }
+
+      function show(i){
+        slides.forEach((s,si)=> s.classList.toggle('active', si===i));
+        const active = slides[i];
+        let c = active && active.dataset && active.dataset.caption;
+        if(!c || !c.trim()) c = 'Your small gift will make them smile.';
+        typeCaption(c);
+      }
+
+      // start
+      show(0);
+      setInterval(()=>{ idx = (idx+1) % slides.length; show(idx); }, 4500);
+    })();
+
+    // Reveal on scroll using IntersectionObserver
+    (function(){
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); }
+        });
+      },{threshold:0.12});
+      document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+    })();
+    
+    // Categories menu toggle & close handlers
+    (function(){
+      const toggle = document.getElementById('categoriesToggle');
+      const menu = document.getElementById('categoriesMenu');
+      if(!toggle || !menu) return;
+      function open(){ menu.classList.add('open'); menu.setAttribute('aria-hidden','false'); }
+      function close(){ menu.classList.remove('open'); menu.setAttribute('aria-hidden','true'); }
+      toggle.addEventListener('click', (e)=>{ e.preventDefault(); menu.classList.contains('open') ? close() : open(); });
+      // close on outside click
+      document.addEventListener('click', (e)=>{
+        if(!menu.classList.contains('open')) return;
+        if(e.target===toggle || toggle.contains(e.target) || menu.contains(e.target)) return;
+        close();
+      });
+      // close on ESC
+      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
+    })();
+    
+    // Platform menu toggle & close handlers
+    (function(){
+      const toggleP = document.getElementById('platformToggle');
+      const menuP = document.getElementById('platformMenu');
+      if(!toggleP || !menuP) return;
+      function openP(){ menuP.classList.add('open'); menuP.setAttribute('aria-hidden','false'); }
+      function closeP(){ menuP.classList.remove('open'); menuP.setAttribute('aria-hidden','true'); }
+      toggleP.addEventListener('click', (e)=>{ e.preventDefault(); menuP.classList.contains('open') ? closeP() : openP(); });
+      document.addEventListener('click', (e)=>{
+        if(!menuP.classList.contains('open')) return;
+        if(e.target===toggleP || toggleP.contains(e.target) || menuP.contains(e.target)) return;
+        closeP();
+      });
+      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeP(); });
+    })();
+    
+    // Theme toggle (persist in localStorage)
+    (function(){
+      const key = 'mrshop-theme';
+      const btn = document.getElementById('themeToggle');
+      const root = document.documentElement;
+      function apply(theme){
+        if(theme === 'dark') root.classList.add('theme-dark'); else root.classList.remove('theme-dark');
+        if(btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+      }
+      const saved = localStorage.getItem(key) || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      apply(saved);
+      if(btn) btn.addEventListener('click', ()=>{
+        const cur = root.classList.contains('theme-dark') ? 'dark' : 'light';
+        const next = cur === 'dark' ? 'light' : 'dark';
+        localStorage.setItem(key, next);
+        apply(next);
+      });
+    })();
+
+    // ========== ADMIN PRODUCTS SYNC LISTENER ==========
+    // Listen for products updated event from adminrafi
+    (function(){
+      let allAdminProducts = [];
+      
+      // Load admin products from localStorage on page load
+      function loadAdminProducts(){
+        try {
+          const stored = localStorage.getItem('mrshop_admin_products');
+          if(stored){
+            allAdminProducts = JSON.parse(stored);
+            console.log('✅ Loaded admin products from localStorage:', allAdminProducts.length);
+            renderProducts();
+          }
+        } catch(e){
+          console.error('Error loading admin products:', e);
+        }
+      }
+
+      // Listen for custom event from adminrafi
+      window.addEventListener('mrshopProductsUpdated', (event)=>{
+        console.log('✅ Received mrshopProductsUpdated event:', event.detail);
+        if(event.detail && event.detail.products){
+          allAdminProducts = event.detail.products;
+          renderProducts();
+        }
+      });
+
+      // Listen for BroadcastChannel messages from adminrafi
+      if(window.BroadcastChannel){
+        const channel = new BroadcastChannel('mrshop_products');
+        channel.onmessage = (event)=>{
+          console.log('✅ Received BroadcastChannel message:', event.data);
+          if(event.data.type === 'productsUpdated' && event.data.data){
+            allAdminProducts = event.data.data;
+            renderProducts();
+          }
+        };
+      }
+
+      // Sample product data (local/default products)
+      const defaultProducts = [
+        {id: 1, name: 'Bogura Doi', category: 'sweets', price: 250, stock: 50, seller: 'Local Dairy', imageBase64: null},
+        {id: 2, name: 'Wild Honey', category: 'food', price: 500, stock: 30, seller: 'Sundarbans', imageBase64: null},
+        {id: 3, name: 'Cotton Saree', category: 'clothing', price: 2500, stock: 20, seller: 'Traditional Wear', imageBase64: null}
+      ];
+
+      // Render products (combines admin + default products)
+      function renderProducts(){
+        const grid = document.getElementById('dynamicProductsGrid');
+        const empty = document.getElementById('emptyState');
+        const activeCat = document.querySelector('.category-tab.active')?.dataset.category || 'all';
+        
+        // Combine admin products with defaults
+        const allProducts = [...allAdminProducts, ...defaultProducts];
+        
+        // Filter by category
+        const filtered = activeCat === 'all' 
+          ? allProducts
+          : allProducts.filter(p => p.category === activeCat);
+
+        if(filtered.length === 0){
+          grid.style.display = 'none';
+          empty.style.display = 'block';
+          return;
+        }
+
+        grid.style.display = 'grid';
+        empty.style.display = 'none';
+        
+        grid.innerHTML = filtered.map(product => `
+          <div class="dynamic-product">
+            ${product.imageBase64 
+              ? `<img src="data:image/jpeg;base64,${product.imageBase64.substring(0, 100)}..." alt="${product.name}" />` 
+              : `<img src="../images/placeholder.jpg" alt="${product.name}" style="background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(6,182,212,0.1)); display: flex; align-items: center; justify-content: center;" />`
+            }
+            <span class="category-badge">${product.category}</span>
+            <h3>${product.name}</h3>
+            <div class="price">৳ ${product.price}</div>
+            <div style="font-size: 12px; color: var(--muted);">Stock: ${product.stock}</div>
+            <div style="font-size: 12px; color: var(--accent); font-weight: 600;">By: ${product.seller}</div>
+            <button onclick="alert('Added to cart: ${product.name}')">🛒 Add to Cart</button>
+          </div>
+        `).join('');
+        
+        console.log(`✅ Rendered ${filtered.length} products for category: ${activeCat}`);
+      }
+
+      // Category filter handler
+      document.querySelectorAll('.category-tab').forEach(tab => {
+        tab.addEventListener('click', function(){
+          document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          renderProducts();
+          console.log('📌 Category filtered:', this.dataset.category);
+        });
+      });
+
+      // Initial load
+      loadAdminProducts();
+      
+      console.log('✅ Admin products sync listener initialized');
+    })();
+  </script>
+  <script src="../js/search.js"></script>
+
+</body>
+</html>
