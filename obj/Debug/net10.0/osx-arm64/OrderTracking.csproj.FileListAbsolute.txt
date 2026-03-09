@@ -48,3 +48,13 @@
 /Users/mdrafiullah/Desktop/mr project /obj/Debug/net10.0/osx-arm64/OrderTracking.pdb
 /Users/mdrafiullah/Desktop/mr project /obj/Debug/net10.0/osx-arm64/OrderTracking.genruntimeconfig.cache
 /Users/mdrafiullah/Desktop/mr project /obj/Debug/net10.0/osx-arm64/ref/OrderTracking.dll
+/home/runner/work/mr-project/mr-project/obj/Debug/net10.0/osx-arm64/OrderTracking.csproj.AssemblyReference.cache
+/home/runner/work/mr-project/mr-project/obj/Debug/net10.0/osx-arm64/rpswa.dswa.cache.json
+/home/runner/work/mr-project/mr-project/obj/Debug/net10.0/osx-arm64/OrderTracking.GeneratedMSBuildEditorConfig.editorconfig
+/home/runner/work/mr-project/mr-project/obj/Debug/net10.0/osx-arm64/OrderTracking.csproj.CoreCompileInputs.cache
+/home/runner/work/mr-project/mr-project/obj/Debug/net10.0/osx-arm64/OrderTracking.MvcApplicationPartsAssemblyInfo.cs
+/home/runner/work/mr-project/mr-project/obj/Debug/net10.0/osx-arm64/OrderTracking.MvcApplicationPartsAssemblyInfo.cache
+/home/runner/work/mr-project/mr-project/obj/Debug/net10.0/osx-arm64/OrderTracking.sourcelink.json
+/home/runner/work/mr-project/mr-project/obj/Debug/net10.0/osx-arm64/OrderTracking.dll
+/home/runner/work/mr-project/mr-project/obj/Debug/net10.0/osx-arm64/refint/OrderTracking.dll
+/home/runner/work/mr-project/mr-project/obj/Debug/net10.0/osx-arm64/OrderTracking.pdb
