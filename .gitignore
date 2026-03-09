@@ -9,3 +9,7 @@ settings.json
 .DS_Store
 .venv/
 backend/.venv/
+bin/
+obj/
+MyApp/bin/
+MyApp/obj/
