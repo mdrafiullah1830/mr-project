@@ -1168,12 +1168,19 @@ function checkAuthentication() {
     return;
   }
   
-  // Load user data
+  // Load user data (Google or local)
   const user = JSON.parse(userData);
-  if (user.username) {
-    document.getElementById('profileName').textContent = user.username;
-  }
-  if (user.email) {
-    document.getElementById('profileEmail').textContent = user.email;
-  }
+  // Prefer Google name/email if available
+  const displayName = user.name || user.username || 'User';
+  const displayEmail = user.email || '';
+  const displayPhoto = user.picture || '';
+  document.getElementById('profileName').textContent = displayName;
+  document.getElementById('profileEmail').textContent = displayEmail;
+  // Sidebar photo
+  if (displayPhoto) document.getElementById('profilePhoto').src = displayPhoto;
+  // Hero section
+  if (document.getElementById('heroName')) document.getElementById('heroName').textContent = displayName.split(' ')[0] || displayName;
+  if (document.getElementById('miniName')) document.getElementById('miniName').textContent = displayName;
+  if (document.getElementById('miniEmail')) document.getElementById('miniEmail').textContent = displayEmail;
+  if (document.getElementById('heroPhoto') && displayPhoto) document.getElementById('heroPhoto').src = displayPhoto;
 }

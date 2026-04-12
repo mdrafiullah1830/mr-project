@@ -4,7 +4,7 @@
 class GoogleOAuthManager {
   constructor() {
     // Configuration
-    this.CLIENT_ID = 'YOUR_ACTUAL_CLIENT_ID.apps.googleusercontent.com'; // Will be updated
+    this.CLIENT_ID = '1049849814562-uj8d0he569bht0m9tv0rl62erj5q519p.apps.googleusercontent.com'; // Updated with real Client ID
     this.PROJECT_ID = 'mr-shop-480319';
     this.IS_DEMO = this.CLIENT_ID.includes('YOUR_ACTUAL');
     
@@ -128,7 +128,7 @@ class GoogleOAuthManager {
   async initiateRealOAuth() {
     try {
       const REDIRECT_URI = window.location.origin + '/assets/html/auth.html';
-      const SCOPE = encodeURIComponent('email profile openid');
+      const SCOPE = 'openid email profile';
       const RESPONSE_TYPE = 'token';
       const STATE = this.generateState();
 
