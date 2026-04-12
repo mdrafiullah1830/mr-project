@@ -1,0 +1,9 @@
+/Users/mdrafiullah/Desktop/mr project /AdminPanel/obj/Debug/net10.0/osx-arm64/rpswa.dswa.cache.json
+/Users/mdrafiullah/Desktop/mr project /AdminPanel/obj/Debug/net10.0/osx-arm64/AdminPanel.GeneratedMSBuildEditorConfig.editorconfig
+/Users/mdrafiullah/Desktop/mr project /AdminPanel/obj/Debug/net10.0/osx-arm64/AdminPanel.AssemblyInfoInputs.cache
+/Users/mdrafiullah/Desktop/mr project /AdminPanel/obj/Debug/net10.0/osx-arm64/AdminPanel.AssemblyInfo.cs
+/Users/mdrafiullah/Desktop/mr project /AdminPanel/obj/Debug/net10.0/osx-arm64/AdminPanel.csproj.CoreCompileInputs.cache
+/Users/mdrafiullah/Desktop/mr project /AdminPanel/obj/Debug/net10.0/osx-arm64/AdminPanel.MvcApplicationPartsAssemblyInfo.cache
+/Users/mdrafiullah/Desktop/mr project /AdminPanel/obj/Debug/net10.0/osx-arm64/AdminPanel.RazorAssemblyInfo.cache
+/Users/mdrafiullah/Desktop/mr project /AdminPanel/obj/Debug/net10.0/osx-arm64/AdminPanel.RazorAssemblyInfo.cs
+/Users/mdrafiullah/Desktop/mr project /AdminPanel/obj/Debug/net10.0/osx-arm64/AdminPanel.sourcelink.json

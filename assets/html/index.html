@@ -276,6 +276,7 @@
       border-radius:14px;
       box-shadow: var(--shadow);
       text-align:center;padding:18px;transition:transform .25s ease,box-shadow .25s ease;
+      -webkit-backdrop-filter: blur(6px);
       backdrop-filter: blur(6px);
       overflow:hidden;
       display:flex;flex-direction:column;gap:12px;align-items:center;
@@ -375,7 +376,7 @@
     </div>
   </nav>
 
-  <div class="banner" aria-roledescription="carousel">
+  <div class="banner" role="region" aria-label="Product carousel">
     <div class="slides">
   <div class="slide" data-src="../images/saree.jpg" data-caption="Soft, breathable cotton weave—perfect for everyday comfort with a classic touch." style="background-image:url('../images/saree.jpg')"></div>
   <div class="slide" data-src="../images/doi.jpg" data-caption="Authentic Bogura Doi—thick, creamy, and naturally delicious." style="background-image:url('../images/doi.jpg')"></div>
@@ -438,6 +439,7 @@
       padding: 12px;
       text-align: center;
       transition: transform .22s ease, box-shadow .22s ease;
+      -webkit-backdrop-filter: blur(4px);
       backdrop-filter: blur(4px);
       overflow: hidden;
       display: flex;
