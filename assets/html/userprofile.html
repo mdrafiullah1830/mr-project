@@ -11,15 +11,15 @@
   <!-- Header -->
   <header class="header">
     <h1>
-      <a href="index.html" class="brand-link" aria-label="MR Shop home" style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:32px">🛍️</span>
+      <a href="index.html" class="brand-link brand-link-flex" aria-label="MR Shop home">
+        <span class="brand-link-icon">🛍️</span>
   <img src="../images/mrlogo.png" alt="MR" class="mr-logo" />
-        <span style="font-weight:700;font-size:20px;color:#fff">MR Shop</span>
+        <span class="brand-link-title">MR Shop</span>
       </a>
     </h1>
     <nav class="header-nav">
       <a href="orders.html" class="cart-link" aria-label="View orders" title="Track Orders">
-        <img src="./assets/images/cart.jpg" alt="Orders" class="cart-icon" style="filter: hue-rotate(200deg);" />
+        <img src="./assets/images/cart.jpg" alt="Orders" class="cart-icon cart-icon-hue" />
       </a>
       <a href="notification.html" class="notification-link" aria-label="View notifications">
         <span class="notification-icon">🔔</span>
@@ -82,10 +82,10 @@
           <span class="menu-text">Settings</span>
         </button>
         <!-- Admin Only: Seller Approvals -->
-        <button class="menu-item" id="sellerApprovalsMenu" data-section="seller-approvals" onclick="switchSection('seller-approvals')" style="display: none; color: #ff6b6b; border-color: #ff6b6b;">
+        <button class="menu-item seller-approvals-menu" id="sellerApprovalsMenu" data-section="seller-approvals" onclick="switchSection('seller-approvals')">
           <span class="menu-icon">✅</span>
           <span class="menu-text">Seller Approvals</span>
-          <span class="notification-badge" id="approvalBadge" style="display: none; background: #ff6b6b; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: auto;">0</span>
+          <span class="notification-badge approval-badge" id="approvalBadge">0</span>
         </button>
         <button class="menu-item logout-btn" onclick="logout()">
           <span class="menu-icon">🚪</span>
@@ -144,9 +144,9 @@
       <div class="content-section active" id="personal-info">
         <div class="section-header">
           <h2 class="section-title">Personal Information</h2>
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <span id="backendStatus" style="font-size: 12px; color: #666; display: flex; align-items: center; gap: 5px;">
-              <span style="width: 8px; height: 8px; border-radius: 50%; background: #28a745;" id="statusDot"></span>
+          <div class="flex-align-gap">
+            <span id="backendStatus" class="backend-status">
+              <span class="status-dot" id="statusDot"></span>
               <span id="statusText">Connected to Backend</span>
             </span>
             <button class="edit-btn" id="editBtn" onclick="toggleEdit()">
@@ -315,21 +315,21 @@ Dhaka - 1205, Bangladesh</textarea>
       </div>
 
       <!-- Admin Only: Seller Approvals Section -->
-      <div class="content-section" id="seller-approvals" style="display: none;">
+      <div class="content-section seller-approvals-section" id="seller-approvals">
         <div class="section-header">
           <h2 class="section-title">Pending Seller Approvals</h2>
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <span id="approvalCount" style="font-size: 12px; color: #666;">
+          <div class="flex-align-gap">
+            <span id="approvalCount" class="approval-count">
               <span id="pendingCount">0</span> pending requests
             </span>
-            <button class="edit-btn" onclick="loadAdminNotifications()" style="background: #28a745; color: white;">
+            <button class="edit-btn edit-btn-green" onclick="loadAdminNotifications()">
               <span>🔄</span>
               Refresh
             </button>
           </div>
         </div>
 
-        <div id="approvalsContainer" style="display: flex; flex-direction: column; gap: 12px;">
+        <div id="approvalsContainer" class="approvals-container">
           <!-- Seller approval cards will be loaded here -->
         </div>
       </div>

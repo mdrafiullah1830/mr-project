@@ -23,9 +23,9 @@ body{font-family:'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, sans-s
 .header-actions a:hover{background:rgba(255,255,255,.12)}
 
 .auth-main{display:flex;justify-content:center;align-items:center;padding:40px 24px}
-.wrapper{position:relative;width:820px;max-width:95vw;height:clamp(540px, 70vh, 660px);background:linear-gradient(180deg,rgba(255,255,255,0.98),rgba(247,250,255,0.96));border-radius:24px;overflow:hidden;border:2px solid rgba(124,58,237,0.16);box-shadow:0 18px 50px rgba(12,20,30,0.12);backdrop-filter:blur(18px);transition:border 0.2s ease,box-shadow 0.2s ease}
+.wrapper{position:relative;width:820px;max-width:95vw;height:clamp(540px, 70vh, 660px);background:linear-gradient(180deg,rgba(255,255,255,0.98),rgba(247,250,255,0.96));border-radius:24px;overflow:hidden;border:2px solid rgba(124,58,237,0.16);box-shadow:0 18px 50px rgba(12,20,30,0.12);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);transition:border 0.2s ease,box-shadow 0.2s ease}
 .wrapper:hover{box-shadow:0 24px 60px rgba(12,20,30,0.16);border-color:rgba(6,182,212,0.25)}
-.wrapper .form-box{position:absolute;width:50%;height:100%;display:flex;justify-content:flex-start;flex-direction:column;padding:48px 44px;overflow-y:auto;scrollbar-width:thin}
+.wrapper .form-box{position:absolute;width:50%;height:100%;display:flex;justify-content:flex-start;flex-direction:column;padding:48px 44px;overflow-y:auto}
 .wrapper .form-box::-webkit-scrollbar{width:6px}
 .wrapper .form-box::-webkit-scrollbar-track{background:transparent}
 .wrapper .form-box::-webkit-scrollbar-thumb{background:rgba(124,58,237,0.4);border-radius:999px}

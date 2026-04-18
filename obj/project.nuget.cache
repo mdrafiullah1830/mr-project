@@ -1,30 +1,33 @@
 {
   "version": 2,
-  "dgSpecHash": "Sw+8fBM4Yns=",
+  "dgSpecHash": "3AXI8sX0Yyg=",
   "success": true,
   "projectFilePath": "/Users/mdrafiullah/Desktop/mr project /OrderTracking.csproj",
   "expectedPackageFiles": [
+    "/Users/mdrafiullah/.nuget/packages/bouncycastle.cryptography/2.6.2/bouncycastle.cryptography.2.6.2.nupkg.sha512",
+    "/Users/mdrafiullah/.nuget/packages/google.protobuf/3.32.0/google.protobuf.3.32.0.nupkg.sha512",
+    "/Users/mdrafiullah/.nuget/packages/k4os.compression.lz4/1.3.8/k4os.compression.lz4.1.3.8.nupkg.sha512",
+    "/Users/mdrafiullah/.nuget/packages/k4os.compression.lz4.streams/1.3.8/k4os.compression.lz4.streams.1.3.8.nupkg.sha512",
+    "/Users/mdrafiullah/.nuget/packages/k4os.hash.xxhash/1.0.8/k4os.hash.xxhash.1.0.8.nupkg.sha512",
     "/Users/mdrafiullah/.nuget/packages/microsoft.aspnetcore.openapi/8.0.0/microsoft.aspnetcore.openapi.8.0.0.nupkg.sha512",
+    "/Users/mdrafiullah/.nuget/packages/microsoft.entityframeworkcore/9.0.0/microsoft.entityframeworkcore.9.0.0.nupkg.sha512",
+    "/Users/mdrafiullah/.nuget/packages/microsoft.entityframeworkcore.abstractions/9.0.0/microsoft.entityframeworkcore.abstractions.9.0.0.nupkg.sha512",
+    "/Users/mdrafiullah/.nuget/packages/microsoft.entityframeworkcore.analyzers/9.0.0/microsoft.entityframeworkcore.analyzers.9.0.0.nupkg.sha512",
+    "/Users/mdrafiullah/.nuget/packages/microsoft.entityframeworkcore.relational/9.0.0/microsoft.entityframeworkcore.relational.9.0.0.nupkg.sha512",
     "/Users/mdrafiullah/.nuget/packages/microsoft.extensions.apidescription.server/6.0.5/microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "/Users/mdrafiullah/.nuget/packages/microsoft.openapi/1.4.3/microsoft.openapi.1.4.3.nupkg.sha512",
+    "/Users/mdrafiullah/.nuget/packages/mysql.data/9.6.0/mysql.data.9.6.0.nupkg.sha512",
+    "/Users/mdrafiullah/.nuget/packages/mysqlconnector/2.4.0/mysqlconnector.2.4.0.nupkg.sha512",
+    "/Users/mdrafiullah/.nuget/packages/pomelo.entityframeworkcore.mysql/9.0.0/pomelo.entityframeworkcore.mysql.9.0.0.nupkg.sha512",
     "/Users/mdrafiullah/.nuget/packages/swashbuckle.aspnetcore/6.5.0/swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
     "/Users/mdrafiullah/.nuget/packages/swashbuckle.aspnetcore.swagger/6.5.0/swashbuckle.aspnetcore.swagger.6.5.0.nupkg.sha512",
     "/Users/mdrafiullah/.nuget/packages/swashbuckle.aspnetcore.swaggergen/6.5.0/swashbuckle.aspnetcore.swaggergen.6.5.0.nupkg.sha512",
-    "/Users/mdrafiullah/.nuget/packages/swashbuckle.aspnetcore.swaggerui/6.5.0/swashbuckle.aspnetcore.swaggerui.6.5.0.nupkg.sha512"
+    "/Users/mdrafiullah/.nuget/packages/swashbuckle.aspnetcore.swaggerui/6.5.0/swashbuckle.aspnetcore.swaggerui.6.5.0.nupkg.sha512",
+    "/Users/mdrafiullah/.nuget/packages/system.configuration.configurationmanager/8.0.0/system.configuration.configurationmanager.8.0.0.nupkg.sha512",
+    "/Users/mdrafiullah/.nuget/packages/system.security.cryptography.protecteddata/8.0.0/system.security.cryptography.protecteddata.8.0.0.nupkg.sha512",
+    "/Users/mdrafiullah/.nuget/packages/system.security.permissions/8.0.0/system.security.permissions.8.0.0.nupkg.sha512",
+    "/Users/mdrafiullah/.nuget/packages/system.windows.extensions/8.0.0/system.windows.extensions.8.0.0.nupkg.sha512",
+    "/Users/mdrafiullah/.nuget/packages/zstdsharp.port/0.8.6/zstdsharp.port.0.8.6.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1603",
-      "level": "Warning",
-      "message": "OrderTracking depends on Swashbuckle.AspNetCore (>= 6.4.6) but Swashbuckle.AspNetCore 6.4.6 was not found. Swashbuckle.AspNetCore 6.5.0 was resolved instead.",
-      "projectPath": "/Users/mdrafiullah/Desktop/mr project /OrderTracking.csproj",
-      "warningLevel": 1,
-      "filePath": "/Users/mdrafiullah/Desktop/mr project /OrderTracking.csproj",
-      "libraryId": "Swashbuckle.AspNetCore",
-      "targetGraphs": [
-        "net10.0",
-        "net10.0/osx-arm64"
-      ]
-    }
-  ]
+  "logs": []
 }

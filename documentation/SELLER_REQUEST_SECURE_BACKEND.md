@@ -1,4 +1,114 @@
-# Production-Level Seller Request Backend System
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "server=localhost;database=mrshop_db;user=root;password=;"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}{
+  "ConnectionStrings": {
+    "DefaultConnection": "server=localhost;database=mrshop_db;user=root;password=;"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}{
+  "ConnectionStrings": {
+    "DefaultConnection": "server=localhost;database=mrshop_db;user=root;password=;"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}{
+  "ConnectionStrings": {
+    "DefaultConnection": "server=localhost;database=mrshop_db;user=root;password=;"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}{
+  "ConnectionStrings": {
+    "DefaultConnection": "server=localhost;database=mrshop_db;user=root;password=;"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}{
+  "ConnectionStrings": {
+    "DefaultConnection": "server=localhost;database=mrshop_db;user=root;password=;"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}{
+  "ConnectionStrings": {
+    "DefaultConnection": "server=localhost;database=mrshop_db;user=root;password=;"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}{
+  "ConnectionStrings": {
+    "DefaultConnection": "server=localhost;database=mrshop_db;user=root;password=;"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}{
+  "ConnectionStrings": {
+    "DefaultConnection": "server=localhost;database=mrshop_db;user=root;password=;"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}{
+  "ConnectionStrings": {
+    "DefaultConnection": "server=localhost;database=mrshop_db;user=root;password=;"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}# Production-Level Seller Request Backend System
 
 **Status:** ✅ Complete & Production-Ready  
 **Build:** 0 Errors | Warnings: Non-blocking (null-safety)  
