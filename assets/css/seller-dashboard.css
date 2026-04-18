@@ -1,3 +1,5 @@
+@import url('./site-base.css');
+
 /* Seller Dashboard styles - clean, responsive layout */
 :root{--accent:#7c3aed;--accent-2:#06b6d4;--bg:#f7fbff;--muted:#52606d;--card:#ffffff}
 *{box-sizing:border-box}

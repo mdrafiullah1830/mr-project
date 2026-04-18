@@ -1,3 +1,5 @@
+@import url('./site-base.css');
+
 /* === Support Children - Soft & Emotional Design === */
 
 :root {
@@ -98,9 +100,10 @@ body {
   top: 0;
   z-index: 100;
   background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--wfc-border);
   box-shadow: var(--wfc-shadow-sm);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
 }
 
 .wfc-header-inner {
@@ -732,6 +735,7 @@ body {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
 

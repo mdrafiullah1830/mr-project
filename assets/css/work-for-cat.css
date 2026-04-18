@@ -1,3 +1,5 @@
+@import url('./site-base.css');
+
 /* === Support Cats Page Styles === */
 
 :root {
@@ -86,6 +88,7 @@ body {
   background: rgba(255, 255, 255, 0.9);
   border-bottom: 1px solid var(--wfc-border);
   box-shadow: var(--wfc-shadow-sm);
+  -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
 }
 
@@ -565,6 +568,7 @@ body {
   position: absolute;
   inset: 0;
   background: rgba(15, 23, 42, 0.65);
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
 
