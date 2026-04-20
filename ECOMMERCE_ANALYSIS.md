@@ -82,7 +82,6 @@ Local Storage (Client-side caching)
 - `coin1.html - coin6.html` - Coin collection categories
 
 #### Work/Job Opportunities
-- `work-for-people.html` - Job opportunities
 - `workfor.html` - Work category main
 - `workforcat.html` - Work categories
 - `workforpeople.html` - People looking for work
@@ -92,7 +91,6 @@ Local Storage (Client-side caching)
 
 | Page | Feature | Purpose |
 |------|---------|---------|
-| **search-test.html** | Search functionality | Test search engine |
 | **notification.html** | Notifications | User alerts & updates |
 | **chat.html** | Chat/Messaging | Customer support & seller communication |
 | **setting.html** | User Settings | Preferences, privacy, account settings |
@@ -102,8 +100,8 @@ Local Storage (Client-side caching)
 
 ### **Advanced Pages (OAuth & Testing)**
 
-- `complete-oauth-demo.html` - Full OAuth 2.0 flow demo
-- `oauth-test.html` - OAuth testing interface
+- `auth.html` - Google OAuth sign-in entry point
+- `assets/js/oauth-config.json` - OAuth setup notes and demo config
 
 ---
 

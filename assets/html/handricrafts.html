@@ -145,6 +145,7 @@
 
   <div class="toast" id="toast">Added to cart</div>
 
+  <script src="../js/category-live-sync.js"></script>
   <script>
     // Product catalog
     const products = [
@@ -164,6 +165,10 @@
 
     const grid = document.getElementById('productsGrid');
     const toast = document.getElementById('toast');
+
+    const CATEGORY_SLUG = 'handicrafts';
+    let catalogProducts = products.slice();
+    let activeFilter = 'all';
 
     function render(list){
       grid.innerHTML = list.map(p => `
@@ -190,6 +195,14 @@
       `).join('');
     }
 
+    function renderCatalog(){
+      const visibleProducts = activeFilter === 'all'
+        ? catalogProducts
+        : catalogProducts.filter(p => p.tag === activeFilter);
+
+      render(visibleProducts);
+    }
+
     function humanTag(tag){
       switch(tag){
         case 'textiles': return 'Textiles';
@@ -212,8 +225,8 @@
       document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
       btn.classList.add('active');
       const f = btn.dataset.filter;
-      if(f === 'all') render(products);
-      else render(products.filter(p=>p.tag===f));
+      activeFilter = f;
+      renderCatalog();
     });
 
     // Qty
@@ -231,7 +244,7 @@
     function setCart(c){ localStorage.setItem('mr_shop_cart', JSON.stringify(c)); }
 
     function addToCart(id){
-      const p = products.find(x=>x.id===id);
+      const p = catalogProducts.find(x=>x.id===id) || products.find(x=>x.id===id);
       if(!p) return;
       const qty = parseInt(document.getElementById('qty-'+id).value||'1',10) || 1;
       const cart = getCart();
@@ -250,8 +263,27 @@
       setTimeout(()=>toast.classList.remove('show'), 1800);
     }
 
+    async function refreshCatalog(){
+      if (!window.MRShopCategoryLiveSync) {
+        catalogProducts = products.slice();
+        renderCatalog();
+        return;
+      }
+
+      const liveProducts = await window.MRShopCategoryLiveSync.loadCategoryProducts(CATEGORY_SLUG);
+      catalogProducts = window.MRShopCategoryLiveSync.mergeProducts(products, liveProducts, CATEGORY_SLUG);
+      renderCatalog();
+    }
+
     // Initial render
-    render(products);
+    renderCatalog();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      refreshCatalog();
+      if (window.MRShopCategoryLiveSync) {
+        window.MRShopCategoryLiveSync.watchCategoryUpdates(refreshCatalog);
+      }
+    });
   </script>
 </body>
 </html>

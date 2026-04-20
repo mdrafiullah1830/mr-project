@@ -15,10 +15,10 @@ Your Google OAuth is now configured in **Demo Mode**. This means:
 
 Open this URL in your browser:
 ```
-http://localhost:8000/assets/html/oauth-test.html
+http://localhost:8000/assets/html/auth.html
 ```
 
-Click **"Test Demo Login"** - you'll see demo users login!
+Click **"Continue with Google"** to test the demo login flow.
 
 Or go directly to auth page:
 ```
@@ -119,7 +119,7 @@ Refresh your browser and test the OAuth flow!
 ### Modified Files:
 - `/assets/html/auth.html` - Added Google SDK
 - `/assets/js/auth.js` - Implemented OAuth functions
-- `/assets/html/oauth-test.html` - Test page
+- `/assets/html/auth.html` - OAuth test entry point
 
 ---
 
@@ -180,7 +180,7 @@ Each time you "Continue with Google" in demo mode, a random user logs in!
 ---
 
 **Ready to proceed?**
-- For demo test: http://localhost:8000/assets/html/oauth-test.html
+- For demo test: http://localhost:8000/assets/html/auth.html
 - For real setup: Follow the "Setup Real Google OAuth" steps above
 - Questions? Contact: mdrafiullah
 

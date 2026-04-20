@@ -102,6 +102,7 @@
     © 2025 MR Shop — Clothing
   </footer>
 
+  <script src="../js/category-live-sync.js"></script>
   <script>
     const products = [
       { id:301, name: "Jamdani Saree", price:4500, image: "./assets/images/saree.jpg", description: "Elegant Jamdani saree with handcrafted motifs." },
@@ -111,12 +112,17 @@
       { id:305, name: "Classic Kurta", price:1990, image: "https://picsum.photos/seed/kurta/400/300", description: "Minimalist kurta for modern occasions." }
     ];
 
+    const CATEGORY_SLUG = 'clothing';
+    let catalogProducts = products.slice();
+
     let cart = JSON.parse(localStorage.getItem('mr_shop_cart')) || [];
     function saveCart(){ localStorage.setItem('mr_shop_cart', JSON.stringify(cart)); }
 
     function renderProducts(){
       const grid = document.getElementById('productsGrid');
-      grid.innerHTML = products.map(p => `
+      const displayProducts = Array.isArray(catalogProducts) && catalogProducts.length > 0 ? catalogProducts : products;
+
+      grid.innerHTML = displayProducts.map(p => `
         <div class="product-card">
           <img src="${p.image}" class="product-image" />
           <div class="product-info">
@@ -146,7 +152,7 @@
     }
 
     function addToCart(id){
-      const p = products.find(x => x.id === id);
+      const p = catalogProducts.find(x => x.id === id) || products.find(x => x.id === id);
       const qty = Number(document.getElementById(`qty-${id}`).value);
       const exists = cart.find(i => i.id === id);
       if(exists) exists.quantity += qty;
@@ -155,7 +161,25 @@
       alert(p.name + " added to cart!");
     }
 
+    async function refreshCatalog(){
+      if (!window.MRShopCategoryLiveSync) {
+        catalogProducts = products.slice();
+        renderProducts();
+        return;
+      }
+
+      const liveProducts = await window.MRShopCategoryLiveSync.loadCategoryProducts(CATEGORY_SLUG);
+      catalogProducts = window.MRShopCategoryLiveSync.mergeProducts(products, liveProducts, CATEGORY_SLUG);
+      renderProducts();
+    }
+
     document.addEventListener('DOMContentLoaded', renderProducts);
+    document.addEventListener('DOMContentLoaded', () => {
+      refreshCatalog();
+      if (window.MRShopCategoryLiveSync) {
+        window.MRShopCategoryLiveSync.watchCategoryUpdates(refreshCatalog);
+      }
+    });
   </script>
 
 </body>

@@ -40,7 +40,6 @@
 │   ├── workforcat.html               ✅ Work category
 │   ├── workforchild.html             ✅ Work subcategory
 │   ├── workforpeople.html            ✅ Work people section
-│   └── work-for-people.html          ✅ Work alternative
 │
 ├── 📂 /assets
 │   ├── /css

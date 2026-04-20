@@ -58,14 +58,10 @@ http://localhost:8000/assets/html/auth.html
 
 ### **Google OAuth Demo** 🆕
 ```
-http://localhost:8000/assets/html/complete-oauth-demo.html
+http://localhost:8000/assets/html/auth.html
 ```
-- Click any of 3 demo users to test login:
-  - Ahmed Khan (ahmed.khan@gmail.com)
-  - Fatima Ali (fatima.ali@gmail.com)
-  - Hassan Muhammad (hassan.m@gmail.com)
-- Auto-redirects to user profile after login
-- Full session management with LocalStorage
+- Use the Google sign-in flow on the auth page to test login
+- Demo mode uses the local OAuth config
 
 ### **Chat Support**
 ```
@@ -78,9 +74,9 @@ http://localhost:8000/assets/html/chat.html
 
 ### **Search Test**
 ```
-http://localhost:8000/assets/html/search-test.html
+http://localhost:8000/assets/html/index.html
 ```
-- Test search functionality directly
+- Use the homepage search bar to test product search
 - Query honey, milk, clothing, etc.
 - See relevance scoring in action
 
@@ -222,7 +218,7 @@ Search works perfectly! Try:
 ## 📝 FILES CREATED TODAY
 
 1. `/backend/chat_api.py` - Flask chat bot API
-2. `/assets/html/complete-oauth-demo.html` - OAuth demo & testing page
+2. `/assets/html/auth.html` - OAuth demo & testing entry point
 
 ## 🔧 INSTALLED PACKAGES
 
@@ -233,7 +229,7 @@ Search works perfectly! Try:
 
 ## 💡 NEXT STEPS
 
-1. **Test demo mode** - Click any user on complete-oauth-demo.html
+1. **Test demo mode** - Use the Google sign-in flow on auth.html
 2. **Get Google Client ID** - Follow OAuth setup above
 3. **Update Client ID** - Edit google-oauth-manager.js
 4. **Test real OAuth** - Click "Continue with Google"

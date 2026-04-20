@@ -636,6 +636,102 @@
     let categories = [];
     let selectedCategory = null;
     let allProducts = {};
+    const apiBasePath = '/api.php';
+    const categorySlugMap = {
+      '🍯 Food & Natural': 'food',
+      '🎨 Handicrafts': 'handicrafts',
+      '📚 Books': 'books',
+      '🍰 Sweets & Dairy': 'sweets',
+      '👗 Clothing': 'clothing',
+      '🪙 Antique & Collectibles': 'antique'
+    };
+
+    function createApiUrl(action) {
+      const url = new URL(apiBasePath, window.location.href);
+      url.searchParams.set('action', action);
+      return url.toString();
+    }
+
+    function normalizeCategorySlug(category) {
+      return categorySlugMap[category] || String(category || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+    }
+
+    function getDisplayCategoryForSlug(slug) {
+      const normalizedSlug = String(slug || '').toLowerCase();
+      const entry = Object.entries(categorySlugMap).find(([, value]) => value === normalizedSlug);
+      return entry ? entry[0] : slug;
+    }
+
+    function groupProductsByCategory(products) {
+      const groupedProducts = {};
+
+      products.forEach(product => {
+        const displayCategory = getDisplayCategoryForSlug(product.category || 'food');
+        if (!groupedProducts[displayCategory]) {
+          groupedProducts[displayCategory] = [];
+        }
+
+        groupedProducts[displayCategory].push({
+          id: product.id,
+          name: product.name,
+          description: product.description || '',
+          price: product.price,
+          stock: product.stock,
+          seller: product.seller || 'Admin',
+          imageBase64: product.image_path || product.image || '',
+          createdAt: product.created_at || new Date().toISOString()
+        });
+      });
+
+      return groupedProducts;
+    }
+
+    async function loadProductsFromServer() {
+      const response = await fetch(createApiUrl('getProducts'));
+      const data = await response.json();
+
+      if (!response.ok || !data.success || !Array.isArray(data.data)) {
+        throw new Error(data.error || 'Could not load products from server');
+      }
+
+      return groupProductsByCategory(data.data);
+    }
+
+    async function saveProductToServer(product) {
+      const response = await fetch(createApiUrl('addProduct'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(product)
+      });
+
+      const data = await response.json();
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Failed to save product');
+      }
+
+      return data.data;
+    }
+
+    async function deleteProductFromServer(productId) {
+      const response = await fetch(createApiUrl('deleteProduct'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ id: productId })
+      });
+
+      const data = await response.json();
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Failed to delete product');
+      }
+
+      return data.data;
+    }
 
     // Initialize
     document.addEventListener('DOMContentLoaded', function() {
@@ -672,7 +768,7 @@
 
       categories = categoryNames;
       renderCategories();
-      loadProductsFromLocalStorage();
+      loadProductsFromSource();
     }
 
     // Render category list
@@ -704,6 +800,29 @@
 
       // Load products for this category
       loadProductsForCategory(category);
+    }
+
+    async function loadProductsFromSource() {
+      try {
+        const serverProducts = await loadProductsFromServer();
+        allProducts = serverProducts;
+        localStorage.setItem('mrshop_products', JSON.stringify(allProducts));
+
+        if (selectedCategory) {
+          loadProductsForCategory(selectedCategory);
+        }
+
+        syncToIndexPage();
+        return;
+      } catch (error) {
+        console.warn('Using localStorage fallback for admin products:', error.message);
+      }
+
+      loadProductsFromLocalStorage();
+
+      if (selectedCategory) {
+        loadProductsForCategory(selectedCategory);
+      }
     }
 
     // Load products from localStorage
@@ -761,7 +880,7 @@
     }
 
     // Handle form submission
-    function handleAddProduct(event) {
+    async function handleAddProduct(event) {
       event.preventDefault();
 
       if (!selectedCategory) {
@@ -772,12 +891,24 @@
       const product = {
         name: document.getElementById('productName').value,
         description: document.getElementById('productDesc').value,
-        price: document.getElementById('productPrice').value,
-        stock: document.getElementById('productStock').value,
+        price: Number(document.getElementById('productPrice').value),
+        stock: Number(document.getElementById('productStock').value),
         seller: document.getElementById('sellerName').value,
-        imageBase64: document.getElementById('imageBase64').value,
+        image_path: document.getElementById('imageBase64').value,
+        category: normalizeCategorySlug(selectedCategory),
+        status: 'active',
+        discount: 0,
+        rating: 4.5,
         createdAt: new Date().toISOString()
       };
+
+      let savedProduct = null;
+
+      try {
+        savedProduct = await saveProductToServer(product);
+      } catch (error) {
+        console.warn('Server save failed, falling back to local-only sync:', error.message);
+      }
 
       // Initialize category if not exists
       if (!allProducts[selectedCategory]) {
@@ -785,13 +916,22 @@
       }
 
       // Add product
-      allProducts[selectedCategory].push(product);
+      allProducts[selectedCategory].push({
+        id: savedProduct?.id || Date.now(),
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        stock: product.stock,
+        seller: product.seller,
+        imageBase64: savedProduct?.image_path || product.image_path,
+        createdAt: savedProduct?.created_at || product.createdAt
+      });
 
       // Save to localStorage
       localStorage.setItem('mrshop_products', JSON.stringify(allProducts));
 
       // Show success message
-      showAlert(`✅ Product "${product.name}" added to ${selectedCategory}!`, 'success');
+      showAlert(`✅ Product "${product.name}" added to ${selectedCategory}!`, savedProduct ? 'success' : 'warning');
 
       // Reset form
       document.getElementById('productForm').reset();
@@ -851,8 +991,19 @@
     }
 
     // Delete product
-    function deleteProduct(category, index) {
+    async function deleteProduct(category, index) {
       if (!confirm('Are you sure you want to delete this product?')) return;
+
+      const product = allProducts[category][index];
+
+      if (product && product.id) {
+        try {
+          await deleteProductFromServer(product.id);
+        } catch (error) {
+          console.warn('Server delete failed, removing locally only:', error.message);
+          showAlert(`⚠️ Deleted locally, but server sync failed for "${product.name}"`, 'warning');
+        }
+      }
 
       allProducts[category].splice(index, 1);
       localStorage.setItem('mrshop_products', JSON.stringify(allProducts));
@@ -874,18 +1025,9 @@
       const adminProducts = [];
       
       // Map adminrafi categories to index.html categories
-      const categoryMap = {
-        '🍯 Food & Natural': 'food',
-        '🎨 Handicrafts': 'handicrafts',
-        '📚 Books': 'books',
-        '🍰 Sweets & Dairy': 'sweets',
-        '👗 Clothing': 'clothing',
-        '🪙 Antique & Collectibles': 'antique'
-      };
-
       // Flatten the product structure
       for (const [categoryDisplay, products] of Object.entries(allProducts)) {
-        const categoryCode = categoryMap[categoryDisplay] || categoryDisplay.toLowerCase().replace(/\s+/g, '');
+        const categoryCode = normalizeCategorySlug(categoryDisplay);
         
         products.forEach(product => {
           adminProducts.push({

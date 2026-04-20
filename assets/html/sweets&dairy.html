@@ -221,6 +221,7 @@
     © 2025 MR Shop | Sweets & Dairy Products
   </footer>
 
+  <script src="../js/category-live-sync.js"></script>
   <script>
     // Product data - Bengali sweets and dairy
     const products = [
@@ -339,6 +340,9 @@
     
 ];
 
+    const CATEGORY_SLUG = 'sweets';
+    let catalogProducts = products.slice();
+
     // Cart management
     let cart = JSON.parse(localStorage.getItem('mr_shop_cart')) || [];
 
@@ -348,7 +352,9 @@
 
     function renderProducts() {
       const grid = document.getElementById('productsGrid');
-      grid.innerHTML = products.map(p => `
+      const displayProducts = Array.isArray(catalogProducts) && catalogProducts.length > 0 ? catalogProducts : products;
+
+      grid.innerHTML = displayProducts.map(p => `
         <div class="product-card">
           <img src="${p.image}" alt="${p.name}" class="product-image" />
           <div class="product-info">
@@ -377,7 +383,7 @@
     }
 
     function addToCart(productId) {
-      const product = products.find(p => p.id === productId);
+      const product = catalogProducts.find(p => p.id === productId) || products.find(p => p.id === productId);
       const qtyInput = document.getElementById(`qty-${productId}`);
       const qty = parseInt(qtyInput.value);
 
@@ -393,8 +399,26 @@
       alert(`${product.name} added to cart!`);
     }
 
+    async function refreshCatalog(){
+      if (!window.MRShopCategoryLiveSync) {
+        catalogProducts = products.slice();
+        renderProducts();
+        return;
+      }
+
+      const liveProducts = await window.MRShopCategoryLiveSync.loadCategoryProducts(CATEGORY_SLUG);
+      catalogProducts = window.MRShopCategoryLiveSync.mergeProducts(products, liveProducts, CATEGORY_SLUG);
+      renderProducts();
+    }
+
     // Initialize on load
     document.addEventListener('DOMContentLoaded', renderProducts);
+    document.addEventListener('DOMContentLoaded', () => {
+      refreshCatalog();
+      if (window.MRShopCategoryLiveSync) {
+        window.MRShopCategoryLiveSync.watchCategoryUpdates(refreshCatalog);
+      }
+    });
   </script>
 
 </body>

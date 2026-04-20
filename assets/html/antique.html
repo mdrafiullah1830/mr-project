@@ -178,7 +178,7 @@
   </header>
   <section class="coins-section">
     <div class="coins-title">✨ Rare Coins Collection ✨</div>
-    <div class="coin-list">
+    <div class="coin-list" id="coinList">
       <a href="coin1.html" class="coin-card" aria-label="View details for Singapore 50 cents (1978)">
         <img src="./assets/images/coin1.jpeg" alt="Singapore 50 cents (1978)" class="coin-img" />
         <div class="coin-name">Singapore 50 Cents (1978)</div>
@@ -247,5 +247,53 @@
       </div>
     </div>
   </section>
+
+  <script src="../js/category-live-sync.js"></script>
+  <script>
+    const CATEGORY_SLUG = 'antique';
+
+    async function renderLiveAntiqueProducts() {
+      const sync = window.MRShopCategoryLiveSync;
+      const coinList = document.getElementById('coinList');
+
+      if (!sync || !coinList) {
+        return;
+      }
+
+      coinList.querySelectorAll('[data-live-product="true"]').forEach(element => element.remove());
+
+      const liveProducts = await sync.loadCategoryProducts(CATEGORY_SLUG);
+      if (!Array.isArray(liveProducts) || liveProducts.length === 0) {
+        return;
+      }
+
+      const liveCards = liveProducts.map(product => {
+        const imageUrl = sync.normalizeImageUrl(product.image || product.image_path || product.imageBase64 || '');
+        const title = sync.escapeHtml(product.name);
+        const description = sync.escapeHtml(product.description || 'Live antique collection item added from the admin panel.');
+        const price = `৳ ${sync.toNumber(product.final_price ?? product.price, 0).toLocaleString('en-BD')}`;
+        const productLink = `product.html?id=${encodeURIComponent(product.id)}`;
+
+        return `
+          <a href="${productLink}" class="coin-card" data-live-product="true" aria-label="View details for ${title}">
+            <img src="${sync.escapeHtml(imageUrl)}" alt="${title}" class="coin-img" />
+            <div class="coin-name">${title}</div>
+            <div class="coin-desc">${description}</div>
+            <div class="coin-price">${price}</div>
+          </a>
+        `;
+      }).join('');
+
+      coinList.insertAdjacentHTML('afterbegin', liveCards);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderLiveAntiqueProducts();
+
+      if (window.MRShopCategoryLiveSync) {
+        window.MRShopCategoryLiveSync.watchCategoryUpdates(renderLiveAntiqueProducts);
+      }
+    });
+  </script>
 </body>
 </html>

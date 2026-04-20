@@ -51,6 +51,6 @@
     "step4": "Create OAuth 2.0 Client ID (Web Application)",
     "step5": "Add Authorized JavaScript Origins and Redirect URIs (see above)",
     "step6": "Copy Client ID and update in /assets/js/oauth-config.js",
-    "step7": "Test with /assets/html/oauth-test.html"
+    "step7": "Test the flow in /assets/html/auth.html"
   }
 }

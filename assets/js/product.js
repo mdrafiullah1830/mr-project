@@ -2,6 +2,26 @@
 (function(){
   function $(sel){return document.querySelector(sel)}
 
+  function normalizeImageUrl(imageValue) {
+    const value = String(imageValue || '').trim();
+
+    if (!value) {
+      return '/assets/images/mrlogo.png';
+    }
+
+    if (value.startsWith('http://') || value.startsWith('https://') || value.startsWith('data:') || value.startsWith('/')) {
+      return value;
+    }
+
+    const cleanPath = value
+      .replace(/^\.\.\/images\//, '')
+      .replace(/^\.\//, '')
+      .replace(/^assets\/images\//, '')
+      .replace(/^images\//, '');
+
+    return `/assets/images/${cleanPath}`;
+  }
+
   function showMessage(text, timeout=3000){
     const el = $('#message');
     if(!el) return;
@@ -34,7 +54,7 @@
   $('#productDescription').textContent = product.description || '';
 
   const img = document.createElement('img');
-  img.src = product.image || product.image_path || '/assets/images/placeholder.jpg';
+  img.src = normalizeImageUrl(product.image || product.image_path || product.imageBase64 || '/assets/images/mrlogo.png');
     img.alt = product.name || 'Product image';
     $('#productImage').innerHTML = '';
     $('#productImage').appendChild(img);

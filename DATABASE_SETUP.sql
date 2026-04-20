@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS products (
   price DECIMAL(10, 2) NOT NULL,
   description TEXT,
   category VARCHAR(100),
-  image_path VARCHAR(500),
+  image_path LONGTEXT,
   discount INT DEFAULT 0,
   final_price DECIMAL(10, 2),
   rating DECIMAL(3, 2),

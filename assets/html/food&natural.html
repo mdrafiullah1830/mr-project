@@ -102,6 +102,16 @@
       color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;
     }
 
+    .food-natural-empty{
+      padding:20px;
+      border-radius:16px;
+      background:rgba(255,255,255,0.82);
+      border:1px dashed rgba(124,58,237,0.22);
+      color:var(--muted);
+      text-align:center;
+      font-weight:600;
+    }
+
     footer{
       background:linear-gradient(90deg,#eef2ff,#f0f9ff);
       color:var(--muted);
@@ -134,7 +144,7 @@
 
   <main class="page-container">
     <h2 class="page-title">Food & Natural Products</h2>
-    <p class="page-subtitle">Fresh, organic & authentic Bengali delicacies sourced directly from producers</p>
+    <p class="page-subtitle">Fresh, organic & authentic Bengali delicacies pulled from the live catalog and updated site-wide.</p>
 
     <div class="products-grid" id="productsGrid"></div>
   </main>
@@ -143,62 +153,7 @@
     © 2025 MR Shop | Fresh & Natural Products
   </footer>
 
-  <script>
-    const products = [
-      { id:1,name:"Natore Kachagolla",price:280,image:"https://picsum.photos/seed/kachagolla/400/300",description:"Traditional sweet made from khoya."},
-      { id:2,name:"Fresh Gur (Jaggery)",price:150,image:"https://picsum.photos/seed/gur-jaggery/400/300",description:"Organic jaggery made from sugarcane."},
-      { id:3,name:"Bogura Doi",price:120,image:"https://picsum.photos/seed/bogura-doi/400/300",description:"Authentic Bogura yogurt."},
-      { id:4,name:"Tangail er Chomchom",price:200,image:"https://picsum.photos/seed/chomchom/400/300",description:"Famous sweet from Tangail."},
-      { id:5,name:"Dhaka er Rosogolla",price:180,image:"https://picsum.photos/seed/rosogolla/400/300",description:"Soft, spongy rasgulla from Dhaka."},
-      { id:6,name:"Pure Honey",price:320,image:"https://picsum.photos/seed/honey-natural/400/300",description:"Raw, natural honey."},
-    
-];
-
-    let cart = JSON.parse(localStorage.getItem('mr_shop_cart')) || [];
-
-    function saveCart(){ localStorage.setItem('mr_shop_cart', JSON.stringify(cart)); }
-
-    function renderProducts(){
-      const grid = document.getElementById('productsGrid');
-      grid.innerHTML = products.map(p => `
-        <div class="product-card">
-          <img src="${p.image}" class="product-image" />
-          <div class="product-info">
-            <h3 class="product-name">${p.name}</h3>
-            <p class="product-desc">${p.description}</p>
-            <div class="product-price">৳ ${p.price}</div>
-
-            <div class="product-actions">
-              <div class="qty-selector">
-                <button onclick="changeQty(${p.id}, -1)">−</button>
-                <input id="qty-${p.id}" value="1" readonly />
-                <button onclick="changeQty(${p.id}, 1)">+</button>
-              </div>
-
-              <button class="add-to-cart-btn" onclick="addToCart(${p.id})">Add</button>
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function changeQty(id, d){
-      const input = document.getElementById(`qty-${id}`);
-      input.value = Math.max(1, Number(input.value) + d);
-    }
-
-    function addToCart(id){
-      const p = products.find(x => x.id === id);
-      const qty = Number(document.getElementById(`qty-${id}`).value);
-      const exists = cart.find(i => i.id === id);
-      if(exists) exists.quantity += qty;
-      else cart.push({...p, quantity: qty});
-      saveCart();
-      alert(p.name + " added to cart!");
-    }
-
-    document.addEventListener('DOMContentLoaded', renderProducts);
-  </script>
+  <script src="../js/food-natural-catalog.js"></script>
 
 </body>
 </html>

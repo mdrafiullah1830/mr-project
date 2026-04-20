@@ -1,4 +1,4 @@
-// search.js - real-time product search using C# backend API
+// search.js - real-time product search using the live PHP catalog API
 (function(){
   // Wait for DOM to be ready
   function init() {
@@ -14,7 +14,7 @@
     let currentQuery = '';
 
     // API Configuration
-    const API_BASE = 'http://localhost:5010/api/search';
+    const API_BASE = '/api.php';
     const DEBOUNCE_DELAY = 300; // Wait 300ms after user stops typing
 
     /**
@@ -32,7 +32,11 @@
         searchResults.classList.add('open');
         searchResults.setAttribute('aria-hidden', 'false');
 
-        const response = await fetch(`${API_BASE}?query=${encodeURIComponent(query)}&pageSize=8&sortBy=relevance`);
+        const url = new URL(API_BASE, window.location.href);
+        url.searchParams.set('action', 'searchProducts');
+        url.searchParams.set('search', query);
+
+        const response = await fetch(url.toString());
         
         if (!response.ok) {
           throw new Error(`API error: ${response.status}`);
@@ -40,8 +44,10 @@
 
         const data = await response.json();
 
-        if (data.success && data.data && data.data.results.length > 0) {
-          renderSearchResults(data.data.results);
+        const results = Array.isArray(data.data) ? data.data : [];
+
+        if (data.success && results.length > 0) {
+          renderSearchResults(results);
         } else {
           searchResults.innerHTML = '<div class="search-no-results">No products found for "' + escapeHtml(query) + '"</div>';
         }
@@ -65,6 +71,26 @@
       return text.replace(/[&<>"']/g, m => map[m]);
     }
 
+    function normalizeImageUrl(imageValue) {
+      const value = String(imageValue || '').trim();
+
+      if (!value) {
+        return '../images/mrlogo.png';
+      }
+
+      if (value.startsWith('http://') || value.startsWith('https://') || value.startsWith('data:') || value.startsWith('/')) {
+        return value;
+      }
+
+      const cleanPath = value
+        .replace(/^\.\.\/images\//, '')
+        .replace(/^\.\//, '')
+        .replace(/^assets\/images\//, '')
+        .replace(/^images\//, '');
+
+      return `../images/${cleanPath}`;
+    }
+
     /**
      * Render search results as dropdown items
      */
@@ -86,7 +112,7 @@
         return `
   <div class="search-result-item" role="option" tabindex="0" data-id="${product.id}" aria-label="${escapeHtml(product.name)}, ৳${product.final_price}">
           <div class="search-result-image-wrapper">
-            <img src="${product.image_path || 'https://via.placeholder.com/80?text=No+Image'}" 
+            <img src="${normalizeImageUrl(product.image_path || product.image || product.imageBase64)}" 
                  alt="${escapeHtml(product.name)}" 
                  class="search-result-image"
                  onerror="this.src='https://via.placeholder.com/80?text=No+Image'" />
