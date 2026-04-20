@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat with MR Shop AI - Get Instant Answers</title>
+      <link rel="stylesheet" href="../css/site-base.css" />
+<title>Chat with MR Shop AI - Get Instant Answers</title>
     <style>
         /* Import matching font from main website */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
@@ -493,7 +494,7 @@
                     <div class="avatar">🤖</div>
                     <div>
                         <div class="chat-name">MR Shop AI Assistant</div>
-                        <div class="chat-status">🟢 Online - Ready to help!</div>
+                        <div class="chat-status">⚪ Checking server...</div>
                     </div>
                 </div>
             </div>
@@ -529,8 +530,68 @@
         const conversationItems = document.querySelectorAll('.conversation-item');
         const searchInput = document.getElementById('searchInput');
 
-        // API Configuration
-        const API_URL = 'http://localhost:5001/api/chat';
+        // API Configuration (local dev)
+        const API_BASE = 'http://localhost:5001';
+        const API_URL = `${API_BASE}/api/chat`;
+        const HEALTH_URL = `${API_BASE}/api/chat/health`;
+
+        const chatStatusEl = document.querySelector('.chat-status');
+        let backendOnline = false;
+
+        function setChatStatus(isOnline) {
+            backendOnline = isOnline;
+
+            if (chatStatusEl) {
+                chatStatusEl.textContent = isOnline
+                    ? '🟢 Online - Ready to help!'
+                    : '🔴 Offline - Start the backend to chat';
+            }
+
+            // Keep the original UX: enable send when there's text.
+            sendButton.disabled = messageInput.value.trim() === '';
+        }
+
+        async function checkBackendHealth(timeoutMs = 900) {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+            try {
+                const res = await fetch(HEALTH_URL, { signal: controller.signal });
+                return res.ok;
+            } catch (_) {
+                return false;
+            } finally {
+                clearTimeout(timeoutId);
+            }
+        }
+
+        function showBackendOfflineNotice(timeString) {
+            const noticeId = 'backendOfflineNotice';
+            if (document.getElementById(noticeId)) return;
+
+            const ts = timeString || new Date().toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+
+            const noticeHTML = `
+                <div class="message received" id="${noticeId}">
+                    <div class="avatar">⚠️</div>
+                    <div class="message-content">
+                        <div class="message-bubble" style="background: #fee; color: #c00;">
+                            Backend is not running.<br>
+                            1) Quick start: run <b>START_SERVERS.sh</b><br>
+                            2) macOS permanent: run <b>scripts/macos/install-launchd.sh</b> once
+                        </div>
+                        <div class="message-timestamp">${ts}</div>
+                    </div>
+                </div>
+            `;
+
+            messagesContainer.insertAdjacentHTML('beforeend', noticeHTML);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
 
         // Auto-resize textarea
         messageInput.addEventListener('input', function() {
@@ -578,6 +639,17 @@
             messageInput.value = '';
             messageInput.style.height = 'auto';
             sendButton.disabled = true;
+
+            // If backend is offline, don't proceed (avoids noisy fetch errors)
+            if (!backendOnline) {
+                const ok = await checkBackendHealth(1200);
+                setChatStatus(ok);
+
+                if (!ok) {
+                    showBackendOfflineNotice(timeString);
+                    return;
+                }
+            }
 
             // Show typing indicator
             const typingHTML = `
@@ -642,7 +714,7 @@
                         <div class="avatar">⚠️</div>
                         <div class="message-content">
                             <div class="message-bubble" style="background: #fee; color: #c00;">
-                                Sorry, I'm having trouble connecting to the server. Please make sure the backend is running (python backend/chat_api.py) and try again.
+                                Sorry, I'm having trouble connecting to the server. Please make sure the backend is running (START_SERVERS.sh) and try again.
                             </div>
                             <div class="message-timestamp">${timeString}</div>
                         </div>
@@ -652,6 +724,13 @@
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }
         }
+
+        // Initial backend status check on load
+        (async () => {
+            const ok = await checkBackendHealth();
+            setChatStatus(ok);
+            if (!ok) showBackendOfflineNotice();
+        })();
 
         function escapeHtml(text) {
             const div = document.createElement('div');

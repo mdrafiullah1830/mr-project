@@ -8,6 +8,7 @@ Runs on http://localhost:5001
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
+import os
 from datetime import datetime
 
 app = Flask(__name__)
@@ -150,10 +151,15 @@ def index():
     }), 200
 
 if __name__ == '__main__':
+    bind_host = os.getenv('MRSHOP_CHAT_BIND', '127.0.0.1')
+    bind_port = int(os.getenv('MRSHOP_CHAT_PORT', '5001'))
+    debug_env = os.getenv('MRSHOP_CHAT_DEBUG', '1').strip().lower()
+    debug_mode = debug_env in ('1', 'true', 'yes', 'on')
+
     print('='*60)
     print('🚀 MR Shop Chat API Server')
     print('='*60)
-    print('Starting Flask server on http://localhost:5001')
+    print(f'Starting Flask server on http://{bind_host}:{bind_port}')
     print('Endpoints:')
     print('  - POST /api/chat')
     print('  - GET  /api/chat/health')
@@ -162,8 +168,8 @@ if __name__ == '__main__':
     print('Press Ctrl+C to stop the server\n')
     
     app.run(
-        host='0.0.0.0',
-        port=5001,
-        debug=True,
+        host=bind_host,
+        port=bind_port,
+        debug=debug_mode,
         use_reloader=False
     )

@@ -303,3 +303,101 @@ select:focus {
     transition-duration: 0.01ms !important;
   }
 }
+
+@media (max-width: 1024px) {
+  body {
+    font-size: 15px;
+  }
+
+  .container,
+  .page-shell,
+  .content-shell {
+    width: min(100%, calc(100vw - 24px));
+  }
+
+  .surface,
+  .card,
+  .panel,
+  .glass-card,
+  .sheet {
+    border-radius: 18px;
+  }
+
+  .grid {
+    gap: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  .container,
+  .page-shell,
+  .content-shell {
+    width: min(100%, calc(100vw - 16px));
+  }
+
+  .btn,
+  .button,
+  .cta-btn,
+  .primary-btn,
+  .edit-btn,
+  .nav-item,
+  .theme-toggle,
+  .logout-btn,
+  .social-btn {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="file"],
+  textarea,
+  select {
+    font-size: 16px;
+  }
+
+  table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .grid {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container,
+  .page-shell,
+  .content-shell {
+    width: min(100%, calc(100vw - 12px));
+  }
+
+  .surface,
+  .card,
+  .panel,
+  .glass-card,
+  .sheet {
+    border-radius: 16px;
+  }
+
+  .btn,
+  .button,
+  .cta-btn,
+  .primary-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 14px;
+  }
+}

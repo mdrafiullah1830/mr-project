@@ -9,3 +9,10 @@ settings.json
 .DS_Store
 .venv/
 backend/.venv/
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Local runtime logs
+.logs/
