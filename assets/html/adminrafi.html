@@ -315,6 +315,430 @@
       color: var(--primary);
     }
 
+    .admin-subtitle {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .header-category {
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .loading-categories {
+      color: var(--text-light);
+      font-size: 14px;
+    }
+
+    .upload-hint {
+      font-size: 12px;
+      color: var(--text-light);
+      margin-top: 5px;
+    }
+
+    .preview-image {
+      display: none;
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+    }
+
+    .table-empty-state {
+      text-align: center;
+      color: var(--text-light);
+      padding: 30px;
+    }
+
+    .seller-section {
+      margin-top: 30px;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .seller-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .seller-section h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: var(--primary);
+    }
+
+    .seller-section-subtitle {
+      color: var(--text-light);
+      font-size: 14px;
+      line-height: 1.6;
+      max-width: 780px;
+    }
+
+    .seller-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .seller-refresh-btn {
+      padding: 10px 16px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .seller-refresh-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .seller-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(124, 58, 237, 0.08);
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid rgba(124, 58, 237, 0.12);
+      white-space: nowrap;
+    }
+
+    .seller-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .seller-stat {
+      background: var(--bg-light);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .seller-stat-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+
+    .seller-stat-value {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1;
+    }
+
+    .seller-request-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .seller-request-card {
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--warning);
+      border-radius: 14px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 240px;
+      gap: 20px;
+    }
+
+    .seller-request-card.approved {
+      border-left-color: var(--success);
+    }
+
+    .seller-request-card.rejected {
+      border-left-color: var(--danger);
+    }
+
+    .seller-request-card.generated {
+      border-left-color: var(--secondary);
+    }
+
+    .seller-request-main {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .seller-request-title {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .seller-request-title h4 {
+      font-size: 18px;
+      color: var(--text-dark);
+      margin: 0;
+    }
+
+    .seller-status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .seller-status-badge.pending {
+      background: rgba(245, 158, 11, 0.12);
+      color: #b45309;
+    }
+
+    .seller-status-badge.approved {
+      background: rgba(16, 185, 129, 0.12);
+      color: #047857;
+    }
+
+    .seller-status-badge.rejected {
+      background: rgba(239, 68, 68, 0.12);
+      color: #b91c1c;
+    }
+
+    .seller-status-badge.generated {
+      background: rgba(6, 182, 212, 0.12);
+      color: #0e7490;
+    }
+
+    .seller-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px 16px;
+    }
+
+    .seller-meta {
+      background: rgba(248, 250, 252, 0.95);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      border-radius: 10px;
+      padding: 10px 12px;
+      min-width: 0;
+    }
+
+    .seller-meta-label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-light);
+    }
+
+    .seller-meta-value {
+      margin: 0;
+      font-size: 14px;
+      color: var(--text-dark);
+      word-break: break-word;
+    }
+
+    .seller-request-notes {
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px dashed var(--border);
+      background: #f8fafc;
+      color: var(--text-dark);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .seller-credential-box {
+      background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .seller-credential-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      min-width: 0;
+    }
+
+    .seller-credential-label {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: rgba(255, 255, 255, 0.72);
+      margin-bottom: 4px;
+    }
+
+    .seller-credential-heading {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .seller-credential-footer {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .seller-credential-content {
+      min-width: 0;
+    }
+
+    .seller-empty-title {
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+    }
+
+    .seller-credential-value {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .seller-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .seller-action-btn {
+      padding: 11px 14px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .seller-action-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 18px rgba(15, 23, 42, 0.12);
+    }
+
+    .seller-action-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .seller-action-btn.approve {
+      background: linear-gradient(135deg, var(--success), #059669);
+      color: white;
+    }
+
+    .seller-action-btn.reject {
+      background: linear-gradient(135deg, var(--danger), #dc2626);
+      color: white;
+    }
+
+    .seller-action-btn.generate {
+      background: linear-gradient(135deg, var(--secondary), #0284c7);
+      color: white;
+    }
+
+    .seller-action-btn.copy {
+      background: linear-gradient(135deg, #475569, #334155);
+      color: white;
+    }
+
+    .seller-empty {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      text-align: center;
+      color: var(--text-light);
+    }
+
+    .seller-empty-icon {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 1024px) {
+      .seller-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .seller-request-card {
+        grid-template-columns: 1fr;
+      }
+
+      .seller-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .seller-action-btn {
+        flex: 1 1 180px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .seller-section {
+        padding: 20px;
+      }
+
+      .seller-section-header {
+        flex-direction: column;
+      }
+
+      .seller-controls {
+        justify-content: flex-start;
+      }
+
+      .seller-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .seller-meta-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .seller-actions {
+        flex-direction: column;
+      }
+
+      .seller-action-btn {
+        width: 100%;
+      }
+    }
+
     .products-table {
       width: 100%;
       border-collapse: collapse;
@@ -473,12 +897,12 @@
   <header>
     <div>
       <h1>👨‍💼 Admin Panel - Product Management</h1>
-      <p style="font-size: 12px; opacity: 0.8;">MR Shop - Rafi's Admin Control Center</p>
+      <p class="admin-subtitle">MR Shop - Rafi's Admin Control Center</p>
     </div>
     <div class="header-info">
       <div class="user-info">
         <div>Logged in as: <strong id="adminName">Admin</strong></div>
-        <div style="font-size: 12px; margin-top: 3px;">Category: <strong id="currentCategory">Select a category</strong></div>
+        <div class="header-category">Category: <strong id="currentCategory">Select a category</strong></div>
       </div>
       <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
@@ -493,7 +917,7 @@
       <div class="category-panel">
         <h2>📂 Categories</h2>
         <div class="category-list" id="categoryList">
-          <p style="color: var(--text-light); font-size: 14px;">Loading categories...</p>
+          <p class="loading-categories">Loading categories...</p>
         </div>
       </div>
 
@@ -577,7 +1001,7 @@
             <div class="image-upload-area" id="imageUploadArea" onclick="document.getElementById('imageInput').click()">
               <div class="upload-icon">📸</div>
               <div class="upload-text">Click to upload or drag & drop</div>
-              <div style="font-size: 12px; color: var(--text-light); margin-top: 5px;">PNG, JPG, JPEG (Max 5MB)</div>
+              <div class="upload-hint">PNG, JPG, JPEG (Max 5MB)</div>
             </div>
             <input 
               type="file" 
@@ -586,7 +1010,7 @@
               onchange="handleImageSelect(event)"
             >
             <div class="image-preview">
-              <img id="previewImage" style="display: none;">
+              <img id="previewImage" class="preview-image" alt="Selected product preview">
             </div>
           </div>
 
@@ -605,7 +1029,7 @@
     <!-- Products Table -->
     <div class="products-section">
       <h3>📦 Products in <strong id="tableCategory">Selected Category</strong></h3>
-      <div style="overflow-x: auto;">
+      <div class="table-scroll">
         <table class="products-table" id="productsTable">
           <thead>
             <tr>
@@ -620,12 +1044,52 @@
           </thead>
           <tbody id="productsTableBody">
             <tr>
-              <td colspan="7" style="text-align: center; color: var(--text-light); padding: 30px;">
+              <td colspan="7" class="table-empty-state">
                 Select a category to view products
               </td>
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+
+    <div class="seller-section" id="sellerRequestsSection">
+      <div class="seller-section-header">
+        <div>
+          <h3>🔔 Seller Requests</h3>
+          <p class="seller-section-subtitle">Pending requests appear here as notifications. Approve a seller first, then generate a username and password so they can sign in.</p>
+        </div>
+        <div class="seller-controls">
+          <button type="button" class="seller-refresh-btn" onclick="loadSellerRequests()">🔄 Refresh Requests</button>
+          <span class="seller-status-pill" id="sellerRequestsLastSync">Waiting for seller notifications</span>
+        </div>
+      </div>
+
+      <div class="seller-stats">
+        <div class="seller-stat">
+          <div class="seller-stat-label">Pending</div>
+          <div class="seller-stat-value" id="sellerPendingCount">0</div>
+        </div>
+        <div class="seller-stat">
+          <div class="seller-stat-label">Approved</div>
+          <div class="seller-stat-value" id="sellerApprovedCount">0</div>
+        </div>
+        <div class="seller-stat">
+          <div class="seller-stat-label">Rejected</div>
+          <div class="seller-stat-value" id="sellerRejectedCount">0</div>
+        </div>
+        <div class="seller-stat">
+          <div class="seller-stat-label">Credentials Ready</div>
+          <div class="seller-stat-value" id="sellerGeneratedCount">0</div>
+        </div>
+      </div>
+
+      <div id="sellerRequestList" class="seller-request-list">
+        <div class="seller-empty">
+          <div class="seller-empty-icon">⏳</div>
+          <div class="seller-empty-title">Loading seller requests...</div>
+          <div>Seller notifications will show here once the backend sends them.</div>
+        </div>
       </div>
     </div>
   </div>
@@ -636,6 +1100,8 @@
     let categories = [];
     let selectedCategory = null;
     let allProducts = {};
+    const sellerRequestCacheKey = 'mrshop_seller_request_cache';
+    const sellerAccountStoreKey = 'mrshop_seller_accounts';
     const apiBasePath = '/api.php';
     const categorySlugMap = {
       '🍯 Food & Natural': 'food',
@@ -738,6 +1204,8 @@
       loadCategories();
       loadAdminName();
       setupDragDrop();
+      loadSellerRequests();
+      setInterval(loadSellerRequests, 30000);
     });
 
     // Load categories from index.html
@@ -825,6 +1293,557 @@
       }
     }
 
+    function safeParseJson(value, fallback) {
+      try {
+        return value ? JSON.parse(value) : fallback;
+      } catch (error) {
+        return fallback;
+      }
+    }
+
+    function getSellerRequestCache() {
+      const cache = safeParseJson(localStorage.getItem(sellerRequestCacheKey), {});
+      return cache && typeof cache === 'object' && !Array.isArray(cache) ? cache : {};
+    }
+
+    function saveSellerRequestCache(cache) {
+      localStorage.setItem(sellerRequestCacheKey, JSON.stringify(cache));
+    }
+
+    function getSellerAccounts() {
+      const accounts = safeParseJson(localStorage.getItem(sellerAccountStoreKey), []);
+      return Array.isArray(accounts) ? accounts : [];
+    }
+
+    function saveSellerAccounts(accounts) {
+      localStorage.setItem(sellerAccountStoreKey, JSON.stringify(accounts));
+    }
+
+    function normalizeSellerStatus(status) {
+      const value = String(status || 'pending').toLowerCase();
+      if (value.includes('reject')) return 'rejected';
+      if (value.includes('approve')) return 'approved';
+      if (value.includes('pending') || value.includes('unread')) return 'pending';
+      return value || 'pending';
+    }
+
+    function formatSellerStatusLabel(status) {
+      const labels = {
+        pending: 'Pending',
+        approved: 'Approved',
+        rejected: 'Rejected'
+      };
+
+      return labels[status] || 'Pending';
+    }
+
+    function slugifySellerText(value) {
+      return String(value || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '')
+        .replace(/^_+|_+$/g, '');
+    }
+
+    function getRandomInteger(max) {
+      if (window.crypto && window.crypto.getRandomValues) {
+        const buffer = new Uint32Array(1);
+        window.crypto.getRandomValues(buffer);
+        return buffer[0] % max;
+      }
+
+      return Math.floor(Math.random() * max);
+    }
+
+    function generateReadablePassword() {
+      const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      const segments = [];
+
+      for (let groupIndex = 0; groupIndex < 3; groupIndex += 1) {
+        let segment = '';
+        for (let charIndex = 0; charIndex < 4; charIndex += 1) {
+          segment += alphabet[getRandomInteger(alphabet.length)];
+        }
+        segments.push(segment);
+      }
+
+      return `MR-${segments.join('-')}`;
+    }
+
+    function buildSellerUsername(request, existingUsernames = []) {
+      const source = request.shopName || request.fullName || request.email || 'seller';
+      const base = slugifySellerText(source) || 'seller';
+      const prefix = base.startsWith('seller') ? base : `seller_${base}`;
+      const normalizedExisting = new Set(existingUsernames.map(value => String(value || '').toLowerCase()));
+
+      let candidate = prefix;
+      let counter = 1;
+
+      while (normalizedExisting.has(candidate.toLowerCase())) {
+        candidate = `${prefix}${counter}`;
+        counter += 1;
+      }
+
+      return candidate;
+    }
+
+    function mergeSellerRequestFromSource(request, cacheEntry = {}) {
+      const requestId = request.requestId || request.id || cacheEntry.requestId;
+      const status = normalizeSellerStatus(request.status || cacheEntry.status || 'pending');
+
+      return {
+        requestId,
+        userId: request.userId || cacheEntry.userId || '',
+        fullName: request.fullName || cacheEntry.fullName || '',
+        email: request.email || cacheEntry.email || '',
+        phone: request.phone || cacheEntry.phone || '',
+        shopName: request.shopName || cacheEntry.shopName || '',
+        categories: request.categories || cacheEntry.categories || [],
+        submittedAt: request.submittedAt || cacheEntry.submittedAt || new Date().toISOString(),
+        status,
+        notes: request.adminNotes || request.rejectionReason || cacheEntry.notes || '',
+        reviewedBy: request.reviewedBy || cacheEntry.reviewedBy || '',
+        reviewedAt: request.reviewedAt || cacheEntry.reviewedAt || '',
+        rejectionReason: request.rejectionReason || cacheEntry.rejectionReason || '',
+        approvalScore: request.approvalScore ?? cacheEntry.approvalScore ?? null,
+        generatedCredentials: cacheEntry.generatedCredentials || null,
+        credentialGeneratedAt: cacheEntry.credentialGeneratedAt || '',
+        lastSyncedAt: new Date().toISOString()
+      };
+    }
+
+    function updateSellerSummary(requests, syncLabel) {
+      const summary = requests.reduce((accumulator, request) => {
+        const status = normalizeSellerStatus(request.status);
+        accumulator[status] = (accumulator[status] || 0) + 1;
+        if (request.generatedCredentials) {
+          accumulator.generated += 1;
+        }
+        return accumulator;
+      }, {
+        pending: 0,
+        approved: 0,
+        rejected: 0,
+        generated: 0
+      });
+
+      const mappings = {
+        sellerPendingCount: summary.pending,
+        sellerApprovedCount: summary.approved,
+        sellerRejectedCount: summary.rejected,
+        sellerGeneratedCount: summary.generated
+      };
+
+      Object.entries(mappings).forEach(([elementId, value]) => {
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.textContent = value.toString();
+        }
+      });
+
+      const statusPill = document.getElementById('sellerRequestsLastSync');
+      if (statusPill) {
+        statusPill.textContent = syncLabel || `Tracked ${requests.length} seller requests`;
+      }
+    }
+
+    function escapeHtml(text) {
+      if (text === null || text === undefined) return '';
+      return String(text).replace(/[&<>"']/g, match => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      }[match]));
+    }
+
+    function formatSellerCategories(categories) {
+      if (Array.isArray(categories) && categories.length > 0) {
+        return categories.join(', ');
+      }
+
+      if (typeof categories === 'string' && categories.trim()) {
+        return categories;
+      }
+
+      return 'Not specified';
+    }
+
+    function formatSellerDate(dateValue) {
+      if (!dateValue) return 'Not available';
+
+      const parsedDate = new Date(dateValue);
+      if (Number.isNaN(parsedDate.getTime())) {
+        return String(dateValue);
+      }
+
+      return parsedDate.toLocaleString();
+    }
+
+    function renderSellerRequests(cache, message = '') {
+      const requestList = document.getElementById('sellerRequestList');
+      if (!requestList) return;
+
+      const requests = Object.values(cache || {})
+        .filter(request => request && request.requestId)
+        .sort((left, right) => {
+          const statusPriority = {
+            pending: 0,
+            approved: 1,
+            rejected: 2
+          };
+
+          const leftPriority = statusPriority[normalizeSellerStatus(left.status)] ?? 99;
+          const rightPriority = statusPriority[normalizeSellerStatus(right.status)] ?? 99;
+
+          if (leftPriority !== rightPriority) {
+            return leftPriority - rightPriority;
+          }
+
+          const leftTime = new Date(left.submittedAt || 0).getTime();
+          const rightTime = new Date(right.submittedAt || 0).getTime();
+          return rightTime - leftTime;
+        });
+
+      updateSellerSummary(requests, message || (requests.length ? `Showing ${requests.length} seller requests` : 'No seller requests found yet'));
+
+      if (!requests.length) {
+        requestList.innerHTML = `
+          <div class="seller-empty">
+            <div class="seller-empty-icon">📭</div>
+            <div class="seller-empty-title">No seller requests yet</div>
+            <div>When someone submits the become-seller form, the request will appear here as a notification.</div>
+          </div>
+        `;
+        return;
+      }
+
+      requestList.innerHTML = requests.map(request => {
+        const status = normalizeSellerStatus(request.status);
+        const credential = request.generatedCredentials;
+        const submittedAt = formatSellerDate(request.submittedAt);
+        const categories = formatSellerCategories(request.categories);
+        const displayName = request.fullName || request.shopName || 'Seller Request';
+        const displayEmail = request.email || 'Not provided';
+        const displayPhone = request.phone || 'Not provided';
+        const displayShop = request.shopName || 'Not provided';
+        const requestNotes = request.rejectionReason || request.notes || '';
+        const cardClasses = ['seller-request-card', status];
+        if (credential) {
+          cardClasses.push('generated');
+        }
+
+        const actionButtons = [];
+
+        if (status === 'pending') {
+          actionButtons.push(`<button type="button" class="seller-action-btn approve" onclick="approveSellerRequest('${escapeHtml(request.requestId)}')">✅ Approve</button>`);
+          actionButtons.push(`<button type="button" class="seller-action-btn reject" onclick="rejectSellerRequest('${escapeHtml(request.requestId)}')">❌ Reject</button>`);
+        }
+
+        if (status === 'approved' && !credential) {
+          actionButtons.push(`<button type="button" class="seller-action-btn generate" onclick="generateSellerCredentials('${escapeHtml(request.requestId)}')">🔑 Generate Username &amp; Password</button>`);
+        }
+
+        if (credential) {
+          actionButtons.push(`<button type="button" class="seller-action-btn copy" onclick="copySellerCredentials('${escapeHtml(request.requestId)}')">📋 Copy Credentials</button>`);
+        }
+
+        const credentialMarkup = credential ? `
+          <div class="seller-credential-box">
+            <div class="seller-credential-heading">Generated Login Details</div>
+            <div class="seller-credential-row">
+              <div class="seller-credential-content">
+                <span class="seller-credential-label">Username</span>
+                <p class="seller-credential-value">${escapeHtml(credential.username)}</p>
+              </div>
+            </div>
+            <div class="seller-credential-row">
+              <div class="seller-credential-content">
+                <span class="seller-credential-label">Password</span>
+                <p class="seller-credential-value">${escapeHtml(credential.password)}</p>
+              </div>
+            </div>
+            <div class="seller-credential-footer">Share these credentials only after approval.</div>
+          </div>
+        ` : '';
+
+        const notesMarkup = requestNotes ? `
+          <div class="seller-request-notes">
+            <strong>${status === 'rejected' ? 'Rejection reason:' : 'Admin notes:'}</strong>
+            <span>${escapeHtml(requestNotes)}</span>
+          </div>
+        ` : '';
+
+        return `
+          <article class="${cardClasses.join(' ')}">
+            <div class="seller-request-main">
+              <div class="seller-request-title">
+                <h4>${escapeHtml(displayName)}</h4>
+                <span class="seller-status-badge ${status}">${formatSellerStatusLabel(status)}</span>
+                ${credential ? '<span class="seller-status-badge generated">Credentials ready</span>' : ''}
+              </div>
+
+              <div class="seller-meta-grid">
+                <div class="seller-meta">
+                  <span class="seller-meta-label">Email</span>
+                  <p class="seller-meta-value">${escapeHtml(displayEmail)}</p>
+                </div>
+                <div class="seller-meta">
+                  <span class="seller-meta-label">Phone</span>
+                  <p class="seller-meta-value">${escapeHtml(displayPhone)}</p>
+                </div>
+                <div class="seller-meta">
+                  <span class="seller-meta-label">Shop Name</span>
+                  <p class="seller-meta-value">${escapeHtml(displayShop)}</p>
+                </div>
+                <div class="seller-meta">
+                  <span class="seller-meta-label">Submitted</span>
+                  <p class="seller-meta-value">${escapeHtml(submittedAt)}</p>
+                </div>
+                <div class="seller-meta">
+                  <span class="seller-meta-label">Categories</span>
+                  <p class="seller-meta-value">${escapeHtml(categories)}</p>
+                </div>
+                <div class="seller-meta">
+                  <span class="seller-meta-label">Request ID</span>
+                  <p class="seller-meta-value">${escapeHtml(request.requestId)}</p>
+                </div>
+              </div>
+
+              ${notesMarkup}
+              ${credentialMarkup}
+            </div>
+
+            <div class="seller-actions">
+              ${actionButtons.length ? actionButtons.join('') : '<div class="seller-request-notes">This request has already been reviewed.</div>'}
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    async function loadSellerRequests() {
+      const requestList = document.getElementById('sellerRequestList');
+      if (!requestList) return;
+
+      try {
+        const response = await fetch('http://localhost:5010/api/sellerrequest/admin/notifications', {
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+          throw new Error(result.error || 'Unable to load seller requests');
+        }
+
+        const incomingRequests = Array.isArray(result.data) ? result.data : [];
+        const cache = getSellerRequestCache();
+
+        incomingRequests.forEach(request => {
+          const requestId = request.requestId || request.id;
+          if (!requestId) return;
+          cache[requestId] = mergeSellerRequestFromSource({ ...request, requestId }, cache[requestId] || {});
+        });
+
+        saveSellerRequestCache(cache);
+        renderSellerRequests(cache, `Live sync complete at ${new Date().toLocaleTimeString()}`);
+      } catch (error) {
+        console.warn('Seller request refresh failed:', error);
+        const cache = getSellerRequestCache();
+        renderSellerRequests(cache, `Offline view from local cache: ${error.message}`);
+      }
+    }
+
+    async function approveSellerRequest(requestId) {
+      if (!confirm('Approve this seller request?')) return;
+
+      try {
+        const response = await fetch(`http://localhost:5010/api/sellerrequest/admin/${requestId}/status`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            status: 'Approved',
+            notes: `Approved from adminrafi.html on ${new Date().toLocaleString()}`
+          })
+        });
+
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+          throw new Error(result.error || 'Failed to approve seller request');
+        }
+
+        const cache = getSellerRequestCache();
+        if (cache[requestId]) {
+          cache[requestId].status = 'approved';
+          cache[requestId].notes = result.data?.adminNotes || cache[requestId].notes || 'Approved';
+          cache[requestId].reviewedAt = new Date().toISOString();
+          cache[requestId].reviewedBy = 'adminrafi';
+        }
+        saveSellerRequestCache(cache);
+
+        showAlert('✅ Seller request approved. You can now generate login credentials.', 'success');
+        await loadSellerRequests();
+      } catch (error) {
+        console.error('Error approving seller request:', error);
+        showAlert(`❌ Could not approve seller request: ${error.message}`, 'error');
+      }
+    }
+
+    async function rejectSellerRequest(requestId) {
+      const reason = prompt('Enter rejection reason (optional):');
+      if (reason === null) return;
+
+      try {
+        const response = await fetch(`http://localhost:5010/api/sellerrequest/admin/${requestId}/status`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            status: 'Rejected',
+            notes: reason || `Rejected from adminrafi.html on ${new Date().toLocaleString()}`
+          })
+        });
+
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+          throw new Error(result.error || 'Failed to reject seller request');
+        }
+
+        const cache = getSellerRequestCache();
+        if (cache[requestId]) {
+          cache[requestId].status = 'rejected';
+          cache[requestId].rejectionReason = reason || cache[requestId].rejectionReason || 'Rejected';
+          cache[requestId].notes = cache[requestId].rejectionReason;
+          cache[requestId].reviewedAt = new Date().toISOString();
+          cache[requestId].reviewedBy = 'adminrafi';
+          cache[requestId].generatedCredentials = null;
+          cache[requestId].credentialGeneratedAt = '';
+        }
+        saveSellerRequestCache(cache);
+
+        showAlert('❌ Seller request rejected', 'warning');
+        await loadSellerRequests();
+      } catch (error) {
+        console.error('Error rejecting seller request:', error);
+        showAlert(`❌ Could not reject seller request: ${error.message}`, 'error');
+      }
+    }
+
+    function generateSellerCredentials(requestId) {
+      const cache = getSellerRequestCache();
+      const request = cache[requestId];
+
+      if (!request) {
+        showAlert('Seller request not found', 'error');
+        return;
+      }
+
+      if (normalizeSellerStatus(request.status) !== 'approved') {
+        showAlert('Approve the seller request before generating credentials', 'warning');
+        return;
+      }
+
+      if (request.generatedCredentials) {
+        showAlert('Credentials already generated for this seller', 'warning');
+        return;
+      }
+
+      const storedUsers = safeParseJson(localStorage.getItem('mr_shop_users'), []);
+      const sellerAccounts = getSellerAccounts();
+      const existingUsernames = [
+        ...sellerAccounts.map(account => account.username),
+        ...storedUsers.map(account => account.username)
+      ];
+
+      const username = buildSellerUsername(request, existingUsernames);
+      const password = generateReadablePassword();
+      const generatedAt = new Date().toISOString();
+
+      const credentials = {
+        requestId,
+        username,
+        password,
+        role: 'seller',
+        email: request.email || `${username}@mrshop.com`,
+        fullName: request.fullName || '',
+        shopName: request.shopName || '',
+        generatedAt,
+        status: 'active'
+      };
+
+      request.generatedCredentials = credentials;
+      request.credentialGeneratedAt = generatedAt;
+      cache[requestId] = request;
+      saveSellerRequestCache(cache);
+
+      sellerAccounts.push(credentials);
+      saveSellerAccounts(sellerAccounts);
+
+      const accountIndex = storedUsers.findIndex(user => String(user.username || '').toLowerCase() === username.toLowerCase());
+      const accountPayload = {
+        id: `seller_${requestId}`,
+        username,
+        email: credentials.email,
+        password,
+        role: 'seller',
+        sellerRequestId: requestId,
+        generatedAt,
+        loginTime: generatedAt
+      };
+
+      if (accountIndex >= 0) {
+        storedUsers[accountIndex] = {
+          ...storedUsers[accountIndex],
+          ...accountPayload
+        };
+      } else {
+        storedUsers.push(accountPayload);
+      }
+
+      localStorage.setItem('mr_shop_users', JSON.stringify(storedUsers));
+
+      showAlert(`✅ Username and password generated for ${request.fullName || request.shopName || 'seller'}`, 'success');
+      renderSellerRequests(cache, 'Credentials generated and stored locally');
+    }
+
+    async function copySellerCredentials(requestId) {
+      const cache = getSellerRequestCache();
+      const request = cache[requestId];
+      const credentials = request && request.generatedCredentials;
+
+      if (!credentials) {
+        showAlert('Generate credentials first', 'warning');
+        return;
+      }
+
+      const payload = `Username: ${credentials.username}\nPassword: ${credentials.password}`;
+
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(payload);
+        } else {
+          const tempInput = document.createElement('textarea');
+          tempInput.value = payload;
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          document.execCommand('copy');
+          tempInput.remove();
+        }
+
+        showAlert('📋 Credentials copied to clipboard', 'success');
+      } catch (error) {
+        console.error('Error copying credentials:', error);
+        showAlert('❌ Could not copy credentials automatically', 'error');
+      }
+    }
+
     // Load products from localStorage
     function loadProductsFromLocalStorage() {
       const stored = localStorage.getItem('mrshop_products');
@@ -851,7 +1870,7 @@
       if (products.length === 0) {
         tableBody.innerHTML = `
           <tr>
-            <td colspan="7" style="text-align: center; color: var(--text-light); padding: 30px;">
+            <td colspan="7" class="table-empty-state">
               No products in this category yet
             </td>
           </tr>

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MRShop.AdminPanel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +56,7 @@ namespace MRShop.OrderTracking.Controllers
         /// Get all products or filter by category
         /// </summary>
         [HttpGet("products")]
-        public IActionResult GetProducts([FromQuery] string category = null)
+        public IActionResult GetProducts([FromQuery] string? category = null)
         {
             try
             {

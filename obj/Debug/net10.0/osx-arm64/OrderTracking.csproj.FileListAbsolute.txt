@@ -48,3 +48,14 @@
 /Users/mdrafiullah/Desktop/mr project /obj/Debug/net10.0/osx-arm64/OrderTracking.pdb
 /Users/mdrafiullah/Desktop/mr project /obj/Debug/net10.0/osx-arm64/OrderTracking.genruntimeconfig.cache
 /Users/mdrafiullah/Desktop/mr project /obj/Debug/net10.0/osx-arm64/ref/OrderTracking.dll
+/Users/mdrafiullah/Desktop/mr project /bin/Debug/net10.0/osx-arm64/AdminPanel/obj/AdminPanel.csproj.nuget.dgspec.json
+/Users/mdrafiullah/Desktop/mr project /bin/Debug/net10.0/osx-arm64/AdminPanel/obj/Debug/net10.0/osx-arm64/AdminPanel.sourcelink.json
+/Users/mdrafiullah/Desktop/mr project /bin/Debug/net10.0/osx-arm64/AdminPanel/obj/Debug/net10.0/osx-arm64/rpswa.dswa.cache.json
+/Users/mdrafiullah/Desktop/mr project /bin/Debug/net10.0/osx-arm64/AdminPanel/obj/project.assets.json
+/Users/mdrafiullah/Desktop/mr project /bin/Debug/net10.0/osx-arm64/assets/js/oauth-config.json
+/Users/mdrafiullah/Desktop/mr project /bin/Debug/net10.0/osx-arm64/backend/data/user_profiles.json
+/Users/mdrafiullah/Desktop/mr project /bin/Debug/net10.0/osx-arm64/backend/models/metadata.json
+/Users/mdrafiullah/Desktop/mr project /bin/Debug/net10.0/osx-arm64/backend/models/model_info.json
+/Users/mdrafiullah/Desktop/mr project /bin/Debug/net10.0/osx-arm64/backend/training_dataset.json
+/Users/mdrafiullah/Desktop/mr project /bin/Debug/net10.0/osx-arm64/data/private/catalog/food-natural.json
+/Users/mdrafiullah/Desktop/mr project /bin/Debug/net10.0/osx-arm64/manifest.json

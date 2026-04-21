@@ -67,42 +67,110 @@
       }
 
       try {
-        // Offline mode - accept any username/password combination
-        // Check if username is "mrshop" - make them admin
-        const isAdmin = username.toLowerCase() === 'mrshop';
-        
-        const userData = {
-          id: 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-          username: username,
-          email: username.includes('@') ? username : username + '@mrshop.com',
-          role: isAdmin ? 'admin' : 'user',
-          loggedIn: true,
+        const normalizedUsername = username.trim();
+        const normalizedLookup = normalizedUsername.toLowerCase();
+        const isAdmin = normalizedLookup === 'mrshop';
+        const storedUsers = JSON.parse(localStorage.getItem('mr_shop_users')) || [];
+        const sellerAccounts = JSON.parse(localStorage.getItem('mrshop_seller_accounts')) || [];
+
+        const matchedSeller = sellerAccounts.find(account => {
+          const accountUsername = String(account.username || '').toLowerCase();
+          const accountEmail = String(account.email || '').toLowerCase();
+          return (accountUsername === normalizedLookup || accountEmail === normalizedLookup) && String(account.password || '') === password;
+        });
+
+        const matchedUser = storedUsers.find(account => {
+          const accountUsername = String(account.username || '').toLowerCase();
+          const accountEmail = String(account.email || '').toLowerCase();
+          return (accountUsername === normalizedLookup || accountEmail === normalizedLookup) && String(account.password || '') === password;
+        });
+
+        let userData;
+        if (matchedSeller) {
+          userData = {
+            id: matchedSeller.requestId ? `seller_${matchedSeller.requestId}` : 'seller_' + Date.now(),
+            username: matchedSeller.username,
+            email: matchedSeller.email || (matchedSeller.username + '@mrshop.com'),
+            role: 'seller',
+            loggedIn: true,
+            loginTime: new Date().toISOString(),
+            sellerRequestId: matchedSeller.requestId || null,
+            approvedAt: matchedSeller.generatedAt || new Date().toISOString(),
+            source: 'admin-generated'
+          };
+        } else if (matchedUser) {
+          userData = {
+            id: matchedUser.id || ('user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9)),
+            username: matchedUser.username || normalizedUsername,
+            email: matchedUser.email || (normalizedUsername.includes('@') ? normalizedUsername : normalizedUsername + '@mrshop.com'),
+            role: matchedUser.role || (isAdmin ? 'admin' : 'user'),
+            loggedIn: true,
+            loginTime: new Date().toISOString()
+          };
+        } else if (isAdmin) {
+          userData = {
+            id: 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+            username: normalizedUsername,
+            email: normalizedUsername.includes('@') ? normalizedUsername : normalizedUsername + '@mrshop.com',
+            role: 'admin',
+            loggedIn: true,
+            loginTime: new Date().toISOString()
+          };
+        } else {
+          // Offline mode fallback for legacy demo flows.
+          userData = {
+            id: 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+            username: normalizedUsername,
+            email: normalizedUsername.includes('@') ? normalizedUsername : normalizedUsername + '@mrshop.com',
+            role: 'user',
+            loggedIn: true,
+            loginTime: new Date().toISOString()
+          };
+        }
+
+        localStorage.setItem('mr_shop_user', JSON.stringify(userData));
+
+        // Keep a local list of known accounts so approved seller credentials can be reused.
+        let users = JSON.parse(localStorage.getItem('mr_shop_users')) || [];
+        const existingUserIndex = users.findIndex(account => {
+          const accountUsername = String(account.username || '').toLowerCase();
+          const accountEmail = String(account.email || '').toLowerCase();
+          return accountUsername === userData.username.toLowerCase() || accountEmail === userData.email.toLowerCase();
+        });
+
+        const accountRecord = {
+          id: userData.id,
+          username: userData.username,
+          email: userData.email,
+          password: password,
+          role: userData.role || 'user',
+          lastLogin: new Date().toISOString(),
           loginTime: new Date().toISOString()
         };
-        localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-        
-        // Also save to users list for password reset compatibility
-        let users = JSON.parse(localStorage.getItem('mr_shop_users')) || [];
-        const existingUserIndex = users.findIndex(u => u.username === username);
-        if (existingUserIndex >= 0) {
-          users[existingUserIndex].lastLogin = new Date().toISOString();
-        } else {
-          users.push({
-            id: userData.id,
-            username: username,
-            email: userData.email,
-            password: password,
-            loginTime: new Date().toISOString()
-          });
+
+        if (userData.sellerRequestId) {
+          accountRecord.sellerRequestId = userData.sellerRequestId;
+          accountRecord.approvedAt = userData.approvedAt || new Date().toISOString();
         }
+
+        if (existingUserIndex >= 0) {
+          users[existingUserIndex] = {
+            ...users[existingUserIndex],
+            ...accountRecord
+          };
+        } else {
+          users.push(accountRecord);
+        }
+
         localStorage.setItem('mr_shop_users', JSON.stringify(users));
         
         // Also save profile data for offline access
         const profileData = {
           user_id: userData.id,
-          username: username,
+          username: userData.username,
+          role: userData.role || 'user',
           email_address: userData.email,
-          full_name: username,
+          full_name: userData.username,
           phone_number: '',
           address: '',
           date_of_birth: '',
@@ -135,11 +203,18 @@
         }
         
         // Show success message
-        showAuthNotification(isAdmin ? '👑 Welcome Admin!' : 'Login successful! Redirecting...', 'success');
+        const redirectTarget = userData.role === 'seller' ? 'seller.html' : 'userprofile.html';
+        const successMessage = userData.role === 'seller'
+          ? '✅ Seller credentials verified! Redirecting to seller dashboard...'
+          : isAdmin
+            ? '👑 Welcome Admin!'
+            : 'Login successful! Redirecting...';
+
+        showAuthNotification(successMessage, 'success');
         
         // Redirect to user profile after short delay
         setTimeout(()=>{
-          window.location.href = 'userprofile.html';
+          window.location.href = redirectTarget;
         }, 1000);
       } catch(error) {
         console.error('Login error:', error);
@@ -183,6 +258,7 @@
           id: 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
           username: username,
           email: email,
+          role: 'user',
           loggedIn: true,
           loginTime: new Date().toISOString()
         };
@@ -192,6 +268,7 @@
         const profileData = {
           user_id: userData.id,
           username: username,
+          role: 'user',
           email_address: email,
           full_name: username,
           phone_number: '',

@@ -56,25 +56,16 @@ TemporaryDependencyNodeTargetIdentifier=net10.0
 /warnaserror+:NU1605,SYSLIB0011
 
 [sourceFiles]
-AdminPanel/obj/Debug/net10.0/osx-arm64/
- .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
- AdminPanel.AssemblyInfo.cs
- AdminPanel.GlobalUsings.g.cs
- AdminPanel.RazorAssemblyInfo.cs
-AdminPanel/
- Program.cs
- Services/DataService.cs
 backend-csharp/AdminProductService.cs
 Controllers/
  AdminProductController.cs
  SearchController.cs
-MyApp/obj/Debug/net10.0/
- .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
- MyApp.AssemblyInfo.cs
- MyApp.GlobalUsings.g.cs
+ SellerRequestController.cs
 obj/Debug/net10.0/osx-arm64/OrderTracking.GlobalUsings.g.cs
 Program.cs
-Services/SearchService.cs
+Services/
+ SearchService.cs
+ SellerRequestService.cs
 
 [metadataReferences]
 ../../../../usr/local/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/10.0.2/ref/net10.0/

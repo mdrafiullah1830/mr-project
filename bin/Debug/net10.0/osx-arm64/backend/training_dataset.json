@@ -1,0 +1,124 @@
+{
+  "shop_qa_dataset": [
+    {
+      "question": "মধু কত দাম? আপনাদের মধু পণ্যের মূল্য কত?",
+      "answer": "আমাদের তিন ধরনের মধু আছে: বিশুদ্ধ কাঁচা মধু (৫০০৳), বাদামের সাথে জৈব মধু (৭১১৳), এবং কাঁচা মানুকা মধু (১२९৯৳)।",
+      "category": "pricing",
+      "keywords": ["মধু", "দাম", "মূল্য", "খরচ"]
+    },
+    {
+      "question": "What is the price of honey? How much do honey products cost?",
+      "answer": "We have three types of honey: Pure Raw Honey (500৳), Organic Honey with Nuts (711৳), and Raw Manuka Honey (1299৳).",
+      "category": "pricing",
+      "keywords": ["honey", "price", "cost", "rupees"]
+    },
+    {
+      "question": "ডেলিভারি কত দিনে আসে? কিভাবে দ্রুত ডেলিভারি পাব?",
+      "answer": "সাধারণত ২-৩ ব্যবসায়িক দিনে ডেলিভারি হয়। জরুরি ডেলিভারির জন্য আমরা এক্সপ্রেস অপশন অফার করি।",
+      "category": "delivery",
+      "keywords": ["ডেলিভারি", "সময়", "দিন", "এক্সপ্রেস"]
+    },
+    {
+      "question": "How long does delivery take? When will my order arrive?",
+      "answer": "Standard delivery takes 2-3 business days. We also offer express delivery for urgent orders.",
+      "category": "delivery",
+      "keywords": ["delivery", "time", "days", "arrive"]
+    },
+    {
+      "question": "আমার অর্ডার কোথায় আছে? অর্ডার ট্র্যাকিং কিভাবে করব?",
+      "answer": "আপনার অর্ডার ড্যাশবোর্ডে গিয়ে সরাসরি ট্র্যাক করতে পারবেন। আমরা ইমেইলের মাধ্যমে ট্র্যাকিং তথ্য পাঠাই।",
+      "category": "orders",
+      "keywords": ["অর্ডার", "ট্র্যাক", "অনুসরণ", "স্ট্যাটাস"]
+    },
+    {
+      "question": "How do I track my order? Where is my package?",
+      "answer": "You can track your order in your dashboard. We'll also send you tracking information via email once your order is shipped.",
+      "category": "orders",
+      "keywords": ["track", "order", "status", "package"]
+    },
+    {
+      "question": "পণ্য ফেরত দিতে পারব? রিটার্ন পলিসি কি?",
+      "answer": "অব্যবহৃত পণ্য ৭ দিনের মধ্যে ফেরত দিতে পারবেন। আমাদের সাথে যোগাযোগ করে রিটার্ন শুরু করুন।",
+      "category": "returns",
+      "keywords": ["ফেরত", "রিটার্ন", "নিয়ম", "দিন"]
+    },
+    {
+      "question": "What is your return policy? Can I return items?",
+      "answer": "We accept returns of unused items within 7 days. Contact our support team to initiate a return with your order number.",
+      "category": "returns",
+      "keywords": ["return", "policy", "refund", "days"]
+    },
+    {
+      "question": "পেমেন্ট কিভাবে করব? কি কি পেমেন্ট পদ্ধতি আছে?",
+      "answer": "আমরা নগদ ডেলিভারি, ক্রেডিট/ডেবিট কার্ড, এবং মোবাইল ব্যাংকিং গ্রহণ করি। সব পেমেন্ট সুরক্ষিত এবং এনক্রিপ্টেড।",
+      "category": "payment",
+      "keywords": ["পেমেন্ট", "কার্ড", "টাকা", "ব্যাংকিং"]
+    },
+    {
+      "question": "What payment methods do you accept? How do I pay?",
+      "answer": "We accept cash on delivery, credit/debit cards, and mobile banking. All payments are secure and encrypted.",
+      "category": "payment",
+      "keywords": ["payment", "card", "banking", "cash"]
+    },
+    {
+      "question": "দুধ, মাখন এবং দইয়ের দাম কত? ডেরি পণ্য পাওয়া যায়?",
+      "answer": "হ্যাঁ, আমাদের কাছে তাজা দুধ, জৈব মাখন, এবং দইয়ের কাপ পাওয়া যায়। প্রতিটি পণ্য তাজা এবং উচ্চমানের।",
+      "category": "products",
+      "keywords": ["দুধ", "দই", "মাখন", "ডেরি"]
+    },
+    {
+      "question": "Do you have dairy products? What dairy items do you sell?",
+      "answer": "Yes, we have fresh milk, organic butter, and yogurt cups available in our dairy section.",
+      "category": "products",
+      "keywords": ["dairy", "milk", "butter", "yogurt"]
+    },
+    {
+      "question": "পণ্য খুঁজতে সার্চ বার ব্যবহার কিভাবে করি?",
+      "answer": "আমাদের সার্চ বার ব্যবহার করে পণ্য খুঁজুন। নাম, ক্যাটাগরি, বা বর্ণনা দিয়ে খোঁজা যায়। ফলাফল সরাসরি দেখা যাবে।",
+      "category": "support",
+      "keywords": ["সার্চ", "খুঁজুন", "খোঁজা", "পণ্য"]
+    },
+    {
+      "question": "How do I search for products? How does the search work?",
+      "answer": "Use our search bar to find products by name, category, or description. You can also filter by price and rating.",
+      "category": "support",
+      "keywords": ["search", "find", "filter", "products"]
+    },
+    {
+      "question": "অ্যাকাউন্ট তৈরি করা কেন গুরুত্বপূর্ণ?",
+      "answer": "অ্যাকাউন্ট থাকলে দ্রুত চেকআউট, অর্ডার ট্র্যাকিং, এবং রিওয়ার্ড পয়েন্ট পাবেন। এটি একেবারে বিনামূল্যে।",
+      "category": "account",
+      "keywords": ["অ্যাকাউন্ট", "তৈরি", "রিওয়ার্ড", "সুবিধা"]
+    },
+    {
+      "question": "Why should I create an account? What are the benefits?",
+      "answer": "With an account, you get faster checkout, order tracking, and reward points on every purchase!",
+      "category": "account",
+      "keywords": ["account", "benefits", "rewards", "signup"]
+    },
+    {
+      "question": "৫০০ টাকার উপরে অর্ডারে ডেলিভারি ফ্রি নাকি অর্থ প্রদান করতে হয়?",
+      "answer": "না, ৫০০ টাকার বেশি অর্ডারে সম্পূর্ণ বিনামূল্যে ডেলিভারি পাবেন। এক্সপ্রেস ডেলিভারি অতিরিক্ত খরচে পাওয়া যায়।",
+      "category": "delivery",
+      "keywords": ["ডেলিভারি", "ফ্রি", "বিনামূল্যে", "৫০০"]
+    },
+    {
+      "question": "Is delivery free on orders over 500 taka? Do I pay shipping?",
+      "answer": "Yes! Free standard delivery on all orders over 500৳. Express delivery is available for an additional charge.",
+      "category": "delivery",
+      "keywords": ["free", "delivery", "500", "shipping"]
+    },
+    {
+      "question": "গ্রাহক সেবা দল সপ্তাহে কত ঘণ্টা কাজ করে?",
+      "answer": "আমাদের কাস্টমার সেবা সোমবার থেকে শুক্রবার সকাল ৯টা থেকে রাত ৬টা পর্যন্ত উপলব্ধ। আমরা ২ ঘণ্টার মধ্যে সাড়া দিই।",
+      "category": "support",
+      "keywords": ["গ্রাহক", "সেবা", "সময়", "সপ্তাহ"]
+    },
+    {
+      "question": "What are your customer service hours? When can I contact support?",
+      "answer": "Our customer service team is available Monday to Friday, 9 AM to 6 PM. We respond to messages within 2 hours.",
+      "category": "support",
+      "keywords": ["customer", "service", "hours", "contact"]
+    }
+  ]
+}
