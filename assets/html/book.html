@@ -145,7 +145,9 @@
   <div class="toast" id="toast">Added to cart</div>
 
   <script src="../js/category-live-sync.js"></script>
-  <script>
+  </script>
+
+  <script src="../js/cart-flow.js"></script>
     // Book catalog
     const products = [
       {id:401, name:'পথের পাঁচালী (Pather Panchali)', price: 450, tag:'fiction', img:'https://picsum.photos/seed/pather/600', desc:'Bibhutibhushan Bandyopadhyay\'s timeless Bengali classic.'},
@@ -176,7 +178,7 @@
 
     function render(list){
       grid.innerHTML = list.map(p => `
-        <article class="card" data-tag="${p.tag}">
+        <article class="card" data-tag="${p.tag}" data-product-id="${p.id}" role="link" tabindex="0" aria-label="View details for ${p.name}">
           <div class="thumb">
             <img src="${p.img}" alt="${p.name}" loading="lazy"/>
             <span class="badge">${humanTag(p.tag)}</span>
@@ -197,6 +199,10 @@
           </div>
         </article>
       `).join('');
+
+      if (window.MRShopCategoryLiveSync && typeof window.MRShopCategoryLiveSync.bindProductCardNavigation === 'function') {
+        window.MRShopCategoryLiveSync.bindProductCardNavigation(grid, list);
+      }
     }
 
     function renderCatalog(){
@@ -251,6 +257,20 @@
       const p = catalogProducts.find(x=>x.id===id) || products.find(x=>x.id===id);
       if(!p) return;
       const qty = parseInt(document.getElementById('qty-'+id).value||'1',10) || 1;
+
+      if (window.MRShopCartFlow && typeof window.MRShopCartFlow.addToCart === 'function') {
+        const added = window.MRShopCartFlow.addToCart(p, {
+          quantity: qty,
+          returnUrl: window.location.href
+        });
+
+        if (added) {
+          showToast('Added '+qty+' × '+p.name);
+        }
+
+        return;
+      }
+
       const cart = getCart();
       const idx = cart.findIndex(i=>i.id===id);
       if(idx>-1){ cart[idx].quantity += qty; }

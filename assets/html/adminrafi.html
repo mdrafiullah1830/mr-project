@@ -85,6 +85,70 @@
       background: rgba(255, 255, 255, 0.5);
     }
 
+    .live-tools {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .live-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .live-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.45);
+      animation: liveDotPulse 2s infinite;
+    }
+
+    .live-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .live-btn {
+      background: rgba(255, 255, 255, 0.22);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: 0.3s;
+    }
+
+    .live-btn:hover {
+      background: rgba(255, 255, 255, 0.32);
+      transform: translateY(-1px);
+    }
+
+    .live-btn.secondary {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    @keyframes liveDotPulse {
+      0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.45); }
+      70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+
     /* Main Layout */
     .main-content {
       display: grid;
@@ -810,6 +874,115 @@
       background: #dc2626;
     }
 
+    .category-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(124, 58, 237, 0.1);
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .product-edit-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.62);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1200;
+    }
+
+    .product-edit-modal.open {
+      display: flex;
+    }
+
+    .product-edit-dialog {
+      width: min(760px, 100%);
+      max-height: min(90vh, 920px);
+      overflow: auto;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 24px 80px rgba(15, 23, 42, 0.35);
+      padding: 24px;
+    }
+
+    .product-edit-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+
+    .product-edit-header h3 {
+      font-size: 22px;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .modal-subtitle {
+      color: var(--text-light);
+      font-size: 13px;
+    }
+
+    .modal-close-btn {
+      border: none;
+      background: rgba(124, 58, 237, 0.08);
+      color: var(--primary);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .edit-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .edit-form-grid .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .edit-image-preview {
+      margin-top: 10px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .edit-image-preview img {
+      width: 88px;
+      height: 88px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+      background: #f8fafc;
+    }
+
+    .edit-image-preview .preview-note {
+      font-size: 12px;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
     /* Alert Messages */
     .alert {
       padding: 15px;
@@ -871,6 +1044,26 @@
       .header-info {
         flex-direction: column;
         width: 100%;
+        align-items: stretch;
+      }
+
+      .live-tools {
+        align-items: stretch;
+        width: 100%;
+      }
+
+      .live-indicator,
+      .live-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .live-actions {
+        flex-direction: column;
+      }
+
+      .live-btn {
+        width: 100%;
       }
 
       .form-row {
@@ -889,6 +1082,22 @@
       .products-table td {
         padding: 8px;
       }
+
+      .edit-form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .product-edit-dialog {
+        padding: 18px;
+      }
+
+      .modal-actions {
+        justify-content: stretch;
+      }
+
+      .modal-actions .btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -900,6 +1109,13 @@
       <p class="admin-subtitle">MR Shop - Rafi's Admin Control Center</p>
     </div>
     <div class="header-info">
+      <div class="live-tools">
+        <div class="live-indicator"><span class="live-dot"></span>VS Code Go Live</div>
+        <div class="live-actions">
+          <button type="button" class="live-btn" id="openLivePreviewBtn">Open Preview</button>
+          <button type="button" class="live-btn secondary" id="copyLivePreviewBtn">Copy URL</button>
+        </div>
+      </div>
       <div class="user-info">
         <div>Logged in as: <strong id="adminName">Admin</strong></div>
         <div class="header-category">Category: <strong id="currentCategory">Select a category</strong></div>
@@ -1035,6 +1251,7 @@
             <tr>
               <th>Image</th>
               <th>Product Name</th>
+              <th>Category</th>
               <th>Description</th>
               <th>Price</th>
               <th>Stock</th>
@@ -1044,12 +1261,76 @@
           </thead>
           <tbody id="productsTableBody">
             <tr>
-              <td colspan="7" class="table-empty-state">
+              <td colspan="8" class="table-empty-state">
                 Select a category to view products
               </td>
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+
+    <div class="product-edit-modal" id="productEditModal" aria-hidden="true">
+      <div class="product-edit-dialog" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+        <div class="product-edit-header">
+          <div>
+            <p class="modal-subtitle">Edit and update product details</p>
+            <h3 id="editModalTitle">Update Product</h3>
+          </div>
+          <button type="button" class="modal-close-btn" id="closeEditModalBtn" aria-label="Close modal">×</button>
+        </div>
+
+        <form id="editProductForm">
+          <input type="hidden" id="editProductId">
+          <input type="hidden" id="editOriginalCategory">
+          <input type="hidden" id="editOriginalIndex">
+
+          <div class="edit-form-grid">
+            <div class="form-group full-width">
+              <label for="editCategory">Category *</label>
+              <select id="editCategory" required></select>
+            </div>
+
+            <div class="form-group">
+              <label for="editProductName">Product Name *</label>
+              <input type="text" id="editProductName" required>
+            </div>
+
+            <div class="form-group">
+              <label for="editProductPrice">Price (৳) *</label>
+              <input type="number" id="editProductPrice" min="0" step="0.01" required>
+            </div>
+
+            <div class="form-group full-width">
+              <label for="editProductDesc">Description</label>
+              <textarea id="editProductDesc" placeholder="Enter product description..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="editProductStock">Stock Quantity *</label>
+              <input type="number" id="editProductStock" min="0" required>
+            </div>
+
+            <div class="form-group">
+              <label for="editSellerName">Seller Name *</label>
+              <input type="text" id="editSellerName" required>
+            </div>
+
+            <div class="form-group full-width">
+              <label for="editImageBase64">Image URL or Base64</label>
+              <input type="text" id="editImageBase64" placeholder="Paste a new image URL or base64 string (leave blank to keep current image)">
+              <div class="edit-image-preview">
+                <img id="editPreviewImage" alt="Current product preview">
+                <div class="preview-note">Leave the image field empty to keep the current image. You can also paste a new image URL or base64 data URI.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="cancelEditProductBtn">Cancel</button>
+            <button type="submit" class="btn btn-success">💾 Save Changes</button>
+          </div>
+        </form>
       </div>
     </div>
 
@@ -1097,12 +1378,14 @@
   <!-- Scripts -->
   <script>
     // Global state
+    const ALL_PRODUCTS_LABEL = '📦 All Products';
     let categories = [];
-    let selectedCategory = null;
+    let selectedCategory = ALL_PRODUCTS_LABEL;
     let allProducts = {};
+    let editingProductContext = null;
     const sellerRequestCacheKey = 'mrshop_seller_request_cache';
     const sellerAccountStoreKey = 'mrshop_seller_accounts';
-    const apiBasePath = '/api.php';
+    const apiBasePath = 'http://localhost:5010/api.php';
     const categorySlugMap = {
       '🍯 Food & Natural': 'food',
       '🎨 Handicrafts': 'handicrafts',
@@ -1120,6 +1403,88 @@
 
     function normalizeCategorySlug(category) {
       return categorySlugMap[category] || String(category || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+    }
+
+    function isAllProductsView(category) {
+      return String(category || '') === ALL_PRODUCTS_LABEL;
+    }
+
+    function getViewCategoryLabel(category) {
+      return isAllProductsView(category) ? 'All Products' : category;
+    }
+
+    function getBaseCategoryLabels() {
+      return categories.filter(category => category && category !== ALL_PRODUCTS_LABEL);
+    }
+
+    function getEditableCategoryLabels() {
+      const labels = new Set(getBaseCategoryLabels());
+
+      Object.keys(allProducts || {}).forEach(category => {
+        if (category && category !== ALL_PRODUCTS_LABEL) {
+          labels.add(category);
+        }
+      });
+
+      return Array.from(labels);
+    }
+
+    function ensureProductCategoryBuckets() {
+      const baseCategories = getBaseCategoryLabels();
+
+      baseCategories.forEach(category => {
+        if (!Array.isArray(allProducts[category])) {
+          allProducts[category] = [];
+        }
+      });
+
+      if (Object.prototype.hasOwnProperty.call(allProducts, ALL_PRODUCTS_LABEL)) {
+        delete allProducts[ALL_PRODUCTS_LABEL];
+      }
+    }
+
+    function getAllProductRows() {
+      return getBaseCategoryLabels().flatMap(categoryDisplay => {
+        const products = Array.isArray(allProducts[categoryDisplay]) ? allProducts[categoryDisplay] : [];
+        return products.map((product, index) => ({
+          categoryDisplay,
+          product,
+          index
+        }));
+      });
+    }
+
+    function populateEditCategoryOptions(selectedValue) {
+      const categorySelect = document.getElementById('editCategory');
+      if (!categorySelect) return;
+
+      const options = getEditableCategoryLabels()
+        .map(category => `<option value="${escapeHtml(category)}" ${category === selectedValue ? 'selected' : ''}>${escapeHtml(category)}</option>`)
+        .join('');
+
+      categorySelect.innerHTML = `
+        <option value="" disabled ${!selectedValue ? 'selected' : ''}>Select a category</option>
+        ${options}
+      `;
+    }
+
+    function getProductImageValue(product) {
+      return product.imageBase64 || product.image_path || product.image || '';
+    }
+
+    function calculateFinalPrice(price, discount) {
+      const safePrice = Number(price || 0);
+      const safeDiscount = Number(discount || 0);
+
+      if (!Number.isFinite(safePrice) || safePrice < 0) {
+        return 0;
+      }
+
+      if (!Number.isFinite(safeDiscount) || safeDiscount <= 0) {
+        return safePrice;
+      }
+
+      return Math.max(0, safePrice - ((safePrice * safeDiscount) / 100));
     }
 
     function getDisplayCategoryForSlug(slug) {
@@ -1145,7 +1510,12 @@
           stock: product.stock,
           seller: product.seller || 'Admin',
           imageBase64: product.image_path || product.image || '',
-          createdAt: product.created_at || new Date().toISOString()
+          image_path: product.image_path || product.image || '',
+          discount: product.discount ?? 0,
+          rating: product.rating ?? 4.5,
+          status: product.status || 'active',
+          category: product.category || normalizeCategorySlug(displayCategory),
+          createdAt: product.created_at || product.createdAt || new Date().toISOString()
         });
       });
 
@@ -1181,6 +1551,24 @@
       return data.data;
     }
 
+    async function updateProductToServer(product) {
+      const response = await fetch(createApiUrl('updateProduct'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(product)
+      });
+
+      const data = await response.json();
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Failed to update product');
+      }
+
+      return data.data;
+    }
+
     async function deleteProductFromServer(productId) {
       const response = await fetch(createApiUrl('deleteProduct'), {
         method: 'POST',
@@ -1204,6 +1592,46 @@
       loadCategories();
       loadAdminName();
       setupDragDrop();
+      const openLivePreviewBtn = document.getElementById('openLivePreviewBtn');
+      const copyLivePreviewBtn = document.getElementById('copyLivePreviewBtn');
+      const editProductForm = document.getElementById('editProductForm');
+      const closeEditModalBtn = document.getElementById('closeEditModalBtn');
+      const cancelEditProductBtn = document.getElementById('cancelEditProductBtn');
+      const editImageBase64Input = document.getElementById('editImageBase64');
+      const productEditModal = document.getElementById('productEditModal');
+
+      if (openLivePreviewBtn) {
+        openLivePreviewBtn.addEventListener('click', openLivePreview);
+      }
+
+      if (copyLivePreviewBtn) {
+        copyLivePreviewBtn.addEventListener('click', copyLivePreviewUrl);
+      }
+
+      if (editProductForm) {
+        editProductForm.addEventListener('submit', handleUpdateProduct);
+      }
+
+      if (closeEditModalBtn) {
+        closeEditModalBtn.addEventListener('click', closeEditProductModal);
+      }
+
+      if (cancelEditProductBtn) {
+        cancelEditProductBtn.addEventListener('click', closeEditProductModal);
+      }
+
+      if (productEditModal) {
+        productEditModal.addEventListener('click', event => {
+          if (event.target === productEditModal) {
+            closeEditProductModal();
+          }
+        });
+      }
+
+      if (editImageBase64Input) {
+        editImageBase64Input.addEventListener('input', updateEditPreviewImage);
+      }
+
       loadSellerRequests();
       setInterval(loadSellerRequests, 30000);
     });
@@ -1234,8 +1662,10 @@
         '🪙 Antique & Collectibles'
       ];
 
-      categories = categoryNames;
+      categories = [ALL_PRODUCTS_LABEL, ...categoryNames];
+      selectedCategory = ALL_PRODUCTS_LABEL;
       renderCategories();
+      populateEditCategoryOptions();
       loadProductsFromSource();
     }
 
@@ -1247,24 +1677,35 @@
       categories.forEach(category => {
         const div = document.createElement('div');
         div.className = 'category-item';
+        if (category === selectedCategory) {
+          div.classList.add('active');
+        }
         div.textContent = category;
-        div.onclick = () => selectCategory(category);
+        div.onclick = event => selectCategory(category, event.currentTarget || div);
         categoryList.appendChild(div);
       });
     }
 
     // Select category
-    function selectCategory(category) {
+    function selectCategory(category, selectedElement = null) {
       selectedCategory = category;
-      document.getElementById('category').value = category;
-      document.getElementById('currentCategory').textContent = category;
-      document.getElementById('tableCategory').textContent = category;
+      const categoryInput = document.getElementById('category');
+      if (categoryInput) {
+        categoryInput.value = isAllProductsView(category) ? 'All Products (view only)' : category;
+      }
+
+      const displayLabel = getViewCategoryLabel(category);
+      document.getElementById('currentCategory').textContent = displayLabel;
+      document.getElementById('tableCategory').textContent = displayLabel;
 
       // Update active state
       document.querySelectorAll('.category-item').forEach(item => {
         item.classList.remove('active');
       });
-      event.target.classList.add('active');
+
+      if (selectedElement) {
+        selectedElement.classList.add('active');
+      }
 
       // Load products for this category
       loadProductsForCategory(category);
@@ -1851,10 +2292,12 @@
         allProducts = JSON.parse(stored);
       } else {
         allProducts = {};
-        categories.forEach(cat => {
+        getBaseCategoryLabels().forEach(cat => {
           allProducts[cat] = [];
         });
       }
+
+      ensureProductCategoryBuckets();
       
       // Sync to index.html on load
       syncToIndexPage();
@@ -1862,37 +2305,54 @@
 
     // Load products for selected category
     function loadProductsForCategory(category) {
-      if (!selectedCategory) return;
+      if (!category) return;
 
       const tableBody = document.getElementById('productsTableBody');
-      const products = allProducts[category] || [];
+      const isAllView = isAllProductsView(category);
+      const rows = isAllView
+        ? getAllProductRows()
+        : (Array.isArray(allProducts[category]) ? allProducts[category] : []).map((product, index) => ({
+            categoryDisplay: category,
+            product,
+            index
+          }));
 
-      if (products.length === 0) {
+      document.getElementById('tableCategory').textContent = getViewCategoryLabel(category);
+      if (document.getElementById('currentCategory')) {
+        document.getElementById('currentCategory').textContent = getViewCategoryLabel(category);
+      }
+      const categoryInput = document.getElementById('category');
+      if (categoryInput && selectedCategory === category) {
+        categoryInput.value = isAllView ? 'All Products (view only)' : category;
+      }
+
+      if (rows.length === 0) {
         tableBody.innerHTML = `
           <tr>
-            <td colspan="7" class="table-empty-state">
-              No products in this category yet
+            <td colspan="8" class="table-empty-state">
+              ${isAllView ? 'No products available yet' : 'No products in this category yet'}
             </td>
           </tr>
         `;
         return;
       }
 
-      tableBody.innerHTML = products.map((product, index) => `
+      tableBody.innerHTML = rows.map(({ categoryDisplay, product, index }) => `
         <tr>
           <td>
             ${product.imageBase64 ? 
-              `<img src="${product.imageBase64}" class="product-img" alt="${product.name}">` :
+              `<img src="${escapeHtml(product.imageBase64)}" class="product-img" alt="${escapeHtml(product.name)}">` :
               '📷'}
           </td>
-          <td><strong>${product.name}</strong></td>
-          <td>${product.description || '-'}</td>
-          <td><span class="price-badge">৳${parseInt(product.price).toLocaleString()}</span></td>
-          <td>${product.stock || 0}</td>
-          <td>${product.seller || 'Unknown'}</td>
+          <td><strong>${escapeHtml(product.name)}</strong></td>
+          <td><span class="category-pill">${escapeHtml(categoryDisplay)}</span></td>
+          <td>${escapeHtml(product.description || '-')}</td>
+          <td><span class="price-badge">৳${Number(product.price || 0).toLocaleString()}</span></td>
+          <td>${escapeHtml(product.stock ?? 0)}</td>
+          <td>${escapeHtml(product.seller || 'Unknown')}</td>
           <td>
-            <button class="edit-btn" onclick="editProduct('${category}', ${index})">Edit</button>
-            <button class="delete-btn" onclick="deleteProduct('${category}', ${index})">Delete</button>
+            <button class="edit-btn" onclick='editProduct(${JSON.stringify(categoryDisplay)}, ${index})'>Edit</button>
+            <button class="delete-btn" onclick='deleteProduct(${JSON.stringify(categoryDisplay)}, ${index})'>Delete</button>
           </td>
         </tr>
       `).join('');
@@ -1902,8 +2362,8 @@
     async function handleAddProduct(event) {
       event.preventDefault();
 
-      if (!selectedCategory) {
-        showAlert('Please select a category first', 'warning');
+      if (!selectedCategory || isAllProductsView(selectedCategory)) {
+        showAlert('Please select a real category from the left panel before adding a product', 'warning');
         return;
       }
 
@@ -1943,6 +2403,11 @@
         stock: product.stock,
         seller: product.seller,
         imageBase64: savedProduct?.image_path || product.image_path,
+        image_path: savedProduct?.image_path || product.image_path,
+        discount: savedProduct?.discount ?? product.discount,
+        rating: savedProduct?.rating ?? product.rating,
+        status: savedProduct?.status || product.status,
+        category: product.category,
         createdAt: savedProduct?.created_at || product.createdAt
       });
 
@@ -2027,14 +2492,194 @@
       allProducts[category].splice(index, 1);
       localStorage.setItem('mrshop_products', JSON.stringify(allProducts));
       showAlert('Product deleted successfully', 'success');
-      loadProductsForCategory(category);
+      loadProductsForCategory(selectedCategory || category);
       syncToIndexPage();
     }
 
-    // Edit product (placeholder)
+    function updateEditPreviewImage() {
+      const imageInput = document.getElementById('editImageBase64');
+      const previewImage = document.getElementById('editPreviewImage');
+
+      if (!imageInput || !previewImage) return;
+
+      const fallbackImage = imageInput.dataset.currentImage || '';
+      const nextImage = imageInput.value.trim() || fallbackImage;
+
+      if (nextImage) {
+        previewImage.src = nextImage;
+        previewImage.style.display = 'block';
+      } else {
+        previewImage.removeAttribute('src');
+        previewImage.style.display = 'none';
+      }
+    }
+
+    function closeEditProductModal() {
+      editingProductContext = null;
+
+      const modal = document.getElementById('productEditModal');
+      const form = document.getElementById('editProductForm');
+      const imageInput = document.getElementById('editImageBase64');
+
+      if (modal) {
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+      }
+
+      if (form) {
+        form.reset();
+      }
+
+      if (imageInput) {
+        imageInput.dataset.currentImage = '';
+      }
+
+      updateEditPreviewImage();
+    }
+
+    function openEditProductModal(category, index) {
+      const productList = allProducts[category] || [];
+      const product = productList[index];
+
+      if (!product) {
+        showAlert('Product not found', 'error');
+        return;
+      }
+
+      editingProductContext = { category, index };
+      populateEditCategoryOptions(category);
+
+      document.getElementById('editProductId').value = product.id || '';
+      document.getElementById('editOriginalCategory').value = category;
+      document.getElementById('editOriginalIndex').value = index;
+      document.getElementById('editCategory').value = category;
+      document.getElementById('editProductName').value = product.name || '';
+      document.getElementById('editProductDesc').value = product.description || '';
+      document.getElementById('editProductPrice').value = product.price ?? '';
+      document.getElementById('editProductStock').value = product.stock ?? 0;
+      document.getElementById('editSellerName').value = product.seller || '';
+
+      const imageInput = document.getElementById('editImageBase64');
+      if (imageInput) {
+        imageInput.value = '';
+        imageInput.dataset.currentImage = getProductImageValue(product);
+      }
+
+      updateEditPreviewImage();
+
+      const modal = document.getElementById('productEditModal');
+      if (modal) {
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+      }
+    }
+
+    async function handleUpdateProduct(event) {
+      event.preventDefault();
+
+      if (!editingProductContext) {
+        showAlert('No product selected for editing', 'error');
+        return;
+      }
+
+      const { category: originalCategory, index } = editingProductContext;
+      const sourceProducts = allProducts[originalCategory] || [];
+      const sourceProduct = sourceProducts[index];
+
+      if (!sourceProduct) {
+        showAlert('The selected product could not be found', 'error');
+        return;
+      }
+
+      const targetCategory = document.getElementById('editCategory').value;
+      const rawImageValue = document.getElementById('editImageBase64').value.trim();
+      const imageValue = rawImageValue || getProductImageValue(sourceProduct);
+      const priceValue = Number(document.getElementById('editProductPrice').value);
+      const stockValue = Number(document.getElementById('editProductStock').value);
+      const discountValue = Number(sourceProduct.discount ?? 0);
+
+      if (!Number.isFinite(priceValue) || priceValue < 0) {
+        showAlert('Please enter a valid price', 'error');
+        return;
+      }
+
+      if (!Number.isFinite(stockValue) || stockValue < 0) {
+        showAlert('Please enter a valid stock quantity', 'error');
+        return;
+      }
+
+      const updatedProductPayload = {
+        id: sourceProduct.id,
+        name: document.getElementById('editProductName').value.trim(),
+        description: document.getElementById('editProductDesc').value.trim(),
+        price: priceValue,
+        stock: stockValue,
+        seller: document.getElementById('editSellerName').value.trim(),
+        image_path: imageValue,
+        category: normalizeCategorySlug(targetCategory),
+        status: sourceProduct.status || 'active',
+        discount: discountValue,
+        final_price: calculateFinalPrice(priceValue, discountValue),
+        rating: sourceProduct.rating ?? 4.5,
+        createdAt: sourceProduct.createdAt || new Date().toISOString()
+      };
+
+      let serverResult = null;
+
+      if (updatedProductPayload.id) {
+        try {
+          serverResult = await updateProductToServer(updatedProductPayload);
+        } catch (error) {
+          console.warn('Server update failed, saving locally only:', error.message);
+          showAlert(`⚠️ Updated locally, but server sync failed for "${updatedProductPayload.name}"`, 'warning');
+        }
+      }
+
+      const updatedLocalProduct = {
+        ...sourceProduct,
+        ...updatedProductPayload,
+        id: serverResult?.id || updatedProductPayload.id || sourceProduct.id || Date.now(),
+        imageBase64: imageValue,
+        image_path: imageValue,
+        createdAt: serverResult?.created_at || sourceProduct.createdAt || updatedProductPayload.createdAt,
+        updatedAt: serverResult?.updated_at || new Date().toISOString(),
+        final_price: serverResult?.final_price ?? updatedProductPayload.final_price
+      };
+
+      ensureProductCategoryBuckets();
+
+      if (originalCategory === targetCategory) {
+        allProducts[originalCategory][index] = updatedLocalProduct;
+      } else {
+        allProducts[originalCategory].splice(index, 1);
+
+        if (!Array.isArray(allProducts[targetCategory])) {
+          allProducts[targetCategory] = [];
+        }
+
+        allProducts[targetCategory].push(updatedLocalProduct);
+      }
+
+      localStorage.setItem('mrshop_products', JSON.stringify(allProducts));
+
+      if (serverResult) {
+        try {
+          await loadProductsFromSource();
+        } catch (error) {
+          console.warn('Server refresh after update failed, keeping local data:', error.message);
+        }
+      } else {
+        syncToIndexPage();
+      }
+
+      showAlert(`✅ Product "${updatedLocalProduct.name}" updated successfully`, 'success');
+      closeEditProductModal();
+      loadProductsForCategory(selectedCategory || targetCategory);
+    }
+
+    // Edit product
     function editProduct(category, index) {
-      const product = allProducts[category][index];
-      alert(`Edit feature coming soon!\n\nProduct: ${product.name}\nPrice: ৳${product.price}`);
+      openEditProductModal(category, index);
     }
 
     // Sync to index page (Multiple methods for better compatibility)
@@ -2046,6 +2691,10 @@
       // Map adminrafi categories to index.html categories
       // Flatten the product structure
       for (const [categoryDisplay, products] of Object.entries(allProducts)) {
+        if (categoryDisplay === ALL_PRODUCTS_LABEL || !Array.isArray(products)) {
+          continue;
+        }
+
         const categoryCode = normalizeCategorySlug(categoryDisplay);
         
         products.forEach(product => {
@@ -2130,6 +2779,38 @@
       setTimeout(() => {
         alert.remove();
       }, 4000);
+    }
+
+    const LIVE_PREVIEW_PATH = '/assets/html/adminrafi.html';
+    const DEFAULT_LIVE_SERVER_ORIGIN = 'http://127.0.0.1:5500';
+
+    function getLivePreviewUrl() {
+      if (window.location.protocol === 'file:') {
+        return `${DEFAULT_LIVE_SERVER_ORIGIN}${LIVE_PREVIEW_PATH}`;
+      }
+
+      if (window.location.origin && window.location.origin !== 'null') {
+        return new URL(LIVE_PREVIEW_PATH, window.location.origin).toString();
+      }
+
+      return `${DEFAULT_LIVE_SERVER_ORIGIN}${LIVE_PREVIEW_PATH}`;
+    }
+
+    function openLivePreview() {
+      window.open(getLivePreviewUrl(), '_blank', 'noopener,noreferrer');
+      showAlert('🔗 Opening the Live Server preview in a new tab', 'success');
+    }
+
+    async function copyLivePreviewUrl() {
+      const livePreviewUrl = getLivePreviewUrl();
+
+      try {
+        await navigator.clipboard.writeText(livePreviewUrl);
+        showAlert('📋 Live preview URL copied', 'success');
+      } catch (error) {
+        window.prompt('Copy this Live Server URL', livePreviewUrl);
+        showAlert('📋 Copy the Live Server URL from the prompt', 'warning');
+      }
     }
 
     // Load admin name

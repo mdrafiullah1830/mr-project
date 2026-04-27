@@ -94,8 +94,8 @@ namespace MRShop.OrderTracking.Controllers
         /// GET: api/admin/products/{id}
         /// Get a specific product by ID
         /// </summary>
-        [HttpGet("products/{id}")]
-        public IActionResult GetProduct(string id)
+        [HttpGet("products/{id:int}")]
+        public IActionResult GetProduct(int id)
         {
             try
             {
@@ -186,8 +186,8 @@ namespace MRShop.OrderTracking.Controllers
         /// PUT: api/admin/products/{id}
         /// Update an existing product
         /// </summary>
-        [HttpPut("products/{id}")]
-        public IActionResult UpdateProduct(string id, [FromBody] Product product)
+        [HttpPut("products/{id:int}")]
+        public IActionResult UpdateProduct(int id, [FromBody] Product product)
         {
             try
             {
@@ -231,8 +231,8 @@ namespace MRShop.OrderTracking.Controllers
         /// DELETE: api/admin/products/{id}
         /// Delete a product
         /// </summary>
-        [HttpDelete("products/{id}")]
-        public IActionResult DeleteProduct(string id)
+        [HttpDelete("products/{id:int}")]
+        public IActionResult DeleteProduct(int id)
         {
             try
             {

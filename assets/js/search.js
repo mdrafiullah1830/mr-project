@@ -14,7 +14,7 @@
     let currentQuery = '';
 
     // API Configuration
-    const API_BASE = '/api.php';
+    const API_BASE = 'http://localhost:5010/api.php';
     const DEBOUNCE_DELAY = 300; // Wait 300ms after user stops typing
 
     /**

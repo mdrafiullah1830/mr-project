@@ -191,6 +191,20 @@
     function addToCart(id){
       const p = products.find(x => x.id === id);
       const qty = Number(document.getElementById(`qty-${id}`).value);
+
+      if (window.MRShopCartFlow && typeof window.MRShopCartFlow.addToCart === 'function') {
+        const added = window.MRShopCartFlow.addToCart(p, {
+          quantity: qty,
+          returnUrl: window.location.href
+        });
+
+        if (added) {
+          alert(p.name + " added to cart!");
+        }
+
+        return;
+      }
+
       const exists = cart.find(i => i.id === id);
       if(exists) exists.quantity += qty;
       else cart.push({...p, quantity: qty});
@@ -200,6 +214,8 @@
 
     document.addEventListener('DOMContentLoaded', renderProducts);
   </script>
+
+  <script src="../js/cart-flow.js"></script>
 
 </body>
 </html>

@@ -111,9 +111,14 @@ class GoogleOAuthManager {
         notification.className = 'auth-notification success';
       }
 
+      const authSession = window.MRShopCartFlow && typeof window.MRShopCartFlow.finalizeAuthenticatedSession === 'function'
+        ? window.MRShopCartFlow.finalizeAuthenticatedSession('/assets/html/userprofile.html')
+        : { pendingAction: null, redirectUrl: '/assets/html/userprofile.html' };
+      const redirectTarget = authSession.redirectUrl || '/assets/html/userprofile.html';
+
       // Redirect after 1 second
       setTimeout(() => {
-        window.location.href = '/assets/html/userprofile.html';
+        window.location.href = redirectTarget;
       }, 1000);
 
     } catch (error) {
@@ -213,10 +218,15 @@ class GoogleOAuthManager {
         accessToken: accessToken
       }));
 
+      const authSession = window.MRShopCartFlow && typeof window.MRShopCartFlow.finalizeAuthenticatedSession === 'function'
+        ? window.MRShopCartFlow.finalizeAuthenticatedSession('/assets/html/userprofile.html')
+        : { pendingAction: null, redirectUrl: '/assets/html/userprofile.html' };
+      const redirectTarget = authSession.redirectUrl || '/assets/html/userprofile.html';
+
       // Redirect to profile
       this.showSuccess('Login successful! Redirecting...');
       setTimeout(() => {
-        window.location.href = '/assets/html/userprofile.html';
+        window.location.href = redirectTarget;
       }, 1000);
 
     } catch (error) {

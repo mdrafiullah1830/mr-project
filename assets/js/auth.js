@@ -202,17 +202,26 @@
           localStorage.setItem('adminInfo', JSON.stringify(adminInfo));
         }
         
-        // Show success message
-        const redirectTarget = userData.role === 'seller' ? 'seller.html' : 'userprofile.html';
-        const successMessage = userData.role === 'seller'
-          ? '✅ Seller credentials verified! Redirecting to seller dashboard...'
-          : isAdmin
-            ? '👑 Welcome Admin!'
-            : 'Login successful! Redirecting...';
+        const defaultRedirect = userData.role === 'seller' ? 'seller.html' : 'userprofile.html';
+        const authSession = window.MRShopCartFlow && typeof window.MRShopCartFlow.finalizeAuthenticatedSession === 'function'
+          ? window.MRShopCartFlow.finalizeAuthenticatedSession(defaultRedirect)
+          : { pendingAction: null, redirectUrl: defaultRedirect };
+        const redirectTarget = authSession.redirectUrl || defaultRedirect;
+        const successMessage = authSession.pendingAction
+          ? (userData.role === 'seller'
+            ? '✅ Seller credentials verified! Item added to cart. Redirecting...'
+            : isAdmin
+              ? '👑 Welcome Admin! Item added to cart. Redirecting...'
+              : 'Login successful! Item added to cart. Redirecting...')
+          : (userData.role === 'seller'
+            ? '✅ Seller credentials verified! Redirecting to seller dashboard...'
+            : isAdmin
+              ? '👑 Welcome Admin!'
+              : 'Login successful! Redirecting...');
 
         showAuthNotification(successMessage, 'success');
         
-        // Redirect to user profile after short delay
+        // Redirect after short delay
         setTimeout(()=>{
           window.location.href = redirectTarget;
         }, 1000);
@@ -291,12 +300,17 @@
           console.warn('Profile API unavailable, using localStorage', error);
         }
         
+        const authSession = window.MRShopCartFlow && typeof window.MRShopCartFlow.finalizeAuthenticatedSession === 'function'
+          ? window.MRShopCartFlow.finalizeAuthenticatedSession('userprofile.html')
+          : { pendingAction: null, redirectUrl: 'userprofile.html' };
+        const redirectTarget = authSession.redirectUrl || 'userprofile.html';
+
         // Show success message
         showAuthNotification('Registration successful! Redirecting...', 'success');
         
-        // Redirect to user profile after short delay
+        // Redirect after short delay
         setTimeout(()=>{
-          window.location.href = 'userprofile.html';
+          window.location.href = redirectTarget;
         }, 1000);
       } catch(error) {
         console.error('Registration error:', error);

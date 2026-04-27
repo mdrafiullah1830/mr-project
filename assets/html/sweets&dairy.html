@@ -354,8 +354,8 @@
       const grid = document.getElementById('productsGrid');
       const displayProducts = Array.isArray(catalogProducts) && catalogProducts.length > 0 ? catalogProducts : products;
 
-      grid.innerHTML = displayProducts.map(p => `
-        <div class="product-card">
+        grid.innerHTML = displayProducts.map(p => `
+          <div class="product-card" data-product-id="${p.id}" role="link" tabindex="0" aria-label="View details for ${p.name}">
           <img src="${p.image}" alt="${p.name}" class="product-image" />
           <div class="product-info">
             <div>
@@ -374,6 +374,10 @@
           </div>
         </div>
       `).join('');
+
+        if (window.MRShopCategoryLiveSync && typeof window.MRShopCategoryLiveSync.bindProductCardNavigation === 'function') {
+          window.MRShopCategoryLiveSync.bindProductCardNavigation(grid, displayProducts);
+        }
     }
 
     function changeQty(productId, delta) {
@@ -386,6 +390,20 @@
       const product = catalogProducts.find(p => p.id === productId) || products.find(p => p.id === productId);
       const qtyInput = document.getElementById(`qty-${productId}`);
       const qty = parseInt(qtyInput.value);
+
+      if (window.MRShopCartFlow && typeof window.MRShopCartFlow.addToCart === 'function') {
+        const added = window.MRShopCartFlow.addToCart(product, {
+          quantity: qty,
+          returnUrl: window.location.href
+        });
+
+        if (added) {
+          alert(`${product.name} added to cart!`);
+        }
+
+        qtyInput.value = 1;
+        return;
+      }
 
       const existingItem = cart.find(item => item.id === productId);
       if (existingItem) {
@@ -420,6 +438,8 @@
       }
     });
   </script>
+
+  <script src="../js/cart-flow.js"></script>
 
 </body>
 </html>

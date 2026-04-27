@@ -123,7 +123,7 @@
       const displayProducts = Array.isArray(catalogProducts) && catalogProducts.length > 0 ? catalogProducts : products;
 
       grid.innerHTML = displayProducts.map(p => `
-        <div class="product-card">
+        <div class="product-card" data-product-id="${p.id}" role="link" tabindex="0" aria-label="View details for ${p.name}">
           <img src="${p.image}" class="product-image" />
           <div class="product-info">
             <h3 class="product-name">${p.name}</h3>
@@ -144,6 +144,10 @@
           </div>
         </div>
       `).join('');
+
+      if (window.MRShopCategoryLiveSync && typeof window.MRShopCategoryLiveSync.bindProductCardNavigation === 'function') {
+        window.MRShopCategoryLiveSync.bindProductCardNavigation(grid, displayProducts);
+      }
     }
 
     function changeQty(id, d){
@@ -154,6 +158,20 @@
     function addToCart(id){
       const p = catalogProducts.find(x => x.id === id) || products.find(x => x.id === id);
       const qty = Number(document.getElementById(`qty-${id}`).value);
+
+      if (window.MRShopCartFlow && typeof window.MRShopCartFlow.addToCart === 'function') {
+        const added = window.MRShopCartFlow.addToCart(p, {
+          quantity: qty,
+          returnUrl: window.location.href
+        });
+
+        if (added) {
+          alert(p.name + ' added to cart!');
+        }
+
+        return;
+      }
+
       const exists = cart.find(i => i.id === id);
       if(exists) exists.quantity += qty;
       else cart.push({...p, quantity: qty});
@@ -181,6 +199,8 @@
       }
     });
   </script>
+
+  <script src="../js/cart-flow.js"></script>
 
 </body>
 </html>

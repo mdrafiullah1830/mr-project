@@ -74,6 +74,10 @@
           <span class="menu-icon">❤️</span>
           <span class="menu-text">Wishlist</span>
         </button>
+        <button class="menu-item" data-section="cart" onclick="switchSection('cart')">
+          <span class="menu-icon">🛒</span>
+          <span class="menu-text">Cart</span>
+        </button>
         <button class="menu-item" data-section="recently-viewed" onclick="switchSection('recently-viewed')">
           <span class="menu-icon">👁️</span>
           <span class="menu-text">Recently Viewed</span>
@@ -231,6 +235,18 @@ Dhaka - 1205, Bangladesh</textarea>
         </div>
       </div>
 
+      <!-- Cart Section -->
+      <div class="content-section" id="cart">
+        <div class="section-header">
+          <h2 class="section-title">My Cart</h2>
+          <button class="clear-btn" onclick="clearCart()">Clear Cart</button>
+        </div>
+
+        <div class="products-grid" id="cartContainer">
+          <!-- Cart items will be dynamically inserted -->
+        </div>
+      </div>
+
       <!-- Recently Viewed Section -->
       <div class="content-section" id="recently-viewed">
         <div class="section-header">
@@ -338,6 +354,7 @@ Dhaka - 1205, Bangladesh</textarea>
     </section>
   </main>
 
+  <script src="../js/cart-flow.js"></script>
   <script src="../js/profile-manager.js"></script>
   <script src="../js/userprofile.js"></script>
 </body>

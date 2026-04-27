@@ -1,5 +1,5 @@
 (function (window, document) {
-  const API_BASE = new URL('../../api.php', window.location.href).toString();
+  const API_BASE = 'http://localhost:5010/api.php';
   const ADMIN_PRODUCTS_KEY = 'mrshop_admin_products';
   const GROUPED_PRODUCTS_KEY = 'mrshop_products';
   const SYNC_EVENT_NAME = 'mrshopProductsUpdated';
@@ -206,6 +206,69 @@
     return dedupeProducts(combined);
   }
 
+  function openProductDetails(productOrId, productSnapshot = null) {
+    const productId = typeof productOrId === 'object' && productOrId !== null
+      ? productOrId.id
+      : productOrId;
+
+    if (productId === undefined || productId === null || productId === '') {
+      return;
+    }
+
+    if (productSnapshot && typeof sessionStorage !== 'undefined') {
+      try {
+        sessionStorage.setItem('mrshop_selected_product', JSON.stringify(productSnapshot));
+      } catch (error) {
+        console.warn('Failed to cache selected product for detail view:', error);
+      }
+    }
+
+    window.location.href = `product.html?id=${encodeURIComponent(productId)}`;
+  }
+
+  function bindProductCardNavigation(container, products = []) {
+    if (!container || container.dataset.productNavigationBound === 'true') {
+      return;
+    }
+
+    container.dataset.productNavigationBound = 'true';
+    container.__productLookup = new Map(
+      (Array.isArray(products) ? products : [])
+        .filter(product => product && product.id !== undefined && product.id !== null)
+        .map(product => [String(product.id), product])
+    );
+
+    const shouldIgnoreTarget = target => Boolean(target && target.closest('button, a, input, select, textarea, label, [data-skip-product-navigation="true"]'));
+
+    const handleCardActivation = event => {
+      const card = event.target.closest('[data-product-id]');
+      if (!card || !container.contains(card) || shouldIgnoreTarget(event.target)) {
+        return;
+      }
+
+      const productId = card.getAttribute('data-product-id');
+      const productSnapshot = container.__productLookup?.get(String(productId)) || null;
+      openProductDetails(productId, productSnapshot);
+    };
+
+    container.addEventListener('click', handleCardActivation);
+    container.addEventListener('keydown', event => {
+      if (event.key !== 'Enter' && event.key !== ' ') {
+        return;
+      }
+
+      const card = event.target.closest('[data-product-id]');
+      if (!card || !container.contains(card) || shouldIgnoreTarget(event.target)) {
+        return;
+      }
+
+      event.preventDefault();
+      const productId = card.getAttribute('data-product-id');
+      const productSnapshot = container.__productLookup?.get(String(productId)) || null;
+      openProductDetails(productId, productSnapshot);
+    });
+  }
+
   function watchCategoryUpdates(onUpdate) {
     if (typeof onUpdate !== 'function') {
       return () => {};
@@ -251,6 +314,8 @@
     normalizeCategorySlug,
     normalizeImageUrl,
     normalizeProduct,
+    openProductDetails,
+    bindProductCardNavigation,
     toNumber,
     watchCategoryUpdates
   };

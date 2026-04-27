@@ -4,6 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder.Services.AddScoped<SearchService>();
+builder.Services.AddScoped<MRShop.AdminPanel.AdminProductService>();
 builder.Services.AddScoped<MRShop.SellerRequests.SellerRequestService>();
 builder.Services.AddCors(options =>
 {

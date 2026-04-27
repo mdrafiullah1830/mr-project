@@ -29,6 +29,8 @@ function switchSection(sectionId) {
     loadOrders();
   } else if (sectionId === 'wishlist') {
     loadWishlist();
+  } else if (sectionId === 'cart') {
+    loadCart();
   } else if (sectionId === 'recently-viewed') {
     loadRecentlyViewed();
   } else if (sectionId === 'seller-approvals') {
@@ -818,6 +820,102 @@ function loadWishlist() {
   `).join('');
 }
 
+function getCartItems() {
+  if (window.MRShopCartFlow && typeof window.MRShopCartFlow.getCartItems === 'function') {
+    return window.MRShopCartFlow.getCartItems();
+  }
+
+  try {
+    const cart = JSON.parse(localStorage.getItem('mr_shop_cart')) || JSON.parse(localStorage.getItem('mrshop_cart')) || [];
+    return Array.isArray(cart) ? cart : [];
+  } catch (error) {
+    console.error('Error getting cart items:', error);
+    return [];
+  }
+}
+
+function setCartItems(items) {
+  if (window.MRShopCartFlow && typeof window.MRShopCartFlow.setCartItems === 'function') {
+    window.MRShopCartFlow.setCartItems(items);
+    return;
+  }
+
+  const serialized = JSON.stringify(Array.isArray(items) ? items : []);
+  localStorage.setItem('mr_shop_cart', serialized);
+  localStorage.setItem('mrshop_cart', serialized);
+}
+
+function loadCart() {
+  const container = document.getElementById('cartContainer');
+  const cartItems = getCartItems();
+
+  if (!container) return;
+
+  if (cartItems.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">🛒</div>
+        <p class="empty-state-text">Your cart is empty</p>
+      </div>
+    `;
+    return;
+  }
+
+  const subtotal = cartItems.reduce((total, item) => {
+    const price = Number(item.price || item.final_price || 0);
+    const quantity = Number(item.quantity || 1);
+    return total + (price * quantity);
+  }, 0);
+
+  container.innerHTML = `
+    <div class="cart-summary" style="grid-column: 1 / -1; padding: 16px 20px; border-radius: 16px; background: linear-gradient(135deg, #eef7ff, #f7fbff); border: 1px solid rgba(79, 172, 254, 0.18); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
+      <div>
+        <strong style="font-size: 18px; color: #16324f;">${cartItems.length} item${cartItems.length === 1 ? '' : 's'} in cart</strong>
+        <div style="color: #4b5d73; margin-top: 4px;">Subtotal: ৳${subtotal.toFixed(0)}</div>
+      </div>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button class="clear-btn" onclick="clearCart()">Clear Cart</button>
+        <button class="clear-btn" onclick="window.location.href='cart.html'">Open Cart Page</button>
+      </div>
+    </div>
+    ${cartItems.map(item => {
+      const price = Number(item.price || item.final_price || 0);
+      const quantity = Number(item.quantity || 1);
+      const lineTotal = price * quantity;
+      const image = item.image || item.image_path || item.img || '../images/mrlogo.png';
+
+      return `
+        <div class="product-card">
+          <button class="product-remove-btn" onclick="removeFromCart('${String(item.id)}')">❌</button>
+          <img src="${image}" alt="${item.name || 'Cart item'}" class="product-image">
+          <div class="product-info">
+            <h3 class="product-name">${item.name || 'Untitled product'}</h3>
+            <p class="product-price">৳${price.toLocaleString()} × ${quantity}</p>
+            <p class="product-desc">Line total: ৳${lineTotal.toLocaleString()}</p>
+          </div>
+        </div>
+      `;
+    }).join('')}
+  `;
+}
+
+function removeFromCart(id) {
+  const updatedCart = getCartItems().filter(item => String(item.id) !== String(id));
+  setCartItems(updatedCart);
+  loadCart();
+  showNotification('Removed from cart', 'info');
+}
+
+function clearCart() {
+  if (!confirm('Are you sure you want to clear your cart?')) {
+    return;
+  }
+
+  setCartItems([]);
+  loadCart();
+  showNotification('Cart cleared', 'info');
+}
+
 function removeFromWishlist(id) {
   const index = wishlistData.findIndex(item => item.id === id);
   if (index > -1) {
@@ -924,6 +1022,8 @@ function logout() {
     localStorage.removeItem('mr_shop_user');
     localStorage.removeItem('mr_shop_user_profile');
     sessionStorage.removeItem('reset_email');
+    sessionStorage.removeItem('mrshop_pending_cart_action');
+    sessionStorage.removeItem('mrshop_auth_return_url');
     
     showNotification('Logging out... 👋', 'info');
     setTimeout(() => {
@@ -994,7 +1094,12 @@ document.addEventListener('DOMContentLoaded', () => {
   checkAuthentication();
   loadProfileData();
   loadProfilePhoto();
-  loadOrders();
+  const initialSection = window.location.hash.replace('#', '');
+  if (initialSection && document.querySelector(`[data-section="${initialSection}"]`)) {
+    switchSection(initialSection);
+  } else {
+    loadOrders();
+  }
   initializeAdminFeatures();
   updateAndAnimateStats();
 });
@@ -1164,7 +1269,7 @@ function checkAuthentication() {
   const userData = localStorage.getItem('mr_shop_user');
   if (!userData) {
     // Not logged in, redirect to auth page
-    window.location.href = 'auth.html';
+    window.location.href = 'auth.html#login';
     return;
   }
   

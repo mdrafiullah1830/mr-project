@@ -13,40 +13,52 @@ namespace MRShop.AdminPanel
     public class Product
     {
         [JsonPropertyName("id")]
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public int Id { get; set; }
 
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [JsonPropertyName("description")]
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         [JsonPropertyName("price")]
         public decimal Price { get; set; }
+
+        [JsonPropertyName("discount")]
+        public int Discount { get; set; }
+
+        [JsonPropertyName("final_price")]
+        public decimal FinalPrice { get; set; }
+
+        [JsonPropertyName("rating")]
+        public decimal Rating { get; set; } = 5.0m;
 
         [JsonPropertyName("stock")]
         public int Stock { get; set; }
 
         [JsonPropertyName("seller")]
-        public string Seller { get; set; }
+        public string Seller { get; set; } = string.Empty;
 
         [JsonPropertyName("category")]
-        public string Category { get; set; }
+        public string Category { get; set; } = string.Empty;
+
+        [JsonPropertyName("status")]
+        public string Status { get; set; } = "active";
+
+        [JsonPropertyName("image_path")]
+        public string ImagePath { get; set; } = string.Empty;
 
         [JsonPropertyName("imageBase64")]
-        public string ImageBase64 { get; set; }
+        public string ImageBase64 { get; set; } = string.Empty;
 
         [JsonPropertyName("imageUrl")]
-        public string ImageUrl { get; set; }
+        public string ImageUrl { get; set; } = string.Empty;
 
         [JsonPropertyName("createdAt")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         [JsonPropertyName("updatedAt")]
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
-
-        [JsonPropertyName("rating")]
-        public double Rating { get; set; } = 5.0;
 
         [JsonPropertyName("reviews")]
         public int Reviews { get; set; } = 0;
@@ -58,13 +70,13 @@ namespace MRShop.AdminPanel
     public class Category
     {
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [JsonPropertyName("productCount")]
         public int ProductCount { get; set; }
 
         [JsonPropertyName("icon")]
-        public string Icon { get; set; }
+        public string Icon { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -75,7 +87,7 @@ namespace MRShop.AdminPanel
         private readonly string _productsPath;
         private readonly string _dataPath;
 
-        public AdminProductService(string dataPath = null)
+        public AdminProductService(string? dataPath = null)
         {
             _dataPath = dataPath ?? Path.Combine(Directory.GetCurrentDirectory(), "data");
             _productsPath = Path.Combine(_dataPath, "products.json");
@@ -91,23 +103,12 @@ namespace MRShop.AdminPanel
         {
             var categories = new List<Category>
             {
-                new Category { Name = "Clothing", Icon = "👕" },
-                new Category { Name = "Sarees", Icon = "👗" },
-                new Category { Name = "Salwar", Icon = "👔" },
-                new Category { Name = "Panjabi", Icon = "🥻" },
-                new Category { Name = "Lungi", Icon = "👖" },
-                new Category { Name = "Handicrafts", Icon = "🎨" },
-                new Category { Name = "Pottery", Icon = "🏺" },
-                new Category { Name = "Nakshi", Icon = "🧵" },
-                new Category { Name = "Jute", Icon = "🌾" },
-                new Category { Name = "Wood", Icon = "🪵" },
-                new Category { Name = "Organic Food", Icon = "🥬" },
-                new Category { Name = "Sweets & Dairy", Icon = "🍶" },
-                new Category { Name = "Food & Natural", Icon = "🥗" },
-                new Category { Name = "Honey", Icon = "🍯" },
-                new Category { Name = "Milk", Icon = "🥛" },
-                new Category { Name = "Antiques", Icon = "🏛️" },
-                new Category { Name = "Books", Icon = "📚" }
+                new Category { Name = "🍯 Food & Natural", Icon = "🍯" },
+                new Category { Name = "🎨 Handicrafts", Icon = "🎨" },
+                new Category { Name = "📚 Books", Icon = "📚" },
+                new Category { Name = "🍰 Sweets & Dairy", Icon = "🍰" },
+                new Category { Name = "👗 Clothing", Icon = "👗" },
+                new Category { Name = "🪙 Antique & Collectibles", Icon = "🪙" }
             };
 
             return categories;
@@ -141,7 +142,12 @@ namespace MRShop.AdminPanel
         public List<Product> GetProductsByCategory(string category)
         {
             var allProducts = GetAllProducts();
-            return allProducts.Where(p => p.Category?.ToLower() == category?.ToLower()).ToList();
+            var normalizedCategory = NormalizeCategorySlug(category);
+
+            return allProducts
+                .Where(p => p.Status.Equals("active", StringComparison.OrdinalIgnoreCase))
+                .Where(p => NormalizeCategorySlug(p.Category) == normalizedCategory)
+                .ToList();
         }
 
         /// <summary>
@@ -155,11 +161,18 @@ namespace MRShop.AdminPanel
             if (product.Price < 0)
                 throw new ArgumentException("Price cannot be negative");
 
-            product.Id = Guid.NewGuid().ToString();
+            var products = GetAllProducts();
+            product.Id = product.Id > 0 ? product.Id : GetNextProductId(products);
+            product.Category = NormalizeCategorySlug(product.Category);
+            product.Seller = string.IsNullOrWhiteSpace(product.Seller) ? "Admin" : product.Seller.Trim();
+            product.Status = NormalizeStatus(product.Status);
+            product.ImagePath = ResolveImagePath(product);
+            product.ImageBase64 = string.IsNullOrWhiteSpace(product.ImageBase64) ? product.ImagePath : product.ImageBase64;
+            product.ImageUrl = string.IsNullOrWhiteSpace(product.ImageUrl) ? product.ImagePath : product.ImageUrl;
+            product.FinalPrice = product.FinalPrice > 0 ? product.FinalPrice : CalculateFinalPrice(product.Price, product.Discount);
             product.CreatedAt = DateTime.Now;
             product.UpdatedAt = DateTime.Now;
 
-            var products = GetAllProducts();
             products.Add(product);
             SaveProducts(products);
 
@@ -170,7 +183,7 @@ namespace MRShop.AdminPanel
         /// <summary>
         /// Update product
         /// </summary>
-        public Product UpdateProduct(string productId, Product updatedProduct)
+        public Product UpdateProduct(int productId, Product updatedProduct)
         {
             var products = GetAllProducts();
             var existingProduct = products.FirstOrDefault(p => p.Id == productId);
@@ -178,13 +191,33 @@ namespace MRShop.AdminPanel
             if (existingProduct == null)
                 throw new InvalidOperationException($"Product with ID {productId} not found");
 
-            existingProduct.Name = updatedProduct.Name ?? existingProduct.Name;
+            existingProduct.Name = string.IsNullOrWhiteSpace(updatedProduct.Name) ? existingProduct.Name : updatedProduct.Name.Trim();
             existingProduct.Description = updatedProduct.Description ?? existingProduct.Description;
             existingProduct.Price = updatedProduct.Price > 0 ? updatedProduct.Price : existingProduct.Price;
+            existingProduct.Discount = updatedProduct.Discount >= 0 ? updatedProduct.Discount : existingProduct.Discount;
+            existingProduct.FinalPrice = updatedProduct.FinalPrice > 0 ? updatedProduct.FinalPrice : CalculateFinalPrice(existingProduct.Price, existingProduct.Discount);
+            existingProduct.Rating = updatedProduct.Rating > 0 ? updatedProduct.Rating : existingProduct.Rating;
             existingProduct.Stock = updatedProduct.Stock >= 0 ? updatedProduct.Stock : existingProduct.Stock;
-            existingProduct.Seller = updatedProduct.Seller ?? existingProduct.Seller;
-            existingProduct.Category = updatedProduct.Category ?? existingProduct.Category;
-            existingProduct.ImageBase64 = updatedProduct.ImageBase64 ?? existingProduct.ImageBase64;
+            existingProduct.Seller = string.IsNullOrWhiteSpace(updatedProduct.Seller) ? existingProduct.Seller : updatedProduct.Seller.Trim();
+            existingProduct.Category = string.IsNullOrWhiteSpace(updatedProduct.Category) ? existingProduct.Category : NormalizeCategorySlug(updatedProduct.Category);
+
+            var resolvedImagePath = ResolveImagePath(updatedProduct);
+            if (!string.IsNullOrWhiteSpace(resolvedImagePath))
+            {
+                existingProduct.ImagePath = resolvedImagePath;
+            }
+
+            if (!string.IsNullOrWhiteSpace(updatedProduct.ImageBase64))
+            {
+                existingProduct.ImageBase64 = updatedProduct.ImageBase64;
+            }
+
+            if (!string.IsNullOrWhiteSpace(updatedProduct.ImageUrl))
+            {
+                existingProduct.ImageUrl = updatedProduct.ImageUrl;
+            }
+
+            existingProduct.Status = NormalizeStatus(string.IsNullOrWhiteSpace(updatedProduct.Status) ? existingProduct.Status : updatedProduct.Status);
             existingProduct.UpdatedAt = DateTime.Now;
 
             SaveProducts(products);
@@ -195,7 +228,7 @@ namespace MRShop.AdminPanel
         /// <summary>
         /// Delete product
         /// </summary>
-        public bool DeleteProduct(string productId)
+        public bool DeleteProduct(int productId)
         {
             var products = GetAllProducts();
             var product = products.FirstOrDefault(p => p.Id == productId);
@@ -212,7 +245,7 @@ namespace MRShop.AdminPanel
         /// <summary>
         /// Get product by ID
         /// </summary>
-        public Product GetProductById(string productId)
+        public Product? GetProductById(int productId)
         {
             var products = GetAllProducts();
             return products.FirstOrDefault(p => p.Id == productId);
@@ -237,7 +270,7 @@ namespace MRShop.AdminPanel
         {
             var products = GetAllProducts();
             return products
-                .GroupBy(p => p.Category)
+                .GroupBy(p => NormalizeCategorySlug(p.Category))
                 .ToDictionary(g => g.Key, g => g.Count());
         }
 
@@ -287,6 +320,75 @@ namespace MRShop.AdminPanel
             var products = GetAllProducts();
             return products.Where(p => p.Stock <= threshold).ToList();
         }
+
+        private static int GetNextProductId(List<Product> products)
+        {
+            if (products.Count == 0)
+            {
+                return 201;
+            }
+
+            return products.Max(p => p.Id) + 1;
+        }
+
+        private static decimal CalculateFinalPrice(decimal price, int discount)
+        {
+            if (discount <= 0)
+            {
+                return price;
+            }
+
+            return Math.Max(0, price - ((price * discount) / 100m));
+        }
+
+        private static string NormalizeStatus(string? status)
+        {
+            var normalizedStatus = (status ?? string.Empty).Trim().ToLowerInvariant();
+
+            return normalizedStatus switch
+            {
+                "inactive" => "inactive",
+                "discontinued" => "discontinued",
+                _ => "active"
+            };
+        }
+
+        private static string NormalizeCategorySlug(string? category)
+        {
+            var normalizedCategory = (category ?? string.Empty).Trim().ToLowerInvariant();
+            var compactCategory = new string(normalizedCategory.Where(char.IsLetterOrDigit).ToArray());
+
+            return compactCategory switch
+            {
+                "food" or "foodnatural" or "foodnaturalproducts" => "food",
+                "sweets" or "sweetsdairy" => "sweets",
+                "handicrafts" => "handicrafts",
+                "clothing" => "clothing",
+                "books" => "books",
+                "antique" or "antiquecollectibles" or "antiques" => "antique",
+                _ => compactCategory
+            };
+        }
+
+        private static string ResolveImagePath(Product product)
+        {
+            if (!string.IsNullOrWhiteSpace(product.ImagePath))
+            {
+                return product.ImagePath.Trim();
+            }
+
+            if (!string.IsNullOrWhiteSpace(product.ImageBase64))
+            {
+                return product.ImageBase64.Trim();
+            }
+
+            if (!string.IsNullOrWhiteSpace(product.ImageUrl))
+            {
+                return product.ImageUrl.Trim();
+            }
+
+            return string.Empty;
+        }
     }
 
     /// <summary>
@@ -325,9 +427,10 @@ namespace MRShop.AdminPanel
                     Price = 5500m,
                     Stock = 25,
                     Seller = "Rafi's Textile House",
-                    Category = "Sarees",
-                    ImageBase64 = "", // Would be image data in real scenario
-                    Rating = 4.8,
+                    Category = "clothing",
+                    ImagePath = "", // Would be image data in real scenario
+                    Status = "active",
+                    Rating = 4.8m,
                     Reviews = 150
                 };
 
@@ -341,7 +444,7 @@ namespace MRShop.AdminPanel
 
                 // Get products by category
                 Console.WriteLine("\n📦 Products in 'Sarees' Category:\n");
-                var sareeProducts = adminService.GetProductsByCategory("Sarees");
+                var sareeProducts = adminService.GetProductsByCategory("clothing");
                 foreach (var product in sareeProducts)
                 {
                     Console.WriteLine($"   • {product.Name} - ৳{product.Price} ({product.Stock} in stock)");

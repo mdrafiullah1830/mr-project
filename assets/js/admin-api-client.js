@@ -5,7 +5,7 @@
  */
 
 class AdminAPIClient {
-    constructor(baseUrl = 'http://localhost:5001') {
+    constructor(baseUrl = 'http://localhost:5010') {
         this.baseUrl = baseUrl;
         this.apiEndpoint = `${baseUrl}/api/admin`;
     }
@@ -132,7 +132,7 @@ class AdminAPIClient {
  * Manages UI and integrates with API client
  */
 class AdminPanelManager {
-    constructor(apiBaseUrl = 'http://localhost:5001') {
+    constructor(apiBaseUrl = 'http://localhost:5010') {
         this.apiClient = new AdminAPIClient(apiBaseUrl);
         this.selectedCategory = null;
         this.allProducts = {};

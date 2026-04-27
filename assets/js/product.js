@@ -9,17 +9,21 @@
       return '/assets/images/mrlogo.png';
     }
 
-    if (value.startsWith('http://') || value.startsWith('https://') || value.startsWith('data:') || value.startsWith('/')) {
+    if (value.startsWith('http://') || value.startsWith('https://') || value.startsWith('data:')) {
       return value;
     }
 
     const cleanPath = value
       .replace(/^\.\.\/images\//, '')
+      .replace(/^\.\.\/assets\/images\//, '')
+      .replace(/^\.\/assets\/images\//, '')
       .replace(/^\.\//, '')
+      .replace(/^\/assets\/images\//, '')
       .replace(/^assets\/images\//, '')
-      .replace(/^images\//, '');
+      .replace(/^images\//, '')
+      .replace(/^\//, '');
 
-    return `/assets/images/${cleanPath}`;
+    return `../images/${cleanPath}`;
   }
 
   function showMessage(text, timeout=3000){
@@ -36,6 +40,17 @@
   function getNameFromQuery(){
     const params = new URLSearchParams(window.location.search);
     return params.get('name');
+  }
+
+  function getSelectedProductSnapshot(){
+    try{
+      const raw = sessionStorage.getItem('mrshop_selected_product');
+      if(!raw) return null;
+      const parsed = JSON.parse(raw);
+      return parsed && typeof parsed === 'object' ? parsed : null;
+    }catch(err){
+      return null;
+    }
   }
 
   function renderProduct(product){
@@ -62,14 +77,38 @@
 
   function addToCart(product, qty=1){
     try{
-      const key = 'mrshop_cart';
+      if (window.MRShopCartFlow && typeof window.MRShopCartFlow.addToCart === 'function') {
+        const added = window.MRShopCartFlow.addToCart(product, {
+          quantity: qty,
+          returnUrl: window.location.href
+        });
+
+        if (added) {
+          showMessage('Added to cart');
+        }
+
+        return;
+      }
+
+      const key = 'mr_shop_cart';
+      const legacyKey = 'mrshop_cart';
       const raw = localStorage.getItem(key);
+      const legacyRaw = localStorage.getItem(legacyKey);
       const cart = raw ? JSON.parse(raw) : [];
+
+      if (cart.length === 0 && legacyRaw) {
+        const legacyCart = JSON.parse(legacyRaw);
+        if (Array.isArray(legacyCart) && legacyCart.length > 0) {
+          cart.push(...legacyCart);
+        }
+      }
+
       const price = (product.final_price !== undefined) ? product.final_price : (product.price || 0);
       const existing = cart.find(i=>String(i.id)===String(product.id));
       if(existing){ existing.quantity = (existing.quantity||0) + qty; }
       else { cart.push({ id: product.id, name: product.name, price: price, quantity: qty }); }
       localStorage.setItem(key, JSON.stringify(cart));
+      localStorage.setItem(legacyKey, JSON.stringify(cart));
       showMessage('Added to cart');
     }catch(err){
       console.error('Add to cart failed', err);
@@ -104,7 +143,9 @@
         return;
       }
 
-      let product = await window.MRShop.Products.getProductById(id);
+      const snapshotProduct = getSelectedProductSnapshot();
+      let product = snapshotProduct && String(snapshotProduct.id) === String(id) ? snapshotProduct : await window.MRShop.Products.getProductById(id);
+
       // If product not found by id, try name fallback
       if(!product){
         const name = getNameFromQuery();
@@ -112,6 +153,7 @@
           product = await window.MRShop.Products.getProductByName(name);
         }
       }
+
       renderProduct(product);
 
       if(!product){

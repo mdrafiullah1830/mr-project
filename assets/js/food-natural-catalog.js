@@ -1,7 +1,5 @@
 (function (window, document) {
-  const API_BASE = window.location.origin && window.location.origin !== 'null'
-    ? `${window.location.origin}/api.php`
-    : '/api.php';
+  const API_BASE = 'http://localhost:5010/api.php';
 
   const CART_STORAGE_KEY = 'mr_shop_cart';
 
@@ -154,7 +152,7 @@
     const productId = escapeHtml(product.id);
 
     return `
-      <div class="product-card" data-product-id="${productId}">
+      <div class="product-card" data-product-id="${productId}" role="link" tabindex="0" aria-label="View details for ${title}">
         <img src="${escapeHtml(image)}" class="product-image" alt="${title}" loading="lazy" />
         <div class="product-info">
           <h3 class="product-name">${title}</h3>
@@ -196,6 +194,10 @@
         }
       });
     });
+
+    if (window.MRShopCategoryLiveSync && typeof window.MRShopCategoryLiveSync.bindProductCardNavigation === 'function') {
+      window.MRShopCategoryLiveSync.bindProductCardNavigation(grid, products);
+    }
   }
 
   function loadCart() {

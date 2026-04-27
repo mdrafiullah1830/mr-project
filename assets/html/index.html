@@ -700,21 +700,265 @@
     }
 
     @media (max-width: 768px) {
-      body{padding-bottom:96px}
+      body{padding-bottom:120px}
+      header{
+        padding:10px 12px 12px;
+        gap:10px;
+      }
+      header h1{
+        flex:1;
+        min-width:0;
+      }
+      .brand-name{font-size:16px}
+      .header-actions{gap:6px}
       .hero-panel,
       .trust-strip,
       .collection-strip{
         padding-left:12px;
         padding-right:12px;
       }
-      .hero-copy,
-      .hero-spotlight,
-      .trust-strip,
-      .collection-strip{border-radius:20px}
-      .hero-copy h2{max-width:none}
-      .hero-metrics{grid-template-columns:1fr}
-      .collection-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .mobile-bottom-nav{display:grid}
+      nav{
+        padding:10px 12px 12px;
+        display:grid;
+        gap:8px;
+        background:rgba(255,255,255,0.78);
+        -webkit-backdrop-filter:blur(18px);
+        backdrop-filter:blur(18px);
+        box-shadow:0 12px 28px rgba(16,42,67,0.08);
+      }
+      nav a{margin-right:0}
+      .nav-left{
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:8px;
+        width:100%;
+      }
+      .nav-right{display:none}
+      .nav-home,
+      .categories-toggle,
+      .platform-toggle,
+      .nav-left > a{
+        width:100%;
+        min-height:42px;
+        margin-right:0;
+        justify-content:center;
+        padding:10px 12px;
+        border-radius:14px;
+        background:rgba(124,58,237,0.06);
+        border:1px solid rgba(124,58,237,0.10);
+        color:var(--text-primary);
+      }
+      .categories-wrapper,
+      .platform-wrapper,
+      .search-wrapper{
+        width:100%;
+      }
+      .search-wrapper{
+        grid-column:1 / -1;
+      }
+      .search-input{
+        padding:12px 14px;
+        border-radius:14px;
+        background:rgba(255,255,255,0.96);
+      }
+      .hero-panel{
+        grid-template-columns:1fr;
+        gap:12px;
+        padding:0 12px;
+        align-items:start;
+      }
+      .hero-spotlight{
+        order:-1;
+        min-height:auto;
+        padding:14px;
+        background:linear-gradient(135deg, rgba(15,23,42,0.96), rgba(6,182,212,0.94));
+        color:#fff;
+        box-shadow:0 18px 40px rgba(15,23,42,0.18);
+        align-self:start;
+        justify-content:flex-start;
+        gap:12px;
+      }
+      .spotlight-banner{
+        min-height:auto;
+        padding:18px;
+        background:transparent;
+        box-shadow:none;
+      }
+      .spotlight-banner strong{font-size:21px}
+      .spotlight-banner p{font-size:14px;color:rgba(255,255,255,0.88)}
+      .spotlight-item{
+        background:rgba(255,255,255,0.08);
+        border-color:rgba(255,255,255,0.12);
+        flex-direction:column;
+        align-items:flex-start;
+        min-height:74px;
+        gap:4px;
+      }
+      .spotlight-list{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+      .spotlight-item span,
+      .spotlight-item strong{color:#fff}
+      .hero-copy{
+        padding:20px;
+        min-height:auto;
+        position:relative;
+        overflow:hidden;
+      }
+      .hero-copy::after{
+        content:'';
+        position:absolute;
+        inset:auto -24px -24px auto;
+        width:120px;
+        height:120px;
+        border-radius:50%;
+        background:radial-gradient(circle, rgba(6,182,212,0.16), transparent 70%);
+        pointer-events:none;
+      }
+      .hero-copy h2{
+        max-width:12ch;
+        font-size:clamp(28px, 8vw, 40px);
+      }
+      .hero-copy p{
+        font-size:15px;
+        line-height:1.65;
+      }
+      .hero-actions{
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:8px;
+      }
+      .hero-button{
+        width:100%;
+        min-height:42px;
+        padding:11px 14px;
+        font-size:14px;
+      }
+      .hero-button.ghost{grid-column:1 / -1}
+      .hero-metrics{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+        gap:8px;
+      }
+      .metric-card{
+        padding:12px 10px;
+        min-height:84px;
+      }
+      .metric-card strong{font-size:16px}
+      .metric-card span{font-size:11px}
+      .trust-strip{
+        grid-template-columns:1fr;
+        padding:14px 12px;
+        gap:10px;
+      }
+      .trust-card{
+        padding:12px 14px;
+        align-items:center;
+      }
+      .collection-strip{
+        grid-template-columns:none;
+        grid-auto-flow:column;
+        grid-auto-columns:minmax(76vw, 1fr);
+        overflow-x:auto;
+        scroll-snap-type:x mandatory;
+        padding:14px 12px 8px;
+        scrollbar-width:none;
+      }
+      .collection-strip::-webkit-scrollbar{display:none}
+      .collection-card{
+        min-height:140px;
+        scroll-snap-align:start;
+      }
+      .food-natural-section{
+        padding-left:0;
+        padding-right:0;
+      }
+      .food-natural-shell{
+        grid-template-columns:1fr;
+        padding:14px;
+        gap:14px;
+      }
+      .food-natural-grid{
+        grid-template-columns:1fr;
+        gap:10px;
+      }
+      .food-natural-card-media{height:160px}
+      .category-section{
+        padding:0 12px;
+      }
+      .category-section-header{margin-bottom:22px}
+      .category-tabs{
+        justify-content:flex-start;
+        flex-wrap:nowrap;
+        overflow-x:auto;
+        gap:8px;
+        padding:0 4px 8px;
+        scroll-snap-type:x proximity;
+        scrollbar-width:none;
+      }
+      .category-tabs::-webkit-scrollbar{display:none}
+      .category-tab{
+        flex:0 0 auto;
+        white-space:nowrap;
+        padding:9px 14px;
+        border-radius:999px;
+      }
+      .products,
+      .products-grid,
+      #dynamicProductsGrid{
+        grid-template-columns:1fr !important;
+        gap:12px !important;
+        padding:12px !important;
+      }
+      .dynamic-product{
+        max-width:100%;
+        padding:14px;
+        border-radius:16px;
+      }
+      .dynamic-product img{
+        height:170px;
+        max-height:170px;
+      }
+      .dynamic-product .card-actions{
+        flex-direction:column;
+      }
+      .dynamic-product .card-action{
+        width:100%;
+      }
+      .banner{
+        height:120px;
+        margin:12px;
+      }
+      .banner .caption{
+        font-size:18px;
+        padding:0 12px;
+      }
+      .mobile-bottom-nav{
+        display:grid;
+        left:10px;
+        right:10px;
+        bottom:calc(10px + env(safe-area-inset-bottom));
+        gap:6px;
+        padding:8px;
+        border-radius:22px;
+        background:linear-gradient(180deg, rgba(15,23,42,0.95), rgba(17,24,39,0.88));
+        border:1px solid rgba(255,255,255,0.12);
+        box-shadow:0 18px 42px rgba(15,23,42,0.22);
+      }
+      .mobile-bottom-nav a{
+        min-height:56px;
+        color:rgba(255,255,255,0.82);
+        background:rgba(255,255,255,0.05);
+        border:1px solid rgba(255,255,255,0.06);
+      }
+      .mobile-bottom-nav a.active{
+        background:linear-gradient(90deg,var(--accent),var(--accent-2));
+        color:#fff;
+        box-shadow:0 12px 24px rgba(124,58,237,0.24);
+      }
+      .mobile-bottom-nav .nav-count{
+        top:4px;
+        right:8px;
+      }
       .header-actions .commerce-link .commerce-count{display:none}
       .header-actions .commerce-link .commerce-icon{display:inline-flex}
       .header-actions .wishlist-link .commerce-label,
@@ -723,13 +967,23 @@
 
     @media (max-width: 640px) {
       .hero-panel{margin-top:14px}
-      .hero-copy{padding:22px}
-      .hero-spotlight{padding:14px}
-      .hero-actions{gap:8px}
-      .hero-button{width:100%}
+      .hero-actions{
+        grid-template-columns:1fr;
+      }
+      .hero-button.ghost{
+        grid-column:auto;
+      }
+      .hero-button{
+        width:100%;
+      }
+      .hero-copy{padding:18px}
+      .hero-spotlight{padding:12px}
       .spotlight-banner strong{font-size:20px}
-      .collection-strip{grid-template-columns:1fr}
+      .spotlight-banner p{font-size:13px}
       .hero-metrics{gap:10px}
+      .collection-strip{
+        grid-auto-columns:minmax(82vw, 1fr);
+      }
     }
 
     /* Footer */
@@ -737,11 +991,14 @@
 
     /* Responsive tweaks */
     @media (max-width:800px){
-      .banner{height:200px;margin:12px}
-      .products{padding:20px}
-      header{padding:12px 18px}
-      nav{padding:8px 18px;flex-wrap:wrap}
-      nav a{font-size:14px;padding:6px 8px}
+      .banner{height:160px;margin:12px}
+      #categoryTabs{
+        padding:0 6px 8px;
+      }
+      .category-tab{
+        font-size:12px !important;
+        padding:9px 14px !important;
+      }
     }
   </style>
 </head>
@@ -1128,7 +1385,7 @@
     // ========================================
     
     // API Base URL
-    const API_BASE_URL = '../../api.php';
+    const API_BASE_URL = 'http://localhost:5010/api.php';
     
     // Local fallback products (if database is not available)
     const allProducts = [
@@ -1181,7 +1438,8 @@
       let currentCategory = 'all';
       let currentRenderedProducts = [];
 
-      const CART_STORAGE_KEY = 'mrshop_cart';
+      const CART_STORAGE_KEY = 'mr_shop_cart';
+      const LEGACY_CART_STORAGE_KEY = 'mrshop_cart';
       const WISHLIST_STORAGE_KEY = 'mr_shop_wishlist';
 
       function toNumber(value, fallback = 0) {
@@ -1199,11 +1457,24 @@
       }
 
       function getCartItems() {
-        return safeParseArray(localStorage.getItem(CART_STORAGE_KEY));
+        const currentItems = safeParseArray(localStorage.getItem(CART_STORAGE_KEY));
+        if (currentItems.length > 0) {
+          return currentItems;
+        }
+
+        const legacyItems = safeParseArray(localStorage.getItem(LEGACY_CART_STORAGE_KEY));
+        if (legacyItems.length > 0) {
+          setCartItems(legacyItems);
+          return legacyItems;
+        }
+
+        return currentItems;
       }
 
       function setCartItems(items) {
-        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+        const serializedItems = JSON.stringify(items);
+        localStorage.setItem(CART_STORAGE_KEY, serializedItems);
+        localStorage.setItem(LEGACY_CART_STORAGE_KEY, serializedItems);
       }
 
       function getWishlistItems() {
@@ -1279,6 +1550,20 @@
       }
 
       function addToCart(product) {
+        if (window.MRShopCartFlow && typeof window.MRShopCartFlow.addToCart === 'function') {
+          const added = window.MRShopCartFlow.addToCart(product, {
+            returnUrl: window.location.href
+          });
+
+          if (!added) {
+            return;
+          }
+
+          updateCommerceBadges();
+          alert(`${product.name} added to cart`);
+          return;
+        }
+
         const normalized = normalizeProduct(product);
         const cart = getCartItems();
         const existing = cart.find(item => String(item.id) === String(normalized.id));
@@ -1574,6 +1859,8 @@
     <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy &amp; Policy</a>
   </footer>
 
+  <script src="../js/cart-flow.js"></script>
+
   <script>
     // Enhanced authentication system with localStorage session management
     let isAuthenticated = false;
@@ -1806,6 +2093,15 @@
         }
       });
 
+      window.addEventListener('message', (event) => {
+        const data = event.data || {};
+
+        if (data.type === 'productsUpdated' && Array.isArray(data.data)) {
+          console.log('✅ Received productsUpdated postMessage:', data.data.length);
+          applyAdminProducts(data.data);
+        }
+      });
+
       if (window.BroadcastChannel) {
         const channel = new BroadcastChannel('mrshop_products');
         channel.onmessage = (event) => {
@@ -1821,6 +2117,19 @@
           updateCommerceBadges();
           if (event.key === WISHLIST_STORAGE_KEY) {
             renderProducts(currentCategory);
+          }
+          return;
+        }
+
+        if (event.key === 'mrshop_admin_products') {
+          try {
+            const parsed = safeParseArray(event.newValue);
+            adminProductsCache = parsed;
+            updateCommerceBadges();
+            renderProducts(currentCategory);
+            console.log('✅ Refreshed admin products from storage event:', adminProductsCache.length);
+          } catch (error) {
+            console.error('Error refreshing admin products from storage event:', error);
           }
         }
       });
