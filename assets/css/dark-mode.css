@@ -1,0 +1,176 @@
+/* Dark Mode for MR Shop */
+[data-theme="dark"] {
+  --amazon-white: #1a1a2e;
+  --amazon-bg: #0f0f1a;
+  --amazon-text: #e0e0e0;
+  --amazon-border: #2a2a3e;
+  --amazon-orange: #ff9900;
+  color-scheme: dark;
+}
+
+[data-theme="dark"] body {
+  background: var(--amazon-bg);
+  color: var(--amazon-text);
+}
+
+[data-theme="dark"] .amz-header {
+  background: #131921;
+}
+
+[data-theme="dark"] .amz-header-top {
+  background: #0a0e13;
+}
+
+[data-theme="dark"] .amz-search-input {
+  background: #2a2a3e;
+  color: #fff;
+  border-color: #3a3a4e;
+}
+
+[data-theme="dark"] .amz-header-link,
+[data-theme="dark"] .amz-logo-text {
+  color: #fff;
+}
+
+[data-theme="dark"] .section-title {
+  color: #fff;
+}
+
+[data-theme="dark"] .product-card,
+[data-theme="dark"] .cat-card,
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .admin-card,
+[data-theme="dark"] .email-settings,
+[data-theme="dark"] .review-form,
+[data-theme="dark"] .review-card,
+[data-theme="dark"] .track-box,
+[data-theme="dark"] .payment-methods,
+[data-theme="dark"] .order-summary,
+[data-theme="dark"] .compare-grid,
+[data-theme="dark"] .blog-card {
+  background: var(--amazon-white);
+  border-color: var(--amazon-border);
+  color: var(--amazon-text);
+}
+
+[data-theme="dark"] .product-title,
+[data-theme="dark"] .reviewer-name,
+[data-theme="dark"] .review-title,
+[data-theme="dark"] .cat-card-title,
+[data-theme="dark"] .blog-card-title {
+  color: #fff;
+}
+
+[data-theme="dark"] .product-rating .rating-count,
+[data-theme="dark"] .delivery-info,
+[data-theme="dark"] .review-text,
+[data-theme="dark"] .blog-card-excerpt,
+[data-theme="dark"] .review-date {
+  color: #aaa;
+}
+
+[data-theme="dark"] .price-original {
+  color: #777;
+}
+
+[data-theme="dark"] .feature-item,
+[data-theme="dark"] .product-info {
+  background: transparent;
+}
+
+[data-theme="dark"] .cat-card-items .cat-mini {
+  background: #2a2a3e;
+}
+
+[data-theme="dark"] .product-img-wrap {
+  background: #1a1a2e;
+}
+
+[data-theme="dark"] .cat-card-bg::after {
+  background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.9) 100%);
+}
+
+[data-theme="dark"] .deals-inner {
+  background: linear-gradient(135deg, #0a0e13 0%, #1a1a2e 50%, #0f3460 100%);
+}
+
+[data-theme="dark"] .back-to-top {
+  background: #1a1a2e;
+}
+
+[data-theme="dark"] .footer {
+  background: #0a0e13;
+}
+
+[data-theme="dark"] .footer-col a {
+  color: #aaa;
+}
+
+[data-theme="dark"] .admin-sidebar {
+  background: #0a0e13;
+}
+
+[data-theme="dark"] .admin-main {
+  background: #0f0f1a;
+}
+
+[data-theme="dark"] .admin-header {
+  background: #1a1a2e;
+  border-color: var(--amazon-border);
+}
+
+[data-theme="dark"] .admin-table th {
+  background: #2a2a3e;
+  color: #aaa;
+}
+
+[data-theme="dark"] .admin-table td {
+  border-color: #2a2a3e;
+}
+
+[data-theme="dark"] .bar-track {
+  background: #2a2a3e;
+}
+
+[data-theme="dark"] .timeline-content h4,
+[data-theme="dark"] .track-details .label {
+  color: #ccc;
+}
+
+[data-theme="dark"] .email-preview-header {
+  background: #2a2a3e;
+}
+
+[data-theme="dark"] .email-preview-body .order-box {
+  background: #2a2a3e;
+}
+
+[data-theme="dark"] .modal {
+  background: #1a1a2e;
+}
+
+/* Dark mode toggle button */
+.dark-mode-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--amazon-orange);
+  color: #000;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(255,153,0,0.4);
+  z-index: 9999;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dark-mode-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(255,153,0,0.5);
+}

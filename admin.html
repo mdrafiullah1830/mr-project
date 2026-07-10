@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MR Shop Admin Panel - Manage products, orders, customers, and site settings.">
+  <title>Admin Panel — MR Shop</title>
+  <script src="assets/js/loader.js"></script>
+  <link rel="stylesheet" href="assets/css/amazon-style.css">
+  <style>
+    .admin-layout { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+    .admin-sidebar { background: #131921; color: #fff; padding: 20px; }
+    .admin-sidebar .logo { font-size: 20px; font-weight: 800; color: var(--amazon-orange); margin-bottom: 30px; padding-bottom: 16px; border-bottom: 1px solid #3a4553; }
+    .admin-sidebar .logo span { font-size: 11px; color: #999; display: block; font-weight: 400; }
+    .sidebar-nav a { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 6px; color: #ddd; font-size: 14px; transition: all 0.2s; margin-bottom: 4px; }
+    .sidebar-nav a:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .sidebar-nav a.active { background: var(--amazon-orange); color: #000; font-weight: 700; }
+    .sidebar-nav a i { width: 18px; text-align: center; }
+    .admin-header { background: #fff; border-bottom: 1px solid #d5d9d9; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .admin-header h2 { font-size: 20px; font-weight: 700; }
+    .admin-header-actions { display: flex; gap: 10px; }
+    .admin-header-actions button { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #d5d9d9; background: #fff; transition: all 0.2s; }
+    .admin-header-actions button:hover { background: #f0f2f2; }
+    .admin-header-actions .primary { background: var(--amazon-orange); color: #000; border-color: var(--amazon-orange); }
+    .admin-main { background: #f0f2f2; padding: 24px; overflow-y: auto; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .stat-card { background: #fff; border: 1px solid #d5d9d9; border-radius: 10px; padding: 20px; }
+    .stat-card .label { font-size: 13px; color: #565959; margin-bottom: 8px; }
+    .stat-card .value { font-size: 28px; font-weight: 800; }
+    .stat-card .change { font-size: 12px; margin-top: 6px; }
+    .stat-card .change.up { color: #007600; }
+    .stat-card .change.down { color: #cc0c39; }
+    .admin-card { background: #fff; border: 1px solid #d5d9d9; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+    .admin-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #eee; }
+    .admin-table { width: 100%; border-collapse: collapse; }
+    .admin-table th { background: #f7f8f8; padding: 10px 14px; text-align: left; font-size: 13px; font-weight: 700; color: #565959; border-bottom: 2px solid #ddd; }
+    .admin-table td { padding: 10px 14px; border-bottom: 1px solid #eee; font-size: 13px; }
+    .admin-table tr:hover { background: #fafafa; }
+    .badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    .badge-green { background: #e6f4e6; color: #007600; }
+    .badge-yellow { background: #fef3e0; color: #c7511f; }
+    .badge-red { background: #fce4ec; color: #cc0c39; }
+    .badge-blue { background: #e6f0fa; color: #146eb4; }
+    .action-btn { padding: 4px 10px; border: 1px solid #d5d9d9; border-radius: 4px; background: #fff; cursor: pointer; font-size: 12px; margin-right: 4px; }
+    .action-btn:hover { background: #f0f2f2; }
+    .action-btn.danger { color: #cc0c39; border-color: #cc0c39; }
+    .action-btn.danger:hover { background: #fce4ec; }
+    .tab-nav { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 2px solid #eee; }
+    .tab-btn { padding: 10px 20px; border: none; background: none; font-size: 14px; font-weight: 600; cursor: pointer; color: #565959; border-bottom: 2px solid transparent; margin-bottom: -2px; }
+    .tab-btn.active { color: var(--amazon-orange); border-bottom-color: var(--amazon-orange); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+    .modal-overlay.active { display: flex; }
+    .modal { background: #fff; border-radius: 12px; padding: 24px; width: 500px; max-height: 80vh; overflow-y: auto; }
+    .modal h3 { margin-bottom: 16px; }
+    .modal .form-group { margin-bottom: 14px; }
+    .modal .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    .modal .form-group input, .modal .form-group select, .modal .form-group textarea { width: 100%; padding: 10px; border: 1px solid #d5d9d9; border-radius: 6px; font-size: 14px; }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; }
+    .modal-actions button { padding: 8px 20px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
+     @media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+     @media (max-width: 768px) { .admin-layout { grid-template-columns: 1fr; } .admin-sidebar { display: none; } }
+     .category-filter { background: #fff !important; color: #333 !important; border: 1px solid #d5d9d9 !important; }
+     .category-filter.active { background: var(--amazon-orange) !important; color: #000 !important; border-color: var(--amazon-orange) !important; font-weight: 600; }
+     .category-filter:hover { background: #f0f2f2 !important; }
+     .category-filter.active:hover { background: var(--amazon-orange) !important; }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="logo">MR Shop <span>Admin Panel</span></div>
+      <nav class="sidebar-nav">
+        <a href="#" class="active" onclick="showTab('dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="#" onclick="showTab('products')"><i class="fas fa-box"></i> Products</a>
+        <a href="#" onclick="showTab('sellers')"><i class="fas fa-store"></i> Sellers</a>
+        <a href="#" onclick="showTab('orders')"><i class="fas fa-shopping-bag"></i> Orders</a>
+        <a href="#" onclick="showTab('users')"><i class="fas fa-users"></i> Users</a>
+        <a href="#" onclick="showTab('reviews')"><i class="fas fa-star"></i> Reviews</a>
+        <a href="#" onclick="showTab('coupons')"><i class="fas fa-tags"></i> Coupons</a>
+        <a href="#" onclick="showTab('settings')"><i class="fas fa-cog"></i> Settings</a>
+        <a href="index.html" style="margin-top:20px;border-top:1px solid #3a4553;padding-top:16px"><i class="fas fa-store"></i> View Store</a>
+        <a href="#" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </nav>
+    </aside>
+
+    <main>
+      <header class="admin-header">
+        <h2 id="pageTitle">Dashboard</h2>
+        <div class="admin-header-actions">
+          <button onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+          <button class="primary" id="headerAction" style="display:none"><i class="fas fa-plus"></i> Add New</button>
+        </div>
+      </header>
+
+      <div class="admin-main">
+        <!-- Dashboard Tab -->
+        <div class="tab-content active" id="tab-dashboard">
+          <div class="stats-grid">
+            <div class="stat-card"><div class="label">Total Revenue</div><div class="value">৳12,45,800</div><div class="change up">↑ 12.5% from last month</div></div>
+            <div class="stat-card"><div class="label">Total Orders</div><div class="value">3,842</div><div class="change up">↑ 8.2% from last month</div></div>
+            <div class="stat-card"><div class="label">Total Users</div><div class="value">10,247</div><div class="change up">↑ 5.1% from last month</div></div>
+            <div class="stat-card"><div class="label">Pending Orders</div><div class="value">156</div><div class="change down">↓ 3.4% from last month</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+            <div class="admin-card">
+              <h3>Recent Orders</h3>
+              <table class="admin-table">
+                <tr><th>Order ID</th><th>Customer</th><th>Amount</th><th>Status</th></tr>
+                <tr><td>#MR-3842</td><td>Karim U.</td><td>৳2,450</td><td><span class="badge badge-green">Delivered</span></td></tr>
+                <tr><td>#MR-3841</td><td>Fatima R.</td><td>৳1,890</td><td><span class="badge badge-blue">Shipped</span></td></tr>
+                <tr><td>#MR-3840</td><td>Rahat H.</td><td>৳3,200</td><td><span class="badge badge-yellow">Processing</span></td></tr>
+                <tr><td>#MR-3839</td><td>Nusrat J.</td><td>৳780</td><td><span class="badge badge-green">Delivered</span></td></tr>
+              </table>
+            </div>
+            <div class="admin-card">
+              <h3>Top Products</h3>
+              <table class="admin-table">
+                <tr><th>Product</th><th>Sales</th><th>Revenue</th></tr>
+                <tr><td>Sundarbans Honey</td><td>342</td><td>৳2,90,700</td></tr>
+                <tr><td>Jamdani Saree</td><td>198</td><td>৳4,95,000</td></tr>
+                <tr><td>Nakshi Kantha</td><td>156</td><td>৳2,34,000</td></tr>
+                <tr><td>Roshogolla Box</td><td>289</td><td>৳1,73,400</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Products Tab -->
+        <div class="tab-content" id="tab-products">
+          <div class="admin-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+              <h3 style="margin:0;border:0;padding:0">All Products (<span id="productCount">0</span>)</h3>
+              <button class="action-btn" style="background:var(--amazon-orange);color:#000;border-color:var(--amazon-orange)" onclick="openModal('productModal')"><i class="fas fa-plus"></i> Add Product</button>
+            </div>
+            <!-- Category Filter -->
+            <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+              <button class="action-btn category-filter active" onclick="filterProducts('all', this)">All</button>
+              <button class="action-btn category-filter" onclick="filterProducts('food', this)">Food & Natural</button>
+              <button class="action-btn category-filter" onclick="filterProducts('sweets', this)">Sweets & Dairy</button>
+              <button class="action-btn category-filter" onclick="filterProducts('handicrafts', this)">Handicrafts</button>
+              <button class="action-btn category-filter" onclick="filterProducts('clothing', this)">Clothing</button>
+              <button class="action-btn category-filter" onclick="filterProducts('books', this)">Books</button>
+              <button class="action-btn category-filter" onclick="filterProducts('antique', this)">Antique</button>
+            </div>
+            <table class="admin-table">
+              <tr><th>ID</th><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Images</th><th>Status</th><th>Actions</th></tr>
+              <tbody id="productTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Sellers Tab -->
+        <div class="tab-content" id="tab-sellers">
+          <div class="admin-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+              <h3 style="margin:0;border:0;padding:0">Seller Applications (<span id="sellerCount">0</span>)</h3>
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:16px">
+              <button class="action-btn category-filter active" onclick="filterSellers('all', this)">All</button>
+              <button class="action-btn category-filter" onclick="filterSellers('pending', this)">Pending</button>
+              <button class="action-btn category-filter" onclick="filterSellers('approved', this)">Approved</button>
+              <button class="action-btn category-filter" onclick="filterSellers('rejected', this)">Rejected</button>
+            </div>
+            <table class="admin-table">
+              <tr><th>ID</th><th>Name</th><th>Shop</th><th>Phone</th><th>Email</th><th>Categories</th><th>Status</th><th>Actions</th></tr>
+              <tbody id="sellerTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Orders Tab -->
+        <div class="tab-content" id="tab-orders">
+          <div class="admin-card">
+            <h3>All Orders (3,842)</h3>
+            <table class="admin-table">
+              <tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th><th>Actions</th></tr>
+              <tr><td>#MR-3842</td><td>Karim Uddin</td><td>2</td><td>৳2,450</td><td>bKash</td><td><span class="badge badge-green">Delivered</span></td><td>Jul 1, 2026</td><td><button class="action-btn">View</button></td></tr>
+              <tr><td>#MR-3841</td><td>Fatima Rahman</td><td>1</td><td>৳1,890</td><td>Nagad</td><td><span class="badge badge-blue">Shipped</span></td><td>Jul 1, 2026</td><td><button class="action-btn">View</button></td></tr>
+              <tr><td>#MR-3840</td><td>Rahat Hossain</td><td>3</td><td>৳3,200</td><td>COD</td><td><span class="badge badge-yellow">Processing</span></td><td>Jun 30, 2026</td><td><button class="action-btn">View</button></td></tr>
+              <tr><td>#MR-3839</td><td>Nusrat Jahan</td><td>1</td><td>৳780</td><td>bKash</td><td><span class="badge badge-green">Delivered</span></td><td>Jun 30, 2026</td><td><button class="action-btn">View</button></td></tr>
+              <tr><td>#MR-3838</td><td>Arif Khan</td><td>2</td><td>৳1,560</td><td>Card</td><td><span class="badge badge-green">Delivered</span></td><td>Jun 29, 2026</td><td><button class="action-btn">View</button></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- Users Tab -->
+        <div class="tab-content" id="tab-users">
+          <div class="admin-card">
+            <h3>All Users (10,247)</h3>
+            <table class="admin-table">
+              <tr><th>User ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Orders</th><th>Joined</th><th>Actions</th></tr>
+              <tr><td>U001</td><td>Karim Uddin</td><td>karim@email.com</td><td>01712345678</td><td>12</td><td>Jan 2025</td><td><button class="action-btn">View</button><button class="action-btn danger">Block</button></td></tr>
+              <tr><td>U002</td><td>Fatima Rahman</td><td>fatima@email.com</td><td>01812345678</td><td>8</td><td>Mar 2025</td><td><button class="action-btn">View</button><button class="action-btn danger">Block</button></td></tr>
+              <tr><td>U003</td><td>Rahat Hossain</td><td>rahat@email.com</td><td>01912345678</td><td>15</td><td>Feb 2025</td><td><button class="action-btn">View</button><button class="action-btn danger">Block</button></td></tr>
+              <tr><td>U004</td><td>Nusrat Jahan</td><td>nusrat@email.com</td><td>01612345678</td><td>5</td><td>May 2025</td><td><button class="action-btn">View</button><button class="action-btn danger">Block</button></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- Reviews Tab -->
+        <div class="tab-content" id="tab-reviews">
+          <div class="admin-card">
+            <h3>All Reviews (2,847)</h3>
+            <table class="admin-table">
+              <tr><th>User</th><th>Product</th><th>Rating</th><th>Review</th><th>Date</th><th>Actions</th></tr>
+              <tr><td>Karim U.</td><td>Sundarbans Honey</td><td><span style="color:var(--amazon-orange)">★★★★★</span></td><td>Authentic product!</td><td>Jun 28</td><td><button class="action-btn">Approve</button><button class="action-btn danger">Delete</button></td></tr>
+              <tr><td>Fatima R.</td><td>Jamdani Saree</td><td><span style="color:var(--amazon-orange)">★★★★</span>☆</td><td>Beautiful weaving</td><td>Jun 25</td><td><button class="action-btn">Approve</button><button class="action-btn danger">Delete</button></td></tr>
+              <tr><td>Rahat H.</td><td>Roshogolla Box</td><td><span style="color:var(--amazon-orange)">★★★★★</span></td><td>Amazing taste!</td><td>Jun 20</td><td><button class="action-btn">Approve</button><button class="action-btn danger">Delete</button></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- Coupons Tab -->
+        <div class="tab-content" id="tab-coupons">
+          <div class="admin-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+              <h3 style="margin:0;border:0;padding:0">All Coupons</h3>
+              <button class="action-btn" style="background:var(--amazon-orange);color:#000;border-color:var(--amazon-orange)" onclick="openModal('couponModal')"><i class="fas fa-plus"></i> Add Coupon</button>
+            </div>
+            <table class="admin-table">
+              <tr><th>Code</th><th>Discount</th><th>Min. Order</th><th>Usage</th><th>Expires</th><th>Status</th><th>Actions</th></tr>
+              <tr><td><strong>WELCOME10</strong></td><td>10%</td><td>৳500</td><td>342/1000</td><td>Dec 31, 2026</td><td><span class="badge badge-green">Active</span></td><td><button class="action-btn">Edit</button><button class="action-btn danger">Delete</button></td></tr>
+              <tr><td><strong>EID25</strong></td><td>৳250</td><td>৳2,000</td><td>89/200</td><td>Jul 15, 2026</td><td><span class="badge badge-green">Active</span></td><td><button class="action-btn">Edit</button><button class="action-btn danger">Delete</button></td></tr>
+              <tr><td><strong>FREESHIP</strong></td><td>Free Shipping</td><td>৳1,000</td><td>567/500</td><td>Jun 30, 2026</td><td><span class="badge badge-red">Expired</span></td><td><button class="action-btn">Edit</button><button class="action-btn danger">Delete</button></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div class="tab-content" id="tab-settings">
+          <div class="admin-card">
+            <h3>Store Settings</h3>
+            <div class="form-group" style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Store Name</label><input type="text" value="MR Shop" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px;font-size:14px"></div>
+            <div class="form-group" style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Contact Email</label><input type="email" value="admin@mrshop.com" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px;font-size:14px"></div>
+            <div class="form-group" style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Phone</label><input type="tel" value="01712345678" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px;font-size:14px"></div>
+            <div class="form-group" style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Currency</label><select style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px;font-size:14px"><option>BDT (৳)</option><option>USD ($)</option></select></div>
+            <button class="action-btn" style="background:var(--amazon-orange);color:#000;border-color:var(--amazon-orange);padding:10px 24px">Save Changes</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Product Modal -->
+  <div class="modal-overlay" id="productModal">
+    <div class="modal">
+      <h3>Add New Product</h3>
+      <div class="form-group"><label>Product Name</label><input type="text" id="prodName" placeholder="Enter product name"></div>
+      <div class="form-group"><label>Category</label><select id="prodCategory"><option value="food">Food & Natural</option><option value="sweets">Sweets & Dairy</option><option value="handicrafts">Handicrafts</option><option value="clothing">Clothing</option><option value="books">Books</option><option value="antique">Antique</option></select></div>
+      <div class="form-group"><label>Price (৳)</label><input type="number" id="prodPrice" placeholder="0"></div>
+      <div class="form-group"><label>Original Price (৳)</label><input type="number" id="prodOriginalPrice" placeholder="0"></div>
+      <div class="form-group"><label>Stock</label><input type="number" id="prodStock" placeholder="0"></div>
+      <div class="form-group"><label>Description</label><textarea id="prodDesc" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px;min-height:80px" placeholder="Product description"></textarea></div>
+      <div class="form-group">
+        <label>Product Images (Max 4 photos, 1MB each)</label>
+        <input type="file" id="prodImages" accept="image/*" multiple style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px;font-size:14px">
+        <small style="color:#565959;font-size:12px">You can select up to 4 images. Max size: 1MB per image.</small>
+        <div id="imagePreview" style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap"></div>
+      </div>
+      <div class="modal-actions">
+        <button onclick="closeModal('productModal')" style="background:#fff;border:1px solid #d5d9d9">Cancel</button>
+        <button onclick="addProduct()" style="background:var(--amazon-orange);border:1px solid var(--amazon-orange)">Add Product</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Coupon Modal -->
+  <div class="modal-overlay" id="couponModal">
+    <div class="modal">
+      <h3>Add New Coupon</h3>
+      <div class="form-group"><label>Coupon Code</label><input type="text" placeholder="e.g. SAVE20"></div>
+      <div class="form-group"><label>Discount Type</label><select><option>Percentage (%)</option><option>Fixed Amount (৳)</option><option>Free Shipping</option></select></div>
+      <div class="form-group"><label>Discount Value</label><input type="number" placeholder="0"></div>
+      <div class="form-group"><label>Minimum Order (৳)</label><input type="number" placeholder="0"></div>
+      <div class="form-group"><label>Expiry Date</label><input type="date"></div>
+      <div class="modal-actions">
+        <button onclick="closeModal('couponModal')" style="background:#fff;border:1px solid #d5d9d9">Cancel</button>
+        <button onclick="closeModal('couponModal');alert('Coupon added!')" style="background:var(--amazon-orange);border:1px solid var(--amazon-orange)">Add Coupon</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showTab(name) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+      document.getElementById('tab-' + name).classList.add('active');
+      document.getElementById('pageTitle').textContent = name.charAt(0).toUpperCase() + name.slice(1);
+      // Highlight active sidebar link
+      document.querySelectorAll('.sidebar-nav a').forEach(a => {
+        if (a.getAttribute('onclick') && a.getAttribute('onclick').includes("'" + name + "'")) {
+          a.classList.add('active');
+        }
+      });
+    }
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+    // Image preview and validation
+    const imageInput = document.getElementById('prodImages');
+    const imagePreview = document.getElementById('imagePreview');
+    let selectedImages = [];
+
+    if(imageInput) {
+      imageInput.addEventListener('change', function(e) {
+        const files = Array.from(e.target.files);
+        imagePreview.innerHTML = '';
+        selectedImages = [];
+
+        if(files.length > 4) {
+          alert('Maximum 4 images allowed!');
+          imageInput.value = '';
+          return;
+        }
+
+        for(let file of files) {
+          if(file.size > 1024 * 1024) {
+            alert(`${file.name} is too large! Max 1MB allowed.`);
+            imageInput.value = '';
+            imagePreview.innerHTML = '';
+            selectedImages = [];
+            return;
+          }
+          if(!file.type.startsWith('image/')) {
+            alert(`${file.name} is not an image!`);
+            imageInput.value = '';
+            imagePreview.innerHTML = '';
+            selectedImages = [];
+            return;
+          }
+          selectedImages.push(file);
+          const reader = new FileReader();
+          reader.onload = function(ev) {
+            const div = document.createElement('div');
+            div.style.cssText = 'position:relative;width:80px;height:80px;border:1px solid #d5d9d9;border-radius:6px;overflow:hidden';
+            div.innerHTML = `<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover">`;
+            imagePreview.appendChild(div);
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    // Add product to localStorage
+    function addProduct() {
+      const name = document.getElementById('prodName').value.trim();
+      const category = document.getElementById('prodCategory').value;
+      const price = parseInt(document.getElementById('prodPrice').value) || 0;
+      const originalPrice = parseInt(document.getElementById('prodOriginalPrice').value) || price;
+      const stock = parseInt(document.getElementById('prodStock').value) || 0;
+      const description = document.getElementById('prodDesc').value.trim();
+
+      if(!name) { alert('Please enter product name!'); return; }
+      if(price <= 0) { alert('Please enter valid price!'); return; }
+
+      // Convert images to base64 for localStorage
+      const imagePromises = selectedImages.map(file => {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target.result);
+          reader.readAsDataURL(file);
+        });
+      });
+
+      Promise.all(imagePromises).then(images => {
+        // Get existing products from localStorage
+        let products = JSON.parse(localStorage.getItem('mr_shop_products')) || [];
+
+        // Create new product
+        const newProduct = {
+          id: Date.now(),
+          name: name,
+          price: price,
+          originalPrice: originalPrice,
+          category: category,
+          image: images[0] || './assets/images/placeholder.jpg',
+          images: images,
+          rating: 0,
+          reviews: 0,
+          prime: false,
+          description: description,
+          stock: stock,
+          createdAt: new Date().toISOString()
+        };
+
+        // Add to localStorage
+        products.push(newProduct);
+        localStorage.setItem('mr_shop_products', JSON.stringify(products));
+
+        alert('Product added successfully!');
+        closeModal('productModal');
+        document.getElementById('prodName').value = '';
+        document.getElementById('prodPrice').value = '';
+        document.getElementById('prodOriginalPrice').value = '';
+        document.getElementById('prodStock').value = '';
+        document.getElementById('prodDesc').value = '';
+        document.getElementById('prodImages').value = '';
+        imagePreview.innerHTML = '';
+        selectedImages = [];
+        loadAdminProducts();
+      });
+    }
+
+    // Current filter
+    let currentCategoryFilter = 'all';
+
+    // All products data
+    let allAdminProducts = [];
+
+    // Load products in admin table
+    function loadAdminProducts() {
+      const localProducts = JSON.parse(localStorage.getItem('mr_shop_products')) || [];
+      const fallbackProducts = [
+        { id: 1, name: "Sundarbans Wild Honey", price: 850, category: "food", stock: 15, images: [] },
+        { id: 2, name: "Pure Mustard Oil", price: 320, category: "food", stock: 25, images: [] },
+        { id: 3, name: "Organic Basmati Rice", price: 180, category: "food", stock: 40, images: [] },
+        { id: 101, name: "Authentic Bogura Doi", price: 180, category: "sweets", stock: 20, images: [] },
+        { id: 201, name: "Nakshi Kantha", price: 1200, category: "handicrafts", stock: 5, images: [] },
+        { id: 301, name: "Jamdani Saree", price: 4500, category: "clothing", stock: 6, images: [] },
+        { id: 401, name: "Bengali Literature Collection", price: 350, category: "books", stock: 25, images: [] },
+        { id: 501, name: "Antique Coin", price: 150, category: "antique", stock: 3, images: [] }
+      ];
+      allAdminProducts = [...fallbackProducts, ...localProducts];
+      renderProducts();
+    }
+
+    // Render products based on filter
+    function renderProducts() {
+      const categoryNames = {food:'Food & Natural',sweets:'Sweets & Dairy',handicrafts:'Handicrafts',clothing:'Clothing',books:'Books',antique:'Antique'};
+      const tbody = document.getElementById('productTableBody');
+      
+      let filteredProducts = allAdminProducts;
+      if (currentCategoryFilter !== 'all') {
+        filteredProducts = allAdminProducts.filter(p => p.category === currentCategoryFilter);
+      }
+      
+      document.getElementById('productCount').textContent = filteredProducts.length;
+      tbody.innerHTML = filteredProducts.map(p => `
+        <tr>
+          <td>P${String(p.id).slice(-3).padStart(3,'0')}</td>
+          <td>${p.name}</td>
+          <td>${categoryNames[p.category] || p.category}</td>
+          <td>৳${p.price.toLocaleString()}</td>
+          <td>${p.stock}</td>
+          <td>${(p.images && p.images.length > 0) ? p.images.length + ' photo(s)' : 'No image'}</td>
+          <td><span class="badge ${p.stock > 0 ? 'badge-green' : 'badge-red'}">${p.stock > 0 ? 'Active' : 'Out of Stock'}</span></td>
+          <td><button class="action-btn" onclick="deleteProduct(${p.id})">Delete</button></td>
+        </tr>
+      `).join('');
+    }
+
+    // Filter products by category
+    function filterProducts(category, btn) {
+      currentCategoryFilter = category;
+      // Update active button - only in products tab
+      document.querySelectorAll('#tab-products .category-filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderProducts();
+    }
+
+    // Delete product
+    function deleteProduct(id) {
+      if(!confirm('Are you sure you want to delete this product?')) return;
+      let products = JSON.parse(localStorage.getItem('mr_shop_products')) || [];
+      products = products.filter(p => p.id !== id);
+      localStorage.setItem('mr_shop_products', JSON.stringify(products));
+      loadAdminProducts();
+    }
+
+    // Load products on page load
+    loadAdminProducts();
+
+    // ==================== SELLERS MANAGEMENT ====================
+    let currentSellerFilter = 'all';
+    let allSellers = [];
+    const ADMIN_API = window.location.protocol === 'https:' ? 'https://localhost:5000/api' : 'http://localhost:5000/api';
+
+    async function loadSellers() {
+      try {
+        const token = localStorage.getItem('mr_shop_token');
+        const res = await fetch(`${ADMIN_API}/sellers/applications`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          allSellers = await res.json();
+        } else {
+          allSellers = JSON.parse(localStorage.getItem('mr_shop_sellers')) || [];
+        }
+      } catch {
+        allSellers = JSON.parse(localStorage.getItem('mr_shop_sellers')) || [];
+      }
+      renderSellers();
+    }
+
+    function renderSellers() {
+      const tbody = document.getElementById('sellerTableBody');
+      let filtered = allSellers;
+      if (currentSellerFilter !== 'all') {
+        if (currentSellerFilter === 'pending') filtered = allSellers.filter(s => !s.isApproved && !s.rejectionReason);
+        else if (currentSellerFilter === 'approved') filtered = allSellers.filter(s => s.isApproved);
+        else if (currentSellerFilter === 'rejected') filtered = allSellers.filter(s => s.rejectionReason);
+      }
+      document.getElementById('sellerCount').textContent = filtered.length;
+      
+      const categoryNames = {food:'Food',sweets:'Sweets',handicrafts:'Crafts',clothing:'Clothing',books:'Books',antique:'Antique',electronics:'Electronics',others:'Others'};
+      
+      tbody.innerHTML = filtered.map(s => {
+        const cats = s.categories ? s.categories.split(',').map(c => categoryNames[c.trim()] || c.trim()).join(', ') : '';
+        const status = s.isApproved ? 'approved' : s.rejectionReason ? 'rejected' : 'pending';
+        return `
+          <tr>
+            <td>S${String(s.id).slice(-4).padStart(4,'0')}</td>
+            <td>${s.ownerName || s.fullName || ''}</td>
+            <td>${s.shopName}</td>
+            <td>${s.phone}</td>
+            <td>${s.email}</td>
+            <td>${cats}</td>
+            <td><span class="badge ${status === 'approved' ? 'badge-green' : status === 'rejected' ? 'badge-red' : 'badge-yellow'}">${status.charAt(0).toUpperCase() + status.slice(1)}</span></td>
+            <td>
+              ${status === 'pending' ? `
+                <button class="action-btn" style="background:#007600;color:#fff;border-color:#007600" onclick="approveSeller(${s.id})">Approve</button>
+                <button class="action-btn danger" onclick="rejectSeller(${s.id})">Reject</button>
+              ` : status === 'approved' && s.username ? `
+                <button class="action-btn" onclick="viewSellerCredentials(${s.id})">View Credentials</button>
+              ` : ''}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterSellers(status, btn) {
+      currentSellerFilter = status;
+      document.querySelectorAll('#tab-sellers .category-filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderSellers();
+    }
+
+    async function approveSeller(id) {
+      const seller = allSellers.find(s => s.id === id);
+      if (!seller) return;
+
+      try {
+        const token = localStorage.getItem('mr_shop_token');
+        const res = await fetch(`${ADMIN_API}/sellers/applications/${id}/approve`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          alert(`Seller Approved!\n\nUsername: ${data.credentials.username}\nPassword: ${data.credentials.password}\n\nShare these credentials with the seller.`);
+          loadSellers();
+          return;
+        }
+      } catch (err) {}
+
+      // Fallback to localStorage
+      const sellerName = seller.ownerName || seller.fullName || 'seller';
+      const username = 'seller_' + sellerName.toLowerCase().replace(/[^a-z]/g, '').slice(0, 8) + Math.floor(Math.random() * 100);
+      const password = 'MR' + Math.random().toString(36).slice(-8).toUpperCase();
+      seller.isApproved = true;
+      seller.status = 'approved';
+      seller.username = username;
+      seller.approvedAt = new Date().toISOString();
+      seller.credentials = { username, password };
+      localStorage.setItem('mr_shop_sellers', JSON.stringify(allSellers));
+      alert(`Seller Approved!\n\nUsername: ${username}\nPassword: ${password}\n\nShare these credentials with the seller.`);
+      renderSellers();
+    }
+
+    async function rejectSeller(id) {
+      if (!confirm('Are you sure you want to reject this seller?')) return;
+      const seller = allSellers.find(s => s.id === id);
+      if (!seller) return;
+
+      try {
+        const token = localStorage.getItem('mr_shop_token');
+        const res = await fetch(`${ADMIN_API}/sellers/applications/${id}/reject`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reason: 'Rejected by admin' })
+        });
+        if (res.ok) {
+          loadSellers();
+          return;
+        }
+      } catch (err) {}
+
+      // Fallback to localStorage
+      seller.isApproved = false;
+      seller.rejectionReason = 'Rejected by admin';
+      seller.rejectedAt = new Date().toISOString();
+      localStorage.setItem('mr_shop_sellers', JSON.stringify(allSellers));
+      renderSellers();
+    }
+
+    function viewSellerCredentials(id) {
+      const seller = allSellers.find(s => s.id === id);
+      if (!seller) return;
+      const creds = seller.credentials || {};
+      alert(`Seller Credentials:\n\nShop: ${seller.shopName}\nUsername: ${seller.username || creds.username || 'N/A'}\n\nApproved: ${seller.approvedAt ? new Date(seller.approvedAt).toLocaleDateString() : 'N/A'}`);
+    }
+
+    // Load sellers on page load
+    loadSellers();
+
+    // Admin logout
+    function adminLogout() {
+      localStorage.removeItem('mr_shop_user');
+      localStorage.removeItem('mr_shop_token');
+      localStorage.removeItem('mr_shop_cart');
+      localStorage.removeItem('mr_shop_wishlist');
+      window.location.href = 'signin.html';
+    }
+  </script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/products.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/auth-shared.js"></script>
+  <script>
+    // Admin authentication check
+    (function() {
+      const user = MR_Auth.getUser();
+      if (!user || !user.loggedIn) {
+        alert('Access denied. Please log in as admin.');
+        window.location.href = 'signin.html';
+        return;
+      }
+      // Check for admin role (customize based on your auth system)
+      if (!user.isAdmin && !user.role?.includes('admin')) {
+        alert('Access denied. Admin privileges required.');
+        window.location.href = 'index.html';
+        return;
+      }
+    })();
+  </script>
+</body>
+</html>

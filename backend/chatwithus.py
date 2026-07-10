@@ -23,7 +23,7 @@ import math
 import argparse
 from collections import Counter, defaultdict
 
-ROOT = os.path.dirname(__file__)
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FILE_EXTENSIONS = ('.html', '.htm', '.md', '.txt')
 
 # small English stopword set for better matching

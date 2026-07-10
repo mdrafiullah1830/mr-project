@@ -1,210 +1,644 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>R Clothing — Premium Kurta</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/clothing.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Shop authentic Bangladeshi clothing including Jamdani sarees, cotton panjabis, salwar kameez, and traditional lungi.">
+  <title>MR Shop — Clothing</title>
+  <script src="assets/js/loader.js"></script>
+  <link rel="stylesheet" href="assets/css/amazon-style.css">
+  <style>
+    /* ==================== PRODUCT DETAIL (Amazon-style) ==================== */
+    .amz-pdp { max-width: 1500px; margin: 20px auto; padding: 0 16px; }
+    .amz-pdp-layout { display: grid; grid-template-columns: 480px 1fr; gap: 24px; }
+
+    /* Gallery */
+    .amz-pdp-gallery { position: relative; }
+    .amz-pdp-main-img { width: 100%; aspect-ratio: 1; object-fit: contain; border-radius: 8px; background: #fff; border: 1px solid var(--amazon-border); cursor: crosshair; transition: transform 0.2s; }
+    .amz-pdp-badge { position: absolute; top: 12px; left: 12px; background: #cc0c39; color: #fff; padding: 6px 12px; border-radius: 4px; font-size: 13px; font-weight: 700; z-index: 2; }
+    .amz-pdp-thumbs { display: flex; gap: 8px; margin-top: 12px; }
+    .amz-pdp-thumb { width: 72px; height: 72px; border-radius: 6px; overflow: hidden; border: 2px solid transparent; cursor: pointer; background: #fff; padding: 4px; transition: border-color 0.2s; }
+    .amz-pdp-thumb:hover, .amz-pdp-thumb.active { border-color: #e77600; }
+    .amz-pdp-thumb img { width: 100%; height: 100%; object-fit: contain; }
+
+    /* Info column */
+    .amz-pdp-info { display: flex; flex-direction: column; gap: 12px; }
+    .amz-pdp-breadcrumb { font-size: 13px; color: #767676; }
+    .amz-pdp-breadcrumb a { color: var(--amazon-link); }
+    .amz-pdp-breadcrumb a:hover { text-decoration: underline; color: #c7511f; }
+    .amz-pdp-title { font-size: 24px; font-weight: 400; line-height: 1.3; color: var(--amazon-text); }
+    .amz-pdp-brand { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+    .amz-pdp-brand a { color: var(--amazon-link); font-weight: 600; }
+    .amz-pdp-brand a:hover { text-decoration: underline; color: #c7511f; }
+    .amz-pdp-rating-row { display: flex; align-items: center; gap: 8px; }
+    .amz-pdp-rating-stars { color: var(--amazon-orange); font-size: 16px; }
+    .amz-pdp-rating-count { color: var(--amazon-link); font-size: 14px; cursor: pointer; }
+    .amz-pdp-rating-count:hover { text-decoration: underline; color: #c7511f; }
+    .amz-pdp-separator { border: 0; border-top: 1px solid #e7e7e7; margin: 4px 0; }
+
+    /* Price block */
+    .amz-pdp-price-block { background: #fff; border: 1px solid var(--amazon-border); border-radius: 8px; padding: 14px 18px; }
+    .amz-pdp-price-deal { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+    .amz-pdp-price-label { font-size: 13px; color: #cc0c39; }
+    .amz-pdp-price-current { font-size: 28px; font-weight: 400; color: var(--amazon-text); }
+    .amz-pdp-price-current .symbol { font-size: 14px; vertical-align: top; }
+    .amz-pdp-price-original { font-size: 14px; color: #565959; text-decoration: line-through; margin-left: 8px; }
+    .amz-pdp-price-save { font-size: 13px; color: #cc0c39; margin-top: 2px; }
+    .amz-pdp-prime { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 13px; }
+    .amz-pdp-prime .prime-badge-sm { background: var(--amazon-blue); color: #fff; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: 700; }
+    .amz-pdp-prime span:last-child { color: #007185; }
+    .amz-pdp-delivery { font-size: 14px; margin-top: 8px; }
+    .amz-pdp-delivery strong { color: var(--amazon-text); }
+
+    /* Variants */
+    .amz-pdp-variants { display: flex; flex-direction: column; gap: 14px; }
+    .amz-pdp-variant-group label { font-size: 14px; font-weight: 700; margin-bottom: 8px; display: block; }
+    .amz-pdp-sizes { display: flex; gap: 8px; flex-wrap: wrap; }
+    .amz-pdp-size-btn { width: 48px; height: 40px; border-radius: 8px; border: 1px solid var(--amazon-border); background: #fff; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; }
+    .amz-pdp-size-btn:hover { border-color: #e77600; }
+    .amz-pdp-size-btn.selected { border-color: #e77600; box-shadow: 0 0 0 2px #f0c14b; background: #fff8e7; }
+    .amz-pdp-colors { display: flex; gap: 10px; flex-wrap: wrap; }
+    .amz-pdp-color-btn { width: 36px; height: 36px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: all 0.15s; position: relative; }
+    .amz-pdp-color-btn:hover { border-color: #e77600; }
+    .amz-pdp-color-btn.selected { border-color: #e77600; box-shadow: 0 0 0 3px #f0c14b; }
+    .amz-pdp-size-note { font-size: 12px; color: #767676; margin-top: 4px; }
+
+    /* CTA */
+    .amz-pdp-cta { display: flex; flex-direction: column; gap: 10px; }
+    .amz-pdp-btn-cart { width: 100%; padding: 12px 20px; border-radius: 20px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; background: linear-gradient(to bottom, #ffd814, #f7ca00); border: 1px solid #f2c200; transition: background 0.2s; }
+    .amz-pdp-btn-cart:hover { background: linear-gradient(to bottom, #f7ca00, #ebb617); }
+    .amz-pdp-btn-buy { width: 100%; padding: 12px 20px; border-radius: 20px; font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid #a88734; background: linear-gradient(to bottom, #f7dfa5, #f0c14b); transition: background 0.2s; }
+    .amz-pdp-btn-buy:hover { background: linear-gradient(to bottom, #f5d78e, #eeb933); }
+
+    /* Product details table */
+    .amz-pdp-details { background: #fff; border: 1px solid var(--amazon-border); border-radius: 8px; padding: 18px; }
+    .amz-pdp-details h3 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+    .amz-pdp-details-table { width: 100%; border-collapse: collapse; }
+    .amz-pdp-details-table td { padding: 8px 12px; border-bottom: 1px solid #e7e7e7; font-size: 14px; }
+    .amz-pdp-details-table td:first-child { font-weight: 700; width: 160px; color: #565959; }
+
+    /* Reviews section */
+    .amz-pdp-reviews { max-width: 1500px; margin: 24px auto; padding: 0 16px; }
+    .amz-pdp-reviews-layout { display: grid; grid-template-columns: 300px 1fr; gap: 24px; }
+    .amz-pdp-reviews-summary { background: #fff; border: 1px solid var(--amazon-border); border-radius: 8px; padding: 20px; }
+    .amz-pdp-reviews-summary h2 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+    .amz-pdp-reviews-overall { text-align: center; margin-bottom: 16px; }
+    .amz-pdp-reviews-overall .big-score { font-size: 48px; font-weight: 400; }
+    .amz-pdp-reviews-overall .big-stars { color: var(--amazon-orange); font-size: 20px; }
+    .amz-pdp-reviews-overall .total { font-size: 13px; color: #767676; margin-top: 4px; }
+    .amz-pdp-reviews-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-size: 13px; }
+    .amz-pdp-reviews-bar .bar { flex: 1; height: 16px; background: #e7e7e7; border-radius: 3px; overflow: hidden; }
+    .amz-pdp-reviews-bar .bar-fill { height: 100%; background: var(--amazon-orange); border-radius: 3px; }
+    .amz-pdp-reviews-bar .count { color: var(--amazon-link); width: 30px; text-align: right; cursor: pointer; }
+
+    .amz-pdp-reviews-list { display: flex; flex-direction: column; gap: 16px; }
+    .amz-pdp-review-card { background: #fff; border: 1px solid var(--amazon-border); border-radius: 8px; padding: 16px; }
+    .amz-pdp-review-card .review-stars { color: var(--amazon-orange); font-size: 16px; margin-bottom: 4px; }
+    .amz-pdp-review-card .review-title { font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+    .amz-pdp-review-card .review-date { font-size: 12px; color: #767676; margin-bottom: 8px; }
+    .amz-pdp-review-card .review-text { font-size: 14px; line-height: 1.5; color: #333; }
+    .amz-pdp-review-form { margin-top: 16px; }
+    .amz-pdp-review-form .rf-stars { display: flex; gap: 4px; margin-bottom: 12px; }
+    .amz-pdp-review-form .rf-stars button { background: none; border: none; font-size: 28px; color: #ccc; cursor: pointer; transition: color 0.15s; }
+    .amz-pdp-review-form .rf-stars button.active { color: var(--amazon-orange); }
+    .amz-pdp-review-form textarea { width: 100%; border: 1px solid var(--amazon-border); border-radius: 8px; padding: 10px 12px; font-size: 14px; resize: vertical; min-height: 80px; }
+    .amz-pdp-review-form textarea:focus { outline: none; border-color: #e77600; box-shadow: 0 0 0 3px #f0c14b; }
+    .amz-pdp-review-form button[type="submit"] { margin-top: 10px; background: linear-gradient(to bottom, #f7dfa5, #f0c14b); border: 1px solid #a88734; border-radius: 8px; padding: 10px 24px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .amz-pdp-review-form button[type="submit"]:hover { background: linear-gradient(to bottom, #f5d78e, #eeb933); }
+
+    /* Related */
+    .amz-pdp-related { max-width: 1500px; margin: 24px auto; padding: 0 16px; }
+    .amz-pdp-related h2 { font-size: 21px; font-weight: 700; margin-bottom: 16px; }
+    .amz-pdp-related-track { display: flex; gap: 16px; overflow-x: auto; scroll-behavior: smooth; padding-bottom: 8px; }
+    .amz-pdp-related-track::-webkit-scrollbar { height: 6px; }
+    .amz-pdp-related-track::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+    .amz-related-card { min-width: 200px; max-width: 200px; background: #fff; border-radius: 8px; border: 1px solid var(--amazon-border); overflow: hidden; cursor: pointer; transition: box-shadow 0.2s; flex-shrink: 0; }
+    .amz-related-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+    .amz-related-card img { width: 100%; height: 160px; object-fit: cover; }
+    .amz-related-card .rel-info { padding: 10px; }
+    .amz-related-card .rel-info h3 { font-size: 13px; font-weight: 500; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .amz-related-card .rel-price { font-weight: 700; font-size: 14px; }
+
+    /* Toast */
+    .amz-toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: #323232; color: #fff; padding: 12px 28px; border-radius: 8px; font-size: 14px; font-weight: 500; opacity: 0; transition: all 0.35s ease; z-index: 9999; pointer-events: none; white-space: nowrap; }
+    .amz-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .amz-pdp-layout { grid-template-columns: 1fr; }
+      .amz-pdp-reviews-layout { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .amz-pdp-thumbs { gap: 6px; }
+      .amz-pdp-thumb { width: 56px; height: 56px; }
+      .amz-pdp-price-current { font-size: 22px; }
+    }
+  </style>
 </head>
 <body>
-  <header class="rc-header">
-    <div class="rc-header-inner">
-      <a href="index.html" class="mr-brand" aria-label="MR Shop home">
-        <img src="./assets/images/mrlogo.png" alt="MR" class="mr-logo-small" />
-        <span style="font-weight:700;font-size:20px">MR Shop</span>
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="amz-header">
+    <div class="amz-header-top">
+      <a href="index.html" class="logo">
+        <div>
+          <span class="logo-text">MR shop</span>
+          <span class="logo-sub">Bangladesh</span>
+        </div>
       </a>
-      <nav class="rc-nav">
-        <a href="index.html">Home</a>
-        <a href="javascript:history.back()">Back</a>
-      </nav>
+
+      <div class="amz-deliver-to">
+        <span class="label">Deliver to</span>
+        <span class="location">
+          <i class="fas fa-map-marker-alt"></i> Bangladesh
+        </span>
+      </div>
+
+      <div class="amz-search-bar">
+        <select class="amz-search-category">
+          <option>All</option>
+          <option>Food & Natural</option>
+          <option>Sweets & Dairy</option>
+          <option>Handicrafts</option>
+          <option selected>Clothing</option>
+          <option>Books</option>
+          <option>Antique</option>
+        </select>
+        <input type="text" class="amz-search-input" placeholder="Search MR Shop" id="searchInput" autocomplete="off">
+        <button class="amz-search-btn" aria-label="Search">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+
+      <div class="amz-header-right">
+        <a href="signin.html" class="amz-header-link">
+          <span class="line1">Hello, Sign in</span>
+          <span class="line2">Account & Lists <i class="fas fa-caret-down"></i></span>
+        </a>
+        <a href="userprofile.html" class="amz-header-link">
+          <span class="line1">Returns</span>
+          <span class="line2">& Orders</span>
+        </a>
+        <a href="wishlist.html" class="amz-header-link">
+          <span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span>
+          <span class="line2">Wishlist</span>
+        </a>
+        <a href="cart.html" class="amz-cart">
+          <span class="amz-cart-icon">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="amz-cart-count" id="cartCount">0</span>
+          </span>
+          <span class="amz-cart-text">Cart</span>
+        </a>
+      </div>
     </div>
+
+    <nav class="amz-nav-bar">
+      <a href="index.html" class="amz-nav-item"><i class="fas fa-bars"></i> All</a>
+      <a href="food&natural.html" class="amz-nav-item">Food & Natural</a>
+      <a href="sweets&dairy.html" class="amz-nav-item">Sweets & Dairy</a>
+      <a href="handricrafts.html" class="amz-nav-item">Handicrafts</a>
+      <a href="clothing.html" class="amz-nav-item active">Clothing</a>
+      <a href="book.html" class="amz-nav-item">Books</a>
+      <a href="antique.html" class="amz-nav-item">Antique</a>
+      <div class="amz-nav-divider"></div>
+      <a href="becomeseller.html" class="amz-nav-item">Sell</a>
+      <a href="index.html" class="amz-nav-item">Best Sellers</a>
+      <a href="index.html" class="amz-nav-item">Today's Deals</a>
+      <a href="chat.html" class="amz-nav-item"><i class="fas fa-headset"></i> Help</a>
+    </nav>
   </header>
 
-  <main class="rc-page">
-    <section class="rc-product">
-      <div class="rc-gallery">
-        <div class="rc-badge">-25%</div>
-        <div class="rc-main-image image-zoomable" id="mainImageWrapper">
-          <img id="mainImage" src="https://images.unsplash.com/photo-1542060748-10c28b62716d?q=80&w=1600&auto=format&fit=crop" alt="Premium Linen-Cotton Kurta in Navy" />
-        </div>
-        <div class="rc-thumbs" id="thumbs">
-          <button class="rc-thumb rc-thumb--active" data-src="https://images.unsplash.com/photo-1542060748-10c28b62716d?q=80&w=1600&auto=format&fit=crop" aria-label="Navy front view">
+  <!-- Features Bar -->
+  <div class="amz-features-bar">
+    <div class="amz-features-grid">
+      <div class="amz-feature-item">
+        <div class="amz-feature-icon green"><i class="fas fa-truck"></i></div>
+        <div class="amz-feature-text"><h4>Free Delivery</h4><p>On orders over ৳5,000</p></div>
+      </div>
+      <div class="amz-feature-item">
+        <div class="amz-feature-icon blue"><i class="fas fa-undo"></i></div>
+        <div class="amz-feature-text"><h4>Easy Returns</h4><p>7-day return policy</p></div>
+      </div>
+      <div class="amz-feature-item">
+        <div class="amz-feature-icon orange"><i class="fas fa-shield-alt"></i></div>
+        <div class="amz-feature-text"><h4>Secure Payment</h4><p>bKash, Nagad, COD</p></div>
+      </div>
+      <div class="amz-feature-item">
+        <div class="amz-feature-icon red"><i class="fas fa-headset"></i></div>
+        <div class="amz-feature-text"><h4>24/7 Support</h4><p>Dedicated help center</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PRODUCT DETAIL ==================== -->
+  <main class="amz-pdp">
+    <div class="amz-pdp-layout">
+
+      <!-- Gallery -->
+      <div class="amz-pdp-gallery">
+        <div class="amz-pdp-badge">-25%</div>
+        <img class="amz-pdp-main-img" id="mainImage"
+             src="https://images.unsplash.com/photo-1542060748-10c28b62716d?q=80&w=1600&auto=format&fit=crop"
+             alt="Premium Linen-Cotton Kurta in Navy" />
+        <div class="amz-pdp-thumbs" id="thumbs">
+          <button class="amz-pdp-thumb active" data-src="https://images.unsplash.com/photo-1542060748-10c28b62716d?q=80&w=1600&auto=format&fit=crop" aria-label="Front view">
             <img src="https://images.unsplash.com/photo-1542060748-10c28b62716d?q=80&w=400&auto=format&fit=crop" alt="thumb 1">
           </button>
-          <button class="rc-thumb" data-src="https://images.unsplash.com/photo-1620799139504-5c5e27c0a2f1?q=80&w=1600&auto=format&fit=crop" aria-label="Detail texture">
+          <button class="amz-pdp-thumb" data-src="https://images.unsplash.com/photo-1620799139504-5c5e27c0a2f1?q=80&w=1600&auto=format&fit=crop" aria-label="Texture detail">
             <img src="https://images.unsplash.com/photo-1620799139504-5c5e27c0a2f1?q=80&w=400&auto=format&fit=crop" alt="thumb 2">
           </button>
-          <button class="rc-thumb" data-src="https://images.unsplash.com/photo-1520975922215-c0f734f87c37?q=80&w=1600&auto=format&fit=crop" aria-label="Side profile">
+          <button class="amz-pdp-thumb" data-src="https://images.unsplash.com/photo-1520975922215-c0f734f87c37?q=80&w=1600&auto=format&fit=crop" aria-label="Side profile">
             <img src="https://images.unsplash.com/photo-1520975922215-c0f734f87c37?q=80&w=400&auto=format&fit=crop" alt="thumb 3">
           </button>
-          <button class="rc-thumb" data-src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1600&auto=format&fit=crop" aria-label="Back view">
+          <button class="amz-pdp-thumb" data-src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1600&auto=format&fit=crop" aria-label="Back view">
             <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=400&auto=format&fit=crop" alt="thumb 4">
           </button>
         </div>
       </div>
 
-      <div class="rc-info">
-        <div class="rc-breadcrumbs"><a href="index.html">Home</a> / <a href="clothing.html">Clothing</a> / Kurta</div>
-        <h1 class="rc-title">Premium Linen-Cotton Kurta</h1>
-        <div class="rc-brand-row">
-          <span class="rc-brand-chip">R Clothing</span>
-          <div class="rc-rating" id="ratingSummary">
-            <span class="stars" aria-hidden="true">★★★★★</span>
-            <span class="score">4.7</span>
-            <a href="#reviews" class="rc-reviews-count">(128 reviews)</a>
+      <!-- Info -->
+      <div class="amz-pdp-info">
+        <div class="amz-pdp-breadcrumb">
+          <a href="index.html">Home</a> &rsaquo;
+          <a href="clothing.html">Clothing</a> &rsaquo;
+          <span>Kurta</span>
+        </div>
+
+        <h1 class="amz-pdp-title">Premium Linen-Cotton Kurta</h1>
+
+        <div class="amz-pdp-brand">
+          <span>Brand:</span>
+          <a href="clothing.html">R Clothing</a>
+        </div>
+
+        <div class="amz-pdp-rating-row">
+          <span class="amz-pdp-rating-stars" id="ratingSummaryStars">★★★★★</span>
+          <a href="#reviews" class="amz-pdp-rating-count" id="ratingSummaryCount">128 ratings</a>
+        </div>
+
+        <hr class="amz-pdp-separator">
+
+        <!-- Price -->
+        <div class="amz-pdp-price-block">
+          <div class="amz-pdp-price-deal">
+            <span class="amz-pdp-price-label">-25%</span>
+            <span class="amz-pdp-price-current"><span class="symbol">৳</span>2,250</span>
+            <span class="amz-pdp-price-original">৳2,999</span>
+          </div>
+          <div class="amz-pdp-price-save">You save: ৳749</div>
+          <div class="amz-pdp-prime">
+            <span class="prime-badge-sm">MR</span>
+            <span>Prime FREE Delivery</span>
+          </div>
+          <div class="amz-pdp-delivery">
+            FREE delivery <strong id="deliveryDate"></strong>. Details
           </div>
         </div>
 
-        <div class="rc-price-row">
-          <div class="rc-price">
-            <span class="current">৳ 2,250</span>
-            <span class="original">৳ 2,999</span>
-          </div>
-          <div class="rc-badge pill">25% OFF</div>
-        </div>
-
-        <div class="rc-variants">
-          <div class="rc-size">
-            <h4>Size</h4>
-            <div class="rc-size-grid" id="sizeGrid">
-              <button class="size-btn" data-size="S">S</button>
-              <button class="size-btn" data-size="M">M</button>
-              <button class="size-btn" data-size="L">L</button>
-              <button class="size-btn" data-size="XL">XL</button>
-              <button class="size-btn" data-size="XXL">XXL</button>
+        <!-- Variants -->
+        <div class="amz-pdp-variants">
+          <div class="amz-pdp-variant-group">
+            <label>Size:</label>
+            <div class="amz-pdp-sizes" id="sizeGrid">
+              <button class="amz-pdp-size-btn" data-size="S">S</button>
+              <button class="amz-pdp-size-btn" data-size="M">M</button>
+              <button class="amz-pdp-size-btn" data-size="L">L</button>
+              <button class="amz-pdp-size-btn" data-size="XL">XL</button>
+              <button class="amz-pdp-size-btn" data-size="XXL">XXL</button>
             </div>
-            <div class="rc-size-note">Size guide: True to size. Relaxed fit.</div>
+            <div class="amz-pdp-size-note">Size guide: True to size. Relaxed fit.</div>
           </div>
 
-          <div class="rc-colors">
-            <h4>Color</h4>
-            <div class="rc-color-row" id="colorRow">
-              <button class="color-swatch" style="--sw:#13223a" data-color="Navy" aria-label="Navy"></button>
-              <button class="color-swatch" style="--sw:#e7e7e7" data-color="Ivory" aria-label="Ivory"></button>
-              <button class="color-swatch" style="--sw:#6b2221" data-color="Maroon" aria-label="Maroon"></button>
-              <button class="color-swatch" style="--sw:#556b2f" data-color="Olive" aria-label="Olive"></button>
+          <div class="amz-pdp-variant-group">
+            <label>Color:</label>
+            <div class="amz-pdp-colors" id="colorRow">
+              <button class="amz-pdp-color-btn" style="background:#13223a" data-color="Navy" aria-label="Navy"></button>
+              <button class="amz-pdp-color-btn" style="background:#e7e7e7" data-color="Ivory" aria-label="Ivory"></button>
+              <button class="amz-pdp-color-btn" style="background:#6b2221" data-color="Maroon" aria-label="Maroon"></button>
+              <button class="amz-pdp-color-btn" style="background:#556b2f" data-color="Olive" aria-label="Olive"></button>
             </div>
           </div>
         </div>
 
-        <div class="rc-cta">
-          <button class="rc-btn rc-btn--primary" id="addToCartBtn">Add to Cart</button>
-          <button class="rc-btn rc-btn--ghost" id="buyNowBtn">Buy Now</button>
+        <!-- CTA -->
+        <div class="amz-pdp-cta">
+          <button class="amz-pdp-btn-cart" id="addToCartBtn">Add to Cart</button>
+          <button class="amz-pdp-btn-buy" id="buyNowBtn">Buy Now</button>
         </div>
 
-        <div class="rc-details">
-          <h3>Product Details</h3>
-          <ul class="rc-detail-list">
-            <li><strong>Fabric:</strong> 55% Linen, 45% Cotton — breathable and soft</li>
-            <li><strong>Style:</strong> Minimalist band collar, concealed placket</li>
-            <li><strong>Fit:</strong> Relaxed modern fit for all-day comfort</li>
-            <li><strong>Care:</strong> Machine wash cold, do not tumble dry, warm iron</li>
-          </ul>
+        <hr class="amz-pdp-separator">
+
+        <!-- Details table -->
+        <div class="amz-pdp-details">
+          <h3>About this item</h3>
+          <table class="amz-pdp-details-table">
+            <tr><td>Fabric</td><td>55% Linen, 45% Cotton — breathable and soft</td></tr>
+            <tr><td>Style</td><td>Minimalist band collar, concealed placket</td></tr>
+            <tr><td>Fit</td><td>Relaxed modern fit for all-day comfort</td></tr>
+            <tr><td>Care</td><td>Machine wash cold, do not tumble dry, warm iron</td></tr>
+            <tr><td>Origin</td><td>Made in Bangladesh</td></tr>
+          </table>
         </div>
       </div>
-    </section>
-
-    <section class="rc-reviews" id="reviews">
-      <div class="rc-reviews-header">
-        <h2>Customer Reviews</h2>
-        <div class="rc-rating-lg" id="ratingLarge">
-          <div class="stars" aria-hidden="true">★★★★★</div>
-          <div class="score">4.7 out of 5</div>
-        </div>
-      </div>
-
-      <div class="rc-reviews-list" id="reviewsList">
-        <!-- Reviews will render here -->
-      </div>
-
-      <form class="rc-review-form" id="reviewForm">
-        <div class="rf-stars" id="reviewStars" aria-label="Rate this product">
-          <button type="button" aria-label="1 star" data-star="1">★</button>
-          <button type="button" aria-label="2 stars" data-star="2">★</button>
-          <button type="button" aria-label="3 stars" data-star="3">★</button>
-          <button type="button" aria-label="4 stars" data-star="4">★</button>
-          <button type="button" aria-label="5 stars" data-star="5">★</button>
-        </div>
-        <textarea id="reviewText" rows="3" placeholder="Share your thoughts (quality, fit, fabric)..."></textarea>
-        <button type="submit" class="rc-btn rc-btn--primary">Submit Review</button>
-      </form>
-    </section>
-
-    <section class="rc-related">
-      <div class="rc-related-header">
-        <h2>Related Products</h2>
-        <div class="rc-slider-controls">
-          <button class="rc-slider-btn" id="relPrev" aria-label="Previous">‹</button>
-          <button class="rc-slider-btn" id="relNext" aria-label="Next">›</button>
-        </div>
-      </div>
-      <div class="rc-related-track" id="relatedTrack">
-        <!-- Cards -->
-        <article class="rel-card">
-          <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=800&auto=format&fit=crop" alt="Classic White Kurta">
-          <div class="rel-info">
-            <h3>Classic White Kurta</h3>
-            <div class="rel-price">৳ 1,990</div>
-          </div>
-        </article>
-        <article class="rel-card">
-          <img src="https://images.unsplash.com/photo-1520975922215-c0f734f87c37?q=80&w=800&auto=format&fit=crop" alt="Charcoal Casual Shirt">
-          <div class="rel-info">
-            <h3>Charcoal Casual Shirt</h3>
-            <div class="rel-price">৳ 1,750</div>
-          </div>
-        </article>
-        <article class="rel-card">
-          <img src="https://images.unsplash.com/photo-1542060748-10c28b62716d?q=80&w=800&auto=format&fit=crop" alt="Navy Linen Kurta">
-          <div class="rel-info">
-            <h3>Navy Linen Kurta</h3>
-            <div class="rel-price">৳ 2,250</div>
-          </div>
-        </article>
-        <article class="rel-card">
-          <img src="https://images.unsplash.com/photo-1620799139504-5c5e27c0a2f1?q=80&w=800&auto=format&fit=crop" alt="Textured Kurta">
-          <div class="rel-info">
-            <h3>Textured Kurta</h3>
-            <div class="rel-price">৳ 2,050</div>
-          </div>
-        </article>
-        <article class="rel-card">
-          <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=800&auto=format&fit=crop" alt="Back Pleat Kurta">
-          <div class="rel-info">
-            <h3>Back Pleat Kurta</h3>
-            <div class="rel-price">৳ 2,190</div>
-          </div>
-        </article>
-      </div>
-    </section>
+    </div>
   </main>
 
-  <div class="rc-toast" id="rcToast">Added to cart</div>
+  <!-- ==================== REVIEWS ==================== -->
+  <section class="amz-pdp-reviews" id="reviews">
+    <div class="amz-pdp-reviews-layout">
 
-  <footer class="rc-footer">© 2025 R Clothing — Crafted with care</footer>
+      <!-- Summary -->
+      <div class="amz-pdp-reviews-summary">
+        <h2>Customer reviews</h2>
+        <div class="amz-pdp-reviews-overall" id="ratingLarge">
+          <div class="big-stars">★★★★★</div>
+          <div class="big-score" id="ratingScore">4.7</div>
+          <div class="total" id="ratingTotal">out of 5</div>
+        </div>
+        <div class="amz-pdp-reviews-bar"><span>5 star</span><div class="bar"><div class="bar-fill" style="width:70%"></div></div><span class="count">89</span></div>
+        <div class="amz-pdp-reviews-bar"><span>4 star</span><div class="bar"><div class="bar-fill" style="width:18%"></div></div><span class="count">23</span></div>
+        <div class="amz-pdp-reviews-bar"><span>3 star</span><div class="bar"><div class="bar-fill" style="width:6%"></div></div><span class="count">8</span></div>
+        <div class="amz-pdp-reviews-bar"><span>2 star</span><div class="bar"><div class="bar-fill" style="width:4%"></div></div><span class="count">5</span></div>
+        <div class="amz-pdp-reviews-bar"><span>1 star</span><div class="bar"><div class="bar-fill" style="width:2%"></div></div><span class="count">3</span></div>
+      </div>
 
+      <!-- Review list + form -->
+      <div>
+        <div class="amz-pdp-reviews-list" id="reviewsList">
+          <!-- Reviews rendered by JS -->
+        </div>
+
+        <div class="amz-pdp-review-form" id="reviewFormWrap">
+          <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;">Write a review</h3>
+          <form id="reviewForm">
+            <div class="rf-stars" id="reviewStars" aria-label="Rate this product">
+              <button type="button" aria-label="1 star" data-star="1">★</button>
+              <button type="button" aria-label="2 stars" data-star="2">★</button>
+              <button type="button" aria-label="3 stars" data-star="3">★</button>
+              <button type="button" aria-label="4 stars" data-star="4">★</button>
+              <button type="button" aria-label="5 stars" data-star="5">★</button>
+            </div>
+            <textarea id="reviewText" rows="3" placeholder="Share your thoughts (quality, fit, fabric)..."></textarea>
+            <button type="submit">Submit Review</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== RELATED PRODUCTS ==================== -->
+  <section class="amz-pdp-related">
+    <h2>Related products</h2>
+    <div class="amz-pdp-related-track" id="relatedTrack">
+      <article class="amz-related-card">
+        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=800&auto=format&fit=crop" alt="Classic White Kurta">
+        <div class="rel-info"><h3>Classic White Kurta</h3><div class="rel-price">৳ 1,990</div></div>
+      </article>
+      <article class="amz-related-card">
+        <img src="https://images.unsplash.com/photo-1520975922215-c0f734f87c37?q=80&w=800&auto=format&fit=crop" alt="Charcoal Casual Shirt">
+        <div class="rel-info"><h3>Charcoal Casual Shirt</h3><div class="rel-price">৳ 1,750</div></div>
+      </article>
+      <article class="amz-related-card">
+        <img src="https://images.unsplash.com/photo-1542060748-10c28b62716d?q=80&w=800&auto=format&fit=crop" alt="Navy Linen Kurta">
+        <div class="rel-info"><h3>Navy Linen Kurta</h3><div class="rel-price">৳ 2,250</div></div>
+      </article>
+      <article class="amz-related-card">
+        <img src="https://images.unsplash.com/photo-1620799139504-5c5e27c0a2f1?q=80&w=800&auto=format&fit=crop" alt="Textured Kurta">
+        <div class="rel-info"><h3>Textured Kurta</h3><div class="rel-price">৳ 2,050</div></div>
+      </article>
+      <article class="amz-related-card">
+        <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=800&auto=format&fit=crop" alt="Back Pleat Kurta">
+        <div class="rel-info"><h3>Back Pleat Kurta</h3><div class="rel-price">৳ 2,190</div></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <div class="amz-back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    Back to top
+  </div>
+
+  <footer class="amz-footer">
+    <div class="amz-footer-grid">
+      <div class="amz-footer-col">
+        <h4>Get to Know Us</h4>
+        <a href="#">About MR Shop</a>
+        <a href="#">Careers</a>
+        <a href="#">Press Releases</a>
+        <a href="#">MR Shop Science</a>
+      </div>
+      <div class="amz-footer-col">
+        <h4>Make Money with Us</h4>
+        <a href="becomeseller.html">Sell on MR Shop</a>
+        <a href="#">Sell under MR Shop Accelerator</a>
+        <a href="#">Protect & Build Your Brand</a>
+        <a href="#">Become an Affiliate</a>
+      </div>
+      <div class="amz-footer-col">
+        <h4>Let Us Help You</h4>
+        <a href="userprofile.html">Your Account</a>
+        <a href="userprofile.html">Returns Centre</a>
+        <a href="#">Recalls and Safety Alerts</a>
+        <a href="chat.html">Customer Service</a>
+      </div>
+      <div class="amz-footer-col">
+        <h4>Connect with Us</h4>
+        <a href="https://www.facebook.com/profile.php?id=61583616496782" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+        <a href="https://www.instagram.com/mrshopbd18/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+        <a href="https://www.youtube.com/@mrshop18" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
+      </div>
+    </div>
+    <div class="amz-footer-divider"></div>
+  </footer>
+
+  <div class="amz-footer-bottom">
+    <div class="amz-footer-logo">MR Shop</div>
+    <div class="amz-footer-copyright">&copy; 2026 MR Shop. All Rights Reserved. | Powered by MR IT Company</div>
+  </div>
+
+  <!-- Toast -->
+  <div class="amz-toast" id="amzToast">Added to cart</div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/products.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/auth-shared.js"></script>
+  <script src="assets/js/wishlist.js"></script>
+
+  <!-- Scripts -->
+  <script>
+    // Delivery date helper
+    (function(){
+      var d = new Date();
+      d.setDate(d.getDate() + 3 + Math.floor(Math.random() * 3));
+      document.getElementById('deliveryDate').textContent = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    })();
+  </script>
   <script src="assets/js/clothing.js"></script>
   <script>
-    // Theme toggle (same behavior as index.html)
+    // Update clothing.js selectors for new Amazon-style class names
     (function(){
-      const key = 'mrshop-theme';
-      const btn = document.getElementById('themeToggle');
-      const root = document.documentElement;
-      function apply(theme){
-        if(theme === 'dark') root.classList.add('theme-dark'); else root.classList.remove('theme-dark');
-        if(btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+      var product = {
+        id: 301,
+        title: 'Premium Linen-Cotton Kurta',
+        brand: 'R Clothing',
+        price: 2250,
+        original: 2999,
+        images: [
+          'https://images.unsplash.com/photo-1542060748-10c28b62716d?q=80&w=1600&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1620799139504-5c5e27c0a2f1?q=80&w=1600&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1520975922215-c0f734f87c37?q=80&w=1600&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1600&auto=format&fit=crop'
+        ]
+      };
+
+      var mainImage = document.getElementById('mainImage');
+      var thumbs = document.getElementById('thumbs');
+      var sizeGrid = document.getElementById('sizeGrid');
+      var colorRow = document.getElementById('colorRow');
+      var addToCartBtn = document.getElementById('addToCartBtn');
+      var buyNowBtn = document.getElementById('buyNowBtn');
+      var toast = document.getElementById('amzToast');
+
+      var selectedSize = null;
+      var selectedColor = null;
+
+      // Thumbnails
+      if(thumbs){
+        thumbs.addEventListener('click', function(e){
+          var btn = e.target.closest('.amz-pdp-thumb');
+          if(!btn) return;
+          var src = btn.dataset.src;
+          if(src){
+            mainImage.src = src;
+            thumbs.querySelectorAll('.amz-pdp-thumb').forEach(function(b){ b.classList.remove('active'); });
+            btn.classList.add('active');
+          }
+        });
       }
-      const saved = localStorage.getItem(key) || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-      apply(saved);
-      if(btn) btn.addEventListener('click', ()=>{
-        const cur = root.classList.contains('theme-dark') ? 'dark' : 'light';
-        const next = cur === 'dark' ? 'light' : 'dark';
-        localStorage.setItem(key, next);
-        apply(next);
+
+      // Size selection
+      sizeGrid.addEventListener('click', function(e){
+        var btn = e.target.closest('.amz-pdp-size-btn');
+        if(!btn) return;
+        sizeGrid.querySelectorAll('.amz-pdp-size-btn').forEach(function(b){ b.classList.remove('selected'); });
+        btn.classList.add('selected');
+        selectedSize = btn.dataset.size;
       });
+
+      // Color selection
+      colorRow.addEventListener('click', function(e){
+        var btn = e.target.closest('.amz-pdp-color-btn');
+        if(!btn) return;
+        colorRow.querySelectorAll('.amz-pdp-color-btn').forEach(function(b){ b.classList.remove('selected'); });
+        btn.classList.add('selected');
+        selectedColor = btn.dataset.color;
+      });
+
+      // Cart helpers
+      function getCart(){ try{ return JSON.parse(localStorage.getItem('mr_shop_cart')) || []; }catch(e){ return []; } }
+      function setCart(c){ localStorage.setItem('mr_shop_cart', JSON.stringify(c)); }
+
+      function addToCart(){
+        if(!selectedSize){ showToast('Please select a size'); return; }
+        if(!selectedColor){ showToast('Please select a color'); return; }
+        var cart = getCart();
+        var idx = cart.findIndex(function(i){ return i.id === product.id && i.size === selectedSize && i.color === selectedColor; });
+        if(idx > -1){ cart[idx].quantity += 1; }
+        else{
+          cart.push({
+            id: product.id,
+            name: product.title,
+            price: product.price,
+            image: product.images[0],
+            description: product.brand + ' \u2022 ' + selectedColor + ' \u2022 ' + selectedSize,
+            quantity: 1,
+            size: selectedSize,
+            color: selectedColor
+          });
+        }
+        setCart(cart);
+        showToast('Added 1 \u00d7 ' + product.title + ' (' + selectedColor + ', ' + selectedSize + ')');
+        // Update header cart count
+        var countEl = document.getElementById('cartCount');
+        if(countEl){ countEl.textContent = cart.reduce(function(s,i){ return s + i.quantity; }, 0); }
+      }
+
+      addToCartBtn.addEventListener('click', function(){ MR_addToCart(301); });
+      buyNowBtn.addEventListener('click', function(){ MR_addToCart(301); setTimeout(function(){ window.location.href = 'cart.html'; }, 400); });
+
+      function showToast(msg){
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(function(){ toast.classList.remove('show'); }, 2000);
+      }
+
+      // Reviews
+      var REV_KEY = 'mr_reviews_' + product.id;
+      var reviewsList = document.getElementById('reviewsList');
+      var reviewForm = document.getElementById('reviewForm');
+      var reviewText = document.getElementById('reviewText');
+      var reviewStars = document.getElementById('reviewStars');
+      var selectedStars = 0;
+
+      function loadReviews(){
+        var list = [];
+        try{ list = JSON.parse(localStorage.getItem(REV_KEY)) || []; }catch(e){}
+        renderReviews(list);
+      }
+
+      function renderReviews(list){
+        if(list.length === 0){
+          reviewsList.innerHTML = '<div class="amz-pdp-review-card"><div class="review-text" style="color:#767676;">No reviews yet \u2014 be the first to review.</div></div>';
+          return;
+        }
+        reviewsList.innerHTML = list.map(function(r){
+          var stars = '';
+          for(var i=0;i<5;i++) stars += i < r.stars ? '\u2605' : '\u2606';
+          return '<div class="amz-pdp-review-card">' +
+            '<div class="review-stars">' + stars + '</div>' +
+            '<div class="review-date">' + new Date(r.time).toLocaleDateString() + '</div>' +
+            '<div class="review-text">' + escapeHtml(r.text) + '</div>' +
+          '</div>';
+        }).join('');
+        var avg = list.reduce(function(a,b){ return a+b.stars; },0)/list.length;
+        document.getElementById('ratingScore').textContent = avg.toFixed(1);
+        document.getElementById('ratingSummaryStars').textContent = starsStr(avg);
+      }
+
+      function starsStr(r){ var s=''; var full=Math.round(r); for(var i=0;i<5;i++) s += i<full?'\u2605':'\u2606'; return s; }
+
+      function escapeHtml(s){
+        return s.replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; });
+      }
+
+      reviewStars.addEventListener('click', function(e){
+        var btn = e.target.closest('button');
+        if(!btn) return;
+        selectedStars = parseInt(btn.dataset.star,10);
+        reviewStars.querySelectorAll('button').forEach(function(b,i){
+          b.classList.toggle('active', i < selectedStars);
+        });
+      });
+
+      reviewForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        if(selectedStars < 1){ showToast('Please choose a star rating'); return; }
+        var text = (reviewText.value||'').trim();
+        if(!text){ showToast('Please write a short review'); return; }
+        var list = [];
+        try{ list = JSON.parse(localStorage.getItem(REV_KEY)) || []; }catch(e){}
+        list.unshift({ stars: selectedStars, text: text, time: Date.now() });
+        localStorage.setItem(REV_KEY, JSON.stringify(list));
+        reviewText.value=''; selectedStars=0;
+        reviewStars.querySelectorAll('button').forEach(function(b){ b.classList.remove('active'); });
+        loadReviews();
+        showToast('Thanks for your review!');
+      });
+
+      // Init
+      loadReviews();
     })();
   </script>
 </body>

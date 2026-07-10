@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment — MR Shop</title>
+  <script src="assets/js/loader.js"></script>
+  <link rel="stylesheet" href="assets/css/amazon-style.css">
+  <style>
+    .payment-page { max-width: 900px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 380px; gap: 24px; }
+    .payment-methods { background: var(--amazon-white); border: 1px solid var(--amazon-border); border-radius: 12px; padding: 24px; }
+    .payment-methods h2 { font-size: 20px; font-weight: 700; margin-bottom: 20px; }
+    .method-card { border: 2px solid #d5d9d9; border-radius: 10px; padding: 16px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 14px; }
+    .method-card:hover { border-color: var(--amazon-orange); }
+    .method-card.selected { border-color: var(--amazon-orange); background: #fef8f0; }
+    .method-icon { width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; flex-shrink: 0; }
+    .method-icon.bkash { background: linear-gradient(135deg, #e2136e, #f42e96); color: white; }
+    .method-icon.nagad { background: linear-gradient(135deg, #f6921e, #f9a825); color: white; }
+    .method-icon.cod { background: linear-gradient(135deg, #007600, #00a800); color: white; }
+    .method-icon.card { background: linear-gradient(135deg, #146eb4, #2196f3); color: white; }
+    .method-info h4 { font-size: 15px; font-weight: 700; }
+    .method-info p { font-size: 13px; color: #565959; margin-top: 2px; }
+    .method-radio { margin-left: auto; width: 20px; height: 20px; border-radius: 50%; border: 2px solid #d5d9d9; display: flex; align-items: center; justify-content: center; }
+    .method-card.selected .method-radio { border-color: var(--amazon-orange); }
+    .method-card.selected .method-radio::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--amazon-orange); }
+    .bkash-form, .nagad-form, .card-form { display: none; margin-top: 16px; padding: 16px; background: #f7f8f8; border-radius: 8px; }
+    .bkash-form.active, .nagad-form.active, .card-form.active { display: block; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #333; }
+    .form-group input { width: 100%; padding: 12px; border: 1px solid #d5d9d9; border-radius: 8px; font-size: 14px; }
+    .form-group input:focus { border-color: var(--amazon-orange); outline: none; }
+    .pay-btn { width: 100%; padding: 14px; background: linear-gradient(to bottom, #ffd814, #f7ca00); border: 1px solid #f2c200; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; color: #0f1111; margin-top: 10px; }
+    .pay-btn:hover { background: linear-gradient(to bottom, #f7ca00, #e6b800); }
+    .order-summary { background: var(--amazon-white); border: 1px solid var(--amazon-border); border-radius: 12px; padding: 24px; height: fit-content; position: sticky; top: 100px; }
+    .order-summary h3 { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+    .summary-item { display: flex; gap: 12px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid #eee; }
+    .summary-item img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; background: #f0f0f0; }
+    .summary-item-info { flex: 1; }
+    .summary-item-info .name { font-size: 14px; font-weight: 600; }
+    .summary-item-info .qty { font-size: 13px; color: #565959; }
+    .summary-item-info .price { font-size: 14px; font-weight: 700; margin-top: 4px; }
+    .summary-totals { margin-top: 16px; }
+    .summary-row { display: flex; justify-content: space-between; font-size: 14px; padding: 6px 0; }
+    .summary-row.total { font-weight: 700; font-size: 16px; border-top: 2px solid #ddd; padding-top: 10px; margin-top: 8px; }
+    .secure-badge { text-align: center; margin-top: 16px; padding: 10px; background: #f0fdf4; border-radius: 8px; font-size: 13px; color: #007600; font-weight: 600; }
+    .secure-badge i { margin-right: 6px; }
+    @media (max-width: 768px) {
+      .payment-page { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="amz-header">
+    <div class="amz-header-top">
+      <a href="index.html" class="logo">
+        <div>
+          <span class="logo-text">MR shop</span>
+          <span class="logo-sub">Bangladesh</span>
+        </div>
+      </a>
+      <div class="amz-deliver-to"><span class="label">Deliver to</span><span class="location"><i class="fas fa-map-marker-alt"></i> Bangladesh</span></div>
+      <div class="amz-search-bar">
+        <select class="amz-search-category"><option>All</option><option>Food & Natural</option><option>Sweets & Dairy</option><option>Handicrafts</option><option>Clothing</option><option>Books</option><option>Antique</option></select>
+        <input type="text" class="amz-search-input" placeholder="Search MR Shop">
+        <button class="amz-search-btn"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="amz-header-right">
+        <a href="signin.html" class="amz-header-link"><span class="line1">Hello, Sign in</span><span class="line2">Account & Lists <i class="fas fa-caret-down"></i></span></a>
+        <a href="userprofile.html" class="amz-header-link"><span class="line1">Returns</span><span class="line2">& Orders</span></a>
+        <a href="wishlist.html" class="amz-header-link"><span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span><span class="line2">Wishlist</span></a>
+        <a href="cart.html" class="amz-cart"><span class="amz-cart-icon"><i class="fas fa-shopping-cart"></i><span class="amz-cart-count" id="cartCount">0</span></span><span class="amz-cart-text">Cart</span></a>
+      </div>
+    </div>
+    <nav class="amz-nav-bar">
+      <a href="index.html" class="amz-nav-item"><i class="fas fa-bars"></i> All</a>
+      <a href="food&natural.html" class="amz-nav-item">Food & Natural</a>
+      <a href="sweets&dairy.html" class="amz-nav-item">Sweets & Dairy</a>
+      <a href="handricrafts.html" class="amz-nav-item">Handicrafts</a>
+      <a href="clothing.html" class="amz-nav-item">Clothing</a>
+      <a href="book.html" class="amz-nav-item">Books</a>
+      <a href="antique.html" class="amz-nav-item">Antique</a>
+      <div class="amz-nav-divider"></div>
+      <a href="becomeseller.html" class="amz-nav-item">Sell</a>
+      <a href="chat.html" class="amz-nav-item"><i class="fas fa-headset"></i> Help</a>
+    </nav>
+  </header>
+
+  <div class="payment-page">
+    <div class="payment-methods">
+      <h2><i class="fas fa-lock"></i> Select Payment Method</h2>
+
+      <div class="method-card selected" onclick="selectMethod('bkash')">
+        <div class="method-icon bkash">bKash</div>
+        <div class="method-info"><h4>bKash</h4><p>Pay via bKash mobile financial service</p></div>
+        <div class="method-radio"></div>
+      </div>
+      <div class="bkash-form active" id="bkashForm">
+        <div class="form-group"><label>bKash Account Number</label><input type="tel" placeholder="01XXXXXXXXX" maxlength="11"></div>
+        <div class="form-group"><label>Amount</label><input type="text" value="৳2,450" readonly style="background:#f0f0f0"></div>
+        <div class="form-group"><label>PIN</label><input type="password" placeholder="Enter bKash PIN" maxlength="5"></div>
+        <button class="pay-btn" onclick="processPayment('bKash')"><i class="fas fa-lock"></i> Pay with bKash</button>
+      </div>
+
+      <div class="method-card" onclick="selectMethod('nagad')">
+        <div class="method-icon nagad">Nagad</div>
+        <div class="method-info"><h4>Nagad</h4><p>Pay via Nagad digital financial service</p></div>
+        <div class="method-radio"></div>
+      </div>
+      <div class="nagad-form" id="nagadForm">
+        <div class="form-group"><label>Nagad Account Number</label><input type="tel" placeholder="01XXXXXXXXX" maxlength="11"></div>
+        <div class="form-group"><label>Amount</label><input type="text" value="৳2,450" readonly style="background:#f0f0f0"></div>
+        <div class="form-group"><label>PIN</label><input type="password" placeholder="Enter Nagad PIN" maxlength="5"></div>
+        <button class="pay-btn" onclick="processPayment('Nagad')"><i class="fas fa-lock"></i> Pay with Nagad</button>
+      </div>
+
+      <div class="method-card" onclick="selectMethod('card')">
+        <div class="method-icon card"><i class="fas fa-credit-card"></i></div>
+        <div class="method-info"><h4>Credit/Debit Card</h4><p>Visa, Mastercard, DBBL Rocket</p></div>
+        <div class="method-radio"></div>
+      </div>
+      <div class="card-form" id="cardForm">
+        <div class="form-group"><label>Card Number</label><input type="text" placeholder="XXXX XXXX XXXX XXXX" maxlength="19"></div>
+        <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div><label>Expiry</label><input type="text" placeholder="MM/YY" maxlength="5"></div>
+          <div><label>CVV</label><input type="password" placeholder="XXX" maxlength="4"></div>
+        </div>
+        <div class="form-group"><label>Cardholder Name</label><input type="text" placeholder="Name on card"></div>
+        <button class="pay-btn" onclick="processPayment('Card')"><i class="fas fa-lock"></i> Pay with Card</button>
+      </div>
+
+      <div class="method-card" onclick="selectMethod('cod')">
+        <div class="method-icon cod"><i class="fas fa-money-bill-wave"></i></div>
+        <div class="method-info"><h4>Cash on Delivery</h4><p>Pay when you receive your order</p></div>
+        <div class="method-radio"></div>
+      </div>
+    </div>
+
+    <div class="order-summary">
+      <h3>Order Summary</h3>
+      <div class="summary-item">
+        <img src="./assets/images/honey.jpg" alt="Honey">
+        <div class="summary-item-info">
+          <div class="name">Sundarbans Pure Honey</div>
+          <div class="qty">Qty: 1</div>
+          <div class="price">৳850</div>
+        </div>
+      </div>
+      <div class="summary-item">
+        <img src="./assets/images/roshogolla.jpg" alt="Roshogolla">
+        <div class="summary-item-info">
+          <div class="name">Roshogolla Box (12 pcs)</div>
+          <div class="qty">Qty: 2</div>
+          <div class="price">৳1,200</div>
+        </div>
+      </div>
+      <div class="summary-totals">
+        <div class="summary-row"><span>Subtotal</span><span>৳2,050</span></div>
+        <div class="summary-row"><span>Shipping</span><span>৳100</span></div>
+        <div class="summary-row"><span>VAT (5%)</span><span>৳300</span></div>
+        <div class="summary-row total"><span>Total</span><span>৳2,450</span></div>
+      </div>
+      <div class="secure-badge"><i class="fas fa-shield-alt"></i> Your payment is 100% secure</div>
+    </div>
+  </div>
+
+  <script>
+    function selectMethod(method) {
+      document.querySelectorAll('.method-card').forEach(c => c.classList.remove('selected'));
+      document.querySelectorAll('.bkash-form, .nagad-form, .card-form').forEach(f => f.classList.remove('active'));
+      event.currentTarget.classList.add('selected');
+      if (method === 'bkash') document.getElementById('bkashForm').classList.add('active');
+      else if (method === 'nagad') document.getElementById('nagadForm').classList.add('active');
+      else if (method === 'card') document.getElementById('cardForm').classList.add('active');
+    }
+    function processPayment(method) {
+      alert('Processing ' + method + ' payment...\n\nIn production, this would connect to the ' + method + ' API.\nPayment of ৳2,450 would be processed.');
+      window.location.href = 'order-tracking.html';
+    }
+  </script>
+</body>
+</html>

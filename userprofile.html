@@ -3,264 +3,369 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Profile — MR Shop</title>
-  <link rel="stylesheet" href="assets/css/userprofile.css">
+  <meta name="description" content="Manage your MR Shop profile, view orders, track shipments, and update your account settings.">
+  <title>My Profile - MR Shop</title>
+  <script src="assets/js/loader.js"></script>
+  <link rel="stylesheet" href="assets/css/amazon-style.css">
+  <style>
+    .up-container { max-width: 1200px; margin: 0 auto; padding: 20px; display: grid; grid-template-columns: 280px 1fr; gap: 24px; }
+    .up-sidebar { background: white; border-radius: 12px; border: 1px solid #d5d9d9; overflow: hidden; height: fit-content; position: sticky; top: 80px; }
+    .up-profile-card { text-align: center; padding: 30px 20px; background: linear-gradient(135deg, #131921, #1a2332); color: white; }
+    .up-avatar { width: 100px; height: 100px; border-radius: 50%; border: 4px solid #ff9900; object-fit: cover; margin-bottom: 12px; }
+    .up-name { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+    .up-email { font-size: 13px; color: #999; margin-bottom: 16px; }
+    .up-stats { display: flex; justify-content: center; gap: 20px; }
+    .up-stat { text-align: center; }
+    .up-stat .num { font-size: 20px; font-weight: 800; color: #ff9900; display: block; }
+    .up-stat .label { font-size: 11px; color: #999; }
+    .up-nav { padding: 8px; }
+    .up-nav-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px 16px; border: none; background: none; font-size: 14px; font-weight: 500; cursor: pointer; border-radius: 8px; transition: all 0.2s; color: #333; text-align: left; }
+    .up-nav-item:hover { background: #f0f2f2; }
+    .up-nav-item.active { background: #fff8e7; color: #ff9900; font-weight: 700; }
+    .up-nav-item.logout { color: #cc0c39; }
+    .up-nav-item .icon { font-size: 18px; width: 24px; text-align: center; }
+    .up-content { background: white; border-radius: 12px; border: 1px solid #d5d9d9; padding: 28px; min-height: 500px; }
+    .up-section { display: none; }
+    .up-section.active { display: block; }
+    .up-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #eee; }
+    .up-header h2 { font-size: 22px; font-weight: 700; }
+    .up-btn { padding: 8px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #d5d9d9; background: #f0f2f2; transition: all 0.2s; }
+    .up-btn:hover { background: #e3e6e6; }
+    .up-btn.primary { background: linear-gradient(to bottom, #f7dfa5, #f0c14b); border-color: #a88734; }
+    .up-btn.danger { background: #cc0c39; color: white; border-color: #a8001f; }
+    .up-form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .up-form.full { grid-template-columns: 1fr; }
+    .up-form-group { display: flex; flex-direction: column; }
+    .up-form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #555; }
+    .up-form-group input, .up-form-group select, .up-form-group textarea { padding: 10px 14px; border: 1px solid #d5d9d9; border-radius: 8px; font-size: 14px; transition: border-color 0.2s; }
+    .up-form-group input:focus, .up-form-group select:focus, .up-form-group textarea:focus { border-color: #ff9900; outline: none; }
+    .up-form-group textarea { resize: vertical; min-height: 80px; }
+    .up-form-group input:disabled, .up-form-group select:disabled, .up-form-group textarea:disabled { background: #f7f8f8; color: #999; }
+    .up-order { border: 1px solid #d5d9d9; border-radius: 10px; padding: 16px; margin-bottom: 12px; transition: all 0.2s; }
+    .up-order:hover { border-color: #ff9900; }
+    .up-order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .up-order-id { font-weight: 700; font-size: 15px; }
+    .up-order-status { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    .up-order-status.delivered { background: #e6f4e6; color: #007600; }
+    .up-order-status.pending { background: #fff3e0; color: #e67700; }
+    .up-order-status.cancelled { background: #fce4ec; color: #cc0c39; }
+    .up-order-meta { display: flex; gap: 20px; font-size: 13px; color: #565959; margin-bottom: 10px; }
+    .up-order-meta span { display: flex; align-items: center; gap: 4px; }
+    .up-order-items { display: flex; gap: 8px; }
+    .up-order-items img { width: 50px; height: 50px; border-radius: 6px; object-fit: cover; border: 1px solid #eee; }
+    .up-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
+    .up-product { background: white; border: 1px solid #d5d9d9; border-radius: 10px; overflow: hidden; position: relative; transition: all 0.2s; }
+    .up-product:hover { border-color: #ff9900; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .up-product img { width: 100%; height: 140px; object-fit: cover; }
+    .up-product-info { padding: 10px; }
+    .up-product-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; line-height: 1.3; }
+    .up-product-price { font-size: 15px; font-weight: 700; color: #b12704; }
+    .up-product-remove { position: absolute; top: 6px; right: 6px; width: 24px; height: 24px; border-radius: 50%; background: rgba(0,0,0,0.5); color: white; border: none; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .up-empty { text-align: center; padding: 60px 20px; color: #999; }
+    .up-empty .icon { font-size: 48px; margin-bottom: 12px; }
+    .up-empty p { font-size: 16px; }
+    .up-settings-card { background: #f7f8f8; border-radius: 10px; padding: 20px; margin-bottom: 16px; border: 1px solid #d5d9d9; }
+    .up-settings-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 14px; }
+    .up-toggle { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
+    .up-toggle:last-child { border-bottom: none; }
+    .up-toggle-info .label { font-size: 14px; font-weight: 600; }
+    .up-toggle-info .desc { font-size: 12px; color: #999; }
+    .up-switch { position: relative; width: 44px; height: 24px; }
+    .up-switch input { opacity: 0; width: 0; height: 0; }
+    .up-switch .slider { position: absolute; inset: 0; background: #ccc; border-radius: 24px; cursor: pointer; transition: 0.3s; }
+    .up-switch .slider::before { content: ''; position: absolute; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; }
+    .up-switch input:checked + .slider { background: #ff9900; }
+    .up-switch input:checked + .slider::before { transform: translateX(20px); }
+    .up-filter-btns { display: flex; gap: 6px; }
+    .up-filter-btn { padding: 6px 14px; border: 1px solid #d5d9d9; border-radius: 20px; background: white; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .up-filter-btn.active { background: #ff9900; color: white; border-color: #ff9900; }
+    @media (max-width: 768px) {
+      .up-container { grid-template-columns: 1fr; }
+      .up-sidebar { position: static; }
+      .up-form { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-
   <!-- Header -->
-  <header class="header">
-    <div class="header-content">
-      <a href="index.html" class="brand-link">
-        <span class="brand-icon">🛍️</span>
-        <img src="./assets/images/mrlogo.png" alt="MR Shop" class="brand-logo">
+  <header class="amz-header">
+    <div class="amz-header-top">
+      <a href="index.html" class="logo">
+        <div>
+          <span class="logo-text">MR shop</span>
+          <span class="logo-sub">Bangladesh</span>
+        </div>
       </a>
-      <nav class="header-nav">
-        <a href="index.html" class="nav-link">Home</a>
-        <a href="cart.html" class="nav-link">Cart</a>
-        <a href="notification.html" class="nav-link">Notifications</a>
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-          <span class="theme-icon">🌙</span>
-        </button>
-      </nav>
+      <div class="amz-deliver-to"><span class="label">Deliver to</span><span class="location"><i class="fas fa-map-marker-alt"></i> Bangladesh</span></div>
+      <div class="amz-search-bar">
+        <select class="amz-search-category"><option>All</option></select>
+        <input type="text" class="amz-search-input" placeholder="Search MR Shop">
+        <button class="amz-search-btn"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="amz-header-right">
+        <a href="userprofile.html" class="amz-header-link"><span class="line1">Hello, <span id="headerName">User</span></span><span class="line2">Account <i class="fas fa-caret-down"></i></span></a>
+        <a href="wishlist.html" class="amz-header-link"><span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span><span class="line2">Wishlist</span></a>
+        <a href="cart.html" class="amz-cart"><span class="amz-cart-icon"><i class="fas fa-shopping-cart"></i><span class="amz-cart-count">0</span></span><span class="amz-cart-text">Cart</span></a>
+      </div>
     </div>
+    <nav class="amz-nav-bar">
+      <a href="index.html" class="amz-nav-item"><i class="fas fa-bars"></i> All</a>
+      <a href="food&natural.html" class="amz-nav-item">Food</a>
+      <a href="sweets&dairy.html" class="amz-nav-item">Sweets</a>
+      <a href="handricrafts.html" class="amz-nav-item">Handicrafts</a>
+      <a href="clothing.html" class="amz-nav-item">Clothing</a>
+      <a href="book.html" class="amz-nav-item">Books</a>
+      <a href="antique.html" class="amz-nav-item">Antique</a>
+      <div class="amz-nav-divider"></div>
+      <a href="becomeseller.html" class="amz-nav-item">Sell</a>
+      <a href="chat.html" class="amz-nav-item"><i class="fas fa-headset"></i> Help</a>
+    </nav>
   </header>
 
-  <!-- Main Container -->
-  <main class="profile-container">
-    
+  <!-- Features Bar -->
+  <div class="amz-features-bar">
+    <div class="amz-features-grid">
+      <div class="amz-feature-item">
+        <div class="amz-feature-icon green"><i class="fas fa-truck"></i></div>
+        <div class="amz-feature-text"><h4>Free Delivery</h4><p>On orders over ৳5,000</p></div>
+      </div>
+      <div class="amz-feature-item">
+        <div class="amz-feature-icon blue"><i class="fas fa-undo"></i></div>
+        <div class="amz-feature-text"><h4>Easy Returns</h4><p>7-day return policy</p></div>
+      </div>
+      <div class="amz-feature-item">
+        <div class="amz-feature-icon orange"><i class="fas fa-shield-alt"></i></div>
+        <div class="amz-feature-text"><h4>Secure Payment</h4><p>bKash, Nagad, COD</p></div>
+      </div>
+      <div class="amz-feature-item">
+        <div class="amz-feature-icon red"><i class="fas fa-headset"></i></div>
+        <div class="amz-feature-text"><h4>24/7 Support</h4><p>Dedicated help center</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile -->
+  <div class="up-container">
     <!-- Sidebar -->
-    <aside class="profile-sidebar">
-      <div class="profile-card">
-        <div class="profile-photo-wrapper">
-          <img src="https://i.pravatar.cc/200?img=33" alt="User" class="profile-photo" id="profilePhoto">
-          <button class="photo-edit-btn" onclick="changeProfilePhoto()">
-            <span>📷</span>
-          </button>
-        </div>
-        <h2 class="profile-name" id="profileName">Rafi Ullah</h2>
-        <p class="profile-email" id="profileEmail">rafi@mrshop.com</p>
-        <div class="profile-stats">
-          <div class="stat-item">
-            <span class="stat-value">24</span>
-            <span class="stat-label">Orders</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <span class="stat-value">12</span>
-            <span class="stat-label">Wishlist</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <span class="stat-value">45</span>
-            <span class="stat-label">Reviews</span>
-          </div>
+    <aside class="up-sidebar">
+      <div class="up-profile-card">
+        <img src="https://i.pravatar.cc/200?img=33" alt="User" class="up-avatar" id="profilePhoto">
+        <div class="up-name" id="profileName">User</div>
+        <div class="up-email" id="profileEmail">user@mrshop.com</div>
+        <div class="up-stats">
+          <div class="up-stat"><span class="num" id="orderCount">6</span><span class="label">Orders</span></div>
+          <div class="up-stat"><span class="num" id="wishlistCount">0</span><span class="label">Wishlist</span></div>
+          <div class="up-stat"><span class="num">4.8</span><span class="label">Rating</span></div>
         </div>
       </div>
-
-      <!-- Navigation Menu -->
-      <nav class="profile-menu">
-        <button class="menu-item active" data-section="personal-info" onclick="switchSection('personal-info')">
-          <span class="menu-icon">👤</span>
-          <span class="menu-text">Personal Info</span>
-        </button>
-        <button class="menu-item" data-section="order-history" onclick="switchSection('order-history')">
-          <span class="menu-icon">📦</span>
-          <span class="menu-text">Order History</span>
-        </button>
-        <button class="menu-item" data-section="wishlist" onclick="switchSection('wishlist')">
-          <span class="menu-icon">❤️</span>
-          <span class="menu-text">Wishlist</span>
-        </button>
-        <button class="menu-item" data-section="recently-viewed" onclick="switchSection('recently-viewed')">
-          <span class="menu-icon">👁️</span>
-          <span class="menu-text">Recently Viewed</span>
-        </button>
-        <button class="menu-item" data-section="settings" onclick="switchSection('settings')">
-          <span class="menu-icon">⚙️</span>
-          <span class="menu-text">Settings</span>
-        </button>
-        <button class="menu-item logout-btn" onclick="logout()">
-          <span class="menu-icon">🚪</span>
-          <span class="menu-text">Logout</span>
-        </button>
+      <nav class="up-nav">
+        <button class="up-nav-item active" onclick="showSection('personal')"><span class="icon">&#x1F464;</span> Personal Info</button>
+        <button class="up-nav-item" onclick="showSection('orders')"><span class="icon">&#x1F4E6;</span> Order History</button>
+        <button class="up-nav-item" onclick="showSection('wishlist')"><span class="icon">&#x2764;&#xFE0F;</span> Wishlist</button>
+        <button class="up-nav-item" onclick="showSection('settings')"><span class="icon">&#x2699;&#xFE0F;</span> Settings</button>
+        <button class="up-nav-item logout" onclick="doLogout()"><span class="icon">&#x1F6AA;</span> Logout</button>
       </nav>
     </aside>
 
-    <!-- Main Content -->
-    <section class="profile-content">
-
-      <!-- Personal Info Section -->
-      <div class="content-section active" id="personal-info">
-        <div class="section-header">
-          <h2 class="section-title">Personal Information</h2>
-          <button class="edit-btn" id="editBtn" onclick="toggleEdit()">
-            <span class="edit-icon">✏️</span>
-            <span class="edit-text">Edit</span>
-          </button>
+    <!-- Content -->
+    <div class="up-content">
+      <!-- Personal Info -->
+      <div class="up-section active" id="sec-personal">
+        <div class="up-header">
+          <h2>Personal Information</h2>
+          <button class="up-btn" id="editBtn" onclick="toggleEdit()">Edit</button>
         </div>
-        
-        <form class="info-form" id="infoForm">
-          <div class="form-grid">
-            <div class="form-group">
-              <label class="form-label">Full Name</label>
-              <input type="text" class="form-input" id="fullName" value="Md. Rafi Ullah" disabled>
-            </div>
-            
-            <div class="form-group">
-              <label class="form-label">Phone Number</label>
-              <input type="tel" class="form-input" id="phoneNumber" value="+880 1712-345678" disabled>
-            </div>
-            
-            <div class="form-group full-width">
-              <label class="form-label">Email Address</label>
-              <input type="email" class="form-input" id="emailAddress" value="rafi@mrshop.com" disabled>
-            </div>
-            
-            <div class="form-group full-width">
-              <label class="form-label">Address</label>
-              <textarea class="form-textarea" id="address" rows="3" disabled>House 12, Road 5, Dhanmondi
-Dhaka - 1205, Bangladesh</textarea>
-            </div>
-            
-            <div class="form-group">
-              <label class="form-label">Date of Birth</label>
-              <input type="date" class="form-input" id="dob" value="1995-05-15" disabled>
-            </div>
-            
-            <div class="form-group">
-              <label class="form-label">Gender</label>
-              <select class="form-input" id="gender" disabled>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
+        <form id="profileForm" onsubmit="saveProfile(event)">
+          <div class="up-form">
+            <div class="up-form-group"><label>Full Name</label><input type="text" id="fullName" value="User" disabled></div>
+            <div class="up-form-group"><label>Phone</label><input type="tel" id="phone" value="+880 1712-345678" disabled></div>
+            <div class="up-form-group"><label>Email</label><input type="email" id="email" value="user@mrshop.com" disabled></div>
+            <div class="up-form-group"><label>Date of Birth</label><input type="date" id="dob" value="1995-05-15" disabled></div>
+            <div class="up-form-group full"><label>Address</label><textarea id="address" rows="3" disabled>House 12, Road 5, Dhanmondi, Dhaka - 1205</textarea></div>
+            <div class="up-form-group"><label>Gender</label><select id="gender" disabled><option>Male</option><option>Female</option><option>Other</option></select></div>
           </div>
-          
-          <button type="submit" class="save-btn hidden" id="saveBtn">
-            <span>💾</span>
-            Save Changes
-          </button>
+          <button type="submit" class="up-btn primary" id="saveBtn" style="display:none;margin-top:16px;">Save Changes</button>
         </form>
       </div>
 
-      <!-- Order History Section -->
-      <div class="content-section" id="order-history">
-        <div class="section-header">
-          <h2 class="section-title">Order History</h2>
-          <div class="order-filters">
-            <button class="filter-btn active" onclick="filterOrders('all')">All</button>
-            <button class="filter-btn" onclick="filterOrders('delivered')">Delivered</button>
-            <button class="filter-btn" onclick="filterOrders('pending')">Pending</button>
-            <button class="filter-btn" onclick="filterOrders('cancelled')">Cancelled</button>
+      <!-- Orders -->
+      <div class="up-section" id="sec-orders">
+        <div class="up-header">
+          <h2>Order History</h2>
+          <div class="up-filter-btns">
+            <button class="up-filter-btn active" onclick="filterOrders('all', this)">All</button>
+            <button class="up-filter-btn" onclick="filterOrders('delivered', this)">Delivered</button>
+            <button class="up-filter-btn" onclick="filterOrders('pending', this)">Pending</button>
+            <button class="up-filter-btn" onclick="filterOrders('cancelled', this)">Cancelled</button>
           </div>
         </div>
-        
-        <div class="orders-container" id="ordersContainer">
-          <!-- Orders will be dynamically inserted -->
-        </div>
+        <div id="ordersList"></div>
       </div>
 
-      <!-- Wishlist Section -->
-      <div class="content-section" id="wishlist">
-        <div class="section-header">
-          <h2 class="section-title">My Wishlist</h2>
-          <button class="clear-btn" onclick="clearWishlist()">Clear All</button>
+      <!-- Wishlist -->
+      <div class="up-section" id="sec-wishlist">
+        <div class="up-header">
+          <h2>My Wishlist</h2>
+          <button class="up-btn" onclick="clearWishlist()">Clear All</button>
         </div>
-        
-        <div class="products-grid" id="wishlistContainer">
-          <!-- Wishlist items will be dynamically inserted -->
-        </div>
+        <div class="up-grid" id="wishlistGrid"></div>
       </div>
 
-      <!-- Recently Viewed Section -->
-      <div class="content-section" id="recently-viewed">
-        <div class="section-header">
-          <h2 class="section-title">Recently Viewed Products</h2>
-          <button class="clear-btn" onclick="clearHistory()">Clear History</button>
+      <!-- Settings -->
+      <div class="up-section" id="sec-settings">
+        <div class="up-header"><h2>Account Settings</h2></div>
+        <div class="up-settings-card">
+          <h3>Notifications</h3>
+          <div class="up-toggle"><div class="up-toggle-info"><div class="label">Email Notifications</div><div class="desc">Order updates via email</div></div><label class="up-switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+          <div class="up-toggle"><div class="up-toggle-info"><div class="label">SMS Alerts</div><div class="desc">Delivery notifications</div></div><label class="up-switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+          <div class="up-toggle"><div class="up-toggle-info"><div class="label">Promotional Emails</div><div class="desc">Deals and offers</div></div><label class="up-switch"><input type="checkbox"><span class="slider"></span></label></div>
         </div>
-        
-        <div class="products-grid" id="recentlyViewedContainer">
-          <!-- Recently viewed items will be dynamically inserted -->
+        <div class="up-settings-card">
+          <h3>Security</h3>
+          <button class="up-btn" style="width:100%;margin-bottom:8px;">Change Password</button>
+          <button class="up-btn" style="width:100%;margin-bottom:8px;">Two-Factor Authentication</button>
+          <button class="up-btn" style="width:100%;">Connected Devices</button>
         </div>
-      </div>
-
-      <!-- Settings Section -->
-      <div class="content-section" id="settings">
-        <div class="section-header">
-          <h2 class="section-title">Account Settings</h2>
-        </div>
-        
-        <div class="settings-container">
-          <div class="settings-card">
-            <div class="settings-item">
-              <div class="settings-info">
-                <h3 class="settings-title">Email Notifications</h3>
-                <p class="settings-desc">Receive order updates via email</p>
-              </div>
-              <label class="toggle-switch">
-                <input type="checkbox" checked>
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-            
-            <div class="settings-item">
-              <div class="settings-info">
-                <h3 class="settings-title">SMS Notifications</h3>
-                <p class="settings-desc">Get SMS alerts for deliveries</p>
-              </div>
-              <label class="toggle-switch">
-                <input type="checkbox" checked>
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-            
-            <div class="settings-item">
-              <div class="settings-info">
-                <h3 class="settings-title">Promotional Emails</h3>
-                <p class="settings-desc">Receive deals and offers</p>
-              </div>
-              <label class="toggle-switch">
-                <input type="checkbox">
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-          </div>
-
-          <div class="settings-card">
-            <h3 class="card-title">Privacy & Security</h3>
-            <button class="settings-action-btn">
-              <span>🔒</span>
-              Change Password
-            </button>
-            <button class="settings-action-btn">
-              <span>🛡️</span>
-              Two-Factor Authentication
-            </button>
-            <button class="settings-action-btn">
-              <span>📱</span>
-              Connected Devices
-            </button>
-          </div>
-
-          <div class="settings-card danger-zone">
-            <h3 class="card-title">Danger Zone</h3>
-            <button class="settings-action-btn danger">
-              <span>⚠️</span>
-              Deactivate Account
-            </button>
-            <button class="settings-action-btn danger">
-              <span>🗑️</span>
-              Delete Account
-            </button>
-          </div>
+        <div class="up-settings-card" style="border-color:#fce4ec;">
+          <h3 style="color:#cc0c39;">Danger Zone</h3>
+          <button class="up-btn" style="width:100%;margin-bottom:8px;">Deactivate Account</button>
+          <button class="up-btn danger" style="width:100%;">Delete Account</button>
         </div>
       </div>
+    </div>
+  </div>
 
-    </section>
-  </main>
+  <!-- Footer -->
+  <div class="amz-back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</div>
+  <footer class="amz-footer">
+    <div class="amz-footer-grid">
+      <div class="amz-footer-col"><h4>Get to Know Us</h4><a href="work-for-people.html">About MR Shop</a><a href="workfor.html">Careers</a><a href="seller.html">Sell on MR Shop</a></div>
+      <div class="amz-footer-col"><h4>Help & Support</h4><a href="chat.html">Customer Service</a><a href="userprofile.html">Your Account</a><a href="workforchild.html">Children's Privacy</a></div>
+      <div class="amz-footer-col"><h4>Shop by Category</h4><a href="food&natural.html">Food & Natural</a><a href="sweets&dairy.html">Sweets & Dairy</a><a href="handricrafts.html">Handicrafts</a><a href="clothing.html">Clothing</a></div>
+      <div class="amz-footer-col"><h4>Connect with Us</h4><a href="https://www.facebook.com/profile.php?id=61583616496782" target="_blank"><i class="fab fa-facebook"></i> Facebook</a><a href="https://www.instagram.com/mrshopbd18/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a><a href="https://www.youtube.com/@mrshop18" target="_blank"><i class="fab fa-youtube"></i> YouTube</a></div>
+    </div>
+    <div class="amz-footer-divider"></div>
+    <div class="amz-footer-bottom"><div class="amz-footer-logo">MR shop</div><div class="amz-footer-copyright">&copy; 2026 MR Shop. All Rights Reserved. | Powered by <strong>MR IT Company</strong></div></div>
+  </footer>
 
-  <script src="assets/js/userprofile.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/products.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/auth-shared.js"></script>
+  <script>
+    // Load user data from localStorage
+    const user = JSON.parse(localStorage.getItem('mr_shop_user') || '{}');
+    if (user.username) {
+      document.getElementById('profileName').textContent = user.username;
+      document.getElementById('headerName').textContent = user.username;
+      document.getElementById('fullName').value = user.username;
+    }
+    if (user.email) {
+      document.getElementById('profileEmail').textContent = user.email;
+      document.getElementById('email').value = user.email;
+    }
+
+    // Section switching
+    function showSection(name) {
+      document.querySelectorAll('.up-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.up-nav-item').forEach(n => n.classList.remove('active'));
+      document.getElementById('sec-' + name).classList.add('active');
+      event.currentTarget.classList.add('active');
+      if (name === 'orders') loadOrders();
+      if (name === 'wishlist') loadWishlist();
+    }
+
+    // Edit profile
+    let editing = false;
+    function toggleEdit() {
+      editing = !editing;
+      const inputs = document.querySelectorAll('#profileForm input, #profileForm textarea, #profileForm select');
+      inputs.forEach(i => i.disabled = !editing);
+      document.getElementById('editBtn').textContent = editing ? 'Cancel' : 'Edit';
+      document.getElementById('saveBtn').style.display = editing ? 'block' : 'none';
+    }
+
+    function saveProfile(e) {
+      e.preventDefault();
+      const data = {
+        username: document.getElementById('fullName').value,
+        email: document.getElementById('email').value,
+        loggedIn: true
+      };
+      localStorage.setItem('mr_shop_user', JSON.stringify(data));
+      document.getElementById('profileName').textContent = data.username;
+      document.getElementById('headerName').textContent = data.username;
+      document.getElementById('profileEmail').textContent = data.email;
+      toggleEdit();
+      alert('Profile saved!');
+    }
+
+    // Orders
+    const orders = [
+      { id: '#MR5001', status: 'delivered', date: '2026-01-15', total: 1250, items: 3, imgs: ['./assets/images/honey.jpg', './assets/images/oil.jpg', './assets/images/rice.jpg'] },
+      { id: '#MR5000', status: 'pending', date: '2026-01-14', total: 850, items: 2, imgs: ['./assets/images/doi.jpg', './assets/images/roshogolla.jpg'] },
+      { id: '#MR4999', status: 'delivered', date: '2026-01-12', total: 2100, items: 5, imgs: ['./assets/images/saree.jpg', './assets/images/nakshi.jpg'] },
+      { id: '#MR4998', status: 'delivered', date: '2026-01-10', total: 650, items: 1, imgs: ['./assets/images/basket.jpg'] },
+      { id: '#MR4997', status: 'cancelled', date: '2026-01-08', total: 320, items: 1, imgs: ['./assets/images/clay.jpg'] },
+      { id: '#MR4996', status: 'delivered', date: '2026-01-05', total: 1450, items: 4, imgs: ['./assets/images/panjabi.jpg', './assets/images/tea.jpg'] }
+    ];
+
+    function loadOrders(filter = 'all') {
+      const list = document.getElementById('ordersList');
+      const filtered = filter === 'all' ? orders : orders.filter(o => o.status === filter);
+      if (!filtered.length) { list.innerHTML = '<div class="up-empty"><div class="icon">&#x1F4E6;</div><p>No orders found</p></div>'; return; }
+      list.innerHTML = filtered.map(o => `
+        <div class="up-order">
+          <div class="up-order-header"><span class="up-order-id">${o.id}</span><span class="up-order-status ${o.status}">${o.status}</span></div>
+          <div class="up-order-meta"><span>&#x1F4C5; ${new Date(o.date).toLocaleDateString('en-GB')}</span><span>&#x1F4B0; &#2547;${o.total.toLocaleString()}</span><span>&#x1F4E6; ${o.items} item${o.items>1?'s':''}</span></div>
+          <div class="up-order-items">${o.imgs.map(i => `<img src="${i}" alt="">`).join('')}</div>
+        </div>`).join('');
+    }
+
+    function filterOrders(f, btn) {
+      document.querySelectorAll('.up-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      loadOrders(f);
+    }
+
+    // Wishlist
+    function loadWishlist() {
+      const grid = document.getElementById('wishlistGrid');
+      const wl = JSON.parse(localStorage.getItem('mr_shop_wishlist') || '[]');
+      document.getElementById('wishlistCount').textContent = wl.length;
+      if (!wl.length) { grid.innerHTML = '<div class="up-empty"><div class="icon">&#x2764;&#xFE0F;</div><p>Your wishlist is empty</p></div>'; return; }
+      grid.innerHTML = wl.map(item => `
+        <div class="up-product">
+          <button class="up-product-remove" onclick="removeWish(${item.id})">&#x2715;</button>
+          <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/180x140?text=No+Image'">
+          <div class="up-product-info"><div class="up-product-name">${item.name}</div><div class="up-product-price">&#2547;${item.price.toLocaleString()}</div></div>
+        </div>`).join('');
+    }
+
+    function removeWish(id) {
+      let wl = JSON.parse(localStorage.getItem('mr_shop_wishlist') || '[]');
+      wl = wl.filter(i => i.id !== id);
+      localStorage.setItem('mr_shop_wishlist', JSON.stringify(wl));
+      loadWishlist();
+    }
+
+    function clearWishlist() {
+      if (confirm('Clear entire wishlist?')) {
+        localStorage.removeItem('mr_shop_wishlist');
+        loadWishlist();
+      }
+    }
+
+    // Logout
+    function doLogout() {
+      if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('mr_shop_user');
+        window.location.href = 'index.html';
+      }
+    }
+
+    // Init
+    loadOrders();
+  </script>
 </body>
 </html>

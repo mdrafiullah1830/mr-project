@@ -1,0 +1,1382 @@
+/* ==================== MR SHOP - AMAZON STYLE ==================== */
+/* Fonts & Icons loaded via <link> tags in HTML for faster page load */
+
+:root {
+  --amazon-dark: #131921;
+  --amazon-orange: #febd69;
+  --amazon-yellow: #ff9900;
+  --amazon-light: #f5f5f5;
+  --amazon-blue: #146eb4;
+  --amazon-green: #007600;
+  --amazon-white: #ffffff;
+  --amazon-border: #d5d9d9;
+  --amazon-text: #0f1111;
+  --amazon-link: #007185;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', Arial, sans-serif;
+  background: var(--amazon-light);
+  color: var(--amazon-text);
+  line-height: 1.4;
+}
+
+a { text-decoration: none; color: inherit; }
+
+/* ==================== HEADER ==================== */
+.amz-header,
+.header {
+  background: var(--amazon-dark);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.amz-header-top,
+.header-top {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  gap: 16px;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.amz-logo,
+.logo {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.amz-logo:hover,
+.logo:hover {
+  border-color: #fff;
+  background: rgba(255,255,255,0.05);
+}
+
+.amz-logo-img {
+  height: 32px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+.amz-logo-text,
+.logo-text {
+  color: var(--amazon-white);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.amz-logo-subtitle,
+.logo-sub {
+  color: var(--amazon-yellow);
+  font-size: 10px;
+  font-weight: 600;
+  display: block;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.amz-deliver-to,
+.deliver-to {
+  color: var(--amazon-white);
+  padding: 8px 14px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.amz-deliver-to:hover,
+.deliver-to:hover { border-color: #fff; }
+
+.amz-deliver-to .label,
+.deliver-to .label {
+  color: #999;
+  font-size: 11px;
+  display: block;
+}
+
+.amz-deliver-to .location,
+.deliver-to .loc {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Search Bar */
+.amz-search-bar,
+.search-bar {
+  flex: 1;
+  display: flex;
+  height: 46px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.amz-search-category,
+.search-cat {
+  background: var(--amazon-light);
+  border: none;
+  padding: 0 12px;
+  font-size: 13px;
+  color: #555;
+  cursor: pointer;
+  border-right: 1px solid var(--amazon-border);
+}
+
+.amz-search-input,
+.search-input {
+  flex: 1;
+  border: none;
+  padding: 0 16px;
+  font-size: 15px;
+  outline: none;
+}
+
+.amz-search-btn,
+.search-btn {
+  background: var(--amazon-orange);
+  border: none;
+  padding: 0 20px;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--amazon-dark);
+  transition: background 0.2s;
+}
+
+.amz-search-btn:hover,
+.search-btn:hover { background: var(--amazon-yellow); }
+
+/* Header Right */
+.amz-header-right,
+.header-actions,
+.amz-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.amz-header-link,
+.header-link {
+  color: var(--amazon-white);
+  padding: 8px 14px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.amz-header-link:hover,
+.header-link:hover { border-color: #fff; }
+
+.amz-header-link .line1,
+.header-link .line1 {
+  color: #999;
+  font-size: 11px;
+  display: block;
+}
+
+.amz-header-link .line2,
+.header-link .line2 {
+  font-weight: 700;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+}
+
+.amz-cart {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--amazon-white);
+}
+
+.amz-cart:hover,
+.cart-btn:hover { border-color: #fff; }
+
+.amz-cart-icon,
+.cart-icon {
+  font-size: 24px;
+  position: relative;
+}
+
+.amz-cart-count,
+.cart-count {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: var(--amazon-orange);
+  color: var(--amazon-dark);
+  font-size: 13px;
+  font-weight: 700;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.amz-cart-text,
+.cart-text {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* ==================== NAVIGATION ==================== */
+.amz-nav-bar {
+  background: #232f3e;
+  padding: 6px 16px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  overflow-x: auto;
+}
+
+.amz-nav-item {
+  color: var(--amazon-white);
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.2s;
+}
+
+.amz-nav-item:hover { border-color: #fff; }
+
+.amz-nav-item.active {
+  border-color: #fff;
+  font-weight: 700;
+}
+
+.amz-nav-item i { margin-right: 4px; }
+
+.amz-nav-divider {
+  width: 1px;
+  height: 24px;
+  background: #4a5568;
+  margin: 0 4px;
+}
+
+/* ==================== FOOTER ==================== */
+.amz-back-to-top {
+  background: #37475a;
+  text-align: center;
+  padding: 14px;
+  color: var(--amazon-white);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.amz-back-to-top:hover { background: #485769; }
+
+.amz-footer {
+  background: #232f3e;
+  padding: 40px 16px;
+}
+
+.amz-footer-grid {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+
+.amz-footer-col h4 {
+  color: var(--amazon-white);
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.amz-footer-col a {
+  display: block;
+  color: #ddd;
+  font-size: 14px;
+  padding: 4px 0;
+  transition: color 0.2s;
+}
+
+.amz-footer-col a:hover { text-decoration: underline; }
+
+.amz-footer-divider {
+  max-width: 1000px;
+  margin: 32px auto;
+  height: 1px;
+  background: #3a4553;
+}
+
+.amz-footer-bottom {
+  text-align: center;
+  padding: 24px 16px;
+  background: #131a22;
+}
+
+.amz-footer-logo {
+  color: var(--amazon-white);
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.amz-footer-copyright {
+  color: #999;
+  font-size: 12px;
+}
+
+/* ==================== PRODUCT CARDS ==================== */
+.amz-products-section {
+  padding: 20px 16px;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.amz-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.amz-section-title {
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--amazon-text);
+}
+
+.amz-section-link {
+  color: var(--amazon-link);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.amz-section-link:hover { text-decoration: underline; color: #c7511f; }
+
+.amz-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.amz-product-card {
+  background: var(--amazon-white);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  position: relative;
+}
+
+.amz-product-card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.amz-product-card .deal-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #cc0c39;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  z-index: 1;
+}
+
+.amz-product-img-wrap {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: #f7f7f7;
+}
+
+.amz-product-img-wrap img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.amz-product-info {
+  padding: 12px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.amz-product-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--amazon-text);
+  margin-bottom: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.3;
+}
+
+.amz-product-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.amz-stars {
+  color: var(--amazon-orange);
+  font-size: 14px;
+  display: flex;
+}
+
+.amz-rating-count {
+  color: var(--amazon-link);
+  font-size: 13px;
+}
+
+.amz-product-price {
+  margin-top: auto;
+}
+
+.amz-price-symbol {
+  font-size: 13px;
+  vertical-align: top;
+}
+
+.amz-price-whole {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--amazon-text);
+}
+
+.amz-price-fraction {
+  font-size: 13px;
+  vertical-align: top;
+}
+
+.amz-price-original {
+  color: #565959;
+  font-size: 13px;
+  text-decoration: line-through;
+  margin-left: 8px;
+}
+
+.amz-price-discount {
+  color: #cc0c39;
+  font-size: 13px;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.amz-prime-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #007185;
+  font-weight: 600;
+}
+
+.amz-prime-badge .prime-icon {
+  background: var(--amazon-blue);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.amz-product-btn {
+  margin-top: 10px;
+  background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+  border: 1px solid #a88734;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+}
+
+.amz-product-btn:hover {
+  background: linear-gradient(to bottom, #f5d78e, #eeb933);
+}
+
+.amz-product-btn-cart {
+  background: linear-gradient(to bottom, #ffd814, #f7ca00);
+  border: 1px solid #f2c200;
+}
+
+.amz-product-btn-cart:hover {
+  background: linear-gradient(to bottom, #f7ca00, #ebb617);
+}
+
+.amz-delivery-info {
+  font-size: 12px;
+  color: #565959;
+  margin-top: 6px;
+}
+
+.amz-delivery-info strong {
+  color: var(--amazon-text);
+}
+
+/* ==================== CATEGORY CARDS ==================== */
+.amz-category-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.amz-category-card {
+  background: var(--amazon-white);
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.amz-category-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.amz-category-card .grid-4 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.amz-category-card .grid-item {
+  text-align: center;
+}
+
+.amz-category-card .grid-item img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.amz-category-card .grid-item span {
+  display: block;
+  font-size: 12px;
+  color: var(--amazon-text);
+  margin-top: 4px;
+}
+
+.amz-category-card .see-more {
+  color: var(--amazon-link);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.amz-category-card .see-more:hover { text-decoration: underline; color: #c7511f; }
+
+/* ==================== DEALS BANNER ==================== */
+.amz-deals-banner {
+  background: linear-gradient(135deg, #37475a, #232f3e);
+  padding: 40px 24px;
+  margin: 20px 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.amz-deals-content h2 {
+  color: var(--amazon-white);
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.amz-deals-content p {
+  color: #ddd;
+  font-size: 16px;
+}
+
+.amz-deals-btn {
+  background: var(--amazon-orange);
+  color: var(--amazon-dark);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s;
+}
+
+.amz-deals-btn:hover { background: var(--amazon-yellow); }
+
+/* ==================== AUTH PAGES ==================== */
+.amz-auth-container {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+
+.amz-auth-box {
+  background: var(--amazon-white);
+  border-radius: 8px;
+  padding: 24px;
+  border: 1px solid var(--amazon-border);
+}
+
+.amz-auth-box h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+.amz-auth-label {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.amz-auth-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--amazon-border);
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.amz-auth-input:focus {
+  border-color: #e77600;
+  box-shadow: 0 0 0 3px #f0c14b;
+}
+
+.amz-auth-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: background 0.2s;
+}
+
+.amz-auth-btn-primary {
+  background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+  border: 1px solid #a88734;
+}
+
+.amz-auth-btn-primary:hover {
+  background: linear-gradient(to bottom, #f5d78e, #eeb933);
+}
+
+.amz-auth-btn-secondary {
+  background: linear-gradient(to bottom, #f7f8fa, #e7e9ec);
+  border: 1px solid #adb1b8;
+}
+
+.amz-auth-btn-secondary:hover {
+  background: linear-gradient(to bottom, #e7eaf0, #d9dce1);
+}
+
+.amz-auth-divider {
+  text-align: center;
+  margin: 18px 0;
+  position: relative;
+}
+
+.amz-auth-divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--amazon-border);
+}
+
+.amz-auth-divider span {
+  background: var(--amazon-white);
+  padding: 0 12px;
+  position: relative;
+  color: #767676;
+  font-size: 13px;
+}
+
+.amz-auth-link {
+  color: var(--amazon-link);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.amz-auth-link:hover { text-decoration: underline; color: #c7511f; }
+
+.amz-auth-footer {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 12px;
+  color: #767676;
+}
+
+.amz-auth-new-account {
+  background: linear-gradient(to bottom, #f7f8fa, #e7e9ec);
+  border: 1px solid #adb1b8;
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 18px;
+}
+
+/* ==================== CART PAGE ==================== */
+.amz-cart-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 16px;
+}
+
+.amz-cart-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+}
+
+.amz-cart-items {
+  background: var(--amazon-white);
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid var(--amazon-border);
+}
+
+.amz-cart-item {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.amz-cart-item:last-child { border-bottom: none; }
+
+.amz-cart-item-img {
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #f7f7f7;
+}
+
+.amz-cart-item-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--amazon-text);
+  margin-bottom: 8px;
+}
+
+.amz-cart-item-stock {
+  font-size: 14px;
+  color: var(--amazon-green);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.amz-cart-item-price {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.amz-cart-qty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.amz-cart-qty select {
+  padding: 8px 12px;
+  border: 1px solid var(--amazon-border);
+  border-radius: 8px;
+  background: #f0f2f2;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.amz-cart-item-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.amz-cart-item-actions a {
+  color: var(--amazon-link);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.amz-cart-item-actions a:hover { text-decoration: underline; color: #c7511f; }
+
+/* Cart Summary */
+.amz-cart-summary {
+  background: var(--amazon-white);
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid var(--amazon-border);
+  height: fit-content;
+  position: sticky;
+  top: 120px;
+}
+
+.amz-cart-summary-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.amz-cart-summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.amz-cart-summary-total {
+  font-size: 18px;
+  font-weight: 700;
+  padding: 12px 0;
+  border-top: 2px solid #eee;
+  border-bottom: 1px solid #eee;
+  margin: 12px 0;
+}
+
+.amz-cart-checkout-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(to bottom, #ffd814, #f7ca00);
+  border: 1px solid #f2c200;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.amz-cart-checkout-btn:hover {
+  background: linear-gradient(to bottom, #f7ca00, #ebb617);
+}
+
+.amz-cart-secure {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 12px;
+  color: #767676;
+}
+
+.amz-cart-empty {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.amz-cart-empty i {
+  font-size: 64px;
+  color: #ddd;
+  margin-bottom: 16px;
+}
+
+.amz-cart-empty h2 {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.amz-cart-empty p {
+  color: #767676;
+  margin-bottom: 16px;
+}
+
+/* ==================== CHAT PAGE ==================== */
+.amz-chat-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0 16px;
+}
+
+.amz-chat-box {
+  background: var(--amazon-white);
+  border-radius: 8px;
+  border: 1px solid var(--amazon-border);
+  overflow: hidden;
+}
+
+.amz-chat-header {
+  background: var(--amazon-dark);
+  color: var(--amazon-white);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.amz-chat-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.amz-chat-messages {
+  height: 500px;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #f7f8fa;
+}
+
+.amz-chat-msg {
+  max-width: 80%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.amz-chat-msg-user {
+  align-self: flex-end;
+  background: var(--amazon-blue);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.amz-chat-msg-bot {
+  align-self: flex-start;
+  background: white;
+  border: 1px solid #e6e9ee;
+  border-bottom-left-radius: 4px;
+}
+
+.amz-chat-input {
+  display: flex;
+  padding: 16px;
+  gap: 12px;
+  border-top: 1px solid #e6e9ee;
+}
+
+.amz-chat-input input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid var(--amazon-border);
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.amz-chat-input input:focus {
+  border-color: #e77600;
+}
+
+.amz-chat-input button {
+  padding: 12px 24px;
+  background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+  border: 1px solid #a88734;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.amz-chat-input button:hover {
+  background: linear-gradient(to bottom, #f5d78e, #eeb933);
+}
+
+/* ==================== SELLER PAGES ==================== */
+.amz-seller-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 16px;
+}
+
+.amz-seller-card {
+  background: var(--amazon-white);
+  border-radius: 8px;
+  padding: 24px;
+  border: 1px solid var(--amazon-border);
+  margin-bottom: 20px;
+}
+
+.amz-seller-card h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.amz-seller-card p {
+  color: #565959;
+  margin-bottom: 12px;
+}
+
+/* ==================== SEARCH SUGGESTIONS ==================== */
+.search-suggestions-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1001;
+  display: none;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.search-suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.search-suggestion-item:last-child { border-bottom: none; }
+.search-suggestion-item:hover { background: #f7f8f8; }
+
+.search-suggestion-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.search-suggestion-info { flex: 1; }
+.search-suggestion-name { font-size: 14px; font-weight: 500; color: #111; }
+.search-suggestion-price { font-size: 13px; margin-top: 2px; }
+.search-price-current { font-weight: 700; color: #b12704; }
+.search-price-original { text-decoration: line-through; color: #999; margin-left: 6px; font-size: 12px; }
+.search-price-discount { color: #cc0c39; margin-left: 4px; font-size: 12px; }
+.search-suggestion-arrow { color: #999; font-size: 12px; }
+.search-category-label { padding: 8px 16px 4px; font-size: 11px; font-weight: 700; color: #555; text-transform: uppercase; background: #fafafa; }
+
+/* ==================== WISHLIST ==================== */
+.amz-wishlist-count { color: var(--amazon-white); }
+.amz-heart-icon { cursor: pointer; transition: transform 0.2s; }
+.amz-heart-icon:hover { transform: scale(1.2); }
+.amz-heart-icon.active { color: #e74c3c; }
+.amz-heart-icon.active i { font-weight: 900; }
+
+/* ==================== PROFESSIONAL IMPROVEMENTS ==================== */
+
+/* Smooth transitions on all interactive elements */
+.amz-product-card,
+.amz-btn,
+.amz-cart-checkout-btn,
+.amz-header-link,
+.amz-nav-item,
+.wishlist-btn {
+  transition: all 0.2s ease;
+}
+
+/* Better focus states for accessibility */
+input:focus,
+select:focus,
+textarea:focus,
+button:focus-visible {
+  outline: 2px solid var(--amazon-orange);
+  outline-offset: 2px;
+}
+
+/* Subtle hover effects on cards */
+.amz-product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+/* Product card image hover zoom */
+.amz-product-img-wrap img {
+  transition: transform 0.3s ease;
+}
+.amz-product-card:hover .amz-product-img-wrap img {
+  transform: scale(1.05);
+}
+
+/* Button press effect */
+.amz-product-btn:active,
+.amz-cart-checkout-btn:active,
+.wishlist-btn:active {
+  transform: scale(0.97);
+}
+
+/* Better scrollbar styling */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: #bbb; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #999; }
+
+/* Toast notification animation */
+@keyframes slideUp {
+  from { transform: translateX(-50%) translateY(100px); opacity: 0; }
+  to { transform: translateX(-50%) translateY(0); opacity: 1; }
+}
+
+/* Loading skeleton for images */
+.amz-product-img-wrap {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Category nav hover */
+.amz-nav-item {
+  position: relative;
+}
+.amz-nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--amazon-orange);
+  transition: all 0.2s ease;
+  transform: translateX(-50%);
+}
+.amz-nav-item:hover::after {
+  width: 80%;
+}
+
+/* Better form inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="number"],
+select {
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+select:focus {
+  border-color: #e77600;
+  box-shadow: 0 0 3px 2px rgba(228,121,17,0.3);
+}
+
+/* Professional badge styling */
+.amz-prime-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #febd69;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.prime-icon {
+  background: var(--amazon-orange);
+  color: var(--amazon-dark);
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+/* Deal badge */
+.deal-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #cc0c39;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  z-index: 1;
+}
+
+/* Free delivery badge */
+.free-delivery-badge {
+  background: #007600;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+/* Quantity selector */
+.qty-select {
+  padding: 6px 10px;
+  border: 1px solid var(--amazon-border);
+  border-radius: 8px;
+  background: #f0f2f2;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* Professional footer */
+.amz-footer {
+  background: #232f3e;
+  color: white;
+}
+
+.amz-footer a {
+  color: #ddd;
+  transition: color 0.2s;
+}
+
+.amz-footer a:hover {
+  color: white;
+}
+
+/* ==================== FEATURES BAR ==================== */
+.amz-features-bar {
+  background: var(--amazon-white);
+  border-bottom: 1px solid var(--amazon-border);
+}
+
+.amz-features-grid {
+  max-width: 1500px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.amz-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 24px;
+  border-right: 1px solid var(--amazon-border);
+  transition: background 0.2s;
+}
+
+.amz-feature-item:last-child {
+  border-right: none;
+}
+
+.amz-feature-item:hover {
+  background: #f8f9fa;
+}
+
+.amz-feature-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.amz-feature-icon.green {
+  background: #e6f4e6;
+  color: var(--amazon-green);
+}
+
+.amz-feature-icon.blue {
+  background: #e6f0fa;
+  color: var(--amazon-blue);
+}
+
+.amz-feature-icon.orange {
+  background: #fff3e0;
+  color: #ff9900;
+}
+
+.amz-feature-icon.red {
+  background: #fce4ec;
+  color: #cc0c39;
+}
+
+.amz-feature-text h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--amazon-text);
+}
+
+.amz-feature-text p {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 900px) {
+  .amz-header-top { flex-wrap: wrap; }
+  .amz-deliver-to { display: none; }
+  .amz-search-bar { order: 3; width: 100%; margin-top: 8px; }
+  .amz-header-right { flex-wrap: wrap; }
+  .amz-footer-grid { grid-template-columns: repeat(2, 1fr); }
+  .amz-deals-banner { flex-direction: column; text-align: center; gap: 16px; }
+  .amz-cart-layout { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .amz-header-link .line1 { display: none; }
+  .amz-logo-text, .logo-text { font-size: 16px; }
+  .amz-products-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .amz-product-img-wrap { height: 140px; padding: 8px; }
+  .amz-product-info { padding: 8px; }
+  .amz-price-whole { font-size: 18px; }
+  .amz-footer-grid { grid-template-columns: 1fr; }
+  .amz-nav-bar { padding: 6px 8px; }
+  .amz-nav-item { padding: 6px 8px; font-size: 12px; }
+  .amz-category-cards { grid-template-columns: 1fr; }
+  .amz-cart-item { grid-template-columns: 100px 1fr; }
+  .amz-cart-item-img { width: 100px; height: 100px; }
+}

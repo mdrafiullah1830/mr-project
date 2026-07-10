@@ -1,250 +1,180 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Antique & Collectibles | Coins</title>
-  <style>
-    /* Remove underlines from all links for a clean UI */
-    a, a:link, a:visited, a:hover, a:active {
-      text-decoration: none !important;
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Explore rare Bangladeshi antique coins, vintage items, and collectibles at MR Shop.">
+  <title>Antique & Collectibles — MR Shop</title>
+  <script src="assets/js/loader.js"></script>
+  <link rel="stylesheet" href="assets/css/amazon-style.css">
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="amz-header">
+    <div class="amz-header-top">
+      <a href="index.html" class="logo">
+        <div>
+          <span class="logo-text">MR shop</span>
+          <span class="logo-sub">Bangladesh</span>
+        </div>
+      </a>
+      <div class="amz-deliver-to"><span class="label">Deliver to</span><span class="location"><i class="fas fa-map-marker-alt"></i> Bangladesh</span></div>
+      <div class="amz-search-bar">
+        <select class="amz-search-category"><option>All</option><option>Food & Natural</option><option>Sweets & Dairy</option><option>Handicrafts</option><option>Clothing</option><option>Books</option><option selected>Antique</option></select>
+        <input type="text" class="amz-search-input" placeholder="Search MR Shop" autocomplete="off">
+        <button class="amz-search-btn" aria-label="Search"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="amz-header-right">
+        <a href="signin.html" class="amz-header-link"><span class="line1">Hello, Sign in</span><span class="line2">Account & Lists <i class="fas fa-caret-down"></i></span></a>
+        <a href="userprofile.html" class="amz-header-link"><span class="line1">Returns</span><span class="line2">& Orders</span></a>
+        <a href="wishlist.html" class="amz-header-link">
+          <span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span>
+          <span class="line2">Wishlist</span>
+        </a>
+        <a href="cart.html" class="amz-cart"><span class="amz-cart-icon"><i class="fas fa-shopping-cart"></i><span class="amz-cart-count" id="cartCount">0</span></span><span class="amz-cart-text">Cart</span></a>
+      </div>
+    </div>
+    <nav class="amz-nav-bar">
+      <a href="index.html" class="amz-nav-item"><i class="fas fa-bars"></i> All</a>
+      <a href="food&natural.html" class="amz-nav-item">Food & Natural</a>
+      <a href="sweets&dairy.html" class="amz-nav-item">Sweets & Dairy</a>
+      <a href="handricrafts.html" class="amz-nav-item">Handicrafts</a>
+      <a href="clothing.html" class="amz-nav-item">Clothing</a>
+      <a href="book.html" class="amz-nav-item">Books</a>
+      <a href="antique.html" class="amz-nav-item active">Antique</a>
+      <div class="amz-nav-divider"></div>
+      <a href="becomeseller.html" class="amz-nav-item">Sell</a>
+      <a href="index.html" class="amz-nav-item">Best Sellers</a>
+      <a href="index.html" class="amz-nav-item">Today's Deals</a>
+      <a href="chat.html" class="amz-nav-item"><i class="fas fa-headset"></i> Help</a>
+    </nav>
+  </header>
+
+  <!-- Features Bar -->
+  <div class="amz-features-bar">
+    <div class="amz-features-grid">
+      <div class="amz-feature-item">
+        <div class="amz-feature-icon green"><i class="fas fa-truck"></i></div>
+        <div class="amz-feature-text"><h4>Free Delivery</h4><p>On orders over ৳5,000</p></div>
+      </div>
+      <div class="amz-feature-item">
+        <div class="amz-feature-icon blue"><i class="fas fa-undo"></i></div>
+        <div class="amz-feature-text"><h4>Easy Returns</h4><p>7-day return policy</p></div>
+      </div>
+      <div class="amz-feature-item">
+        <div class="amz-feature-icon orange"><i class="fas fa-shield-alt"></i></div>
+        <div class="amz-feature-text"><h4>Secure Payment</h4><p>bKash, Nagad, COD</p></div>
+      </div>
+      <div class="amz-feature-item">
+        <div class="amz-feature-icon red"><i class="fas fa-headset"></i></div>
+        <div class="amz-feature-text"><h4>24/7 Support</h4><p>Dedicated help center</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <main class="amz-products-section">
+    <!-- Breadcrumb -->
+    <div class="amz-breadcrumb">
+      <a href="index.html">MR Shop</a>
+      <span>›</span>
+      <a href="index.html">Categories</a>
+      <span>›</span>
+      <strong>Antique & Collectibles</strong>
+    </div>
+
+    <!-- Section title -->
+    <div class="amz-section-header">
+      <h1 class="amz-section-title">Antique & Collectibles</h1>
+    </div>
+    <p style="font-size:14px;color:#565959;margin-bottom:20px;">Browse our curated collection of rare and historical coins from around the world.</p>
+
+    <!-- Product grid -->
+    <div class="amz-products-grid" id="productsGrid"></div>
+  </main>
+
+  <!-- Back to top -->
+  <div class="amz-back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</div>
+
+  <!-- Footer -->
+  <footer class="amz-footer">
+    <div class="amz-footer-grid">
+      <div class="amz-footer-col"><h4>Get to Know Us</h4><a href="#">About MR Shop</a><a href="#">Careers</a><a href="#">Press Releases</a></div>
+      <div class="amz-footer-col"><h4>Make Money with Us</h4><a href="becomeseller.html">Sell on MR Shop</a><a href="#">Become an Affiliate</a></div>
+      <div class="amz-footer-col"><h4>Let Us Help You</h4><a href="userprofile.html">Your Account</a><a href="chat.html">Customer Service</a></div>
+      <div class="amz-footer-col"><h4>Connect with Us</h4><a href="#"><i class="fab fa-facebook"></i> Facebook</a><a href="#"><i class="fab fa-instagram"></i> Instagram</a><a href="#"><i class="fab fa-youtube"></i> YouTube</a></div>
+    </div>
+  </footer>
+  <div class="amz-footer-bottom"><div class="amz-footer-logo">MR Shop</div><div class="amz-footer-copyright">&copy; 2026 MR Shop. All Rights Reserved.</div></div>
+
+  <script>
+    const products = [
+      { id:1, name:"Singapore 50 Cents (1978)", price:150, image:"./assets/images/coin1.jpeg", description:"First coin series, cupro-nickel composition. Circulated 1967–1987.", rating:4, reviews:24, category:"Coins" },
+      { id:2, name:"Bahrain 100 Fils (2010)", price:150, image:"./assets/images/coin2.jpeg", description:"Bi-metallic 100 Fils — brass outer ring with copper-nickel center.", rating:5, reviews:18, category:"Coins" },
+      { id:3, name:"Royal Dynasty Coin", price:150, image:"./assets/images/coin3.jpeg", description:"Historical mint condition rare treasure from a royal collection.", rating:4, reviews:12, category:"Coins" },
+      { id:4, name:"Saudi Arabia 50 Halala", price:150, image:"./assets/images/coin4.jpeg", description:"Brass/Copper-nickel coin featuring crossed swords and palm tree emblem.", rating:4, reviews:31, category:"Coins" },
+      { id:5, name:"Vintage Bronze Coin", price:150, image:"./assets/images/coin5.jpeg", description:"Authentic bronze specimen from ancient times.", rating:3, reviews:9, category:"Coins" },
+      { id:6, name:"Royal Mint Coin", price:150, image:"./assets/images/coin6.jpeg", description:"Official royal mint production rare edition.", rating:5, reviews:15, category:"Coins" },
+    ];
+
+    let cart = JSON.parse(localStorage.getItem('mr_shop_cart')) || [];
+
+    function saveCart() { localStorage.setItem('mr_shop_cart', JSON.stringify(cart)); updateCartCount(); }
+
+    function updateCartCount() {
+      const total = cart.reduce((s, i) => s + i.quantity, 0);
+      document.getElementById('cartCount').textContent = total;
     }
 
-    body {
-      font-family: 'Poppins', Arial, sans-serif;
-      background: linear-gradient(135deg,#f7fbff,#fff7fb);
-      color: #102a43;
-      margin: 0;
-      padding: 0;
+    function renderStars(rating) {
+      let stars = '';
+      for (let i = 0; i < 5; i++) {
+        stars += i < rating ? '<i class="fas fa-star"></i>' : '<i class="far fa-star"></i>';
+      }
+      return stars;
     }
-    header {
-      background: linear-gradient(90deg,#7c3aed,#06b6d4);
-      color: #fff;
-      padding: 18px 36px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      box-shadow: 0 10px 30px rgba(16,24,40,0.08);
+
+    function renderProducts(list) {
+      const grid = document.getElementById('productsGrid');
+      grid.innerHTML = list.map(p => `
+        <div class="amz-product-card">
+          <div class="amz-product-img-wrap">
+            <img src="${p.image}" alt="${p.name}" class="amz-product-img">
+          </div>
+          <div class="amz-product-info">
+            <div class="amz-product-title">${p.name}</div>
+            <div class="amz-product-rating">
+              <span class="amz-stars">${renderStars(p.rating)}</span>
+              <span class="amz-rating-count">(${p.reviews})</span>
+            </div>
+            <div class="amz-product-price"><span class="amz-price-whole">৳${p.price}</span></div>
+            <p style="font-size:13px;color:#565959;margin:6px 0 12px;">${p.description}</p>
+            <button class="amz-product-btn amz-product-btn-cart" onclick="addToCart(${p.id})">Add to Cart</button>
+          </div>
+        </div>
+      `).join('');
     }
-    header h1 {
-      font-size: 26px;
-      margin: 0;
-      letter-spacing: 0.3px;
-      font-weight: 700;
-      text-shadow: 0 2px 8px rgba(6,182,212,0.08);
-      display: flex;
-      align-items: center;
-      gap: 12px;
+
+    function filterProducts() {
+      const q = document.querySelector('.amz-search-input').value.toLowerCase();
+      const filtered = products.filter(p => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+      renderProducts(filtered);
     }
-    .mr-logo {
-      height: 40px;
-      border-radius: 8px;
-      padding: 4px;
-      border: 2px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.03);
+
+    function addToCart(id) {
+      MR_addToCart(id);
     }
-    .header-actions {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-    .coins-section {
-      max-width: 900px;
-      margin: 36px auto;
-      padding: 32px 24px 28px 24px;
-      background: rgba(255,255,255,0.92);
-      border-radius: 20px;
-      box-shadow: 0 12px 40px rgba(18,38,63,0.10);
-    }
-    .coins-title {
-      font-size: 32px;
-      font-weight: 700;
-      margin-bottom: 22px;
-      color: #7c3aed;
-      text-align: center;
-      letter-spacing: 0.5px;
-      text-shadow: 0 2px 8px rgba(124,58,237,0.08);
-    }
-    .coin-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
-      gap: 24px;
-      margin-top: 28px;
-    }
-    .coin-card {
-      background: linear-gradient(135deg,#ffffff 0%,#f0f9ff 100%);
-      border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(124,58,237,0.12);
-      padding: 20px 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
-      position: relative;
-      overflow: hidden;
-      border: 2px solid transparent;
-      cursor: pointer;
-    }
-    .coin-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);
-      transition: left 0.5s;
-    }
-    .coin-card:hover::before {
-      left: 100%;
-    }
-    .coin-card:hover {
-      box-shadow: 0 20px 50px rgba(124,58,237,0.25);
-      transform: translateY(-8px) scale(1.05) rotateX(5deg);
-      background: linear-gradient(135deg,#e0e7ff 0%,#f7fbff 100%);
-      border-color: #7c3aed;
-    }
-    .coin-img {
-      width: 120px;
-      height: 120px;
-      object-fit: contain;
-      border-radius: 12px;
-      background: radial-gradient(circle,#f9fafb 0%,#f3f4f6 100%);
-      padding: 8px;
-      box-shadow: 0 4px 16px rgba(124,58,237,0.15);
-      transition: all 0.3s ease;
-      filter: drop-shadow(0 2px 8px rgba(124,58,237,0.1));
-    }
-    .coin-card:hover .coin-img {
-      box-shadow: 0 12px 32px rgba(124,58,237,0.25);
-      transform: scale(1.08) rotateZ(2deg);
-      filter: drop-shadow(0 6px 16px rgba(124,58,237,0.2)) brightness(1.1);
-    }
-    .coin-name {
-      font-size: 17px;
-      font-weight: 700;
-      color: #1f2937;
-      margin-bottom: 6px;
-      text-align: center;
-      letter-spacing: 0.3px;
-    }
-    .coin-desc {
-      font-size: 13px;
-      color: #6b7280;
-      margin-bottom: 10px;
-      text-align: center;
-      line-height: 1.4;
-    }
-    .coin-price {
-      background: linear-gradient(135deg,#7c3aed 0%,#06b6d4 100%);
-      color: white;
-      padding: 8px 18px;
-      border-radius: 999px;
-      font-weight: 700;
-      font-size: 16px;
-      margin-top: 4px;
-      box-shadow: 0 4px 12px rgba(124,58,237,0.20);
-      letter-spacing: 0.3px;
-      transition: all 0.3s ease;
-    }
-    .coin-card:hover .coin-price {
-      box-shadow: 0 8px 24px rgba(124,58,237,0.35);
-      transform: scale(1.08);
-    }
-    @media (max-width:600px) {
-      .coins-section { padding: 12px 4px; }
-      .coins-title { font-size: 22px; }
-      .coin-list { gap: 16px; }
-      .coin-card { padding: 14px 8px; }
-      .coin-img { width: 60px; height: 60px; }
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>
-      <a href="index.html" style="display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none;">
-        <img src="./assets/images/mrlogo.png" alt="MR" class="mr-logo" />
-        <span style="font-weight:700;font-size:20px;line-height:1;">MR Shop</span>
-      </a>
-    </h1>
-    <div class="header-actions">
-      <a href="index.html" style="color:#fff;text-decoration:none;padding:8px 12px;border-radius:8px;background:transparent;transition:all .2s ease;font-weight:600">Home</a>
-      <a href="javascript:history.back()" style="color:#fff;text-decoration:none;padding:8px 12px;border-radius:8px;background:transparent;transition:all .2s ease;font-weight:600">Back</a>
-    </div>
-  </header>
-  <section class="coins-section">
-    <div class="coins-title">✨ Rare Coins Collection ✨</div>
-    <div class="coin-list">
-      <a href="coin1.html" class="coin-card" aria-label="View details for Singapore 50 cents (1978)">
-        <img src="./assets/images/coin1.jpeg" alt="Singapore 50 cents (1978)" class="coin-img" />
-        <div class="coin-name">Singapore 50 Cents (1978)</div>
-        <div class="coin-desc">First coin series, cupro-nickel composition. Circulated 1967–1987.</div>
-  <div class="coin-price">৳ 150</div>
-      </a>
-      <a href="coin2.html" class="coin-card" aria-label="View details for Bahrain 100 Fils (2010)">
-        <img src="./assets/images/coin2.jpeg" alt="Bahrain 100 Fils (2010)" class="coin-img" />
-        <div class="coin-name">Bahrain 100 Fils (2010)</div>
-        <div class="coin-desc">Bi-metallic 100 Fils — brass outer ring with copper-nickel center.</div>
-  <div class="coin-price">৳ 150</div>
-      </a>
-      <div class="coin-card">
-        <img src="./assets/images/coin3.jpeg" alt="Rare Coin 3" class="coin-img" />
-        <div class="coin-name">Royal Dynasty Coin</div>
-        <div class="coin-desc">Historical mint condition rare treasure</div>
-  <div class="coin-price">৳ 150</div>
-      </div>
-      <a href="coin4.html" class="coin-card" aria-label="View details for Saudi Arabia 50 Halala">
-        <img src="./assets/images/coin4.jpeg" alt="Saudi Arabia 50 Halala" class="coin-img" />
-        <div class="coin-name">Saudi Arabia — 50 Halala</div>
-        <div class="coin-desc">Brass/Copper-nickel coin featuring crossed swords and palm tree emblem.</div>
-  <div class="coin-price">৳ 150</div>
-      </a>
-      <div class="coin-card">
-        <img src="./assets/images/coin5.jpeg" alt="Rare Coin 5" class="coin-img" />
-        <div class="coin-name">Vintage Bronze Coin</div>
-        <div class="coin-desc">Authentic bronze specimen from ancient times</div>
-  <div class="coin-price">৳ 150</div>
-      </div>
-      <div class="coin-card">
-        <img src="./assets/images/coin6.jpeg" alt="Rare Coin 6" class="coin-img" />
-        <div class="coin-name">Royal Mint Coin</div>
-        <div class="coin-desc">Official royal mint production rare edition</div>
-  <div class="coin-price">৳ 150</div>
-      </div>
-      <div class="coin-card">
-        <img src="./assets/images/coin7.jpeg" alt="Rare Coin 7" class="coin-img" />
-        <div class="coin-name">Monarch's Treasure</div>
-        <div class="coin-desc">Historical commemorative coin in perfect state</div>
-  <div class="coin-price">৳ 150</div>
-      </div>
-      <div class="coin-card">
-        <img src="./assets/images/coin8.jpeg" alt="Rare Coin 8" class="coin-img" />
-        <div class="coin-name">Gilded Heritage Coin</div>
-        <div class="coin-desc">Gold-plated vintage collectible masterpiece</div>
-  <div class="coin-price">৳ 150</div>
-      </div>
-      <div class="coin-card">
-        <img src="./assets/images/coin9.jpeg" alt="Rare Coin 9" class="coin-img" />
-        <div class="coin-name">Colonial Era Coin</div>
-        <div class="coin-desc">Authentic coin from the colonial period</div>
-  <div class="coin-price">৳ 150</div>
-      </div>
-      <div class="coin-card">
-        <img src="./assets/images/coin10.jpeg" alt="Rare Coin 10" class="coin-img" />
-        <div class="coin-name">Noble Medallion Coin</div>
-        <div class="coin-desc">Premium noble family mint production</div>
-  <div class="coin-price">৳ 150</div>
-      </div>
-      <div class="coin-card">
-        <img src="./assets/images/coin11.jpeg" alt="Rare Coin 11" class="coin-img" />
-        <div class="coin-name">Treasure Vault Rarity</div>
-        <div class="coin-desc">Ultra-rare collectible from vault collection</div>
-  <div class="coin-price">৳ 150</div>
-      </div>
-    </div>
-  </section>
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderProducts(products);
+      updateCartCount();
+    });
+  </script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/products.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/auth-shared.js"></script>
+  <script src="assets/js/wishlist.js"></script>
 </body>
 </html>

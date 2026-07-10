@@ -1,0 +1,13 @@
+# MR Shop - robots.txt
+# https://mrshopbd.com
+
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /seller-settings.html
+
+# Sitemap
+Sitemap: https://mrshopbd.com/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1

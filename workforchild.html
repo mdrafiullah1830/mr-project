@@ -3,331 +3,528 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Support children in need through MR Shop. 10% of profits go to education, nutrition, healthcare and shelter for underprivileged children in Bangladesh.">
   <title>Support Children — MR Shop</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/work-for-child.css">
+  <script src="assets/js/loader.js"></script>
+  <link rel="stylesheet" href="assets/css/amazon-style.css">
+  <style>
+    :root {
+      --orange: #ff9900;
+      --orange-light: #ffad33;
+      --yellow: #febd69;
+      --yellow-dark: #f0a030;
+      --dark: #131921;
+      --darker: #0f1111;
+      --text: #0f1111;
+      --light: #f5f5f5;
+      --white: #ffffff;
+      --border: #d5d9d9;
+      --green: #007600;
+      --blue: #146eb4;
+      --link: #007185;
+      --red: #cc0c39;
+      --bg-gradient: linear-gradient(135deg, #0f1111 0%, #1a2332 50%, #0f1111 100%);
+    }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--light); color: var(--text); line-height: 1.5; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+
+    /* Header */
+    .header { background: var(--darker); position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    .header-top { display: flex; align-items: center; padding: 10px 20px; gap: 16px; max-width: 1500px; margin: 0 auto; }
+    .logo { display: flex; align-items: center; padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .logo:hover { border-color: #fff; background: rgba(255,255,255,0.05); }
+    .logo-text { color: var(--white); font-size: 22px; font-weight: 800; letter-spacing: -1px; }
+    .logo-sub { color: var(--orange); font-size: 10px; font-weight: 600; display: block; letter-spacing: 2px; text-transform: uppercase; }
+    .deliver-to { color: var(--white); padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .deliver-to:hover { border-color: #fff; }
+    .deliver-to .label { color: #999; font-size: 11px; display: block; }
+    .deliver-to .loc { font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 4px; }
+    .search-bar { flex: 1; display: flex; height: 46px; border-radius: 8px; overflow: hidden; position: relative; }
+    .search-cat { background: #e6e6e6; border: none; padding: 0 12px; font-size: 13px; color: #555; cursor: pointer; border-right: 1px solid var(--border); }
+    .search-input { flex: 1; border: none; padding: 0 16px; font-size: 15px; outline: none; }
+    .search-btn { background: var(--orange); border: none; padding: 0 20px; cursor: pointer; font-size: 20px; color: var(--dark); transition: all 0.2s; }
+    .search-btn:hover { background: var(--orange-light); }
+    .header-actions { display: flex; align-items: center; gap: 6px; }
+    .header-link { color: var(--white); padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; font-size: 13px; white-space: nowrap; transition: all 0.2s; }
+    .header-link:hover { border-color: #fff; }
+    .header-link .line1 { color: #999; font-size: 11px; display: block; }
+    .header-link .line2 { font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 4px; }
+    .cart-btn { display: flex; align-items: center; gap: 4px; padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; color: var(--white); transition: all 0.2s; }
+    .cart-btn:hover { border-color: #fff; }
+    .cart-icon { font-size: 24px; position: relative; }
+    .cart-count { position: absolute; top: -6px; right: -8px; background: var(--orange); color: var(--dark); font-size: 13px; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .cart-text { font-weight: 700; font-size: 13px; }
+
+    /* Nav Bar */
+    .nav-bar { background: #232f3e; padding: 8px 20px; display: flex; align-items: center; gap: 4px; overflow-x: auto; max-width: 1500px; margin: 0 auto; }
+    .nav-item { color: var(--white); padding: 8px 14px; font-size: 13px; font-weight: 500; border: 1px solid transparent; border-radius: 4px; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+    .nav-item:hover { border-color: #fff; }
+    .nav-item.active { border-color: #fff; font-weight: 700; }
+    .nav-divider { width: 1px; height: 24px; background: #4a5568; margin: 0 6px; }
+
+    /* Features Bar */
+    .features-bar { background: var(--white); border-bottom: 1px solid var(--border); }
+    .features-grid { max-width: 1500px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); }
+    .feature-item { display: flex; align-items: center; gap: 14px; padding: 18px 24px; border-right: 1px solid var(--border); transition: background 0.2s; }
+    .feature-item:last-child { border-right: none; }
+    .feature-item:hover { background: #f8f9fa; }
+    .feature-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .feature-icon.green { background: #e6f4e6; color: var(--green); }
+    .feature-icon.blue { background: #e6f0fa; color: var(--blue); }
+    .feature-icon.orange { background: #fff3e0; color: var(--orange); }
+    .feature-icon.red { background: #fce4ec; color: var(--red); }
+    .feature-text h4 { font-size: 14px; font-weight: 700; color: var(--text); }
+    .feature-text p { font-size: 12px; color: #666; margin-top: 2px; }
+
+    /* Footer */
+    .back-to-top { background: #37475a; text-align: center; padding: 14px; color: var(--white); font-size: 13px; cursor: pointer; transition: background 0.2s; }
+    .back-to-top:hover { background: #485769; }
+    .footer { background: var(--darker); color: var(--white); padding: 40px 20px 20px; }
+    .footer-grid { max-width: 1500px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-bottom: 30px; }
+    .footer-col h4 { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
+    .footer-col a { display: block; color: #ddd; font-size: 13px; padding: 4px 0; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--white); text-decoration: underline; }
+    .footer-quick-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 16px 0; max-width: 1500px; margin: 0 auto; }
+    .footer-quick-links a { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); padding: 6px 14px; border-radius: 20px; font-size: 12px; color: #ccc; transition: all 0.2s; }
+    .footer-quick-links a:hover { background: rgba(255,255,255,0.15); color: var(--white); border-color: var(--orange); }
+    .footer-divider { height: 1px; background: #3a4553; margin: 16px 0; }
+    .footer-bottom { text-align: center; padding: 20px; }
+    .footer-logo { font-size: 20px; font-weight: 800; color: var(--white); margin-bottom: 6px; }
+    .footer-copyright { color: #999; font-size: 12px; margin-bottom: 10px; }
+    .footer-copyright strong { color: var(--orange); }
+    .footer-payment { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px; color: #999; font-size: 12px; }
+    .footer-payment i { font-size: 20px; color: #ccc; transition: transform 0.2s; }
+    .footer-payment i:hover { transform: scale(1.2); color: var(--white); }
+
+    /* Work for Child Page */
+    .wfc-hero { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); padding: 60px 20px; text-align: center; color: var(--white); }
+    .wfc-hero h1 { font-size: 42px; font-weight: 800; margin-bottom: 16px; }
+    .wfc-hero p { font-size: 18px; color: #ccc; max-width: 700px; margin: 0 auto 24px; line-height: 1.6; }
+    .wfc-hero .emoji { font-size: 48px; margin-bottom: 16px; }
+    .wfc-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 1000px; margin: 0 auto; }
+    .wfc-stat { background: rgba(255,255,255,0.1); border-radius: 12px; padding: 24px; text-align: center; }
+    .wfc-stat .num { font-size: 36px; font-weight: 800; color: var(--orange); }
+    .wfc-stat .label { font-size: 14px; color: #ccc; margin-top: 4px; }
+    .wfc-section { padding: 60px 20px; max-width: 1200px; margin: 0 auto; }
+    .wfc-section h2 { font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 12px; }
+    .wfc-section .subtitle { text-align: center; color: #666; margin-bottom: 40px; }
+    .wfc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .wfc-card { background: var(--white); border-radius: 12px; padding: 32px; text-align: center; border: 1px solid var(--border); transition: all 0.3s; }
+    .wfc-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
+    .wfc-card .icon { font-size: 48px; margin-bottom: 16px; }
+    .wfc-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .wfc-card p { color: #666; font-size: 14px; line-height: 1.6; }
+    .wfc-impact { background: var(--white); border-radius: 16px; padding: 40px; border: 1px solid var(--border); }
+    .wfc-impact h3 { font-size: 20px; font-weight: 700; margin-bottom: 24px; }
+    .wfc-bar { margin-bottom: 20px; }
+    .wfc-bar-label { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 14px; }
+    .wfc-bar-track { height: 12px; background: #e5e7eb; border-radius: 6px; overflow: hidden; }
+    .wfc-bar-fill { height: 100%; border-radius: 6px; transition: width 1s ease; }
+    .wfc-stories { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .wfc-story { background: var(--white); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+    .wfc-story img { width: 100%; height: 200px; object-fit: cover; }
+    .wfc-story-content { padding: 20px; }
+    .wfc-story-content h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .wfc-story-content p { color: #666; font-size: 14px; line-height: 1.6; }
+    .wfc-cta { background: linear-gradient(135deg, var(--orange) 0%, var(--yellow) 100%); border-radius: 16px; padding: 48px; text-align: center; color: var(--dark); }
+    .wfc-cta h2 { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+    .wfc-cta p { font-size: 16px; margin-bottom: 24px; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .wfc-btn { display: inline-block; padding: 14px 32px; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.3s; margin: 0 8px; }
+    .wfc-btn-primary { background: var(--dark); color: var(--white); border: none; }
+    .wfc-btn-primary:hover { background: #232f3e; transform: translateY(-2px); }
+    .wfc-btn-outline { background: transparent; color: var(--dark); border: 2px solid var(--dark); }
+    .wfc-btn-outline:hover { background: var(--dark); color: var(--white); }
+    .wfc-modal { display: none; position: fixed; inset: 0; z-index: 2000; }
+    .wfc-modal.active { display: flex; align-items: center; justify-content: center; }
+    .wfc-modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); }
+    .wfc-modal-content { position: relative; background: var(--white); border-radius: 16px; padding: 32px; max-width: 400px; width: 90%; z-index: 1; }
+    .wfc-modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 24px; cursor: pointer; }
+    .wfc-modal h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .wfc-modal p { color: #666; margin-bottom: 20px; }
+    .wfc-amounts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+    .wfc-amount { padding: 12px; border: 2px solid var(--border); border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .wfc-amount:hover, .wfc-amount.active { border-color: var(--orange); background: #fff3e0; }
+    .wfc-custom { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px; font-size: 16px; margin-bottom: 20px; }
+    .wfc-pay-btns { display: flex; gap: 12px; margin-bottom: 20px; }
+    .wfc-pay-btn { flex: 1; padding: 12px; border: 2px solid var(--border); border-radius: 8px; background: var(--white); cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; }
+    .wfc-pay-btn:hover { border-color: var(--orange); }
+    .wfc-donate-btn { width: 100%; padding: 14px; background: var(--orange); color: var(--dark); border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .wfc-donate-btn:hover { background: var(--orange-light); }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .feature-item:nth-child(2) { border-right: none; }
+      .wfc-grid, .wfc-stories { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+      .wfc-stats { grid-template-columns: repeat(2, 1fr); }
+      .wfc-grid, .wfc-stories { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .header-top { padding: 8px 12px; gap: 8px; }
+      .logo-text { font-size: 18px; }
+      .deliver-to, .header-link .line1 { display: none; }
+      .wfc-hero h1 { font-size: 28px; }
+      .wfc-stats { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
 </head>
 <body>
   <!-- Header -->
-  <header class="wfc-header">
-    <div class="wfc-header-inner">
-      <a href="index.html" class="wfc-brand">
-        <img src="./assets/images/mrlogo.png" alt="MR" class="wfc-logo">
-        <span class="wfc-brand-text">MR Shop</span>
+  <header class="header">
+    <div class="header-top">
+      <a href="index.html" class="logo">
+        <div>
+          <span class="logo-text">MR shop</span>
+          <span class="logo-sub">Bangladesh</span>
+        </div>
       </a>
-      <nav class="wfc-nav">
-        <a href="index.html">Home</a>
-        <a href="workforchild.html" class="active">Support Children</a>
-        <a href="cart.html">Cart</a>
-        <button id="themeToggle" class="wfc-theme-btn">🌙</button>
-      </nav>
+      <div class="deliver-to">
+        <span class="label">Deliver to</span>
+        <span class="loc"><i class="fas fa-map-marker-alt"></i> Bangladesh</span>
+      </div>
+      <div class="search-bar">
+        <select class="search-cat">
+          <option>All</option>
+          <option>Food & Natural</option>
+          <option>Sweets & Dairy</option>
+          <option>Handicrafts</option>
+          <option>Clothing</option>
+          <option>Books</option>
+          <option>Antique</option>
+        </select>
+        <input type="text" class="search-input" placeholder="Search MR Shop" id="searchInput" autocomplete="off">
+        <button class="search-btn"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="header-actions">
+        <a href="signin.html" class="header-link" id="accountLink">
+          <span class="line1">Hello, Sign in</span>
+          <span class="line2">Account <i class="fas fa-caret-down"></i></span>
+        </a>
+        <a href="wishlist.html" class="header-link">
+          <span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span>
+          <span class="line2">Wishlist</span>
+        </a>
+        <a href="cart.html" class="cart-btn">
+          <span class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count amz-cart-count">0</span></span>
+          <span class="cart-text">Cart</span>
+        </a>
+      </div>
     </div>
+    <nav class="nav-bar">
+      <a href="index.html" class="nav-item"><i class="fas fa-bars"></i> All</a>
+      <a href="food&natural.html" class="nav-item">Food & Natural</a>
+      <a href="sweets&dairy.html" class="nav-item">Sweets & Dairy</a>
+      <a href="handricrafts.html" class="nav-item">Handicrafts</a>
+      <a href="clothing.html" class="nav-item">Clothing</a>
+      <a href="book.html" class="nav-item">Books</a>
+      <a href="antique.html" class="nav-item">Antique</a>
+      <div class="nav-divider"></div>
+      <a href="blog.html" class="nav-item"><i class="fas fa-newspaper"></i> Blog</a>
+      <a href="compare.html" class="nav-item"><i class="fas fa-balance-scale"></i> Compare</a>
+      <a href="order-tracking.html" class="nav-item"><i class="fas fa-truck"></i> Track Order</a>
+      <a href="admin.html" class="nav-item"><i class="fas fa-cog"></i> Admin</a>
+      <div class="nav-divider"></div>
+      <a href="becomeseller.html" class="nav-item">Sell</a>
+      <a href="chat.html" class="nav-item"><i class="fas fa-headset"></i> Help</a>
+    </nav>
   </header>
 
-  <!-- Background Pattern -->
-  <div class="wfc-bg-pattern">
-    <div class="wfc-star">⭐</div>
-    <div class="wfc-star">✨</div>
-    <div class="wfc-star">🌟</div>
-    <div class="wfc-cloud">☁️</div>
-    <div class="wfc-cloud">☁️</div>
-    <div class="wfc-heart">💛</div>
-    <div class="wfc-heart">💙</div>
-    <div class="wfc-heart">💚</div>
+  <!-- Features Bar -->
+  <div class="features-bar">
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="feature-icon green"><i class="fas fa-truck"></i></div>
+        <div class="feature-text"><h4>Free Delivery</h4><p>On orders over ৳5,000</p></div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon blue"><i class="fas fa-undo"></i></div>
+        <div class="feature-text"><h4>Easy Returns</h4><p>7-day return policy</p></div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon orange"><i class="fas fa-shield-alt"></i></div>
+        <div class="feature-text"><h4>Secure Payment</h4><p>bKash, Nagad, COD</p></div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon red"><i class="fas fa-headset"></i></div>
+        <div class="feature-text"><h4>24/7 Support</h4><p>Dedicated help center</p></div>
+      </div>
+    </div>
   </div>
 
   <!-- Hero Section -->
   <section class="wfc-hero">
-    <div class="wfc-container">
-      <div class="wfc-hero-content">
-        <div class="wfc-hero-badge">
-          <span class="wfc-badge-icon">🌈</span>
-          <span class="wfc-badge-text">10% Goes to Children in Need</span>
-        </div>
-        <h1 class="wfc-hero-title">Every Child Deserves a Chance</h1>
-        <p class="wfc-hero-description">
-          At MR Shop, we believe every smile matters. When you shop with us, 
-          <strong>10% of your profit</strong> directly supports underprivileged children—giving them 
-          access to education, nutritious meals, medical care, and a safe place to grow. 
-          Together, we're building brighter futures, one child at a time.
-        </p>
-        <div class="wfc-hero-icons">
-          <div class="wfc-hero-icon">
-            <span class="icon">📚</span>
-            <span class="label">Education</span>
-          </div>
-          <div class="wfc-hero-icon">
-            <span class="icon">🍎</span>
-            <span class="label">Nutrition</span>
-          </div>
-          <div class="wfc-hero-icon">
-            <span class="icon">🏥</span>
-            <span class="label">Healthcare</span>
-          </div>
-          <div class="wfc-hero-icon">
-            <span class="icon">🏠</span>
-            <span class="label">Shelter</span>
-          </div>
-        </div>
+    <div class="emoji">🌈</div>
+    <h1>Every Child Deserves a Chance</h1>
+    <p>At MR Shop, we believe every smile matters. When you shop with us, <strong>10% of your profit</strong> directly supports underprivileged children—giving them access to education, nutritious meals, medical care, and a safe place to grow.</p>
+    <div class="wfc-stats">
+      <div class="wfc-stat">
+        <div class="num">6,847</div>
+        <div class="label">Children Helped</div>
       </div>
-      <div class="wfc-hero-illustration">
-        <div class="wfc-illustration-circle"></div>
-        <div class="wfc-illustration-emoji">👧🏻📖</div>
+      <div class="wfc-stat">
+        <div class="num">৳18,92,450</div>
+        <div class="label">Total Donations</div>
+      </div>
+      <div class="wfc-stat">
+        <div class="num">34</div>
+        <div class="label">Ongoing Projects</div>
+      </div>
+      <div class="wfc-stat">
+        <div class="num">12,456</div>
+        <div class="label">Active Donors</div>
       </div>
     </div>
   </section>
 
-  <!-- Stats Section -->
-  <section class="wfc-stats">
-    <div class="wfc-container">
-      <div class="wfc-stats-grid">
-        <div class="wfc-stat-card">
-          <div class="wfc-stat-illustration">🎉</div>
-          <div class="wfc-stat-number" data-target="6847">0</div>
-          <div class="wfc-stat-label">Children Helped</div>
-        </div>
-        <div class="wfc-stat-card">
-          <div class="wfc-stat-illustration">💝</div>
-          <div class="wfc-stat-number" data-target="1892450">0</div>
-          <div class="wfc-stat-label">Total Donations (৳)</div>
-        </div>
-        <div class="wfc-stat-card">
-          <div class="wfc-stat-illustration">🌟</div>
-          <div class="wfc-stat-number" data-target="34">0</div>
-          <div class="wfc-stat-label">Ongoing Projects</div>
-        </div>
-        <div class="wfc-stat-card">
-          <div class="wfc-stat-illustration">🤝</div>
-          <div class="wfc-stat-number" data-target="12456">0</div>
-          <div class="wfc-stat-label">Active Donors</div>
-        </div>
+  <!-- How We Help -->
+  <section class="wfc-section">
+    <h2>How We Help Children</h2>
+    <p class="subtitle">Multiple ways your contribution creates lasting impact</p>
+    <div class="wfc-grid">
+      <div class="wfc-card">
+        <div class="icon">📚</div>
+        <h3>Education Support</h3>
+        <p>Books, uniforms, tuition fees, and school supplies for children who can't afford education.</p>
       </div>
-    </div>
-  </section>
-
-  <!-- Features Grid -->
-  <section class="wfc-features">
-    <div class="wfc-container">
-      <div class="wfc-section-header">
-        <h2 class="wfc-section-title">How We Help Children</h2>
-        <p class="wfc-section-subtitle">Multiple ways your contribution creates lasting impact</p>
+      <div class="wfc-card">
+        <div class="icon">🍎</div>
+        <h3>Food & Nutrition</h3>
+        <p>Healthy meals, milk, fruits, and nutritional support for growing children every day.</p>
       </div>
-      <div class="wfc-features-grid">
-        <div class="wfc-feature-card" data-animate>
-          <div class="wfc-feature-icon">📚</div>
-          <h3 class="wfc-feature-title">Education Support</h3>
-          <p class="wfc-feature-description">Books, uniforms, tuition fees, and school supplies for children who can't afford education.</p>
-        </div>
-        <div class="wfc-feature-card" data-animate>
-          <div class="wfc-feature-icon">🍎</div>
-          <h3 class="wfc-feature-title">Food & Nutrition</h3>
-          <p class="wfc-feature-description">Healthy meals, milk, fruits, and nutritional support for growing children every day.</p>
-        </div>
-        <div class="wfc-feature-card" data-animate>
-          <div class="wfc-feature-icon">🏥</div>
-          <h3 class="wfc-feature-title">Medical Care</h3>
-          <p class="wfc-feature-description">Free health checkups, medicines, vaccinations, and emergency medical treatment.</p>
-        </div>
-        <div class="wfc-feature-card" data-animate>
-          <div class="wfc-feature-icon">👕</div>
-          <h3 class="wfc-feature-title">Clothes & Essentials</h3>
-          <p class="wfc-feature-description">Clean clothes, shoes, hygiene kits, and daily essentials for dignified living.</p>
-        </div>
-        <div class="wfc-feature-card" data-animate>
-          <div class="wfc-feature-icon">🎈</div>
-          <h3 class="wfc-feature-title">Sponsor a Child</h3>
-          <p class="wfc-feature-description">Direct monthly support for one child's complete education, food, and healthcare needs.</p>
-        </div>
-        <div class="wfc-feature-card" data-animate>
-          <div class="wfc-feature-icon">🚨</div>
-          <h3 class="wfc-feature-title">Emergency Child Help</h3>
-          <p class="wfc-feature-description">Rapid response fund for children facing urgent medical or disaster-related emergencies.</p>
-        </div>
+      <div class="wfc-card">
+        <div class="icon">🏥</div>
+        <h3>Medical Care</h3>
+        <p>Free health checkups, medicines, vaccinations, and emergency medical treatment.</p>
+      </div>
+      <div class="wfc-card">
+        <div class="icon">👕</div>
+        <h3>Clothes & Essentials</h3>
+        <p>Clean clothes, shoes, hygiene kits, and daily essentials for dignified living.</p>
+      </div>
+      <div class="wfc-card">
+        <div class="icon">🎈</div>
+        <h3>Sponsor a Child</h3>
+        <p>Direct monthly support for one child's complete education, food, and healthcare needs.</p>
+      </div>
+      <div class="wfc-card">
+        <div class="icon">🚨</div>
+        <h3>Emergency Child Help</h3>
+        <p>Rapid response fund for children facing urgent medical or disaster-related emergencies.</p>
       </div>
     </div>
   </section>
 
   <!-- Impact Section -->
-  <section class="wfc-impact">
-    <div class="wfc-container">
-      <div class="wfc-impact-box">
-        <div class="wfc-impact-header">
-          <h2 class="wfc-impact-title">How Your Contribution Helps Children</h2>
-          <p class="wfc-impact-subtitle">Transparent allocation of funds across key child welfare areas</p>
+  <section class="wfc-section">
+    <h2>How Your Contribution Helps</h2>
+    <p class="subtitle">Transparent allocation of funds across key areas</p>
+    <div class="wfc-impact">
+      <div class="wfc-bar">
+        <div class="wfc-bar-label">
+          <span>📚 Education & Learning</span>
+          <span>40%</span>
         </div>
-        <div class="wfc-impact-bars">
-          <div class="wfc-impact-item">
-            <div class="wfc-impact-label">
-              <span class="wfc-impact-icon">📚</span>
-              <span class="wfc-impact-name">Education & Learning</span>
-              <span class="wfc-impact-percent">40%</span>
-            </div>
-            <div class="wfc-progress-bar">
-              <div class="wfc-progress-fill" data-progress="40" data-color="#4ade80"></div>
-            </div>
-          </div>
-          <div class="wfc-impact-item">
-            <div class="wfc-impact-label">
-              <span class="wfc-impact-icon">🍎</span>
-              <span class="wfc-impact-name">Food & Nutrition</span>
-              <span class="wfc-impact-percent">30%</span>
-            </div>
-            <div class="wfc-progress-bar">
-              <div class="wfc-progress-fill" data-progress="30" data-color="#fb923c"></div>
-            </div>
-          </div>
-          <div class="wfc-impact-item">
-            <div class="wfc-impact-label">
-              <span class="wfc-impact-icon">🏥</span>
-              <span class="wfc-impact-name">Healthcare & Medicine</span>
-              <span class="wfc-impact-percent">20%</span>
-            </div>
-            <div class="wfc-progress-bar">
-              <div class="wfc-progress-fill" data-progress="20" data-color="#60a5fa"></div>
-            </div>
-          </div>
-          <div class="wfc-impact-item">
-            <div class="wfc-impact-label">
-              <span class="wfc-impact-icon">🏠</span>
-              <span class="wfc-impact-name">Shelter & Safety</span>
-              <span class="wfc-impact-percent">10%</span>
-            </div>
-            <div class="wfc-progress-bar">
-              <div class="wfc-progress-fill" data-progress="10" data-color="#f472b6"></div>
-            </div>
-          </div>
+        <div class="wfc-bar-track">
+          <div class="wfc-bar-fill" style="width:40%;background:#4ade80"></div>
+        </div>
+      </div>
+      <div class="wfc-bar">
+        <div class="wfc-bar-label">
+          <span>🍎 Food & Nutrition</span>
+          <span>30%</span>
+        </div>
+        <div class="wfc-bar-track">
+          <div class="wfc-bar-fill" style="width:30%;background:#fb923c"></div>
+        </div>
+      </div>
+      <div class="wfc-bar">
+        <div class="wfc-bar-label">
+          <span>🏥 Healthcare & Medicine</span>
+          <span>20%</span>
+        </div>
+        <div class="wfc-bar-track">
+          <div class="wfc-bar-fill" style="width:20%;background:#60a5fa"></div>
+        </div>
+      </div>
+      <div class="wfc-bar">
+        <div class="wfc-bar-label">
+          <span>🏠 Shelter & Safety</span>
+          <span>10%</span>
+        </div>
+        <div class="wfc-bar-track">
+          <div class="wfc-bar-fill" style="width:10%;background:#f472b6"></div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Success Stories -->
-  <section class="wfc-stories">
-    <div class="wfc-container">
-      <div class="wfc-section-header">
-        <h2 class="wfc-section-title">Stories of Hope & Smiles</h2>
-        <p class="wfc-section-subtitle">Meet the children whose lives you've changed</p>
+  <section class="wfc-section">
+    <h2>Stories of Hope & Smiles</h2>
+    <p class="subtitle">Meet the children whose lives you've changed</p>
+    <div class="wfc-stories">
+      <div class="wfc-story">
+        <img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=200&fit=crop" alt="Rina">
+        <div class="wfc-story-content">
+          <h4>Rina's Story (Age 9)</h4>
+          <p>"Before, I couldn't go to school because we didn't have money for books. Now I have everything I need! I want to be a teacher when I grow up."</p>
+        </div>
       </div>
-      <div class="wfc-story-slider">
-        <button class="wfc-slider-btn wfc-slider-prev" id="storyPrev">‹</button>
-        <button class="wfc-slider-btn wfc-slider-next" id="storyNext">›</button>
-        <div class="wfc-story-track" id="storyTrack">
-          <div class="wfc-story-card">
-            <div class="wfc-story-image">
-              <img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=400&fit=crop" alt="Rina">
-              <div class="wfc-story-badge">Age 9</div>
-            </div>
-            <div class="wfc-story-content">
-              <h3 class="wfc-story-name">Rina's Story</h3>
-              <div class="wfc-story-quote">"</div>
-              <p class="wfc-story-text">
-                "Before, I couldn't go to school because we didn't have money for books. 
-                Now I have everything I need—notebooks, pencils, and even a school bag! 
-                I want to be a teacher when I grow up so I can help other kids like me."
-              </p>
-              <div class="wfc-story-location">📍 Dhaka, Bangladesh</div>
-            </div>
-          </div>
-          <div class="wfc-story-card">
-            <div class="wfc-story-image">
-              <img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=400&fit=crop&sat=-100" alt="Rafiq">
-              <div class="wfc-story-badge">Age 7</div>
-            </div>
-            <div class="wfc-story-content">
-              <h3 class="wfc-story-name">Rafiq's Recovery</h3>
-              <div class="wfc-story-quote">"</div>
-              <p class="wfc-story-text">
-                "I was very sick and my family couldn't pay for the hospital. The kind people 
-                helped me get treatment and now I'm healthy again! I can play with my friends 
-                and go to school every day. Thank you for saving me!"
-              </p>
-              <div class="wfc-story-location">📍 Chittagong, Bangladesh</div>
-            </div>
-          </div>
-          <div class="wfc-story-card">
-            <div class="wfc-story-image">
-              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop" alt="Sania">
-              <div class="wfc-story-badge">Age 11</div>
-            </div>
-            <div class="wfc-story-content">
-              <h3 class="wfc-story-name">Sania's Dream</h3>
-              <div class="wfc-story-quote">"</div>
-              <p class="wfc-story-text">
-                "I used to be hungry at school and couldn't focus on my studies. Now I get 
-                healthy meals every day and I'm at the top of my class! I dream of becoming 
-                a doctor to help sick children in my village."
-              </p>
-              <div class="wfc-story-location">📍 Sylhet, Bangladesh</div>
-            </div>
-          </div>
+      <div class="wfc-story">
+        <img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=200&fit=crop&sat=-100" alt="Rafiq">
+        <div class="wfc-story-content">
+          <h4>Rafiq's Recovery (Age 7)</h4>
+          <p>"I was very sick and my family couldn't pay for the hospital. The kind people helped me get treatment and now I'm healthy again!"</p>
+        </div>
+      </div>
+      <div class="wfc-story">
+        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=200&fit=crop" alt="Sania">
+        <div class="wfc-story-content">
+          <h4>Sania's Dream (Age 11)</h4>
+          <p>"I used to be hungry at school and couldn't focus. Now I get healthy meals every day and I'm at the top of my class!"</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Call to Action -->
-  <section class="wfc-cta">
-    <div class="wfc-container">
-      <div class="wfc-cta-box">
-        <div class="wfc-cta-emoji">🌈</div>
-        <h2 class="wfc-cta-title">Be a Hero in a Child's Story</h2>
-        <p class="wfc-cta-description">
-          Your small contribution can light up a child's world with education, nutrition, and hope. 
-          Start making a difference today—every purchase matters, every smile counts.
-        </p>
-        <div class="wfc-cta-buttons">
-          <button class="wfc-cta-btn wfc-cta-btn-primary" onclick="openDonateModal()">Donate for Children</button>
-          <button class="wfc-cta-btn wfc-cta-btn-secondary">Become a Sponsor</button>
-        </div>
-      </div>
+  <section class="wfc-section">
+    <div class="wfc-cta">
+      <h2>Be a Hero in a Child's Story</h2>
+      <p>Your small contribution can light up a child's world with education, nutrition, and hope. Start making a difference today.</p>
+      <button class="wfc-btn wfc-btn-primary" onclick="openDonateModal()">Donate for Children</button>
+      <button class="wfc-btn wfc-btn-outline">Become a Sponsor</button>
     </div>
   </section>
 
   <!-- Donation Modal -->
   <div class="wfc-modal" id="donateModal">
-    <div class="wfc-modal-overlay" id="modalOverlay"></div>
+    <div class="wfc-modal-overlay" onclick="closeDonateModal()"></div>
     <div class="wfc-modal-content">
-      <button class="wfc-modal-close" id="modalClose">✕</button>
-      <h2 class="wfc-modal-title">Support a Child Today 💝</h2>
-      <p class="wfc-modal-subtitle">Your donation will bring smiles to children in need</p>
-      
-      <div class="wfc-modal-body">
-        <div class="wfc-donation-amounts">
-          <button class="wfc-amount-btn" data-amount="300">৳300</button>
-          <button class="wfc-amount-btn" data-amount="500">৳500</button>
-          <button class="wfc-amount-btn" data-amount="1000">৳1,000</button>
-          <button class="wfc-amount-btn" data-amount="2000">৳2,000</button>
-        </div>
-        <div class="wfc-custom-amount">
-          <label for="customAmount">Or enter custom amount:</label>
-          <input type="number" id="customAmount" placeholder="Enter amount" min="10">
-        </div>
-        <div class="wfc-payment-methods">
-          <button class="wfc-payment-btn" data-method="bkash">
-            <img src="./assets/images/bkash.jpg" alt="bKash">
-            <span>bKash</span>
-          </button>
-          <button class="wfc-payment-btn" data-method="nagad">
-            <img src="./assets/images/nagad.jpg" alt="Nagad">
-            <span>Nagad</span>
-          </button>
-          <button class="wfc-payment-btn" data-method="rocket">
-            <img src="./assets/images/rocket.jpg" alt="Rocket">
-            <span>Rocket</span>
-          </button>
-        </div>
-        <button class="wfc-submit-btn" id="submitDonation">Donate Now</button>
+      <button class="wfc-modal-close" onclick="closeDonateModal()">&times;</button>
+      <h3>Support a Child Today 💝</h3>
+      <p>Your donation will bring smiles to children in need</p>
+      <div class="wfc-amounts">
+        <button class="wfc-amount" onclick="selectAmount(300)">৳300</button>
+        <button class="wfc-amount" onclick="selectAmount(500)">৳500</button>
+        <button class="wfc-amount" onclick="selectAmount(1000)">৳1,000</button>
+        <button class="wfc-amount" onclick="selectAmount(2000)">৳2,000</button>
       </div>
+      <input type="number" class="wfc-custom" placeholder="Or enter custom amount" min="10">
+      <div class="wfc-pay-btns">
+        <button class="wfc-pay-btn">bKash</button>
+        <button class="wfc-pay-btn">Nagad</button>
+        <button class="wfc-pay-btn">Rocket</button>
+      </div>
+      <button class="wfc-donate-btn">Donate Now</button>
     </div>
   </div>
 
+  <!-- Back to Top -->
+  <div class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</div>
+
   <!-- Footer -->
-  <footer class="wfc-footer">
-    <p>© 2025 MR Shop — Together, we brighten children's futures 🌟</p>
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Get to Know Us</h4>
+        <a href="work-for-people.html">About MR Shop</a>
+        <a href="workfor.html">Careers</a>
+        <a href="workforpeople.html">Our Story</a>
+        <a href="becomeseller.html">Press Releases</a>
+      </div>
+      <div class="footer-col">
+        <h4>Make Money with Us</h4>
+        <a href="becomeseller.html">Sell on MR Shop</a>
+        <a href="seller.html">Seller Dashboard</a>
+        <a href="seller-settings.html">Seller Settings</a>
+        <a href="becomeseller.html">Become an Affiliate</a>
+      </div>
+      <div class="footer-col">
+        <h4>Help & Support</h4>
+        <a href="chat.html">Customer Service</a>
+        <a href="userprofile.html">Your Account</a>
+        <a href="workforchild.html">Children's Privacy</a>
+        <a href="notification.html">Notifications</a>
+        <a href="email-notifications.html">Email Settings</a>
+      </div>
+      <div class="footer-col">
+        <h4>Payment & Delivery</h4>
+        <a href="cart.html">Shopping Cart</a>
+        <a href="checkout.html">Checkout</a>
+        <a href="payment.html">Payment Methods</a>
+        <a href="order-tracking.html">Track Order</a>
+        <a href="workfor.html">Return Policy</a>
+      </div>
+      <div class="footer-col">
+        <h4>Shop by Category</h4>
+        <a href="food&natural.html">Food & Natural</a>
+        <a href="sweets&dairy.html">Sweets & Dairy</a>
+        <a href="handricrafts.html">Handicrafts</a>
+        <a href="clothing.html">Clothing</a>
+      </div>
+      <div class="footer-col">
+        <h4>Connect with Us</h4>
+        <a href="https://www.facebook.com/profile.php?id=61583616496782" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+        <a href="https://www.instagram.com/mrshopbd18/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+        <a href="https://www.youtube.com/@mrshop18" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
+        <a href="chat.html"><i class="fas fa-headset"></i> Live Chat</a>
+      </div>
+    </div>
+
+    <!-- Quick Links Bar -->
+    <div class="footer-quick-links">
+      <a href="index.html">Home</a>
+      <a href="search-results.html">All Products</a>
+      <a href="food&natural.html">Food</a>
+      <a href="sweets&dairy.html">Sweets</a>
+      <a href="handricrafts.html">Handicrafts</a>
+      <a href="clothing.html">Clothing</a>
+      <a href="book.html">Books</a>
+      <a href="antique.html">Antique</a>
+      <a href="blog.html">Blog</a>
+      <a href="compare.html">Compare</a>
+      <a href="order-tracking.html">Track Order</a>
+      <a href="review.html">Reviews</a>
+      <a href="admin.html">Admin</a>
+      <a href="seller.html">Sell</a>
+      <a href="chat.html">Help</a>
+    </div>
+
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <div class="footer-logo">MR shop</div>
+      <div class="footer-copyright">&copy; 2026 MR Shop. All Rights Reserved. | Powered by <strong>MR IT Company</strong></div>
+      <div class="footer-payment">
+        <span>We Accept:</span>
+        <i class="fas fa-money-bill-wave" title="Cash on Delivery"></i>
+        <i class="fas fa-mobile-alt" title="bKash" style="color:#e2136e;"></i>
+        <i class="fas fa-wallet" title="Nagad" style="color:#f6921e;"></i>
+        <i class="fas fa-rocket" title="Rocket" style="color:#8b2393;"></i>
+      </div>
+    </div>
   </footer>
 
-  <script src="assets/js/work-for-child.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/products.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/auth-shared.js"></script>
+  <script>
+    // Donation Modal
+    function openDonateModal() {
+      document.getElementById('donateModal').classList.add('active');
+    }
+    function closeDonateModal() {
+      document.getElementById('donateModal').classList.remove('active');
+    }
+    function selectAmount(amount) {
+      document.querySelectorAll('.wfc-amount').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      document.querySelector('.wfc-custom').value = amount;
+    }
+  </script>
 </body>
 </html>

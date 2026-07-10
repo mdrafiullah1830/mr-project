@@ -4,259 +4,342 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Work For Us — MR Shop</title>
+  <script src="assets/js/loader.js"></script>
+  <link rel="stylesheet" href="assets/css/amazon-style.css">
   <style>
-    /* Remove underlines from links */
-    a, a:link, a:visited, a:hover, a:active { text-decoration: none !important; }
-
-    /* Import modern font */
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-
-    :root{
-      --accent: #7c3aed;
-      --accent-2: #06b6d4;
-      --bg-1: #fff7fb;
-      --bg-2: #f0fbff;
-      --muted: #6b7280;
-      --shadow: 0 10px 30px rgba(18,38,63,0.08);
+    .amz-hero-banner {
+      background: linear-gradient(135deg, #232f3e 0%, #37475a 100%);
+      padding: 60px 24px;
+      text-align: center;
+      margin-bottom: 20px;
     }
 
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%}
-    body{
-      font-family: 'Poppins', Arial, sans-serif;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      background: linear-gradient(135deg,var(--bg-1),var(--bg-2));
-      color:#102a43;
-      line-height:1.4;
+    .amz-hero-banner h1 {
+      color: var(--amazon-white);
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 12px;
     }
 
-    /* Header */
-    header{
-      background: linear-gradient(90deg,var(--accent),var(--accent-2));
+    .amz-hero-banner p {
+      color: #ddd;
+      font-size: 18px;
+      max-width: 700px;
+      margin: 0 auto 24px;
+    }
+
+    .amz-hero-btn {
+      background: var(--amazon-orange);
+      color: var(--amazon-dark);
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s;
+    }
+
+    .amz-hero-btn:hover {
+      background: var(--amazon-yellow);
+    }
+
+    .amz-work-card {
+      background: var(--amazon-white);
+      border-radius: 8px;
+      padding: 24px;
+      border: 1px solid var(--amazon-border);
+      margin-bottom: 20px;
+      transition: box-shadow 0.3s;
+    }
+
+    .amz-work-card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .amz-work-card-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .amz-work-card-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #f0f2f2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      color: var(--amazon-text);
+    }
+
+    .amz-work-card-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--amazon-text);
+      margin-bottom: 4px;
+    }
+
+    .amz-work-card-badge {
+      display: inline-block;
+      background: var(--amazon-blue);
       color: white;
-      padding: 18px 36px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:16px;
-      box-shadow: var(--shadow);
-    }
-    header h1{font-size:20px;letter-spacing:0.2px}
-    .brand-link{color:inherit;text-decoration:none;font-weight:700;display:inline-flex;align-items:center;gap:8px}
-    .brand-link:focus{outline:2px solid rgba(255,255,255,0.15);border-radius:6px;padding:4px}
-    .mr-logo{box-sizing:border-box;height:40px;width:auto;display:block;object-fit:contain;border-radius:8px;padding:4px;border:2px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.03);box-shadow:0 6px 18px rgba(16,24,40,0.08)}
-    .header-links{display:flex;gap:12px;align-items:center}
-    .header-links a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:8px;background:transparent;transition:all .2s ease}
-    .header-links a:hover{background:rgba(255,255,255,0.15)}
-
-    /* Page layout */
-    .page-container{max-width:1200px;margin:0 auto;padding:36px 20px}
-    
-    /* Page title with letter effect */
-    .page-title{display:inline-block;line-height:1;letter-spacing:0.02em;font-weight:700;background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:28px;font-size:32px}
-    .page-title .char{display:inline-block;transform:translateY(0.95em);opacity:0;will-change:transform,opacity;display:inline-block}
-    @keyframes titleLetterIn{0%{transform:translateY(0.95em);opacity:0}60%{transform:translateY(-0.12em);opacity:1}100%{transform:translateY(0);opacity:1}}
-
-    /* Categories grid */
-    .categories-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-      gap:28px;
-      margin-bottom:28px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
     }
 
-    /* Category card */
-    .category-card{
-      position:relative;
-      overflow:hidden;
-      border-radius:18px;
-      background:#fff;
-      box-shadow: var(--shadow);
-      transition:all .3s cubic-bezier(.2,.9,.2,1);
-      cursor:pointer;
-      display:flex;
-      flex-direction:column;
-      height:100%;
-      min-height:360px;
-    }
-    
-    .category-card:hover{
-      transform:translateY(-8px);
-      box-shadow:0 20px 50px rgba(18,38,63,0.15);
+    .amz-work-card-desc {
+      color: #565959;
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 16px;
     }
 
-    .category-card-image{
-      width:100%;
-      height:240px;
-      object-fit:cover;
-      background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(6,182,212,0.08));
-      transition:transform .35s ease;
+    .amz-work-card-features {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 16px;
     }
 
-    .category-card:hover .category-card-image{
-      transform:scale(1.08);
+    .amz-work-card-features li {
+      padding: 6px 0;
+      font-size: 14px;
+      color: #565959;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .category-card-content{
-      flex:1;
-      padding:18px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
+    .amz-work-card-features li i {
+      color: var(--amazon-green);
+      font-size: 14px;
     }
 
-    .category-card-title{
-      font-size:18px;
-      font-weight:700;
-      color:#102a43;
-      margin-bottom:8px;
-      letter-spacing:0.5px;
+    .amz-work-card-link {
+      display: inline-block;
+      background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+      border: 1px solid #a88734;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--amazon-text);
+      cursor: pointer;
+      transition: background 0.2s;
     }
 
-    .category-card-desc{
-      font-size:14px;
-      color:var(--muted);
-      line-height:1.5;
-      margin-bottom:12px;
+    .amz-work-card-link:hover {
+      background: linear-gradient(to bottom, #f5d78e, #eeb933);
     }
 
-    .category-card-link{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:10px 14px;
-      background:linear-gradient(90deg,var(--accent),var(--accent-2));
-      color:#fff;
-      border-radius:10px;
-      font-weight:600;
-      font-size:13px;
-      transition:all .2s ease;
-      width:fit-content;
-      border:none;
-      cursor:pointer;
+    .amz-values-section {
+      background: var(--amazon-white);
+      border-radius: 8px;
+      padding: 32px 24px;
+      border: 1px solid var(--amazon-border);
+      margin-bottom: 20px;
     }
 
-    .category-card-link:hover{
-      transform:translateX(4px);
-      box-shadow:0 8px 24px rgba(124,58,237,0.35);
+    .amz-values-section h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-align: center;
     }
 
-    .category-card-link::after{
-      content:'→';
-      font-size:16px;
+    .amz-values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
     }
 
-    /* Decorative badges */
-    .category-badge{
-      position:absolute;
-      top:12px;
-      right:12px;
-      background:linear-gradient(90deg,var(--accent),var(--accent-2));
-      color:#fff;
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:700;
-      z-index:1;
+    .amz-value-item {
+      text-align: center;
+      padding: 16px;
     }
 
-    /* Footer */
-    footer{
-      background:linear-gradient(90deg,#eef2ff,#f0f9ff);
-      color:var(--muted);
-      text-align:center;
-      padding:28px;
-      margin-top:28px;
+    .amz-value-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+      color: var(--amazon-blue);
     }
 
-    /* Responsive */
-    @media (max-width:768px){
-      header{padding:12px 18px}
-      .page-title{font-size:24px;margin-bottom:20px}
-      .categories-grid{gap:18px}
-      .category-card{min-height:300px}
-      .category-card-image{height:180px}
+    .amz-value-item h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .amz-value-item p {
+      color: #565959;
+      font-size: 14px;
+      line-height: 1.5;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1><a href="index.html" class="brand-link" aria-label="MR Shop home" style="display:flex;align-items:center;gap:8px"><span style="font-size:32px">🛍️</span><img src="./assets/images/mrlogo.png" alt="MR" class="mr-logo" /></a></h1>
-    <div class="header-links">
-      <a href="index.html">Home</a>
-      <a href="Antique.html">Antique</a>
-      <a href="cart.html">Cart</a>
+  <header class="amz-header">
+    <div class="amz-header-top">
+      <a href="index.html" class="logo">
+        <div>
+          <span class="logo-text">MR shop</span>
+          <span class="logo-sub">Bangladesh</span>
+        </div>
+      </a>
+      <div class="amz-deliver-to"><span class="label">Deliver to</span><span class="location"><i class="fas fa-map-marker-alt"></i> Bangladesh</span></div>
+      <div class="amz-search-bar">
+        <select class="amz-search-category"><option>All</option><option>Food & Natural</option><option>Sweets & Dairy</option><option>Handicrafts</option><option>Clothing</option><option>Books</option><option>Antique</option></select>
+        <input type="text" class="amz-search-input" placeholder="Search MR Shop">
+        <button class="amz-search-btn" aria-label="Search"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="amz-header-right">
+        <a href="signin.html" class="amz-header-link"><span class="line1">Hello, Sign in</span><span class="line2">Account & Lists <i class="fas fa-caret-down"></i></span></a>
+        <a href="userprofile.html" class="amz-header-link"><span class="line1">Returns</span><span class="line2">& Orders</span></a>
+        <a href="wishlist.html" class="amz-header-link">
+          <span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span>
+          <span class="line2">Wishlist</span>
+        </a>
+        <a href="cart.html" class="amz-cart"><span class="amz-cart-icon"><i class="fas fa-shopping-cart"></i><span class="amz-cart-count" id="cartCount">0</span></span><span class="amz-cart-text">Cart</span></a>
+      </div>
     </div>
+    <nav class="amz-nav-bar">
+      <a href="index.html" class="amz-nav-item"><i class="fas fa-bars"></i> All</a>
+      <a href="food&natural.html" class="amz-nav-item">Food & Natural</a>
+      <a href="sweets&dairy.html" class="amz-nav-item">Sweets & Dairy</a>
+      <a href="handricrafts.html" class="amz-nav-item">Handicrafts</a>
+      <a href="clothing.html" class="amz-nav-item">Clothing</a>
+      <a href="book.html" class="amz-nav-item">Books</a>
+      <a href="antique.html" class="amz-nav-item">Antique</a>
+      <div class="amz-nav-divider"></div>
+      <a href="becomeseller.html" class="amz-nav-item">Sell</a>
+      <a href="index.html" class="amz-nav-item">Best Sellers</a>
+      <a href="index.html" class="amz-nav-item">Today's Deals</a>
+      <a href="chat.html" class="amz-nav-item"><i class="fas fa-headset"></i> Help</a>
+    </nav>
   </header>
 
-  <main class="page-container">
-    <h2 class="page-title" id="pageTitle">Work For Us</h2>
+  <!-- HERO BANNER -->
+  <div class="amz-hero-banner">
+    <h1>Work With Us</h1>
+    <p>Join MR Shop and make a difference. 10% of every profit goes to support education, healthcare, food, and shelter for those in need.</p>
+    <button class="amz-hero-btn">Explore Opportunities</button>
+  </div>
 
-    <div class="categories-grid">
-      <!-- People Category -->
-      <div class="category-card">
-        <div class="category-badge">People</div>
-        <img src="./assets/images/people.jpg" alt="People category" class="category-card-image" />
-        <div class="category-card-content">
-          <div>
-            <h3 class="category-card-title">People</h3>
-            <p class="category-card-desc">Join our mission to help the needy. 10% of every profit goes to support education, healthcare, food, and shelter for those in need.</p>
-          </div>
-          <a href="workforpeople.html" class="category-card-link">Learn More</a>
+  <!-- MAIN CONTENT -->
+  <main class="amz-seller-container">
+
+    <!-- Values Section -->
+    <div class="amz-values-section">
+      <h2>Our Mission & Values</h2>
+      <div class="amz-values-grid">
+        <div class="amz-value-item">
+          <div class="amz-value-icon"><i class="fa-solid fa-heart"></i></div>
+          <h3>Give Back</h3>
+          <p>10% of every profit is dedicated to helping the needy.</p>
         </div>
-      </div>
-
-      <!-- Child Category -->
-      <div class="category-card">
-        <div class="category-badge">Child</div>
-        <img src="./assets/images/child.jpg" alt="Child category" class="category-card-image" />
-        <div class="category-card-content">
-          <div>
-            <h3 class="category-card-title">Child</h3>
-            <p class="category-card-desc">Support underprivileged children. 10% of every profit goes to provide education, nutrition, healthcare, and shelter for children in need.</p>
-          </div>
-          <a href="workforchild.html" class="category-card-link">Learn More</a>
+        <div class="amz-value-item">
+          <div class="amz-value-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+          <h3>Education</h3>
+          <p>Supporting education for underprivileged children.</p>
         </div>
-      </div>
-
-      <!-- Cat Category -->
-      <div class="category-card">
-        <div class="category-badge">Cat</div>
-        <img src="./assets/images/cat.jpg" alt="Cat category" class="category-card-image" />
-        <div class="category-card-content">
-          <div>
-            <h3 class="category-card-title">Cat</h3>
-            <p class="category-card-desc">Category wise opportunities. Explore different categories and find the right fit for your skills and interests.</p>
-          </div>
-          <a href="index.html" class="category-card-link">Learn More</a>
+        <div class="amz-value-item">
+          <div class="amz-value-icon"><i class="fa-solid fa-stethoscope"></i></div>
+          <h3>Healthcare</h3>
+          <p>Providing healthcare access to communities in need.</p>
+        </div>
+        <div class="amz-value-item">
+          <div class="amz-value-icon"><i class="fa-solid fa-utensils"></i></div>
+          <h3>Nutrition</h3>
+          <p>Ensuring food and nutrition for vulnerable populations.</p>
         </div>
       </div>
     </div>
+
+    <!-- Work Cards -->
+    <div class="amz-work-card">
+      <div class="amz-work-card-header">
+        <div class="amz-work-card-icon"><i class="fa-solid fa-users"></i></div>
+        <div>
+          <h2 class="amz-work-card-title">People</h2>
+          <span class="amz-work-card-badge">Community</span>
+        </div>
+      </div>
+      <p class="amz-work-card-desc">
+        Join our mission to help the needy. 10% of every profit goes to support education, healthcare, food, and shelter for those in need.
+      </p>
+      <ul class="amz-work-card-features">
+        <li><i class="fa-solid fa-check"></i> Volunteer opportunities in local communities</li>
+        <li><i class="fa-solid fa-check"></i> Support education and healthcare programs</li>
+        <li><i class="fa-solid fa-check"></i> Make a direct impact on people's lives</li>
+        <li><i class="fa-solid fa-check"></i> Join a team that cares about giving back</li>
+      </ul>
+      <a href="workforpeople.html" class="amz-work-card-link">Learn More</a>
+    </div>
+
+    <div class="amz-work-card">
+      <div class="amz-work-card-header">
+        <div class="amz-work-card-icon"><i class="fa-solid fa-child"></i></div>
+        <div>
+          <h2 class="amz-work-card-title">Child</h2>
+          <span class="amz-work-card-badge">Children</span>
+        </div>
+      </div>
+      <p class="amz-work-card-desc">
+        Support underprivileged children. 10% of every profit goes to provide education, nutrition, healthcare, and shelter for children in need.
+      </p>
+      <ul class="amz-work-card-features">
+        <li><i class="fa-solid fa-check"></i> Help children access quality education</li>
+        <li><i class="fa-solid fa-check"></i> Support nutrition and healthcare initiatives</li>
+        <li><i class="fa-solid fa-check"></i> Create safe spaces for children to thrive</li>
+        <li><i class="fa-solid fa-check"></i> Work with organizations focused on child welfare</li>
+      </ul>
+      <a href="workforchild.html" class="amz-work-card-link">Learn More</a>
+    </div>
+
+    <div class="amz-work-card">
+      <div class="amz-work-card-header">
+        <div class="amz-work-card-icon"><i class="fa-solid fa-paw"></i></div>
+        <div>
+          <h2 class="amz-work-card-title">Cat</h2>
+          <span class="amz-work-card-badge">Animals</span>
+        </div>
+      </div>
+      <p class="amz-work-card-desc">
+        Category wise opportunities. Explore different categories and find the right fit for your skills and interests.
+      </p>
+      <ul class="amz-work-card-features">
+        <li><i class="fa-solid fa-check"></i> Animal welfare and rescue programs</li>
+        <li><i class="fa-solid fa-check"></i> Support local shelters and sanctuaries</li>
+        <li><i class="fa-solid fa-check"></i> Find opportunities that match your passion</li>
+        <li><i class="fa-solid fa-check"></i> Make a difference for animals in need</li>
+      </ul>
+      <a href="index.html" class="amz-work-card-link">Learn More</a>
+    </div>
+
   </main>
 
-  <footer>
-    © 2025 MR Shop | Powered by Md Rafi Ullah
+  <div class="amz-back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</div>
+  <footer class="amz-footer">
+    <div class="amz-footer-grid">
+      <div class="amz-footer-col"><h4>Get to Know Us</h4><a href="#">About MR Shop</a><a href="#">Careers</a><a href="#">Press Releases</a></div>
+      <div class="amz-footer-col"><h4>Make Money with Us</h4><a href="becomeseller.html">Sell on MR Shop</a><a href="#">Become an Affiliate</a></div>
+      <div class="amz-footer-col"><h4>Let Us Help You</h4><a href="userprofile.html">Your Account</a><a href="chat.html">Customer Service</a></div>
+      <div class="amz-footer-col"><h4>Connect with Us</h4><a href="#"><i class="fab fa-facebook"></i> Facebook</a><a href="#"><i class="fab fa-instagram"></i> Instagram</a><a href="#"><i class="fab fa-youtube"></i> YouTube</a></div>
+    </div>
   </footer>
+  <div class="amz-footer-bottom"><div class="amz-footer-logo">MR Shop</div><div class="amz-footer-copyright">&copy; 2026 MR Shop. All Rights Reserved.</div></div>
 
-  <script>
-    // Apply letter effect to page title
-    (function(){
-      const el = document.getElementById('pageTitle');
-      const text = el.textContent || el.innerText || '';
-      el.setAttribute('aria-label', text);
-      el.innerHTML = '';
-      Array.from(text).forEach((ch, i)=>{
-        const span = document.createElement('span');
-        span.className = 'char';
-        span.textContent = ch === ' ' ? '\u00A0' : ch;
-        span.style.animation = `titleLetterIn 650ms cubic-bezier(.2,.9,.2,1) forwards`;
-        span.style.animationDelay = (i * 38) + 'ms';
-        el.appendChild(span);
-      });
-    })();
-  </script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/products.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/auth-shared.js"></script>
 
 </body>
 </html>

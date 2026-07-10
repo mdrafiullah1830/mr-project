@@ -1,926 +1,719 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MR Shop | Online Store</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MR Shop - Bangladesh's #1 Online Marketplace. Shop authentic Bangladeshi products including Sundarbans honey, Jamdani sarees, handicrafts & more. Free delivery on orders over ৳5,000.">
+  <meta name="keywords" content="MR Shop, Bangladesh online shop, Bangladeshi products, honey, saree, handicrafts, sweets, dairy">
+  <meta name="author" content="MR IT Company">
+  <title>MR Shop - Bangladesh's #1 Online Shopping Destination</title>
+  <script src="assets/js/loader.js"></script>
+  <link rel="stylesheet" href="assets/css/dark-mode.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ff9900">
   <style>
-    /* Remove underlines from all links */
-    a, a:link, a:visited, a:hover, a:active { text-decoration: none !important; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --dark: #0f1111;
+      --darker: #131921;
+      --darkest: #0a0e13;
+      --orange: #ff9900;
+      --orange-light: #febd69;
+      --yellow: #ffd814;
+      --yellow-dark: #f7ca00;
+      --blue: #146eb4;
+      --green: #007600;
+      --light: #f5f5f5;
+      --white: #ffffff;
+      --border: #d5d9d9;
+      --text: #0f1111;
+      --link: #007185;
+      --red: #cc0c39;
+      --bg-gradient: linear-gradient(135deg, #0f1111 0%, #1a2332 50%, #0f1111 100%);
+    }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--light); color: var(--text); line-height: 1.5; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
 
-    /* Import a clean, modern font */
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+    /* ==================== HEADER ==================== */
+    .header { background: var(--darker); position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    .header-top { display: flex; align-items: center; padding: 10px 20px; gap: 16px; max-width: 1500px; margin: 0 auto; }
+    .logo { display: flex; align-items: center; padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .logo:hover { border-color: #fff; background: rgba(255,255,255,0.05); }
+    .logo-text { color: var(--white); font-size: 22px; font-weight: 800; letter-spacing: -1px; }
+    .logo-sub { color: var(--orange); font-size: 10px; font-weight: 600; display: block; letter-spacing: 2px; text-transform: uppercase; }
+    .deliver-to { color: var(--white); padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .deliver-to:hover { border-color: #fff; }
+    .deliver-to .label { color: #999; font-size: 11px; display: block; }
+    .deliver-to .loc { font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 4px; }
+    .search-bar { flex: 1; display: flex; height: 46px; border-radius: 8px; overflow: hidden; position: relative; }
+    .search-cat { background: #e6e6e6; border: none; padding: 0 12px; font-size: 13px; color: #555; cursor: pointer; border-right: 1px solid var(--border); }
+    .search-input { flex: 1; border: none; padding: 0 16px; font-size: 15px; outline: none; }
+    .search-btn { background: var(--orange); border: none; padding: 0 20px; cursor: pointer; font-size: 20px; color: var(--dark); transition: all 0.2s; }
+    .search-btn:hover { background: var(--orange-light); }
+    .header-actions { display: flex; align-items: center; gap: 6px; }
+    .header-link { color: var(--white); padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; font-size: 13px; white-space: nowrap; transition: all 0.2s; }
+    .header-link:hover { border-color: #fff; }
+    .header-link .line1 { color: #999; font-size: 11px; display: block; }
+    .header-link .line2 { font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 4px; }
+    .cart-btn { display: flex; align-items: center; gap: 4px; padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; color: var(--white); transition: all 0.2s; }
+    .cart-btn:hover { border-color: #fff; }
+    .cart-icon { font-size: 24px; position: relative; }
+    .cart-count { position: absolute; top: -6px; right: -8px; background: var(--orange); color: var(--dark); font-size: 13px; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .cart-text { font-weight: 700; font-size: 13px; }
 
-    /* Instagram-style loading bar */
-    
-    :root{
-      --bg-1: #fff7fb;
-      --bg-2: #f0fbff;
-      --accent: #7c3aed; /* violet */
-      --accent-2: #06b6d4; /* teal */
-      --muted: #6b7280;
-      --card-bg: rgba(255,255,255,0.72);
-      --glass: rgba(255,255,255,0.55);
-      --shadow: 0 10px 30px rgba(18,38,63,0.08);
+    /* Nav Bar */
+    .nav-bar { background: #232f3e; padding: 8px 20px; display: flex; align-items: center; gap: 4px; overflow-x: auto; max-width: 1500px; margin: 0 auto; }
+    .nav-item { color: var(--white); padding: 8px 14px; font-size: 13px; font-weight: 500; border: 1px solid transparent; border-radius: 4px; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+    .nav-item:hover { border-color: #fff; }
+    .nav-item.active { border-color: #fff; font-weight: 700; }
+    .nav-divider { width: 1px; height: 24px; background: #4a5568; margin: 0 6px; }
+
+    /* ==================== STUNNING HERO ==================== */
+    .hero { position: relative; background: var(--bg-gradient); min-height: 500px; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 30% 50%, rgba(255,153,0,0.08) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(20,110,180,0.06) 0%, transparent 40%); animation: heroGlow 15s ease-in-out infinite alternate; }
+    @keyframes heroGlow { 0% { transform: translate(0, 0); } 100% { transform: translate(-5%, -3%); } }
+    .hero-content { position: relative; z-index: 2; max-width: 1500px; margin: 0 auto; padding: 80px 40px; text-align: center; min-height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .hero-text { animation: fadeInUp 1s ease; width: 100%; max-width: 800px; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,153,0,0.15); border: 1px solid rgba(255,153,0,0.3); color: var(--orange); padding: 8px 18px; border-radius: 30px; font-size: 13px; font-weight: 600; margin-bottom: 24px; backdrop-filter: blur(10px); }
+    .hero-badge i { font-size: 14px; }
+    .hero-title { font-size: 52px; font-weight: 800; color: var(--white); line-height: 1.1; margin-bottom: 20px; letter-spacing: -1px; }
+    .hero-title span { background: linear-gradient(135deg, var(--orange) 0%, var(--yellow) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-desc { font-size: 18px; color: #999; line-height: 1.6; margin-bottom: 32px; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .hero-btn { padding: 14px 32px; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; border: none; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px; }
+    .hero-btn-primary { background: linear-gradient(135deg, var(--orange) 0%, var(--yellow) 100%); color: var(--dark); box-shadow: 0 4px 15px rgba(255,153,0,0.4); }
+    .hero-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,153,0,0.5); }
+    .hero-btn-secondary { background: rgba(255,255,255,0.1); color: var(--white); border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px); }
+    .hero-btn-secondary:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+    .hero-stats { display: flex; gap: 48px; justify-content: center; margin-top: 48px; }
+    .hero-stat { text-align: center; }
+    .hero-stat-num { font-size: 32px; font-weight: 800; color: var(--white); }
+    .hero-stat-label { font-size: 13px; color: #777; margin-top: 2px; }
+    .hero-float { position: absolute; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 12px 18px; backdrop-filter: blur(10px); animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .hero-float-1 { top: 40px; right: 60px; animation-delay: 0s; }
+    .hero-float-2 { bottom: 60px; left: 60px; animation-delay: 1.5s; }
+    .hero-float i { color: var(--orange); margin-right: 6px; }
+    .hero-float span { color: var(--white); font-size: 13px; font-weight: 600; }
+
+    /* ==================== FEATURES BAR ==================== */
+    .features-bar { background: var(--white); border-bottom: 1px solid var(--border); }
+    .features-grid { max-width: 1500px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); }
+    .feature-item { display: flex; align-items: center; gap: 14px; padding: 18px 24px; border-right: 1px solid var(--border); transition: background 0.2s; }
+    .feature-item:last-child { border-right: none; }
+    .feature-item:hover { background: #f8f9fa; }
+    .feature-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .feature-icon.green { background: #e6f4e6; color: var(--green); }
+    .feature-icon.blue { background: #e6f0fa; color: var(--blue); }
+    .feature-icon.orange { background: #fff3e0; color: var(--orange); }
+    .feature-icon.red { background: #fce4ec; color: var(--red); }
+    .feature-text h4 { font-size: 14px; font-weight: 700; color: var(--text); }
+    .feature-text p { font-size: 12px; color: #666; margin-top: 2px; }
+
+    /* ==================== CATEGORY SHOWCASE ==================== */
+    .section { padding: 24px 20px; max-width: 1500px; margin: 0 auto; }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .section-title { font-size: 22px; font-weight: 800; color: var(--text); position: relative; }
+    .section-title::after { content: ''; position: absolute; bottom: -6px; left: 0; width: 40px; height: 3px; background: var(--orange); border-radius: 2px; }
+    .section-link { color: var(--link); font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+    .section-link:hover { color: #c7511f; text-decoration: underline; }
+
+    .category-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .cat-card { position: relative; border-radius: 16px; overflow: hidden; cursor: pointer; transition: all 0.3s; background: var(--white); border: 1px solid var(--border); }
+    .cat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.12); border-color: var(--orange); }
+    .cat-card-bg { height: 160px; background-size: cover; background-position: center; position: relative; }
+    .cat-card-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.7) 100%); }
+    .cat-card-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 16px; z-index: 1; }
+    .cat-card-icon { width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; margin-bottom: 8px; }
+    .cat-card-title { color: white; font-size: 16px; font-weight: 700; }
+    .cat-card-count { color: rgba(255,255,255,0.7); font-size: 12px; margin-top: 2px; }
+    .cat-card-items { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 12px; }
+    .cat-mini { display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 8px; background: #f8f9fa; transition: all 0.2s; cursor: pointer; }
+    .cat-mini:hover { background: #e8f4fd; }
+    .cat-mini img { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; }
+    .cat-mini span { font-size: 11px; font-weight: 500; color: #333; }
+    .cat-card-footer { padding: 0 12px 12px; }
+    .cat-card-link { display: block; text-align: center; padding: 8px; background: #f0f2f2; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--link); transition: all 0.2s; }
+    .cat-card-link:hover { background: #e3e6e6; color: #c7511f; }
+
+    /* ==================== PRODUCTS GRID ==================== */
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+    .product-card { background: var(--white); border-radius: 12px; overflow: hidden; transition: all 0.3s; display: flex; flex-direction: column; cursor: pointer; position: relative; border: 1px solid var(--border); }
+    .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); border-color: var(--orange); }
+    .deal-badge { position: absolute; top: 10px; left: 10px; background: var(--red); color: white; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; z-index: 1; }
+    .product-img-wrap { height: 200px; display: flex; align-items: center; justify-content: center; padding: 16px; background: #f8f8f8; overflow: hidden; }
+    .product-img-wrap img { max-height: 100%; max-width: 100%; object-fit: contain; transition: transform 0.3s; }
+    .product-card:hover .product-img-wrap img { transform: scale(1.08); }
+    .product-info { padding: 14px; flex: 1; display: flex; flex-direction: column; }
+    .product-title { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.3; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 36px; }
+    .product-rating { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+    .stars { color: var(--orange); font-size: 13px; }
+    .rating-count { color: var(--link); font-size: 13px; }
+    .product-price { margin-bottom: 6px; }
+    .price-symbol { font-size: 13px; color: var(--text); vertical-align: top; }
+    .price-whole { font-size: 22px; font-weight: 700; color: var(--text); }
+    .price-original { text-decoration: line-through; color: #999; font-size: 13px; margin-left: 8px; }
+    .price-discount { color: var(--red); font-size: 13px; font-weight: 600; margin-left: 4px; }
+    .prime-badge { display: inline-flex; align-items: center; gap: 4px; background: linear-gradient(135deg, #1a1a2e, #16213e); color: var(--orange-light); padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; margin-bottom: 6px; }
+    .prime-icon { background: var(--orange); color: var(--dark); padding: 1px 5px; border-radius: 3px; font-size: 9px; font-weight: 800; }
+    .delivery-info { font-size: 13px; color: var(--text); margin-bottom: 10px; }
+    .product-btn { width: 100%; padding: 10px; border: 1px solid var(--yellow); border-radius: 8px; background: linear-gradient(to bottom, var(--yellow), var(--yellow-dark)); font-size: 13px; font-weight: 700; cursor: pointer; color: var(--dark); transition: all 0.2s; margin-top: auto; }
+    .product-btn:hover { background: linear-gradient(to bottom, var(--yellow-dark), #e6b800); }
+    .product-btn:active { transform: scale(0.98); }
+
+    /* ==================== DEALS BANNER ==================== */
+    .deals-banner { max-width: 1500px; margin: 0 auto 24px; padding: 0 20px; }
+    .deals-inner { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); border-radius: 16px; padding: 40px; display: flex; align-items: center; justify-content: space-between; position: relative; overflow: hidden; }
+    .deals-inner::before { content: ''; position: absolute; top: -50%; right: -10%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(255,153,0,0.15) 0%, transparent 70%); }
+    .deals-content h2 { color: var(--white); font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+    .deals-content p { color: #999; font-size: 16px; }
+    .deals-content p span { color: var(--orange); font-weight: 700; }
+    .deals-timer { display: flex; gap: 12px; margin-top: 20px; }
+    .timer-box { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 12px 16px; text-align: center; backdrop-filter: blur(10px); }
+    .timer-num { color: var(--white); font-size: 24px; font-weight: 800; display: block; }
+    .timer-label { color: #999; font-size: 11px; text-transform: uppercase; }
+    .deals-btn { background: linear-gradient(135deg, var(--orange), var(--yellow)); color: var(--dark); border: none; padding: 14px 32px; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; position: relative; z-index: 1; transition: all 0.3s; }
+    .deals-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,153,0,0.4); }
+
+    /* ==================== FOOTER ==================== */
+    .back-to-top { background: #37475a; text-align: center; padding: 14px; color: var(--white); font-size: 13px; cursor: pointer; transition: background 0.2s; }
+    .back-to-top:hover { background: #485769; }
+    .footer { background: var(--darker); color: var(--white); padding: 40px 20px 20px; }
+    .footer-grid { max-width: 1500px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-bottom: 30px; }
+    .footer-col h4 { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
+    .footer-col a { display: block; color: #ddd; font-size: 13px; padding: 4px 0; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--white); text-decoration: underline; }
+    .footer-quick-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 16px 0; max-width: 1500px; margin: 0 auto; }
+    .footer-quick-links a { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); padding: 6px 14px; border-radius: 20px; font-size: 12px; color: #ccc; transition: all 0.2s; }
+    .footer-quick-links a:hover { background: rgba(255,255,255,0.15); color: var(--white); border-color: var(--orange); }
+    .footer-divider { height: 1px; background: #3a4553; margin: 16px 0; }
+    .footer-bottom { text-align: center; padding: 20px; }
+    .footer-logo { font-size: 20px; font-weight: 800; color: var(--white); margin-bottom: 6px; }
+    .footer-copyright { color: #999; font-size: 12px; margin-bottom: 10px; }
+    .footer-copyright strong { color: var(--orange); }
+    .footer-payment { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px; color: #999; font-size: 12px; }
+    .footer-payment i { font-size: 20px; color: #ccc; transition: transform 0.2s; }
+    .footer-payment i:hover { transform: scale(1.2); color: var(--white); }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 1024px) {
+      .hero-content { padding: 60px 20px; }
+      .hero-title { font-size: 42px; }
+      .category-grid { grid-template-columns: repeat(2, 1fr); }
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .feature-item:nth-child(2) { border-right: none; }
+      .hero-float { display: none; }
+    }
+    @media (max-width: 768px) {
+      .hero-title { font-size: 36px; }
+      .category-grid { grid-template-columns: 1fr; }
+      .products-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .deals-inner { flex-direction: column; text-align: center; gap: 20px; padding: 30px; }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .header-top { padding: 8px 12px; gap: 8px; }
+      .logo-text { font-size: 18px; }
+      .deliver-to, .header-link .line1 { display: none; }
+      .hero-title { font-size: 28px; }
+      .products-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .product-img-wrap { height: 140px; padding: 10px; }
+      .price-whole { font-size: 18px; }
     }
 
-    /* Dark theme overrides (apply by adding .theme-dark to <html> or <body>) */
-    .theme-dark{
-      --bg-1: #0b1220;
-      --bg-2: #071026;
-      --accent: #8b5cf6;
-      --accent-2: #14b8a6;
-      --muted: #9aa6b2;
-      --card-bg: rgba(10,16,24,0.45);
-      --glass: rgba(255,255,255,0.04);
-      --shadow: 0 12px 30px rgba(2,6,23,0.6);
-      color-scheme: dark;
-    }
-
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%}
-    body{
-      font-family: 'Poppins', Arial, sans-serif;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      background: linear-gradient(135deg,var(--bg-1),var(--bg-2));
-      color:#102a43;
-      line-height:1.4;
-    }
-
-    /* Header */
-    header{
-      background: linear-gradient(90deg,var(--accent),var(--accent-2));
-      color: white;
-      padding: 18px 36px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:16px;
-      box-shadow: var(--shadow);
-    }
-    header h1{font-size:20px;letter-spacing:0.2px}
-    header input{display:none} /* hide search in header for a cleaner look */
-
-  /* brand link style (clickable title) */
-  .brand-link{color:inherit;text-decoration:none;font-weight:700;display:inline-flex;align-items:center;gap:8px}
-  .brand-link:focus{outline:2px solid rgba(255,255,255,0.15);border-radius:6px;padding:4px}
-
-  /* Logo border style */
-  .mr-logo{
-    box-sizing: border-box;
-    height:40px; /* total height including padding/border */
-    width:auto;
-    display:block;
-    object-fit:contain;
-    border-radius:8px;
-    padding:4px;
-    border:2px solid rgba(255,255,255,0.18);
-    background:rgba(255,255,255,0.03);
-    box-shadow:0 6px 18px rgba(16,24,40,0.08);
-  }
-
-    /* theme toggle button */
-    .theme-toggle{
-      background:transparent;border:none;color:inherit;font-size:18px;cursor:pointer;padding:8px;border-radius:8px;margin-left:8px
-    }
-    .theme-toggle:focus{outline:2px solid rgba(255,255,255,0.15)}
-  /* Cart icon in header (top-right) */
-  .cart-link{display:inline-flex;align-items:center;margin-left:8px}
-  .cart-icon{box-sizing:border-box;width:40px;height:40px;object-fit:cover;border-radius:8px;box-shadow:0 6px 18px rgba(16,24,40,0.12);transition:transform .18s ease,box-shadow .18s ease;display:block}
-  .cart-link:hover .cart-icon{transform:translateY(-3px);box-shadow:0 18px 40px rgba(16,42,67,0.14)}
-  /* Chat icon placed beside cart in header */
-  .chat-link{display:inline-flex;align-items:center;margin-left:8px}
-  .chat-icon{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;background:linear-gradient(90deg,#7c3aed,#06b6d4);color:#fff;font-weight:700;box-shadow:0 6px 18px rgba(16,24,40,0.12);transition:transform .18s ease,box-shadow .18s ease}
-  .chat-link:hover .chat-icon{transform:translateY(-3px);box-shadow:0 18px 40px rgba(16,42,67,0.14)}
-
-  /* Notification icon */
-  .notification-link{display:inline-flex;align-items:center;margin-left:8px;position:relative}
-  .notification-icon{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;background:rgba(255,255,255,0.15);color:#fff;font-weight:700;box-shadow:0 6px 18px rgba(16,24,40,0.12);transition:transform .18s ease,box-shadow .18s ease;font-size:18px;border:none;cursor:pointer}
-  .notification-link:hover .notification-icon{transform:translateY(-3px);box-shadow:0 18px 40px rgba(16,42,67,0.14)}
-  .notification-badge{position:absolute;top:-4px;right:-4px;background:#ef4444;color:#fff;border-radius:999px;font-size:10px;font-weight:700;padding:2px 6px;min-width:18px;text-align:center;box-shadow:0 2px 8px rgba(239,68,68,0.4)}
-
-  /* Cart icon border to match logo */
-  .cart-icon{border:2px solid rgba(255,255,255,0.12);padding:4px;background:rgba(255,255,255,0.02)}
-  /* Home nav button styling */
-  .nav-home{display:inline-flex;align-items:center;padding:6px 10px;border-radius:8px;border:2px solid transparent;transition:all .18s ease;color:var(--muted);background:transparent}
-  .nav-home:hover{border-color:rgba(124,58,237,0.14);background:rgba(124,58,237,0.04);color:#111}
-  @media (max-width:640px){.cart-icon{width:30px;height:30px}}
-
-    /* Top nav (below header) */
-    nav{
-      background:transparent;
-      color:var(--muted);
-      padding:10px 36px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-    }
-    nav a{
-      color:var(--muted);
-      text-decoration:none;
-      margin-right:12px;
-      font-size:15px;
-      padding:8px 10px;
-      border-radius:8px;
-      transition:all .18s ease;
-    }
-    nav a:hover{background:rgba(255,255,255,0.6);color:#111}
-    .nav-left{display:flex;align-items:center;gap:10px}
-    .nav-right{display:flex;align-items:center;gap:10px}
-    .nav-right a.button{background:white;color:var(--accent-2)}
-
-    /* Categories dropdown styles */
-    .categories-wrapper{position:relative}
-    .categories-toggle{cursor:pointer;color:var(--muted);text-decoration:none;padding:8px 10px;border-radius:8px;transition:all .18s ease;display:inline-flex;align-items:center;gap:8px}
-    .categories-toggle:hover{background:rgba(255,255,255,0.6);color:#111}
-    .categories-menu{
-      position:absolute;top:calc(100% + 10px);left:0;min-width:320px;background:linear-gradient(180deg,rgba(255,255,255,0.98),var(--card-bg));box-shadow:0 14px 40px rgba(16,42,67,0.12);border-radius:12px;padding:14px;z-index:60;display:none;
-    }
-    .categories-menu.open{display:block}
-    .category-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-    .category-card{display:block;padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff,#fbfbff);color:#102a43;text-decoration:none;font-weight:600;box-shadow:0 6px 18px rgba(12,20,30,0.06);transition:transform .18s ease,box-shadow .18s ease}
-    .category-card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(16,42,67,0.12)}
-    .category-card .sub{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-top:6px}
-    @media (max-width:640px){.categories-menu{left:auto;right:0;min-width:260px}}
-    
-  /* Our Platform dropdown styles */
-  .platform-wrapper{position:relative}
-  .platform-toggle{cursor:pointer;color:var(--muted);text-decoration:none;padding:8px 10px;border-radius:8px;transition:all .18s ease;display:inline-flex;align-items:center;gap:8px}
-  .platform-toggle:hover{background:rgba(255,255,255,0.6);color:#111}
-  .platform-menu{position:absolute;top:calc(100% + 10px);left:0;min-width:220px;background:linear-gradient(180deg,rgba(255,255,255,0.98),var(--card-bg));box-shadow:0 14px 40px rgba(16,42,67,0.12);border-radius:12px;padding:10px;z-index:60;display:none}
-  .platform-menu.open{display:block}
-  .platform-item{display:flex;gap:10px;align-items:center;padding:8px;border-radius:8px;color:#102a43;text-decoration:none}
-  .platform-item:hover{background:rgba(0,0,0,0.03)}
-  .platform-item svg{width:18px;height:18px}
-  .platform-item img{width:22px;height:22px;object-fit:cover;border-radius:6px}
-
-  /* Search wrapper and dropdown styles */
-  .search-wrapper{position:relative;display:inline-block;width:240px}
-  .search-input{width:100%;padding:8px 12px;border:1px solid #e6e9ee;border-radius:8px;background:rgba(255,255,255,0.85);color:#102a43;font-size:14px}
-  .search-input:focus{outline:none;border-color:var(--accent);background:white;box-shadow:0 0 0 2px rgba(124,58,237,0.1)}
-  .search-results{position:absolute;top:calc(100% + 8px);left:0;right:0;max-height:360px;overflow-y:auto;background:white;border-radius:10px;box-shadow:0 12px 36px rgba(16,42,67,0.12);z-index:70;display:none}
-  .search-results.open{display:block}
-  .search-result-item{padding:12px;border-bottom:1px solid #f0f0f0;cursor:pointer;transition:all .18s ease;display:flex;align-items:center;gap:12px}
-  .search-result-item:last-child{border-bottom:none}
-  .search-result-item:hover{background:rgba(124,58,237,0.04)}
-  .search-result-item img{width:40px;height:40px;object-fit:cover;border-radius:6px;background:#f3f4f6}
-  .search-result-info{flex:1}
-  .search-result-name{font-weight:600;color:#102a43;font-size:14px}
-  .search-result-price{font-size:12px;color:var(--accent);font-weight:700}
-  .search-no-results{padding:16px;text-align:center;color:var(--muted);font-size:14px}
-
-    /* Smooth scrolling */
-    html { scroll-behavior: smooth; }
-
-    /* Banner (slideshow) */
-    .banner{
-      position:relative;
-      height:320px;
-      overflow:hidden;
-      border-radius:12px;
-      margin:18px 36px;
-      display:flex;align-items:center;justify-content:center;
-    }
-    .banner .slides{position:absolute;inset:0}
-    .banner .slide{
-      position:absolute;inset:0;background-position:center;background-size:cover;background-repeat:no-repeat;
-      opacity:0;transform:scale(1.03);transition:opacity .9s ease, transform .9s ease;filter:contrast(.98) saturate(1.02);
-    }
-    .banner .slide.active{opacity:1;transform:scale(1)}
-    .banner::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.22),rgba(0,0,0,0.5));pointer-events:none}
-    .banner .caption{
-      position:relative;
-      z-index:2;
-      color:white;
-      font-size:28px;
-      font-weight:700;
-      text-align:left;
-      padding:0 18px;
-      display:flex;
-      align-items:center;
-      gap:.5rem;
-      min-height:1.4em;
-    }
-
-    /* typing effect styles */
-    .caption-text{display:inline-block;white-space:nowrap;overflow:hidden;letter-spacing:0.2px}
-    .caption-cursor{display:inline-block;color:rgba(255,255,255,0.95);font-weight:700;animation:blink 1s steps(2,start) infinite}
-    @keyframes blink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
-
-    /* Reveal (scroll) animations */
-    .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s ease;will-change:opacity,transform}
-    .reveal.visible{opacity:1;transform:translateY(0)}
-
-    /* Products grid */
-    .products{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      gap:24px;padding:36px;max-width:1200px;margin:0 auto;
-    }
-    .product{
-      background:var(--card-bg);
-      border-radius:14px;
-      box-shadow: var(--shadow);
-      text-align:center;padding:18px;transition:transform .25s ease,box-shadow .25s ease;
-      backdrop-filter: blur(6px);
-      overflow:hidden;
-      display:flex;flex-direction:column;gap:12px;align-items:center;
-    }
-    .product:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(16,42,67,0.12)}
-    .product img{width:100%;height:160px;object-fit:cover;border-radius:10px}
-    .product h3{margin:6px 0;font-size:16px}
-    .product p{color:var(--muted);font-weight:600}
-    .price-pill{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;padding:6px 10px;border-radius:999px;font-weight:700}
-    .product button{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;border:none;padding:10px 16px;border-radius:10px;cursor:pointer}
-
-    /* Footer */
-    footer{background:linear-gradient(90deg,#eef2ff,#f0f9ff);color:var(--muted);text-align:center;padding:28px;margin-top:28px}
-
-    /* Responsive tweaks */
-    @media (max-width:800px){
-      .banner{height:200px;margin:12px}
-      .products{padding:20px}
-      header{padding:12px 18px}
-      nav{padding:8px 18px;flex-wrap:wrap}
-      nav a{font-size:14px;padding:6px 8px}
-    }
-    /* Chat overlay (mobile messenger) */
-    .chat-overlay{position:fixed;inset:0;display:none;align-items:flex-end;justify-content:center;padding:16px;z-index:120}
-    .chat-overlay.open{display:flex}
-    .chat-window{width:360px;max-width:100%;height:80vh;background:white;border-radius:18px;box-shadow:0 30px 80px rgba(2,6,23,0.3);display:flex;flex-direction:column;overflow:hidden}
-    .chat-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:linear-gradient(90deg,#7c3aed,#06b6d4);color:#fff}
-    .chat-messages{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px;background:linear-gradient(180deg,#f9fafb,#fff)}
-    .msg{max-width:78%;padding:10px 12px;border-radius:12px;font-size:14px}
-    .msg.user{align-self:flex-end;background:linear-gradient(90deg,#7c3aed,#06b6d4);color:#fff;border-bottom-right-radius:4px}
-    .msg.bot{align-self:flex-start;background:#f1f5f9;color:#0f172a;border-bottom-left-radius:4px}
-    .chat-input{display:flex;padding:10px;border-top:1px solid #eee;gap:8px}
-    .chat-input input{flex:1;padding:10px;border-radius:10px;border:1px solid #e6e9ee}
-    .chat-input button{padding:8px 12px;border-radius:10px;border:none;background:linear-gradient(90deg,#7c3aed,#06b6d4);color:#fff;cursor:pointer}
-    .chat-close{background:transparent;border:none;color:#fff;font-size:18px;cursor:pointer}
-    @media (max-width:420px){.chat-window{width:100%;height:88vh;border-radius:12px}}
+    /* ==================== ANIMATIONS ==================== */
+    .fade-in { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
   </style>
 </head>
 <body>
 
-  <header>
-  <h1><a href="index.html" class="brand-link" aria-label="MR Shop home" style="display:flex;align-items:center;gap:8px"><span style="font-size:32px">🛍️</span><img src="./assets/images/mrlogo.png" alt="MR" class="mr-logo" /><span style="font-weight:700;font-size:20px;color:#fff">MR Shop</span></a></h1>
-    <div style="display:flex;align-items:center;gap:8px">
-      <input type="text" placeholder="Search for products..." />
-      <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
-      <button class="notification-link" aria-label="View notifications">
-        <div class="notification-icon">🔔</div>
-        <span class="notification-badge" id="notificationBadge">3</span>
-      </button>
-      <a href="cart.html" class="cart-link" aria-label="View cart">
-        <img src="./assets/images/cart.jpg" alt="Cart" class="cart-icon" />
+  <!-- Header -->
+  <header class="header">
+    <div class="header-top">
+      <a href="index.html" class="logo">
+        <div>
+          <span class="logo-text">MR shop</span>
+          <span class="logo-sub">Bangladesh</span>
+        </div>
       </a>
-      <button id="openChatBtn" class="chat-link" aria-label="Open chat">
-        <div class="chat-icon">💬</div>
-      </button>
+      <div class="deliver-to">
+        <span class="label">Deliver to</span>
+        <span class="loc"><i class="fas fa-map-marker-alt"></i> Bangladesh</span>
+      </div>
+      <div class="search-bar">
+        <select class="search-cat">
+          <option>All</option>
+          <option>Food & Natural</option>
+          <option>Sweets & Dairy</option>
+          <option>Handicrafts</option>
+          <option>Clothing</option>
+          <option>Books</option>
+          <option>Antique</option>
+        </select>
+        <input type="text" class="search-input" placeholder="Search MR Shop" id="searchInput" autocomplete="off">
+        <button class="search-btn" onclick="doHomeSearch()"><i class="fas fa-search"></i></button>
+        <div class="search-suggestions-dropdown" id="searchSuggestions"></div>
+      </div>
+      <div class="header-actions">
+        <a href="signin.html" class="header-link" id="accountLink">
+          <span class="line1">Hello, Sign in</span>
+          <span class="line2">Account <i class="fas fa-caret-down"></i></span>
+        </a>
+        <a href="wishlist.html" class="header-link">
+          <span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span>
+          <span class="line2">Wishlist</span>
+        </a>
+        <a href="cart.html" class="cart-btn">
+          <span class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count amz-cart-count">0</span></span>
+          <span class="cart-text">Cart</span>
+        </a>
+      </div>
     </div>
+    <nav class="nav-bar">
+      <a href="index.html" class="nav-item active"><i class="fas fa-bars"></i> All</a>
+      <a href="food&natural.html" class="nav-item" data-category="food">Food & Natural</a>
+      <a href="sweets&dairy.html" class="nav-item" data-category="sweets">Sweets & Dairy</a>
+      <a href="handricrafts.html" class="nav-item" data-category="handicrafts">Handicrafts</a>
+      <a href="clothing.html" class="nav-item" data-category="clothing">Clothing</a>
+      <a href="book.html" class="nav-item" data-category="books">Books</a>
+      <a href="antique.html" class="nav-item" data-category="antique">Antique</a>
+      <div class="nav-divider"></div>
+      <a href="blog.html" class="nav-item"><i class="fas fa-newspaper"></i> Blog</a>
+      <a href="compare.html" class="nav-item"><i class="fas fa-balance-scale"></i> Compare</a>
+      <a href="order-tracking.html" class="nav-item"><i class="fas fa-truck"></i> Track Order</a>
+      <a href="admin.html" class="nav-item"><i class="fas fa-cog"></i> Admin</a>
+      <div class="nav-divider"></div>
+      <a href="becomeseller.html" class="nav-item">Sell</a>
+      <a href="chat.html" class="nav-item"><i class="fas fa-headset"></i> Help</a>
+      <button class="nav-item" onclick="toggleLanguage()" style="background:none;border:1px solid transparent;color:#fff;font-size:13px;cursor:pointer" id="langToggle">EN/বাং</button>
+    </nav>
   </header>
 
-  <nav>
-    <div class="nav-left">
-      <a href="index.html" class="nav-home">home</a>
-      <div class="categories-wrapper">
-        <a href="#" id="categoriesToggle" class="categories-toggle">catagories ▾</a>
-        <div class="categories-menu" id="categoriesMenu" aria-hidden="true">
-          <div class="category-grid">
-            <a href="food&natural.html" class="category-card">Food & Natural<span class="sub">Fresh & organic items</span></a>
-            <a href="sweets&dairy.html" class="category-card">Sweets & Dairy<span class="sub">Local treats & milk products</span></a>
-            <a href="handricrafts.html" class="category-card">Handicrafts<span class="sub">Artisan-made goods</span></a>
-            <a href="clothing.html" class="category-card">Clothing<span class="sub">Traditional & modern wear</span></a>
-            <a href="book.html" class="category-card">📚 Books<span class="sub">Novels, textbooks & more</span></a>
-            <a href="Antique.html" class="category-card">Antique & Collectibles<span class="sub">Rare finds & vintage treasures</span></a>
-          </div>
+  <!-- ==================== STUNNING HERO ==================== -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="hero-badge"><i class="fas fa-bolt"></i> Bangladesh's #1 Online Marketplace</div>
+        <h1 class="hero-title">Discover <span>Authentic Bangladesh</span> at Your Doorstep</h1>
+        <p class="hero-desc">From Sundarbans honey to Jamdani sarees — explore 500+ handpicked products from local artisans and brands. Premium quality, delivered nationwide.</p>
+        <div class="hero-btns">
+          <a href="food&natural.html" class="hero-btn hero-btn-primary"><i class="fas fa-shopping-bag"></i> Shop Now</a>
+          <a href="becomeseller.html" class="hero-btn hero-btn-secondary"><i class="fas fa-store"></i> Become a Seller</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><div class="hero-stat-num">500+</div><div class="hero-stat-label">Products</div></div>
+          <div class="hero-stat"><div class="hero-stat-num">10K+</div><div class="hero-stat-label">Happy Customers</div></div>
+          <div class="hero-stat"><div class="hero-stat-num">64</div><div class="hero-stat-label">Districts Covered</div></div>
+          <div class="hero-stat"><div class="hero-stat-num">4.8</div><div class="hero-stat-label">Average Rating</div></div>
         </div>
       </div>
-      <a href="becomeseller.html" aria-label="Become a seller">become a seller</a>
-      <a href="workfor.html" aria-label="Work for us">work for us</a>
-      <div class="platform-wrapper">
-        <a href="#" id="platformToggle" class="platform-toggle">Our Platform ▾</a>
-        <div class="platform-menu" id="platformMenu" aria-hidden="true">
-          <a class="platform-item" href="https://www.facebook.com/profile.php?id=61583616496782" target="_blank" rel="noopener noreferrer">
-            <img src="./assets/images/facebook.jpg" alt="Facebook" />
-            <div>
-              <div class="label">Facebook</div>
-              <div class="muted">MR Shop</div>
-            </div>
-          </a>
-          <a class="platform-item" href="https://www.instagram.com/mrshopbd18/" target="_blank" rel="noopener noreferrer">
-            <img src="./assets/images/instagram.jpg" alt="Instagram" />            <div>
-              <div class="label">Instagram</div>
-              <div class="muted">@mrshopbd18</div>
-            </div>
-          </a>
-          <a class="platform-item" href="https://www.youtube.com/@mrshop18" target="_blank" rel="noopener noreferrer">
-            <img src="./assets/images/youtube.jpg" alt="YouTube" />
-            <div>
-              <div class="label">YouTube</div>
-              <div class="muted">MR Shop</div>
-            </div>
-          </a>
-        </div>
-      </div>
-      <div class="search-wrapper">
-        <input type="text" id="searchInput" class="search-input" placeholder="Search products..." aria-label="Search products" />
-        <div class="search-results" id="searchResults" aria-hidden="true" aria-label="Search results"></div>
-      </div>
     </div>
-    <div class="nav-right">
-      <!-- Shown when user is signed in -->
-      <a href="#" class="auth-when-signed-in">Dashboard</a>
-      <a href="#" class="auth-when-signed-in toggle-auth">Log out</a>
-      <!-- Shown when user is signed out -->
-      <a href="auth.html#login" class="auth-when-signed-out button">Sign in</a>
-      <a href="auth.html#register" class="auth-when-signed-out button">Sign up</a>
-    </div>
-  </nav>
+    <div class="hero-float hero-float-1"><i class="fas fa-truck"></i><span>Free Delivery</span></div>
+    <div class="hero-float hero-float-2"><i class="fas fa-shield-alt"></i><span>100% Secure</span></div>
+  </section>
 
-  <div class="banner" aria-roledescription="carousel">
-    <div class="slides">
-      <div class="slide" data-src="./assets/images/saree.jpg" data-caption="Soft, breathable cotton weave—perfect for everyday comfort with a classic touch." style="background-image:url('./assets/images/saree.jpg')"></div>
-      <div class="slide" data-src="./assets/images/doi.jpg" data-caption="Authentic Bogura Doi—thick, creamy, and naturally delicious." style="background-image:url('./assets/images/doi.jpg')"></div>
-      <div class="slide" data-src="./assets/images/honey.jpg" data-caption="Pure wild honey from the deep Sundarbans—raw, natural, and truly authentic." style="background-image:url('./assets/images/honey.jpg')"></div>
-      <div class="slide" data-src="./assets/images/tatshilpo.jpg" style="background-image:url('./assets/images/tatshilpo.jpg')"></div>
+  <!-- Features Bar -->
+  <div class="features-bar">
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="feature-icon green"><i class="fas fa-truck"></i></div>
+        <div class="feature-text"><h4>Free Delivery</h4><p>On orders over ৳5,000</p></div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon blue"><i class="fas fa-undo"></i></div>
+        <div class="feature-text"><h4>Easy Returns</h4><p>7-day return policy</p></div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon orange"><i class="fas fa-shield-alt"></i></div>
+        <div class="feature-text"><h4>Secure Payment</h4><p>bKash, Nagad, COD</p></div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon red"><i class="fas fa-headset"></i></div>
+        <div class="feature-text"><h4>24/7 Support</h4><p>Dedicated help center</p></div>
+      </div>
     </div>
-  <div class="caption"><span class="caption-text" aria-live="polite"></span><span class="caption-cursor" aria-hidden="true">▍</span></div>
   </div>
 
-  <!-- Dynamic Products Section with Category Filter -->
-  <section style="max-width:1200px;margin:40px auto;padding:0 36px">
-    <div style="text-align:center;margin-bottom:32px">
-      <h2 style="font-size:32px;font-weight:700;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px">🛍️ Shop By Category</h2>
-      <p style="color:var(--muted);font-size:16px">Browse our curated collection from all categories</p>
+  <!-- ==================== DEALS BANNER ==================== -->
+  <div class="deals-banner fade-in">
+    <div class="deals-inner">
+      <div class="deals-content">
+        <h2>Today's Best Deals</h2>
+        <p>Up to <span>50% OFF</span> on selected items. Limited time offer!</p>
+        <div class="deals-timer">
+          <div class="timer-box"><span class="timer-num" id="hours">08</span><span class="timer-label">Hours</span></div>
+          <div class="timer-box"><span class="timer-num" id="minutes">45</span><span class="timer-label">Minutes</span></div>
+          <div class="timer-box"><span class="timer-num" id="seconds">30</span><span class="timer-label">Seconds</span></div>
+        </div>
+      </div>
+      <button class="deals-btn" onclick="document.getElementById('productsSection').scrollIntoView({behavior:'smooth'})"><i class="fas fa-bolt"></i> Shop Deals</button>
     </div>
+  </div>
 
-    <!-- Category Filter Tabs -->
-    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:32px;padding:0 20px" id="categoryTabs">
-      <button class="category-tab active" data-category="all" style="padding:10px 24px;border:2px solid var(--accent);background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;border-radius:999px;font-weight:600;cursor:pointer;transition:all .3s ease;font-size:14px">All Products</button>
-      <button class="category-tab" data-category="food" style="padding:10px 24px;border:2px solid var(--border-color);background:transparent;color:var(--text-primary);border-radius:999px;font-weight:600;cursor:pointer;transition:all .3s ease;font-size:14px">🍯 Food & Natural</button>
-      <button class="category-tab" data-category="sweets" style="padding:10px 24px;border:2px solid var(--border-color);background:transparent;color:var(--text-primary);border-radius:999px;font-weight:600;cursor:pointer;transition:all .3s ease;font-size:14px">🍰 Sweets & Dairy</button>
-      <button class="category-tab" data-category="handicrafts" style="padding:10px 24px;border:2px solid var(--border-color);background:transparent;color:var(--text-primary);border-radius:999px;font-weight:600;cursor:pointer;transition:all .3s ease;font-size:14px">🎨 Handicrafts</button>
-      <button class="category-tab" data-category="clothing" style="padding:10px 24px;border:2px solid var(--border-color);background:transparent;color:var(--text-primary);border-radius:999px;font-weight:600;cursor:pointer;transition:all .3s ease;font-size:14px">👗 Clothing</button>
-      <button class="category-tab" data-category="books" style="padding:10px 24px;border:2px solid var(--border-color);background:transparent;color:var(--text-primary);border-radius:999px;font-weight:600;cursor:pointer;transition:all .3s ease;font-size:14px">📚 Books</button>
-      <button class="category-tab" data-category="antique" style="padding:10px 24px;border:2px solid var(--border-color);background:transparent;color:var(--text-primary);border-radius:999px;font-weight:600;cursor:pointer;transition:all .3s ease;font-size:14px">🪙 Antique</button>
+  <!-- ==================== CATEGORY SHOWCASE ==================== -->
+  <section class="section fade-in">
+    <div class="section-header">
+      <h2 class="section-title">Shop by Category</h2>
+      <a href="search-results.html" class="section-link">View All <i class="fas fa-chevron-right"></i></a>
     </div>
-
-    <!-- Products Grid -->
-    <div id="dynamicProductsGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px">
-      <!-- Products will be dynamically inserted here -->
-    </div>
-
-    <!-- Empty State -->
-    <div id="emptyState" style="display:none;text-align:center;padding:60px 20px">
-      <div style="font-size:64px;margin-bottom:16px;opacity:0.5">📦</div>
-      <h3 style="font-size:20px;font-weight:600;color:var(--text-primary);margin-bottom:8px">No Products Found</h3>
-      <p style="color:var(--muted);font-size:14px">Try selecting a different category</p>
-    </div>
-  </section>
-
-  <style>
-    /* Category Tab Styles */
-    .category-tab:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(124,58,237,0.15);
-    }
-    .category-tab.active {
-      border-color: var(--accent);
-      background: linear-gradient(90deg,var(--accent),var(--accent-2));
-      color: white;
-      box-shadow: 0 4px 12px rgba(124,58,237,0.25);
-    }
-    
-    /* Dynamic Product Card Styles */
-    .dynamic-product {
-      background: var(--card-bg);
-      border-radius: 14px;
-      box-shadow: var(--shadow);
-      padding: 18px;
-      text-align: center;
-      transition: transform .25s ease, box-shadow .25s ease;
-      backdrop-filter: blur(6px);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      align-items: center;
-      animation: fadeInUp 0.5s ease;
-    }
-    .dynamic-product:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 18px 40px rgba(16,42,67,0.12);
-    }
-    .dynamic-product img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-      border-radius: 10px;
-    }
-    .dynamic-product h3 {
-      margin: 6px 0;
-      font-size: 16px;
-      color: var(--text-primary);
-      min-height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .dynamic-product .category-badge {
-      display: inline-block;
-      padding: 4px 12px;
-      background: linear-gradient(90deg,rgba(124,58,237,0.1),rgba(6,182,212,0.1));
-      color: var(--accent);
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .dynamic-product .price {
-      color: var(--muted);
-      font-weight: 600;
-      font-size: 18px;
-    }
-    .dynamic-product button {
-      background: linear-gradient(90deg,var(--accent),var(--accent-2));
-      color: white;
-      border: none;
-      padding: 10px 24px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 600;
-      width: 100%;
-      transition: all 0.3s ease;
-    }
-    .dynamic-product button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 12px rgba(124,58,237,0.3);
-    }
-    
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    @media (max-width:800px) {
-      #categoryTabs {
-        padding: 0 10px;
-      }
-      .category-tab {
-        font-size: 13px !important;
-        padding: 8px 16px !important;
-      }
-    }
-  </style>
-
-  <script>
-    // ========================================
-    // CLEAN CATEGORY FILTERING SYSTEM
-    // ========================================
-    
-    // Product Database - All Categories (INCLUDING antique products)
-    const allProducts = [
-      // Food & Natural Category
-      { id: 1, name: "Sundarbans Wild Honey", price: 850, category: "food", image: "./assets/images/honey.jpg", link: "honey.html" },
-      { id: 2, name: "Pure Mustard Oil", price: 320, category: "food", image: "./assets/images/oil.jpg", link: "oil.html" },
-      { id: 3, name: "Organic Rice", price: 180, category: "food", image: "./assets/images/rice.jpg", link: "rice.html" },
-      { id: 4, name: "Natural Ghee", price: 950, category: "food", image: "./assets/images/ghee.jpg", link: "ghee.html" },
-      { id: 5, name: "Fresh Vegetables", price: 120, category: "food", image: "./assets/images/vegetables.jpg", link: "vegetables.html" },
-      { id: 6, name: "Organic Tea", price: 250, category: "food", image: "./assets/images/tea.jpg", link: "tea.html" },
-      
-      // Sweets & Dairy Category
-      { id: 101, name: "Bogura Doi", price: 180, category: "sweets", image: "./assets/images/doi.jpg", link: "doi.html" },
-      { id: 102, name: "Roshogolla", price: 250, category: "sweets", image: "./assets/images/roshogolla.jpg", link: "roshogolla.html" },
-      { id: 103, name: "Chomchom", price: 300, category: "sweets", image: "./assets/images/chomchom.jpg", link: "chomchom.html" },
-      { id: 104, name: "Sandesh", price: 220, category: "sweets", image: "./assets/images/sandesh.jpg", link: "sandesh.html" },
-      { id: 105, name: "Fresh Milk", price: 95, category: "sweets", image: "./assets/images/milk.jpg", link: "milk.html" },
-      { id: 106, name: "Paneer", price: 380, category: "sweets", image: "./assets/images/paneer.jpg", link: "paneer.html" },
-      
-      // Handicrafts Category
-      { id: 201, name: "Nakshi Kantha", price: 1200, category: "handicrafts", image: "./assets/images/nakshi.jpg", link: "nakshi.html" },
-      { id: 202, name: "Bamboo Basket", price: 450, category: "handicrafts", image: "./assets/images/basket.jpg", link: "basket.html" },
-      { id: 203, name: "Clay Pot Set", price: 350, category: "handicrafts", image: "./assets/images/clay.jpg", link: "clay.html" },
-      { id: 204, name: "Jute Bag", price: 280, category: "handicrafts", image: "./assets/images/jute.jpg", link: "jute.html" },
-      { id: 205, name: "Wooden Showpiece", price: 650, category: "handicrafts", image: "./assets/images/wood.jpg", link: "wood.html" },
-      { id: 206, name: "Handmade Pottery", price: 520, category: "handicrafts", image: "./assets/images/pottery.jpg", link: "pottery.html" },
-      
-      // Clothing Category
-      { id: 301, name: "Jamdani Saree", price: 4500, category: "clothing", image: "./assets/images/saree.jpg", link: "saree.html" },
-      { id: 302, name: "Cotton Panjabi", price: 850, category: "clothing", image: "./assets/images/panjabi.jpg", link: "panjabi.html" },
-      { id: 303, name: "Silk Salwar Kameez", price: 2200, category: "clothing", image: "./assets/images/salwar.jpg", link: "salwar.html" },
-      { id: 304, name: "Traditional Lungi", price: 420, category: "clothing", image: "./assets/images/lungi.jpg", link: "lungi.html" },
-      
-      // Books Category
-      { id: 401, name: "Bengali Literature", price: 350, category: "books", image: "./assets/images/book1.jpg", link: "book.html" },
-      { id: 402, name: "History of Bengal", price: 480, category: "books", image: "./assets/images/book2.jpg", link: "book.html" },
-      { id: 403, name: "Poetry Collection", price: 290, category: "books", image: "./assets/images/book3.jpg", link: "book.html" },
-      { id: 404, name: "Children's Stories", price: 220, category: "books", image: "./assets/images/book4.jpg", link: "book.html" },
-      
-      // Antique Category
-      { id: 501, name: "Antique Coin — coin1", price: 150, category: "antique", image: "./assets/images/coin1.jpeg", link: "coin1.html" },
-      { id: 502, name: "Antique Coin — coin2", price: 150, category: "antique", image: "./assets/images/coin2.jpeg", link: "coin2.html" },
-      { id: 503, name: "Antique Coin — coin3", price: 150, category: "antique", image: "./assets/images/coin3.jpeg", link: "coin3.html" },
-      { id: 504, name: "Antique Coin — coin4", price: 150, category: "antique", image: "./assets/images/coin4.jpeg", link: "coin4.html" },
-      { id: 505, name: "Antique Coin — coin5", price: 150, category: "antique", image: "./assets/images/coin5.jpeg", link: "coin5.html" },
-      { id: 506, name: "Antique Coin — coin6", price: 150, category: "antique", image: "./assets/images/coin6.jpeg", link: "coin6.html" }
-    ];
-
-    // Category display names mapping
-    function getCategoryDisplay(category) {
-      const categoryMap = {
-        'food': 'Food & Natural',
-        'sweets': 'Sweets & Dairy',
-        'handicrafts': 'Handicrafts',
-        'clothing': 'Clothing',
-        'books': 'Books',
-        'antique': 'Antique & Collectibles'
-      };
-      return categoryMap[category] || category;
-    }
-
-    // Main render function - Clean filtering implementation
-    function renderProducts(selectedCategory) {
-      const grid = document.getElementById('dynamicProductsGrid');
-      const emptyState = document.getElementById('emptyState');
-      
-      // STEP 1: Clear the product container completely
-      grid.innerHTML = '';
-      
-      // STEP 2: Filter products based on selected category
-      let filteredProducts;
-      if (selectedCategory === 'all') {
-        // Show all products (no antiques)
-        filteredProducts = allProducts;
-      } else {
-        // Show only products matching the selected category
-        filteredProducts = allProducts.filter(product => product.category === selectedCategory);
-      }
-      
-      // STEP 3: Handle empty state
-      if (filteredProducts.length === 0) {
-        grid.style.display = 'none';
-        emptyState.style.display = 'block';
-        console.log('❌ No products found for category:', selectedCategory);
-        return;
-      }
-      
-      // STEP 4: Show grid and hide empty state
-      grid.style.display = 'grid';
-      emptyState.style.display = 'none';
-      
-      // STEP 5: Insert only the matching products (no duplicates)
-      filteredProducts.forEach(product => {
-        const productCard = document.createElement('div');
-        productCard.className = 'dynamic-product';
-        productCard.innerHTML = `
-          <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/160x160?text=No+Image'">
-          <span class="category-badge">${getCategoryDisplay(product.category)}</span>
-          <h3>${product.name}</h3>
-          <p class="price">৳ ${product.price.toLocaleString('en-BD')}</p>
-          <button onclick="location.href='${product.link}'">View Details</button>
-        `;
-        grid.appendChild(productCard);
-      });
-      
-      // Log for debugging
-      console.log(`✅ Rendered ${filteredProducts.length} products for category: ${selectedCategory}`);
-    }
-
-    // Initialize category filtering on page load
-    document.addEventListener('DOMContentLoaded', function() {
-      const tabs = document.querySelectorAll('.category-tab');
-      
-      // Add click event to each category tab
-      tabs.forEach(tab => {
-        tab.addEventListener('click', function(e) {
-          e.preventDefault();
-          
-          // Remove active styling from all tabs
-          tabs.forEach(t => {
-            t.classList.remove('active');
-            t.style.background = 'transparent';
-            t.style.color = 'var(--text-primary)';
-          });
-          
-          // Add active styling to clicked tab
-          this.classList.add('active');
-          
-          // Get the selected category from data attribute
-          const selectedCategory = this.getAttribute('data-category');
-          
-          // Render products for selected category
-          renderProducts(selectedCategory);
-          
-          // Smooth scroll to products section
-          setTimeout(() => {
-            document.getElementById('dynamicProductsGrid').scrollIntoView({ 
-              behavior: 'smooth', 
-              block: 'nearest' 
-            });
-          }, 100);
-        });
-      });
-      
-      // Initial render - show all products by default
-      renderProducts('all');
-      
-      console.log('✅ Category filtering system initialized with', allProducts.length, 'total products');
-      console.log('📦 Categories available:', ['food', 'sweets', 'handicrafts', 'clothing', 'books']);
-    });
-  </script>
-
-  <!-- STATIC ANTIQUE SECTION HIDDEN - Only dynamic filtered products will show above -->
-  <section class="products" style="display:none;">
-    <div class="product reveal">
-      <img src="./assets/images/coin1.jpeg" alt="Coin 1">
-      <h3>Antique Coin — coin1</h3>
-      <p>৳ 150</p>
-      <button onclick="location.href='coin1.html'">View</button>
-    </div>
-    <div class="product reveal">
-      <img src="./assets/images/coin2.jpeg" alt="Coin 2">
-      <h3>Antique Coin — coin2</h3>
-      <p>৳ 150</p>
-      <button onclick="location.href='coin2.html'">View</button>
-    </div>
-    <div class="product reveal">
-      <img src="./assets/images/coin3.jpeg" alt="Coin 3">
-      <h3>Antique Coin — coin3</h3>
-      <p>৳ 150</p>
-      <button onclick="location.href='coin3.html'">View</button>
-    </div>
-    <div class="product reveal">
-      <img src="./assets/images/coin4.jpeg" alt="Coin 4">
-      <h3>Antique Coin — coin4</h3>
-      <p>৳ 150</p>
-      <button onclick="location.href='coin4.html'">View</button>
-    </div>
-    <div class="product reveal">
-      <img src="./assets/images/coin5.jpeg" alt="Coin 5">
-      <h3>Antique Coin — coin5</h3>
-      <p>৳ 150</p>
-      <button onclick="location.href='coin5.html'">View</button>
-    </div>
-    <div class="product reveal">
-      <img src="./assets/images/coin6.jpeg" alt="Coin 6">
-      <h3>Antique Coin — coin6</h3>
-      <p>৳ 150</p>
-      <button onclick="location.href='coin6.html'">View</button>
-    </div>
-  </section>
-
-  <footer>
-    © 2025 MR Shop | Powered by Md Rafi Ullah
-  </footer>
-
-  <script>
-    // UI-only demo: toggle between signed-in and signed-out link sets
-    let isAuthenticated = false;
-    function renderAuth() {
-      document.querySelectorAll('.auth-when-signed-in').forEach(el => el.style.display = isAuthenticated ? 'inline-block' : 'none');
-      document.querySelectorAll('.auth-when-signed-out').forEach(el => el.style.display = isAuthenticated ? 'none' : 'inline-block');
-    }
-    function toggleAuth(e) {
-      e.preventDefault();
-      isAuthenticated = !isAuthenticated;
-      renderAuth();
-    }
-    document.addEventListener('DOMContentLoaded', () => {
-      renderAuth();
-      document.querySelectorAll('.toggle-auth').forEach(el => el.addEventListener('click', toggleAuth));
-    });
-  </script>
-
-  <script>
-    // Slideshow for banner with typing effect for captions
-    (function(){
-      const slides = Array.from(document.querySelectorAll('.banner .slide'));
-      const captionText = document.querySelector('.banner .caption .caption-text');
-      const cursor = document.querySelector('.banner .caption .caption-cursor');
-      let idx = 0;
-      let typingTimer = null;
-      let cancelled = false;
-      const TYPING_SPEED = 35; // ms per char
-      const PAUSE_AFTER = 900; // ms after full caption
-
-      function clearTyping(){
-        cancelled = true;
-        if(typingTimer){ clearTimeout(typingTimer); typingTimer = null; }
-      }
-
-      function typeCaption(text){
-        clearTyping();
-        cancelled = false;
-        captionText.textContent = '';
-        let i = 0;
-        function step(){
-          if(cancelled) return;
-          if(i < text.length){
-            captionText.textContent += text.charAt(i);
-            i++;
-            typingTimer = setTimeout(step, TYPING_SPEED);
-          } else {
-            // finished typing, keep cursor blinking for a short pause
-            typingTimer = setTimeout(()=>{ /* noop - allow next slide to take over */ }, PAUSE_AFTER);
-          }
-        }
-        step();
-      }
-
-      function show(i){
-        slides.forEach((s,si)=> s.classList.toggle('active', si===i));
-        const active = slides[i];
-        let c = active && active.dataset && active.dataset.caption;
-        if(!c || !c.trim()) c = 'Your small gift will make them smile.';
-        typeCaption(c);
-      }
-
-      // start
-      show(0);
-      setInterval(()=>{ idx = (idx+1) % slides.length; show(idx); }, 4500);
-    })();
-
-    // Reveal on scroll using IntersectionObserver
-    (function(){
-      const io = new IntersectionObserver((entries)=>{
-        entries.forEach(e=>{
-          if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); }
-        });
-      },{threshold:0.12});
-      document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-    })();
-    
-    // Categories menu toggle & close handlers
-    (function(){
-      const toggle = document.getElementById('categoriesToggle');
-      const menu = document.getElementById('categoriesMenu');
-      if(!toggle || !menu) return;
-      function open(){ menu.classList.add('open'); menu.setAttribute('aria-hidden','false'); }
-      function close(){ menu.classList.remove('open'); menu.setAttribute('aria-hidden','true'); }
-      toggle.addEventListener('click', (e)=>{ e.preventDefault(); menu.classList.contains('open') ? close() : open(); });
-      // close on outside click
-      document.addEventListener('click', (e)=>{
-        if(!menu.classList.contains('open')) return;
-        if(e.target===toggle || toggle.contains(e.target) || menu.contains(e.target)) return;
-        close();
-      });
-      // close on ESC
-      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
-    })();
-    
-    // Platform menu toggle & close handlers
-    (function(){
-      const toggleP = document.getElementById('platformToggle');
-      const menuP = document.getElementById('platformMenu');
-      if(!toggleP || !menuP) return;
-      function openP(){ menuP.classList.add('open'); menuP.setAttribute('aria-hidden','false'); }
-      function closeP(){ menuP.classList.remove('open'); menuP.setAttribute('aria-hidden','true'); }
-      toggleP.addEventListener('click', (e)=>{ e.preventDefault(); menuP.classList.contains('open') ? closeP() : openP(); });
-      document.addEventListener('click', (e)=>{
-        if(!menuP.classList.contains('open')) return;
-        if(e.target===toggleP || toggleP.contains(e.target) || menuP.contains(e.target)) return;
-        closeP();
-      });
-      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeP(); });
-    })();
-    
-    // Theme toggle (persist in localStorage)
-    (function(){
-      const key = 'mrshop-theme';
-      const btn = document.getElementById('themeToggle');
-      const root = document.documentElement;
-      function apply(theme){
-        if(theme === 'dark') root.classList.add('theme-dark'); else root.classList.remove('theme-dark');
-        if(btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
-      }
-      const saved = localStorage.getItem(key) || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-      apply(saved);
-      if(btn) btn.addEventListener('click', ()=>{
-        const cur = root.classList.contains('theme-dark') ? 'dark' : 'light';
-        const next = cur === 'dark' ? 'light' : 'dark';
-        localStorage.setItem(key, next);
-        apply(next);
-      });
-    })();
-    
-    // Chat overlay behavior
-    (function(){
-      const openBtn = document.getElementById('openChatBtn');
-      const overlay = document.createElement('div');
-      overlay.innerHTML = `
-        <div class="chat-overlay" id="chatOverlay" aria-hidden="true">
-          <div class="chat-window" role="dialog" aria-modal="true" aria-label="Chat with MR Shop">
-            <div class="chat-header">
-              <div style="display:flex;align-items:center;gap:10px">
-                <img src="./assets/images/mrlogo.png" alt="MR" style="width:36px;height:36px;border-radius:8px"/>
-                <div><strong>MR Shop</strong><div style="font-size:12px;opacity:0.85">How can we help?</div></div>
-              </div>
-              <div>
-                <button id="minimizeChat" class="chat-close" aria-label="Minimize chat">—</button>
-                <button id="closeChat" class="chat-close" aria-label="Close chat">✕</button>
-              </div>
-            </div>
-            <div class="chat-messages" id="chatMessages"></div>
-            <div class="chat-input">
-              <input id="chatInput" type="text" placeholder="Type a message..." aria-label="Type a message" />
-              <button id="sendChatBtn">Send</button>
-            </div>
+    <div class="category-grid">
+      <div class="cat-card" onclick="location.href='food&natural.html'">
+        <div class="cat-card-bg" style="background-image:url('./assets/images/honey.jpg')">
+          <div class="cat-card-content">
+            <div class="cat-card-icon"><i class="fas fa-leaf"></i></div>
+            <div class="cat-card-title">Food & Natural</div>
+            <div class="cat-card-count">6 products</div>
           </div>
         </div>
-      `;
-      // Append overlay to body
-      document.body.appendChild(overlay);
+        <div class="cat-card-items">
+          <div class="cat-mini"><img src="./assets/images/honey.jpg" alt=""><span>Honey</span></div>
+          <div class="cat-mini"><img src="./assets/images/oil.jpg" alt=""><span>Mustard Oil</span></div>
+          <div class="cat-mini"><img src="./assets/images/rice.jpg" alt=""><span>Rice</span></div>
+          <div class="cat-mini"><img src="./assets/images/tea.jpg" alt=""><span>Green Tea</span></div>
+        </div>
+        <div class="cat-card-footer"><a href="food&natural.html" class="cat-card-link">Explore All</a></div>
+      </div>
+      <div class="cat-card" onclick="location.href='sweets&dairy.html'">
+        <div class="cat-card-bg" style="background-image:url('./assets/images/roshogolla.jpg')">
+          <div class="cat-card-content">
+            <div class="cat-card-icon"><i class="fas fa-cookie-bite"></i></div>
+            <div class="cat-card-title">Sweets & Dairy</div>
+            <div class="cat-card-count">6 products</div>
+          </div>
+        </div>
+        <div class="cat-card-items">
+          <div class="cat-mini"><img src="./assets/images/doi.jpg" alt=""><span>Doi</span></div>
+          <div class="cat-mini"><img src="./assets/images/roshogolla.jpg" alt=""><span>Roshogolla</span></div>
+          <div class="cat-mini"><img src="./assets/images/chomchom.jpg" alt=""><span>Chomchom</span></div>
+          <div class="cat-mini"><img src="./assets/images/milk.jpg" alt=""><span>Milk</span></div>
+        </div>
+        <div class="cat-card-footer"><a href="sweets&dairy.html" class="cat-card-link">Explore All</a></div>
+      </div>
+      <div class="cat-card" onclick="location.href='handricrafts.html'">
+        <div class="cat-card-bg" style="background-image:url('./assets/images/nakshi.jpg')">
+          <div class="cat-card-content">
+            <div class="cat-card-icon"><i class="fas fa-palette"></i></div>
+            <div class="cat-card-title">Handicrafts</div>
+            <div class="cat-card-count">6 products</div>
+          </div>
+        </div>
+        <div class="cat-card-items">
+          <div class="cat-mini"><img src="./assets/images/nakshi.jpg" alt=""><span>Nakshi Kantha</span></div>
+          <div class="cat-mini"><img src="./assets/images/basket.jpg" alt=""><span>Basket</span></div>
+          <div class="cat-mini"><img src="./assets/images/clay.jpg" alt=""><span>Clay Pot</span></div>
+          <div class="cat-mini"><img src="./assets/images/pottery.jpg" alt=""><span>Pottery</span></div>
+        </div>
+        <div class="cat-card-footer"><a href="handricrafts.html" class="cat-card-link">Explore All</a></div>
+      </div>
+      <div class="cat-card" onclick="location.href='clothing.html'">
+        <div class="cat-card-bg" style="background-image:url('./assets/images/saree.jpg')">
+          <div class="cat-card-content">
+            <div class="cat-card-icon"><i class="fas fa-tshirt"></i></div>
+            <div class="cat-card-title">Clothing</div>
+            <div class="cat-card-count">4 products</div>
+          </div>
+        </div>
+        <div class="cat-card-items">
+          <div class="cat-mini"><img src="./assets/images/saree.jpg" alt=""><span>Saree</span></div>
+          <div class="cat-mini"><img src="./assets/images/panjabi.jpg" alt=""><span>Panjabi</span></div>
+          <div class="cat-mini"><img src="./assets/images/salwar.jpg" alt=""><span>Salwar</span></div>
+          <div class="cat-mini"><img src="./assets/images/lungi.jpg" alt=""><span>Lungi</span></div>
+        </div>
+        <div class="cat-card-footer"><a href="clothing.html" class="cat-card-link">Explore All</a></div>
+      </div>
+    </div>
+  </section>
 
-      const chatOverlay = document.getElementById('chatOverlay');
-      const chatMessages = document.getElementById('chatMessages');
-      const chatInput = document.getElementById('chatInput');
-      const sendBtn = document.getElementById('sendChatBtn');
-      const closeBtn = document.getElementById('closeChat');
-      const minBtn = document.getElementById('minimizeChat');
+  <!-- ==================== PRODUCTS ==================== -->
+  <section class="section fade-in" id="productsSection">
+    <div class="section-header">
+      <h2 class="section-title" id="sectionTitle">Best Sellers</h2>
+      <a href="search-results.html" class="section-link">See all deals <i class="fas fa-chevron-right"></i></a>
+    </div>
+    <div class="products-grid" id="productsGrid"></div>
+  </section>
 
-      function openChat(){
-        chatOverlay.classList.add('open');
-        chatOverlay.setAttribute('aria-hidden','false');
-        setTimeout(()=>{ chatInput.focus(); }, 120);
-        // Insert welcome message if empty
-        if(!chatMessages.querySelector('.msg')){
-          appendBot('Hi! I am MR Shop bot. Ask about products, orders, or shipping.');
-        }
-      }
-      function closeChat(){ chatOverlay.classList.remove('open'); chatOverlay.setAttribute('aria-hidden','true'); }
+  <!-- New Arrivals -->
+  <section class="section fade-in">
+    <div class="section-header">
+      <h2 class="section-title">New Arrivals</h2>
+      <a href="search-results.html" class="section-link">See more <i class="fas fa-chevron-right"></i></a>
+    </div>
+    <div class="products-grid" id="newArrivalsGrid"></div>
+  </section>
 
-      function appendUser(text){
-        if(!text) return;
-        const d = document.createElement('div'); d.className='msg user'; d.textContent = text; chatMessages.appendChild(d); chatMessages.scrollTop = chatMessages.scrollHeight; }
-      function appendBot(text){ const d=document.createElement('div'); d.className='msg bot'; d.textContent=text; chatMessages.appendChild(d); chatMessages.scrollTop = chatMessages.scrollHeight; }
+  <!-- Footer -->
+  <div class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</div>
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Get to Know Us</h4>
+        <a href="work-for-people.html">About MR Shop</a>
+        <a href="workfor.html">Careers</a>
+        <a href="workforpeople.html">Our Story</a>
+        <a href="becomeseller.html">Press Releases</a>
+      </div>
+      <div class="footer-col">
+        <h4>Make Money with Us</h4>
+        <a href="becomeseller.html">Sell on MR Shop</a>
+        <a href="seller.html">Seller Dashboard</a>
+        <a href="seller-settings.html">Seller Settings</a>
+        <a href="becomeseller.html">Become an Affiliate</a>
+      </div>
+      <div class="footer-col">
+        <h4>Help & Support</h4>
+        <a href="chat.html">Customer Service</a>
+        <a href="userprofile.html">Your Account</a>
+        <a href="workforchild.html">Children's Privacy</a>
+        <a href="notification.html">Notifications</a>
+        <a href="email-notifications.html">Email Settings</a>
+      </div>
+      <div class="footer-col">
+        <h4>Payment & Delivery</h4>
+        <a href="cart.html">Shopping Cart</a>
+        <a href="checkout.html">Checkout</a>
+        <a href="payment.html">Payment Methods</a>
+        <a href="order-tracking.html">Track Order</a>
+        <a href="workfor.html">Return Policy</a>
+      </div>
+      <div class="footer-col">
+        <h4>Shop by Category</h4>
+        <a href="food&natural.html">Food & Natural</a>
+        <a href="sweets&dairy.html">Sweets & Dairy</a>
+        <a href="handricrafts.html">Handicrafts</a>
+        <a href="clothing.html">Clothing</a>
+      </div>
+      <div class="footer-col">
+        <h4>Connect with Us</h4>
+        <a href="https://www.facebook.com/profile.php?id=61583616496782" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+        <a href="https://www.instagram.com/mrshopbd18/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+        <a href="https://www.youtube.com/@mrshop18" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
+        <a href="chat.html"><i class="fas fa-headset"></i> Live Chat</a>
+      </div>
+    </div>
 
-      if(openBtn) openBtn.addEventListener('click', (e)=>{ e.preventDefault(); openChat(); });
-      if(closeBtn) closeBtn.addEventListener('click', closeChat);
-      if(minBtn) minBtn.addEventListener('click', closeChat);
+    <!-- Quick Links Bar -->
+    <div class="footer-quick-links">
+      <a href="index.html">Home</a>
+      <a href="search-results.html">All Products</a>
+      <a href="food&natural.html">Food</a>
+      <a href="sweets&dairy.html">Sweets</a>
+      <a href="handricrafts.html">Handicrafts</a>
+      <a href="clothing.html">Clothing</a>
+      <a href="book.html">Books</a>
+      <a href="antique.html">Antique</a>
+      <a href="blog.html">Blog</a>
+      <a href="compare.html">Compare</a>
+      <a href="order-tracking.html">Track Order</a>
+      <a href="review.html">Reviews</a>
+      <a href="admin.html">Admin</a>
+      <a href="seller.html">Sell</a>
+      <a href="chat.html">Help</a>
+    </div>
 
-      sendBtn.addEventListener('click', async ()=>{
-        const val = chatInput.value && chatInput.value.trim();
-        if(!val) return;
-        appendUser(val);
-        chatInput.value = '';
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <div class="footer-logo">MR shop</div>
+      <div class="footer-copyright">&copy; 2026 MR Shop. All Rights Reserved. | Powered by <strong>MR IT Company</strong></div>
+      <div class="footer-payment">
+        <span>We Accept:</span>
+        <i class="fas fa-money-bill-wave" title="Cash on Delivery"></i>
+        <i class="fas fa-mobile-alt" title="bKash" style="color:#e2136e;"></i>
+        <i class="fas fa-wallet" title="Nagad" style="color:#f6921e;"></i>
+        <i class="fas fa-rocket" title="Rocket" style="color:#8b2393;"></i>
+      </div>
+    </div>
+  </footer>
 
-        // show a loading placeholder from the bot
-        const loading = document.createElement('div');
-        loading.className = 'msg bot';
-        loading.textContent = '...';
-        chatMessages.appendChild(loading);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/products.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/auth-shared.js"></script>
+  <script src="assets/js/wishlist.js"></script>
+  <script>
+    // Product Database (local for homepage)
+    let allProducts = [
+      { id: 1, name: "Sundarbans Wild Honey 500g", price: 850, originalPrice: 1200, category: "food", image: "./assets/images/honey.jpg", rating: 4.8, reviews: 234, prime: true, link: "food&natural.html" },
+      { id: 2, name: "Pure Mustard Oil 1L", price: 320, originalPrice: 400, category: "food", image: "./assets/images/oil.jpg", rating: 4.6, reviews: 189, prime: true, link: "food&natural.html" },
+      { id: 3, name: "Organic Basmati Rice 5kg", price: 180, originalPrice: 250, category: "food", image: "./assets/images/rice.jpg", rating: 4.5, reviews: 312, prime: true, link: "food&natural.html" },
+      { id: 101, name: "Authentic Bogura Doi 500g", price: 180, originalPrice: 220, category: "sweets", image: "./assets/images/doi.jpg", rating: 4.9, reviews: 456, prime: true, link: "sweets&dairy.html" },
+      { id: 102, name: "Roshogolla 12 Pieces", price: 250, originalPrice: 320, category: "sweets", image: "./assets/images/roshogolla.jpg", rating: 4.8, reviews: 389, prime: true, link: "sweets&dairy.html" },
+      { id: 201, name: "Nakshi Kantha Quilt", price: 1200, originalPrice: 1800, category: "handicrafts", image: "./assets/images/nakshi.jpg", rating: 4.9, reviews: 89, prime: false, link: "handricrafts.html" },
+      { id: 202, name: "Bamboo Basket Eco", price: 450, originalPrice: 600, category: "handicrafts", image: "./assets/images/basket.jpg", rating: 4.6, reviews: 134, prime: true, link: "handricrafts.html" },
+      { id: 301, name: "Jamdani Saree Cotton", price: 4500, originalPrice: 6000, category: "clothing", image: "./assets/images/saree.jpg", rating: 4.9, reviews: 78, prime: false, link: "clothing.html" },
+      { id: 302, name: "Cotton Panjabi", price: 850, originalPrice: 1100, category: "clothing", image: "./assets/images/panjabi.jpg", rating: 4.6, reviews: 234, prime: true, link: "clothing.html" },
+      { id: 401, name: "Bengali Literature", price: 350, originalPrice: 480, category: "books", image: "./assets/images/book1.jpg", rating: 4.7, reviews: 145, prime: true, link: "book.html" },
+      { id: 501, name: "Antique Coin Collection", price: 150, originalPrice: 200, category: "antique", image: "./assets/images/coin1.jpeg", rating: 4.5, reviews: 56, prime: false, link: "antique.html" },
+      { id: 4, name: "Pure Cow Ghee 500ml", price: 950, originalPrice: 1200, category: "food", image: "./assets/images/ghee.jpg", rating: 4.9, reviews: 156, prime: false, link: "food&natural.html" },
+      { id: 103, name: "Chomchom 8 Pieces", price: 300, originalPrice: 380, category: "sweets", image: "./assets/images/chomchom.jpg", rating: 4.7, reviews: 267, prime: false, link: "sweets&dairy.html" },
+      { id: 203, name: "Clay Pot Set", price: 350, originalPrice: 500, category: "handicrafts", image: "./assets/images/clay.jpg", rating: 4.7, reviews: 98, prime: true, link: "handricrafts.html" },
+      { id: 303, name: "Silk Salwar Kameez", price: 2200, originalPrice: 3000, category: "clothing", image: "./assets/images/salwar.jpg", rating: 4.8, reviews: 156, prime: false, link: "clothing.html" },
+      { id: 402, name: "History of Bengal", price: 480, originalPrice: 600, category: "books", image: "./assets/images/book2.jpg", rating: 4.8, reviews: 98, prime: true, link: "book.html" },
+      { id: 5, name: "Fresh Vegetables Bundle", price: 120, originalPrice: 180, category: "food", image: "./assets/images/vegetables.jpg", rating: 4.3, reviews: 89, prime: true, link: "food&natural.html" },
+      { id: 104, name: "Sandesh 10 Pieces", price: 220, originalPrice: 280, category: "sweets", image: "./assets/images/sandesh.jpg", rating: 4.6, reviews: 198, prime: true, link: "sweets&dairy.html" }
+    ];
 
-        try {
-          const res = await fetch('/api/query', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query: val })
+    // Load products from localStorage (admin added)
+    function loadLocalProducts() {
+      try {
+        const localProducts = JSON.parse(localStorage.getItem('mr_shop_products')) || [];
+        if (localProducts.length > 0) {
+          const categoryLinks = {
+            food: 'food&natural.html',
+            sweets: 'sweets&dairy.html',
+            handicrafts: 'handricrafts.html',
+            clothing: 'clothing.html',
+            books: 'book.html',
+            antique: 'antique.html'
+          };
+          localProducts.forEach(p => {
+            if (!allProducts.find(ap => ap.id === p.id)) {
+              allProducts.push({
+                id: p.id,
+                name: p.name,
+                price: p.price,
+                originalPrice: p.originalPrice || p.price,
+                category: p.category,
+                image: p.image || 'https://via.placeholder.com/200x200?text=No+Image',
+                rating: p.rating || 4.5,
+                reviews: p.reviews || 0,
+                prime: p.prime || false,
+                link: categoryLinks[p.category] || 'index.html'
+              });
+            }
           });
-
-          if(!res.ok) throw new Error('Server responded with ' + res.status);
-
-          // try to parse JSON response
-          const data = await res.json();
-
-          // flexible parsing depending on server shape
-          let answer = '';
-          if(typeof data === 'string') answer = data;
-          else if(data.answer) answer = data.answer;
-          else if(Array.isArray(data.answers)) answer = data.answers.join('\n\n');
-          else if(Array.isArray(data.results)) answer = data.results.map(r => r.text || r.snippet || r.answer || JSON.stringify(r)).join('\n\n');
-          else if(data.reply) answer = data.reply;
-          else answer = JSON.stringify(data);
-
-          loading.remove();
-          appendBot(answer);
-        } catch (err) {
-          // network or parse error
-          loading.remove();
-          appendBot('Sorry, I could not reach the assistant — please check your connection and try again.');
-          console.error('Chat query error:', err);
+          console.log('Local products loaded to index:', localProducts.length);
         }
+      } catch (err) {
+        console.log('Error loading local products:', err);
+      }
+    }
+
+    // Load local products immediately
+    loadLocalProducts();
+
+    function generateStars(r) {
+      const f = Math.floor(r), h = r % 1 >= 0.5;
+      let s = '';
+      for (let i = 0; i < f; i++) s += '<i class="fas fa-star"></i>';
+      if (h) s += '<i class="fas fa-star-half-alt"></i>';
+      for (let i = 0; i < 5 - f - (h?1:0); i++) s += '<i class="far fa-star"></i>';
+      return s;
+    }
+
+    function getDiscount(o, c) { return Math.round(((o - c) / o) * 100); }
+
+    function getDeliveryDate() {
+      const d = new Date(); d.setDate(d.getDate() + 3 + Math.floor(Math.random() * 3));
+      return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    }
+
+    function createProductCard(p) {
+      const disc = getDiscount(p.originalPrice, p.price);
+      return `
+        <div class="product-card" onclick="location.href='${p.link}'">
+          ${disc > 0 ? `<span class="deal-badge">${disc}% off</span>` : ''}
+          <div class="product-img-wrap"><img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"></div>
+          <div class="product-info">
+            <div class="product-title">${p.name}</div>
+            <div class="product-rating"><span class="stars">${generateStars(p.rating)}</span><span class="rating-count">${p.reviews.toLocaleString()}</span></div>
+            <div class="product-price">
+              <span class="price-symbol">৳</span><span class="price-whole">${p.price.toLocaleString()}</span>
+              ${disc > 0 ? `<span class="price-original">৳${p.originalPrice.toLocaleString()}</span><span class="price-discount">-${disc}%</span>` : ''}
+            </div>
+            ${p.prime ? `<div class="prime-badge"><span class="prime-icon">MR</span> Prime</div>` : ''}
+            <div class="delivery-info">FREE delivery <strong>${getDeliveryDate()}</strong></div>
+            <button class="product-btn" onclick="event.stopPropagation();MR_addToCart(${p.id})">Add to Cart</button>
+          </div>
+        </div>`;
+    }
+
+    function renderProducts(cat = 'all') {
+      const grid = document.getElementById('productsGrid');
+      let filtered = cat === 'all' ? allProducts : allProducts.filter(p => p.category === cat);
+      filtered.sort((a, b) => (b.rating * b.reviews) - (a.rating * a.reviews));
+      filtered = filtered.slice(0, 8);
+      document.getElementById('sectionTitle').textContent = cat === 'all' ? 'Best Sellers' : `Best in ${cat.charAt(0).toUpperCase() + cat.slice(1)}`;
+      grid.innerHTML = filtered.map(createProductCard).join('');
+    }
+
+    function renderNewArrivals() {
+      const grid = document.getElementById('newArrivalsGrid');
+      const products = [...allProducts].sort(() => Math.random() - 0.5).slice(0, 4);
+      grid.innerHTML = products.map(createProductCard).join('');
+    }
+
+    // Category nav
+    document.querySelectorAll('.nav-item[data-category]').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        renderProducts(item.dataset.category);
+        document.getElementById('productsSection').scrollIntoView({ behavior: 'smooth' });
       });
+    });
 
-      // Enter key to send
-      chatInput.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); sendBtn.click(); } if(e.key==='Escape'){ closeChat(); } });
+    // Search
+    const searchInput = document.getElementById('searchInput');
+    let searchDebounce;
+    searchInput.addEventListener('input', (e) => {
+      clearTimeout(searchDebounce);
+      searchDebounce = setTimeout(() => showSearchSuggestions(e.target.value), 200);
+    });
+    searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') doHomeSearch(); });
 
-      // click outside chat window to close
-      document.addEventListener('click', function(e){ if(chatOverlay.classList.contains('open') && !document.querySelector('.chat-window').contains(e.target) && e.target !== openBtn){ closeChat(); } });
-    })();
+    function showSearchSuggestions(q) {
+      const dd = document.getElementById('searchSuggestions');
+      if (!q || q.length < 2) { dd.style.display = 'none'; return; }
+      const results = allProducts.filter(p => p.name.toLowerCase().includes(q.toLowerCase()) || p.category.includes(q.toLowerCase())).slice(0, 6);
+      if (!results.length) { dd.innerHTML = '<div class="search-suggestion-item">No products found</div>'; }
+      else {
+        const cats = {};
+        results.forEach(p => { if (!cats[p.category]) cats[p.category] = []; cats[p.category].push(p); });
+        let h = '';
+        const cn = { food:'Food & Natural', sweets:'Sweets & Dairy', handicrafts:'Handicrafts', clothing:'Clothing', books:'Books', antique:'Antique' };
+        for (const [c, ps] of Object.entries(cats)) {
+          h += `<div class="search-category-label">${cn[c]||c}</div>`;
+          ps.forEach(p => { h += `<div class="search-suggestion-item" onclick="location.href='${p.link}'"><img src="${p.image}" alt=""><div class="search-suggestion-info"><div class="search-suggestion-name">${p.name}</div><div class="search-suggestion-price"><span class="search-price-current">৳${p.price.toLocaleString()}</span></div></div><div class="search-suggestion-arrow"><i class="fas fa-arrow-right"></i></div></div>`; });
+        }
+        dd.innerHTML = h;
+      }
+      dd.style.display = 'block';
+    }
+
+    document.addEventListener('click', (e) => { if (!searchInput.contains(e.target) && !document.getElementById('searchSuggestions').contains(e.target)) document.getElementById('searchSuggestions').style.display = 'none'; });
+    function doHomeSearch() { const q = searchInput.value.trim(); if (q) { sessionStorage.setItem('mr_search_query', q); location.href = 'search-results.html'; } }
+
+    // Countdown timer
+    function updateTimer() {
+      const now = new Date(); const end = new Date(now); end.setHours(23,59,59,999);
+      const diff = end - now;
+      document.getElementById('hours').textContent = String(Math.floor(diff/3600000)).padStart(2,'0');
+      document.getElementById('minutes').textContent = String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+      document.getElementById('seconds').textContent = String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+    }
+    setInterval(updateTimer, 1000);
+
+    // Scroll animations
+    const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Init
+    renderProducts('all');
+    renderNewArrivals();
   </script>
-  <script src="assets/js/search.js"></script>
-
+  <script src="assets/js/darkmode.js"></script>
+  <script src="assets/js/i18n.js"></script>
+  <script>
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(reg => console.log('Service Worker registered'))
+        .catch(err => console.log('SW registration failed'));
+    }
+  </script>
 </body>
 </html>

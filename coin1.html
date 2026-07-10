@@ -3,74 +3,422 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Singapore 50 Cents (1978) — Details</title>
+  <title>Singapore 50 Cents (1978) — MR Shop</title>
+  <script src="assets/js/loader.js"></script>
+  <link rel="stylesheet" href="assets/css/amazon-style.css">
   <style>
-    :root{--accent:#7c3aed;--accent2:#06b6d4;--bg:#f7fbff;--card:#fff}
-    /* Remove underlines from links on detail pages */
-    a, a:link, a:visited, a:hover, a:active { text-decoration: none; }
-    body{font-family:Inter,Roboto,Arial,sans-serif;background:linear-gradient(135deg,var(--bg),#fff7fb);margin:0;color:#0f172a}
-    .topbar{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;padding:18px 36px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 6px 24px rgba(124,58,237,0.08)}
-    .topbar-left{display:flex;align-items:center;gap:8px}
-    .mr-logo{height:40px;border-radius:8px;padding:4px;border:2px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.03)}
-    .topbar-right{display:flex;gap:12px}
-    .topbar a,.topbar button{color:#fff;text-decoration:none;font-weight:600;padding:8px 18px;border-radius:8px;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.3);transition:all 0.3s}
-    .topbar button{cursor:pointer;font-size:15px}
-    .topbar a:hover,.topbar button:hover{background:rgba(255,255,255,0.2)}
-    .container{max-width:920px;margin:36px auto;padding:20px}
-    .detail-card{display:grid;grid-template-columns:260px 1fr;gap:28px;background:var(--card);padding:22px;border-radius:14px;box-shadow:0 12px 40px rgba(18,38,63,0.06)}
-    .coin-photo{width:100%;height:260px;object-fit:contain;border-radius:10px;background:radial-gradient(circle,#f9fafb,#f3f4f6);padding:12px}
-    .meta h1{margin:0 0 6px 0;font-size:22px;color:var(--accent)}
-    .meta .price{display:inline-block;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;padding:8px 14px;border-radius:999px;font-weight:700}
-    .meta p{color:#475569;margin:8px 0 0 0;line-height:1.5}
-    .specs{margin-top:14px;padding-top:14px;border-top:1px solid #eef2ff}
-    .specs dt{font-weight:700;color:#0f172a}
-    .specs dd{margin:0 0 10px 0;color:#475569}
-    @media (max-width:720px){.detail-card{grid-template-columns:1fr;}.coin-photo{height:200px}}
+    .amz-product-detail {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+
+    .amz-detail-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      background: var(--amazon-white);
+      border-radius: 8px;
+      padding: 24px;
+      border: 1px solid var(--amazon-border);
+    }
+
+    .amz-detail-images {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .amz-main-image {
+      width: 100%;
+      height: 400px;
+      object-fit: contain;
+      border-radius: 8px;
+      background: #f7f7f7;
+      padding: 16px;
+    }
+
+    .amz-thumbnails {
+      display: flex;
+      gap: 8px;
+    }
+
+    .amz-thumb {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      border-radius: 4px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      padding: 4px;
+      background: #f7f7f7;
+      transition: border-color 0.2s;
+    }
+
+    .amz-thumb:hover,
+    .amz-thumb.active {
+      border-color: var(--amazon-orange);
+    }
+
+    .amz-detail-info {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .amz-detail-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--amazon-text);
+      line-height: 1.4;
+    }
+
+    .amz-detail-rating {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .amz-detail-price {
+      padding: 12px 0;
+      border-top: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+    }
+
+    .amz-detail-price .amz-price-whole {
+      font-size: 28px;
+    }
+
+    .amz-detail-stock {
+      font-size: 14px;
+      color: var(--amazon-green);
+      font-weight: 600;
+    }
+
+    .amz-detail-desc {
+      color: #565959;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .amz-detail-specs {
+      border-top: 1px solid #eee;
+      padding-top: 16px;
+    }
+
+    .amz-detail-specs h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--amazon-text);
+    }
+
+    .amz-spec-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .amz-spec-table tr:nth-child(even) {
+      background: #f7f7f7;
+    }
+
+    .amz-spec-table th,
+    .amz-spec-table td {
+      padding: 10px 12px;
+      text-align: left;
+      font-size: 14px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .amz-spec-table th {
+      font-weight: 600;
+      color: var(--amazon-text);
+      width: 40%;
+    }
+
+    .amz-spec-table td {
+      color: #565959;
+    }
+
+    .amz-buy-box {
+      background: #f7f7f7;
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid #e7e9ec;
+    }
+
+    .amz-buy-box .amz-detail-price {
+      border: none;
+      padding: 0;
+      margin-bottom: 12px;
+    }
+
+    .amz-buy-box .amz-detail-stock {
+      margin-bottom: 12px;
+    }
+
+    .amz-buy-box .amz-delivery-info {
+      margin-bottom: 16px;
+    }
+
+    .amz-add-to-cart {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(to bottom, #ffd814, #f7ca00);
+      border: 1px solid #f2c200;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-bottom: 8px;
+    }
+
+    .amz-add-to-cart:hover {
+      background: linear-gradient(to bottom, #f7ca00, #ebb617);
+    }
+
+    .amz-buy-now {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(to bottom, #ffa41c, #fa8900);
+      border: 1px solid #ff8f00;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .amz-buy-now:hover {
+      background: linear-gradient(to bottom, #fa8900, #e8820a);
+    }
+
+    .amz-secure-text {
+      text-align: center;
+      font-size: 12px;
+      color: #767676;
+      margin-top: 12px;
+    }
+
+    .amz-secure-text i {
+      margin-right: 4px;
+      color: var(--amazon-green);
+    }
+
+    @media (max-width: 900px) {
+      .amz-detail-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .amz-main-image {
+        height: 300px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .amz-main-image {
+        height: 200px;
+      }
+
+      .amz-detail-title {
+        font-size: 18px;
+      }
+
+      .amz-thumb {
+        width: 60px;
+        height: 60px;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="topbar-left">
-      <a href="index.html">
-        <img src="./assets/images/mrlogo.png" alt="MR" class="mr-logo" />
+
+  <header class="amz-header">
+    <div class="amz-header-top">
+      <a href="index.html" class="logo">
+        <div>
+          <span class="logo-text">MR shop</span>
+          <span class="logo-sub">Bangladesh</span>
+        </div>
       </a>
-    </div>
-    <div class="topbar-right">
-      <a href="index.html">Home</a>
-      <button onclick="window.history.back()">Back</button>
-    </div>
-  </div>
-  
-  <div class="container">
-    <div class="detail-card">
-      <div>
-        <img src="./assets/images/coin1.jpeg" alt="Singapore 50 cents 1978" class="coin-photo" />
+      <div class="amz-deliver-to"><span class="label">Deliver to</span><span class="location"><i class="fas fa-map-marker-alt"></i> Bangladesh</span></div>
+      <div class="amz-search-bar">
+        <select class="amz-search-category"><option>All</option><option>Food & Natural</option><option>Sweets & Dairy</option><option>Handicrafts</option><option>Clothing</option><option>Books</option><option>Antique</option></select>
+        <input type="text" class="amz-search-input" placeholder="Search MR Shop">
+        <button class="amz-search-btn" aria-label="Search"><i class="fas fa-search"></i></button>
       </div>
-      <div class="meta">
-        <h1>Singapore 50 Cents — First Series (1978)</h1>
-  <div class="price">৳ 150</div>
-        <p>These coins belong to Singapore's first circulating coinage series (issued 1967–1987). The 50 cents piece from 1978 is a cupro-nickel composition and was widely used in daily transactions during the Republic period.</p>
-
-        <dl class="specs">
-          <dt>Country</dt>
-          <dd>Singapore</dd>
-
-          <dt>Denomination</dt>
-          <dd>50 Cents (0.5 SGD)</dd>
-
-          <dt>Year / Period</dt>
-          <dd>1978 — Republic (1967–date)</dd>
-
-          <dt>Composition</dt>
-          <dd>Cupro-nickel</dd>
-
-          <dt>Status</dt>
-          <dd>First series coins are no longer in circulation but may be exchanged via certain currency exchange services.</dd>
-        </dl>
-
-        <p style="margin-top:16px;color:#334155">If you'd like, I can add more high-resolution photos, provenance notes, or a 'Contact to buy' button for this listing.</p>
+      <div class="amz-header-right">
+        <a href="signin.html" class="amz-header-link"><span class="line1">Hello, Sign in</span><span class="line2">Account & Lists <i class="fas fa-caret-down"></i></span></a>
+        <a href="userprofile.html" class="amz-header-link"><span class="line1">Returns</span><span class="line2">& Orders</span></a>
+        <a href="wishlist.html" class="amz-header-link">
+          <span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span>
+          <span class="line2">Wishlist</span>
+        </a>
+        <a href="cart.html" class="amz-cart"><span class="amz-cart-icon"><i class="fas fa-shopping-cart"></i><span class="amz-cart-count" id="cartCount">0</span></span><span class="amz-cart-text">Cart</span></a>
       </div>
     </div>
-  </div>
+    <nav class="amz-nav-bar">
+      <a href="index.html" class="amz-nav-item"><i class="fas fa-bars"></i> All</a>
+      <a href="food&natural.html" class="amz-nav-item">Food & Natural</a>
+      <a href="sweets&dairy.html" class="amz-nav-item">Sweets & Dairy</a>
+      <a href="handricrafts.html" class="amz-nav-item">Handicrafts</a>
+      <a href="clothing.html" class="amz-nav-item">Clothing</a>
+      <a href="book.html" class="amz-nav-item">Books</a>
+      <a href="antique.html" class="amz-nav-item">Antique</a>
+      <div class="amz-nav-divider"></div>
+      <a href="becomeseller.html" class="amz-nav-item">Sell</a>
+      <a href="index.html" class="amz-nav-item">Best Sellers</a>
+      <a href="index.html" class="amz-nav-item">Today's Deals</a>
+      <a href="chat.html" class="amz-nav-item"><i class="fas fa-headset"></i> Help</a>
+    </nav>
+  </header>
+
+  <!-- ==================== PRODUCT DETAIL ==================== -->
+  <main class="amz-product-detail">
+    <div class="amz-detail-layout">
+
+      <!-- Left: Images -->
+      <div class="amz-detail-images">
+        <img src="./assets/images/coin1.jpeg" alt="Singapore 50 cents 1978" class="amz-main-image" id="mainImage" />
+        <div class="amz-thumbnails">
+          <img src="./assets/images/coin1.jpeg" alt="Front view" class="amz-thumb active" onclick="changeImage(this)" />
+          <img src="./assets/images/coin1.jpeg" alt="Back view" class="amz-thumb" onclick="changeImage(this)" />
+          <img src="./assets/images/coin1.jpeg" alt="Detail view" class="amz-thumb" onclick="changeImage(this)" />
+        </div>
+      </div>
+
+      <!-- Right: Info -->
+      <div class="amz-detail-info">
+        <h1 class="amz-detail-title">Singapore 50 Cents — First Series (1978)</h1>
+
+        <div class="amz-detail-rating">
+          <span class="amz-stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star-half-stroke"></i>
+          </span>
+          <span class="amz-rating-count">127 ratings</span>
+        </div>
+
+        <div class="amz-detail-price">
+          <span class="amz-price-symbol">৳</span>
+          <span class="amz-price-whole">150</span>
+          <span class="amz-price-fraction">00</span>
+          <span class="amz-price-discount">-12%</span>
+        </div>
+
+        <div class="amz-detail-stock">
+          <i class="fa-solid fa-circle-check"></i> In Stock
+        </div>
+
+        <div class="amz-buy-box">
+          <div class="amz-detail-price" style="margin-bottom:12px;">
+            <span class="amz-price-symbol">৳</span>
+            <span class="amz-price-whole">150</span>
+            <span class="amz-price-fraction">00</span>
+          </div>
+
+          <div class="amz-detail-stock" style="margin-bottom:12px;">
+            <i class="fa-solid fa-circle-check"></i> In Stock
+          </div>
+
+          <div class="amz-delivery-info">
+            <strong>FREE delivery</strong> on orders over ৳500. <a href="#" style="color:var(--amazon-link);text-decoration:underline;">Details</a>
+          </div>
+
+          <div class="amz-delivery-info" style="margin-bottom:16px;">
+            Or fastest delivery <strong>Tomorrow</strong>. Order within <span style="color:var(--amazon-green);">3 hrs 42 mins</span>
+          </div>
+
+          <button class="amz-add-to-cart" onclick="addToCart()">
+            <i class="fa-solid fa-cart-shopping"></i> Add to Cart
+          </button>
+
+          <button class="amz-buy-now">Buy Now</button>
+
+          <div class="amz-secure-text">
+            <i class="fa-solid fa-lock"></i> Secure transaction
+          </div>
+        </div>
+
+        <div class="amz-detail-desc">
+          <p>These coins belong to Singapore's first circulating coinage series (issued 1967–1987). The 50 cents piece from 1978 is a cupro-nickel composition and was widely used in daily transactions during the Republic period.</p>
+        </div>
+
+        <div class="amz-detail-specs">
+          <h3>Product Details</h3>
+          <table class="amz-spec-table">
+            <tr>
+              <th>Country</th>
+              <td>Singapore</td>
+            </tr>
+            <tr>
+              <th>Denomination</th>
+              <td>50 Cents (0.5 SGD)</td>
+            </tr>
+            <tr>
+              <th>Year / Period</th>
+              <td>1978 — Republic (1967–date)</td>
+            </tr>
+            <tr>
+              <th>Composition</th>
+              <td>Cupro-nickel</td>
+            </tr>
+            <tr>
+              <th>Diameter</th>
+              <td>26.95 mm</td>
+            </tr>
+            <tr>
+              <th>Weight</th>
+              <td>7.29 g</td>
+            </tr>
+            <tr>
+              <th>Condition</th>
+              <td>Used — Good Circulation State</td>
+            </tr>
+            <tr>
+              <th>Shipping</th>
+              <td>Ships worldwide in protective sleeve</td>
+            </tr>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <div class="amz-back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</div>
+  <footer class="amz-footer">
+    <div class="amz-footer-grid">
+      <div class="amz-footer-col"><h4>Get to Know Us</h4><a href="#">About MR Shop</a><a href="#">Careers</a><a href="#">Press Releases</a></div>
+      <div class="amz-footer-col"><h4>Make Money with Us</h4><a href="becomeseller.html">Sell on MR Shop</a><a href="#">Become an Affiliate</a></div>
+      <div class="amz-footer-col"><h4>Let Us Help You</h4><a href="userprofile.html">Your Account</a><a href="chat.html">Customer Service</a></div>
+      <div class="amz-footer-col"><h4>Connect with Us</h4><a href="#"><i class="fab fa-facebook"></i> Facebook</a><a href="#"><i class="fab fa-instagram"></i> Instagram</a><a href="#"><i class="fab fa-youtube"></i> YouTube</a></div>
+    </div>
+  </footer>
+  <div class="amz-footer-bottom"><div class="amz-footer-logo">MR Shop</div><div class="amz-footer-copyright">&copy; 2026 MR Shop. All Rights Reserved.</div></div>
+
+  <script>
+    function changeImage(el) {
+      document.getElementById('mainImage').src = el.src;
+      document.querySelectorAll('.amz-thumb').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    function addToCart() {
+      const count = document.querySelector('.amz-cart-count');
+      count.textContent = parseInt(count.textContent) + 1;
+      alert('Added to cart!');
+    }
+  </script>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/products.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/auth-shared.js"></script>
+
 </body>
 </html>

@@ -249,14 +249,16 @@ function loadOrders() {
   `).join('');
 }
 
-function filterOrders(filter) {
+function filterOrders(filter, element) {
   currentFilter = filter;
   
   // Update active filter button
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.classList.remove('active');
   });
-  event.target.classList.add('active');
+  if (element) {
+    element.classList.add('active');
+  }
   
   loadOrders();
 }

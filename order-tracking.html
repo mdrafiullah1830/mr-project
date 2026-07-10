@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Order — MR Shop</title>
+  <script src="assets/js/loader.js"></script>
+  <link rel="stylesheet" href="assets/css/amazon-style.css">
+  <style>
+    .track-page { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+    .track-box { background: var(--amazon-white); border: 1px solid var(--amazon-border); border-radius: 12px; padding: 30px; margin-bottom: 24px; }
+    .track-box h2 { font-size: 22px; font-weight: 700; margin-bottom: 16px; }
+    .track-input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+    .track-input-group input { flex: 1; padding: 14px; border: 1px solid #d5d9d9; border-radius: 8px; font-size: 15px; }
+    .track-input-group input:focus { border-color: var(--amazon-orange); outline: none; box-shadow: 0 0 0 3px rgba(255,153,0,0.1); }
+    .track-btn { background: linear-gradient(to bottom, #ffd814, #f7ca00); border: 1px solid #f2c200; border-radius: 8px; padding: 14px 28px; font-size: 15px; font-weight: 700; cursor: pointer; color: #0f1111; white-space: nowrap; }
+    .track-btn:hover { background: linear-gradient(to bottom, #f7ca00, #e6b800); }
+    .track-result { display: none; }
+    .track-order-id { font-size: 16px; font-weight: 700; color: var(--amazon-orange); margin-bottom: 20px; }
+    .track-timeline { position: relative; padding-left: 40px; }
+    .track-timeline::before { content: ''; position: absolute; left: 14px; top: 0; bottom: 0; width: 3px; background: #e3e6e6; }
+    .timeline-item { position: relative; margin-bottom: 30px; }
+    .timeline-dot { position: absolute; left: -33px; top: 4px; width: 20px; height: 20px; border-radius: 50%; background: #e3e6e6; border: 3px solid #fff; box-shadow: 0 0 0 2px #e3e6e6; z-index: 1; }
+    .timeline-item.completed .timeline-dot { background: var(--amazon-green); box-shadow: 0 0 0 2px var(--amazon-green); }
+    .timeline-item.active .timeline-dot { background: var(--amazon-orange); box-shadow: 0 0 0 2px var(--amazon-orange); animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 2px var(--amazon-orange); } 50% { box-shadow: 0 0 0 6px rgba(255,153,0,0.3); } }
+    .timeline-content h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .timeline-content p { font-size: 13px; color: #565959; }
+    .timeline-content .time { font-size: 12px; color: #999; margin-top: 4px; }
+    .track-details { background: #f7f8f8; border-radius: 8px; padding: 16px; margin-top: 20px; }
+    .track-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 14px; }
+    .track-details-grid .label { color: #565959; font-weight: 500; }
+    .track-details-grid .value { font-weight: 700; }
+  </style>
+</head>
+<body>
+  <header class="amz-header">
+    <div class="amz-header-top">
+      <a href="index.html" class="logo">
+        <div>
+          <span class="logo-text">MR shop</span>
+          <span class="logo-sub">Bangladesh</span>
+        </div>
+      </a>
+      <div class="amz-deliver-to"><span class="label">Deliver to</span><span class="location"><i class="fas fa-map-marker-alt"></i> Bangladesh</span></div>
+      <div class="amz-search-bar">
+        <select class="amz-search-category"><option>All</option><option>Food & Natural</option><option>Sweets & Dairy</option><option>Handicrafts</option><option>Clothing</option><option>Books</option><option>Antique</option></select>
+        <input type="text" class="amz-search-input" placeholder="Search MR Shop">
+        <button class="amz-search-btn"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="amz-header-right">
+        <a href="signin.html" class="amz-header-link"><span class="line1">Hello, Sign in</span><span class="line2">Account & Lists <i class="fas fa-caret-down"></i></span></a>
+        <a href="userprofile.html" class="amz-header-link"><span class="line1">Returns</span><span class="line2">& Orders</span></a>
+        <a href="wishlist.html" class="amz-header-link"><span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span><span class="line2">Wishlist</span></a>
+        <a href="cart.html" class="amz-cart"><span class="amz-cart-icon"><i class="fas fa-shopping-cart"></i><span class="amz-cart-count" id="cartCount">0</span></span><span class="amz-cart-text">Cart</span></a>
+      </div>
+    </div>
+    <nav class="amz-nav-bar">
+      <a href="index.html" class="amz-nav-item"><i class="fas fa-bars"></i> All</a>
+      <a href="food&natural.html" class="amz-nav-item">Food & Natural</a>
+      <a href="sweets&dairy.html" class="amz-nav-item">Sweets & Dairy</a>
+      <a href="handricrafts.html" class="amz-nav-item">Handicrafts</a>
+      <a href="clothing.html" class="amz-nav-item">Clothing</a>
+      <a href="book.html" class="amz-nav-item">Books</a>
+      <a href="antique.html" class="amz-nav-item">Antique</a>
+      <div class="amz-nav-divider"></div>
+      <a href="becomeseller.html" class="amz-nav-item">Sell</a>
+      <a href="chat.html" class="amz-nav-item"><i class="fas fa-headset"></i> Help</a>
+    </nav>
+  </header>
+        <a href="cart.html" class="amz-header-link"><span class="line1"><i class="fas fa-shopping-cart"></i></span><span class="line2">Cart</span></a>
+      </div>
+    </div>
+  </header>
+
+  <div class="track-page">
+    <div class="track-box">
+      <h2><i class="fas fa-truck"></i> Track Your Order</h2>
+      <p style="color:#565959;margin-bottom:16px">Enter your order ID to see the current status of your order.</p>
+      <div class="track-input-group">
+        <input type="text" id="orderInput" placeholder="e.g. MR-2026-001234">
+        <button class="track-btn" onclick="trackOrder()">Track Order</button>
+      </div>
+
+      <div class="track-result" id="trackResult">
+        <div class="track-order-id" id="trackOrderId">Order: MR-2026-001234</div>
+        <div class="track-timeline">
+          <div class="timeline-item completed">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h4>Order Confirmed</h4>
+              <p>Your order has been placed successfully</p>
+              <div class="time">Jul 1, 2026 — 2:30 PM</div>
+            </div>
+          </div>
+          <div class="timeline-item completed">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h4>Payment Received</h4>
+              <p>bKash payment of ৳2,450 confirmed</p>
+              <div class="time">Jul 1, 2026 — 2:32 PM</div>
+            </div>
+          </div>
+          <div class="timeline-item completed">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h4>Processing</h4>
+              <p>Your order is being prepared by the seller</p>
+              <div class="time">Jul 2, 2026 — 10:15 AM</div>
+            </div>
+          </div>
+          <div class="timeline-item active">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h4>Shipped</h4>
+              <p>Package picked up by Pathao Courier</p>
+              <div class="time">Jul 3, 2026 — 9:00 AM</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h4>Out for Delivery</h4>
+              <p>Package is on the way to your address</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h4>Delivered</h4>
+              <p>Package delivered to your doorstep</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="track-details">
+          <div class="track-details-grid">
+            <div><span class="label">Order Date:</span></div><div class="value">July 1, 2026</div>
+            <div><span class="label">Estimated Delivery:</span></div><div class="value">July 5-7, 2026</div>
+            <div><span class="label">Shipping Method:</span></div><div class="value">Pathao Courier (Standard)</div>
+            <div><span class="label">Payment:</span></div><div class="value">bKash</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function trackOrder() {
+      const id = document.getElementById('orderInput').value.trim();
+      if (!id) { alert('Please enter an Order ID'); return; }
+      document.getElementById('trackOrderId').textContent = 'Order: ' + id;
+      document.getElementById('trackResult').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

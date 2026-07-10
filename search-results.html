@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Search results for Bangladeshi products at MR Shop. Find honey, sweets, handicrafts, clothing, and more.">
+  <title>Search Results - MR Shop</title>
+  <script src="assets/js/loader.js"></script>
+  <link rel="stylesheet" href="assets/css/amazon-style.css">
+  <style>
+    :root {
+      --orange: #ff9900;
+      --orange-light: #ffad33;
+      --yellow: #febd69;
+      --yellow-dark: #f0a030;
+      --dark: #131921;
+      --darker: #0f1111;
+      --text: #0f1111;
+      --light: #eaeded;
+      --white: #ffffff;
+      --border: #ddd;
+      --green: #067d62;
+      --blue: #1a73e8;
+      --link: #007185;
+      --red: #cc0c39;
+      --bg-gradient: linear-gradient(135deg, #0f1111 0%, #1a2332 50%, #0f1111 100%);
+    }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--light); color: var(--text); line-height: 1.5; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+
+    /* Header */
+    .header { background: var(--darker); position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    .header-top { display: flex; align-items: center; padding: 10px 20px; gap: 16px; max-width: 1500px; margin: 0 auto; }
+    .logo { display: flex; align-items: center; padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .logo:hover { border-color: #fff; background: rgba(255,255,255,0.05); }
+    .logo-text { color: var(--white); font-size: 22px; font-weight: 800; letter-spacing: -1px; }
+    .logo-sub { color: var(--orange); font-size: 10px; font-weight: 600; display: block; letter-spacing: 2px; text-transform: uppercase; }
+    .deliver-to { color: var(--white); padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .deliver-to:hover { border-color: #fff; }
+    .deliver-to .label { color: #999; font-size: 11px; display: block; }
+    .deliver-to .loc { font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 4px; }
+    .search-bar { flex: 1; display: flex; height: 46px; border-radius: 8px; overflow: hidden; position: relative; }
+    .search-cat { background: #e6e6e6; border: none; padding: 0 12px; font-size: 13px; color: #555; cursor: pointer; border-right: 1px solid var(--border); }
+    .search-input { flex: 1; border: none; padding: 0 16px; font-size: 15px; outline: none; }
+    .search-btn { background: var(--orange); border: none; padding: 0 20px; cursor: pointer; font-size: 20px; color: var(--dark); transition: all 0.2s; }
+    .search-btn:hover { background: var(--orange-light); }
+    .header-actions { display: flex; align-items: center; gap: 6px; }
+    .header-link { color: var(--white); padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; font-size: 13px; white-space: nowrap; transition: all 0.2s; }
+    .header-link:hover { border-color: #fff; }
+    .header-link .line1 { color: #999; font-size: 11px; display: block; }
+    .header-link .line2 { font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 4px; }
+    .cart-btn { display: flex; align-items: center; gap: 4px; padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; color: var(--white); transition: all 0.2s; }
+    .cart-btn:hover { border-color: #fff; }
+    .cart-icon { font-size: 24px; position: relative; }
+    .cart-count { position: absolute; top: -6px; right: -8px; background: var(--orange); color: var(--dark); font-size: 13px; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .cart-text { font-weight: 700; font-size: 13px; }
+
+    /* Nav Bar */
+    .nav-bar { background: #232f3e; padding: 8px 20px; display: flex; align-items: center; gap: 4px; overflow-x: auto; max-width: 1500px; margin: 0 auto; }
+    .nav-item { color: var(--white); padding: 8px 14px; font-size: 13px; font-weight: 500; border: 1px solid transparent; border-radius: 4px; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+    .nav-item:hover { border-color: #fff; }
+    .nav-item.active { border-color: #fff; font-weight: 700; }
+    .nav-divider { width: 1px; height: 24px; background: #4a5568; margin: 0 6px; }
+
+    /* Features Bar */
+    .features-bar { background: var(--white); border-bottom: 1px solid var(--border); }
+    .features-grid { max-width: 1500px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); }
+    .feature-item { display: flex; align-items: center; gap: 14px; padding: 18px 24px; border-right: 1px solid var(--border); transition: background 0.2s; }
+    .feature-item:last-child { border-right: none; }
+    .feature-item:hover { background: #f8f9fa; }
+    .feature-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .feature-icon.green { background: #e6f4e6; color: var(--green); }
+    .feature-icon.blue { background: #e6f0fa; color: var(--blue); }
+    .feature-icon.orange { background: #fff3e0; color: var(--orange); }
+    .feature-icon.red { background: #fce4ec; color: var(--red); }
+    .feature-text h4 { font-size: 14px; font-weight: 700; color: var(--text); }
+    .feature-text p { font-size: 12px; color: #666; margin-top: 2px; }
+
+    /* Footer */
+    .back-to-top { background: #37475a; text-align: center; padding: 14px; color: var(--white); font-size: 13px; cursor: pointer; transition: background 0.2s; }
+    .back-to-top:hover { background: #485769; }
+    .footer { background: var(--darker); color: var(--white); padding: 40px 20px 20px; }
+    .footer-links { max-width: 1500px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); gap: 30px; margin-bottom: 30px; }
+    .footer-col h4 { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
+    .footer-col a { display: block; color: #ddd; font-size: 13px; padding: 4px 0; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--white); text-decoration: underline; }
+    .footer-quick-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 16px 0; max-width: 1500px; margin: 0 auto; }
+    .footer-quick-links a { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); padding: 6px 14px; border-radius: 20px; font-size: 12px; color: #ccc; transition: all 0.2s; }
+    .footer-quick-links a:hover { background: rgba(255,255,255,0.15); color: var(--white); border-color: var(--orange); }
+    .footer-divider { height: 1px; background: #3a4553; margin: 16px 0; }
+    .footer-bottom { text-align: center; padding: 20px; }
+    .footer-logo { font-size: 20px; font-weight: 800; color: var(--white); margin-bottom: 6px; }
+    .footer-copyright { color: #999; font-size: 12px; margin-bottom: 10px; }
+    .footer-copyright strong { color: var(--orange); }
+    .footer-payment { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px; color: #999; font-size: 12px; }
+    .footer-payment i { font-size: 20px; color: #ccc; transition: transform 0.2s; }
+    .footer-payment i:hover { transform: scale(1.2); color: var(--white); }
+
+    /* Search Results */
+    .search-results-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    .search-results-header { padding: 20px 0; border-bottom: 1px solid #ddd; margin-bottom: 20px; }
+    .search-results-header h2 { font-size: 24px; font-weight: 700; }
+    .search-results-header h2 span { color: #c45500; }
+    .search-filter-bar { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+    .search-filter-bar select, .search-filter-bar input { padding: 8px 12px; border: 1px solid #cdcdcd; border-radius: 8px; font-size: 14px; background: #f0f2f2; }
+    .search-filter-bar select:focus, .search-filter-bar input:focus { border-color: #e77600; outline: none; }
+    .sort-label { font-weight: 600; color: #555; }
+    .results-count { color: #565959; font-size: 14px; margin-bottom: 15px; }
+    .no-results { text-align: center; padding: 60px 20px; }
+    .no-results h3 { font-size: 24px; margin-bottom: 10px; }
+    .no-results p { color: #565959; font-size: 16px; margin-bottom: 20px; }
+    .back-btn { display: inline-block; background: #131921; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: background 0.2s; }
+    .back-btn:hover { background: #232f3e; }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .feature-item:nth-child(2) { border-right: none; }
+    }
+    @media (max-width: 768px) {
+      .footer-links { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .header-top { padding: 8px 12px; gap: 8px; }
+      .logo-text { font-size: 18px; }
+      .deliver-to, .header-link .line1 { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-top">
+      <a href="index.html" class="logo">
+        <div>
+          <span class="logo-text">MR shop</span>
+          <span class="logo-sub">Bangladesh</span>
+        </div>
+      </a>
+      <div class="deliver-to">
+        <span class="label">Deliver to</span>
+        <span class="loc"><i class="fas fa-map-marker-alt"></i> Bangladesh</span>
+      </div>
+      <div class="search-bar">
+        <select class="search-cat" id="searchCategory">
+          <option value="all">All</option>
+          <option value="food">Food & Natural</option>
+          <option value="sweets">Sweets & Dairy</option>
+          <option value="handicrafts">Handicrafts</option>
+          <option value="clothing">Clothing</option>
+          <option value="books">Books</option>
+          <option value="antique">Antique</option>
+        </select>
+        <input type="text" class="search-input" placeholder="Search MR Shop" id="searchInput" autocomplete="off">
+        <button class="search-btn" onclick="doSearch()"><i class="fas fa-search"></i></button>
+        <div class="search-suggestions-dropdown" id="searchSuggestions"></div>
+      </div>
+      <div class="header-actions">
+        <a href="signin.html" class="header-link" id="accountLink">
+          <span class="line1">Hello, Sign in</span>
+          <span class="line2">Account <i class="fas fa-caret-down"></i></span>
+        </a>
+        <a href="wishlist.html" class="header-link">
+          <span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span>
+          <span class="line2">Wishlist</span>
+        </a>
+        <a href="cart.html" class="cart-btn">
+          <span class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count amz-cart-count">0</span></span>
+          <span class="cart-text">Cart</span>
+        </a>
+      </div>
+    </div>
+    <nav class="nav-bar">
+      <a href="index.html" class="nav-item"><i class="fas fa-bars"></i> All</a>
+      <a href="food&natural.html" class="nav-item" data-category="food">Food & Natural</a>
+      <a href="sweets&dairy.html" class="nav-item" data-category="sweets">Sweets & Dairy</a>
+      <a href="handricrafts.html" class="nav-item" data-category="handicrafts">Handicrafts</a>
+      <a href="clothing.html" class="nav-item" data-category="clothing">Clothing</a>
+      <a href="book.html" class="nav-item" data-category="books">Books</a>
+      <a href="antique.html" class="nav-item" data-category="antique">Antique</a>
+      <div class="nav-divider"></div>
+      <a href="blog.html" class="nav-item"><i class="fas fa-newspaper"></i> Blog</a>
+      <a href="compare.html" class="nav-item"><i class="fas fa-balance-scale"></i> Compare</a>
+      <a href="order-tracking.html" class="nav-item"><i class="fas fa-truck"></i> Track Order</a>
+      <a href="admin.html" class="nav-item"><i class="fas fa-cog"></i> Admin</a>
+      <div class="nav-divider"></div>
+      <a href="becomeseller.html" class="nav-item">Sell</a>
+      <a href="chat.html" class="nav-item"><i class="fas fa-headset"></i> Help</a>
+      <button class="nav-item" onclick="toggleLanguage()" style="background:none;border:1px solid transparent;color:#fff;font-size:13px;cursor:pointer" id="langToggle">EN/বাং</button>
+    </nav>
+  </header>
+
+  <!-- Features Bar -->
+  <div class="features-bar">
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="feature-icon green"><i class="fas fa-truck"></i></div>
+        <div class="feature-text"><h4>Free Delivery</h4><p>On orders over ৳5,000</p></div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon blue"><i class="fas fa-undo"></i></div>
+        <div class="feature-text"><h4>Easy Returns</h4><p>7-day return policy</p></div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon orange"><i class="fas fa-shield-alt"></i></div>
+        <div class="feature-text"><h4>Secure Payment</h4><p>bKash, Nagad, COD</p></div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon red"><i class="fas fa-headset"></i></div>
+        <div class="feature-text"><h4>24/7 Support</h4><p>Dedicated help center</p></div>
+      </div>
+    </div>
+  </div>
+
+  <main class="search-results-container">
+    <div class="search-results-header">
+      <h2 id="searchTitle">Search Results</h2>
+    </div>
+    <div class="search-filter-bar">
+      <span class="sort-label">Sort by:</span>
+      <select id="sortSelect" onchange="applySort()">
+        <option value="relevance">Relevance</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+        <option value="rating">Avg. Customer Review</option>
+        <option value="reviews">Most Reviews</option>
+        <option value="newest">Newest Arrivals</option>
+      </select>
+      <span class="results-count" id="resultsCount"></span>
+    </div>
+    <div class="amz-product-grid" id="resultsGrid"></div>
+    <div class="no-results" id="noResults" style="display:none;">
+      <h3>No results found</h3>
+      <p>Try checking your spelling or use more general terms</p>
+      <a href="index.html" class="back-btn">Back to Home</a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to Top</button>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>Get to Know Us</h4>
+        <a href="workfor.html">Careers</a>
+        <a href="work-for-people.html">About Us</a>
+        <a href="seller.html">Sell on MR Shop</a>
+        <a href="seller-settings.html">Seller Dashboard</a>
+        <a href="becomeseller.html">Become an Affiliate</a>
+      </div>
+      <div class="footer-col">
+        <h4>Help & Support</h4>
+        <a href="chat.html">Customer Service</a>
+        <a href="userprofile.html">Your Account</a>
+        <a href="workforchild.html">Children's Privacy</a>
+        <a href="notification.html">Notifications</a>
+        <a href="email-notifications.html">Email Settings</a>
+      </div>
+      <div class="footer-col">
+        <h4>Payment & Delivery</h4>
+        <a href="cart.html">Shopping Cart</a>
+        <a href="checkout.html">Checkout</a>
+        <a href="payment.html">Payment Methods</a>
+        <a href="order-tracking.html">Track Order</a>
+        <a href="workfor.html">Return Policy</a>
+      </div>
+      <div class="footer-col">
+        <h4>Shop by Category</h4>
+        <a href="food&natural.html">Food & Natural</a>
+        <a href="sweets&dairy.html">Sweets & Dairy</a>
+        <a href="handricrafts.html">Handicrafts</a>
+        <a href="clothing.html">Clothing</a>
+      </div>
+      <div class="footer-col">
+        <h4>Connect with Us</h4>
+        <a href="https://www.facebook.com/profile.php?id=61583616496782" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+        <a href="https://www.instagram.com/mrshopbd18/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+        <a href="https://www.youtube.com/@mrshop18" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
+        <a href="chat.html"><i class="fas fa-headset"></i> Live Chat</a>
+      </div>
+    </div>
+
+    <!-- Quick Links Bar -->
+    <div class="footer-quick-links">
+      <a href="index.html">Home</a>
+      <a href="search-results.html">All Products</a>
+      <a href="food&natural.html">Food</a>
+      <a href="sweets&dairy.html">Sweets</a>
+      <a href="handricrafts.html">Handicrafts</a>
+      <a href="clothing.html">Clothing</a>
+      <a href="book.html">Books</a>
+      <a href="antique.html">Antique</a>
+      <a href="blog.html">Blog</a>
+      <a href="compare.html">Compare</a>
+      <a href="order-tracking.html">Track Order</a>
+      <a href="review.html">Reviews</a>
+      <a href="admin.html">Admin</a>
+      <a href="seller.html">Sell</a>
+      <a href="chat.html">Help</a>
+    </div>
+
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <div class="footer-logo">MR shop</div>
+      <div class="footer-copyright">&copy; 2026 MR Shop. All Rights Reserved. | Powered by <strong>MR IT Company</strong></div>
+      <div class="footer-payment">
+        <span>We Accept:</span>
+        <i class="fas fa-money-bill-wave" title="Cash on Delivery"></i>
+        <i class="fas fa-mobile-alt" title="bKash" style="color:#e2136e;"></i>
+        <i class="fas fa-wallet" title="Nagad" style="color:#f6921e;"></i>
+        <i class="fas fa-rocket" title="Rocket" style="color:#8b2393;"></i>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/products.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/wishlist.js"></script>
+  <script src="assets/js/search.js"></script>
+  <script>
+    let currentProducts = [];
+
+    function doSearch() {
+      const q = document.getElementById('searchInput').value.trim();
+      if (q) {
+        sessionStorage.setItem('mr_search_query', q);
+        loadResults();
+      }
+    }
+
+    function loadResults() {
+      const query = sessionStorage.getItem('mr_search_query') || '';
+      const category = document.getElementById('searchCategory').value;
+      
+      let products;
+      if (category && category !== 'all') {
+        products = MR_getProductsByCategory(category);
+        if (query) {
+          products = products.filter(p => 
+            p.name.toLowerCase().includes(query.toLowerCase()) || 
+            p.description.toLowerCase().includes(query.toLowerCase())
+          );
+        }
+      } else {
+        products = query ? MR_searchProducts(query) : MR_PRODUCTS;
+      }
+
+      currentProducts = products;
+      document.getElementById('searchInput').value = query;
+      document.getElementById('searchTitle').innerHTML = query 
+        ? `Results for "<span>${query}</span>"` 
+        : 'All Products';
+      document.getElementById('resultsCount').textContent = `${products.length} results`;
+
+      if (products.length === 0) {
+        document.getElementById('noResults').style.display = 'block';
+        document.getElementById('resultsGrid').innerHTML = '';
+      } else {
+        document.getElementById('noResults').style.display = 'none';
+        renderProducts(products);
+      }
+    }
+
+    function renderProducts(products) {
+      document.getElementById('resultsGrid').innerHTML = products.map(p => MR_createProductCard(p)).join('');
+    }
+
+    function applySort() {
+      const sort = document.getElementById('sortSelect').value;
+      let sorted = [...currentProducts];
+      switch(sort) {
+        case 'price-low': sorted.sort((a, b) => a.price - b.price); break;
+        case 'price-high': sorted.sort((a, b) => b.price - a.price); break;
+        case 'rating': sorted.sort((a, b) => b.rating - a.rating); break;
+        case 'reviews': sorted.sort((a, b) => b.reviews - a.reviews); break;
+        case 'newest': sorted.reverse(); break;
+      }
+      renderProducts(sorted);
+    }
+
+    MR_Search.init('#searchInput', '#searchSuggestions');
+    loadResults();
+  </script>
+  <script src="assets/js/darkmode.js"></script>
+  <script src="assets/js/i18n.js"></script>
+</body>
+</html>

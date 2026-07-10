@@ -81,31 +81,36 @@
     selectedColor = btn.dataset.color;
   });
 
-  // Cart helpers
-  function getCart(){ try{ return JSON.parse(localStorage.getItem('mr_shop_cart')) || []; }catch{ return []; } }
-  function setCart(c){ localStorage.setItem('mr_shop_cart', JSON.stringify(c)); }
-
-  function addToCart(){
+  // Use shared MR_Cart module
+  async function addToCart(){
     if(!selectedSize){ showToast('Please select a size'); return; }
     if(!selectedColor){ showToast('Please select a color'); return; }
-    const cart = getCart();
-    const key = `${product.id}-${selectedSize}-${selectedColor}`;
-    const idx = cart.findIndex(i => (i.id === product.id && i.size === selectedSize && i.color === selectedColor));
-    if(idx>-1){ cart[idx].quantity += 1; }
-    else{
-      cart.push({
-        id: product.id,
-        name: product.title,
-        price: product.price,
-        image: product.images[0],
-        description: `${product.brand} • ${selectedColor} • ${selectedSize}`,
-        quantity: 1,
-        size: selectedSize,
-        color: selectedColor
-      });
+    
+    if (typeof MR_Cart !== 'undefined') {
+      // Use shared cart module
+      await MR_Cart.addItem(product.id, 1);
+      showToast(`Added 1 × ${product.title} (${selectedColor}, ${selectedSize})`);
+    } else {
+      // Fallback to local cart
+      const stored = localStorage.getItem('mr_shop_cart');
+      const cart = stored ? JSON.parse(stored) : [];
+      const idx = cart.findIndex(i => (i.id === product.id && i.size === selectedSize && i.color === selectedColor));
+      if(idx>-1){ cart[idx].quantity += 1; }
+      else{
+        cart.push({
+          id: product.id,
+          name: product.title,
+          price: product.price,
+          image: product.images[0],
+          description: `${product.brand} • ${selectedColor} • ${selectedSize}`,
+          quantity: 1,
+          size: selectedSize,
+          color: selectedColor
+        });
+      }
+      localStorage.setItem('mr_shop_cart', JSON.stringify(cart));
+      showToast(`Added 1 × ${product.title} (${selectedColor}, ${selectedSize})`);
     }
-    setCart(cart);
-    showToast(`Added 1 × ${product.title} (${selectedColor}, ${selectedSize})`);
   }
 
   addToCartBtn.addEventListener('click', addToCart);

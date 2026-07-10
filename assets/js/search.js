@@ -1,79 +1,120 @@
-// search.js - real-time product search on home page
-(function(){
-  // Products data (extracted from the page or hardcoded)
-  const PRODUCTS = [
-    { name: 'Smartphone X10', price: '৳ 15,999', image: 'https://i.ibb.co/S6qMxwr/phone.jpg' },
-    { name: 'Sports Shoes', price: '৳ 2,499', image: 'https://i.ibb.co/fqzGyvY/shoes.jpg' },
-    { name: 'Digital Watch', price: '৳ 1,299', image: 'https://i.ibb.co/wwzCzKR/watch.jpg' },
-    { name: 'Wireless Headphones', price: '৳ 3,999', image: 'https://i.ibb.co/dM2Hv5S/headphones.jpg' },
-    // Antique coins
-    { name: 'Singapore 50 cents (1978)', price: '৳ 150', image: './assets/images/coin1.jpeg' },
-    { name: 'Bahrain 100 Fils (2010)', price: '৳ 150', image: './assets/images/coin2.jpeg' },
-    { name: 'Saudi Arabia 50 Halala', price: '৳ 150', image: './assets/images/coin4.jpeg' },
-  ];
+// ==================== MR SHOP - SEARCH MODULE ====================
+// Real-time search with suggestions
 
-  const searchInput = document.getElementById('searchInput');
-  const searchResults = document.getElementById('searchResults');
+const MR_Search = {
+  debounceTimer: null,
 
-  if (!searchInput || !searchResults) return;
+  init(inputSelector, resultsSelector) {
+    const input = document.querySelector(inputSelector);
+    const results = document.querySelector(resultsSelector);
+    if (!input || !results) return;
 
-  // Filter and display results on input
-  searchInput.addEventListener('input', function() {
-    const query = this.value.trim().toLowerCase();
-    
-    if (query.length === 0) {
-      searchResults.classList.remove('open');
-      searchResults.setAttribute('aria-hidden', 'true');
+    input.addEventListener('input', (e) => {
+      clearTimeout(this.debounceTimer);
+      this.debounceTimer = setTimeout(() => {
+        this.showSuggestions(e.target.value, results);
+      }, 200);
+    });
+
+    input.addEventListener('focus', (e) => {
+      if (e.target.value.length >= 2) {
+        this.showSuggestions(e.target.value, results);
+      }
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        this.doSearch(input.value);
+        results.style.display = 'none';
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!input.contains(e.target) && !results.contains(e.target)) {
+        results.style.display = 'none';
+      }
+    });
+  },
+
+  showSuggestions(query, resultsEl) {
+    if (query.length < 2) {
+      resultsEl.style.display = 'none';
       return;
     }
 
-    // Filter products by name (case-insensitive substring match)
-    const matches = PRODUCTS.filter(p => p.name.toLowerCase().includes(query));
-
-    // Render results
-    if (matches.length === 0) {
-      searchResults.innerHTML = '<div class="search-no-results">No products found</div>';
-    } else {
-      searchResults.innerHTML = matches.map((p, idx) => `
-        <div class="search-result-item" role="option" aria-label="${p.name}, ${p.price}">
-          <img src="${p.image}" alt="${p.name}" />
-          <div class="search-result-info">
-            <div class="search-result-name">${p.name}</div>
-            <div class="search-result-price">${p.price}</div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    searchResults.classList.add('open');
-    searchResults.setAttribute('aria-hidden', 'false');
-  });
-
-  // Close results when clicking outside
-  document.addEventListener('click', function(e) {
-    if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-      searchResults.classList.remove('open');
-      searchResults.setAttribute('aria-hidden', 'true');
-    }
-  });
-
-  // Close results on Escape key
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && searchResults.classList.contains('open')) {
-      searchResults.classList.remove('open');
-      searchResults.setAttribute('aria-hidden', 'true');
-      searchInput.value = '';
-    }
-  });
-
-  // Allow keyboard navigation (optional: arrow keys to select, Enter to submit)
-  searchInput.addEventListener('keydown', function(e) {
-    const items = searchResults.querySelectorAll('.search-result-item');
-    if (items.length === 0) return;
+    const results = MR_searchProducts(query).slice(0, 8);
     
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      items[0].focus();
+    if (results.length === 0) {
+      resultsEl.innerHTML = '<div class="search-suggestion-item">No products found</div>';
+      resultsEl.style.display = 'block';
+      return;
     }
-  });
-})();
+
+    // Group by category
+    const categories = {};
+    results.forEach(p => {
+      if (!categories[p.category]) categories[p.category] = [];
+      categories[p.category].push(p);
+    });
+
+    let html = '';
+    for (const [cat, products] of Object.entries(categories)) {
+      html += `<div class="search-category-label">${MR_CATEGORIES[cat] || cat}</div>`;
+      products.forEach(p => {
+        const discount = MR_getDiscount(p.originalPrice, p.price);
+        html += `
+          <div class="search-suggestion-item" onclick="MR_Search.goToProduct(${p.id})">
+            <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/40x40?text=No+Image'">
+            <div class="search-suggestion-info">
+              <div class="search-suggestion-name">${p.name}</div>
+              <div class="search-suggestion-price">
+                <span class="search-price-current">৳${p.price.toLocaleString()}</span>
+                ${discount > 0 ? `<span class="search-price-original">৳${p.originalPrice.toLocaleString()}</span><span class="search-price-discount">-${discount}%</span>` : ''}
+              </div>
+            </div>
+            <div class="search-suggestion-arrow"><i class="fas fa-arrow-right"></i></div>
+          </div>
+        `;
+      });
+    }
+
+    resultsEl.innerHTML = html;
+    resultsEl.style.display = 'block';
+  },
+
+  doSearch(query) {
+    if (!query || query.trim() === '') return;
+    sessionStorage.setItem('mr_search_query', query.trim());
+    window.location.href = 'search-results.html';
+  },
+
+  goToProduct(id) {
+    const product = MR_getProductById(id);
+    if (product) {
+      sessionStorage.setItem('mr_selected_product', id);
+      window.location.href = product.link;
+    }
+  },
+
+  getResults() {
+    const query = sessionStorage.getItem('mr_search_query');
+    if (!query) return [];
+    return MR_searchProducts(query);
+  },
+
+  getSuggestions(query) {
+    if (!query || query.length < 2) return [];
+    return MR_searchProducts(query).slice(0, 6);
+  }
+};
+
+// Category filter
+function MR_filterByCategory(category) {
+  sessionStorage.setItem('mr_filter_category', category);
+  window.location.href = 'search-results.html';
+}
+
+function MR_getFilterCategory() {
+  return sessionStorage.getItem('mr_filter_category') || 'all';
+}

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reviews & Ratings — MR Shop</title>
+  <script src="assets/js/loader.js"></script>
+  <link rel="stylesheet" href="assets/css/amazon-style.css">
+  <style>
+    .review-page { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+    .review-summary { background: var(--amazon-white); border: 1px solid var(--amazon-border); border-radius: 12px; padding: 30px; margin-bottom: 24px; display: flex; gap: 40px; align-items: center; }
+    .review-avg { text-align: center; min-width: 150px; }
+    .review-avg .big-num { font-size: 48px; font-weight: 800; color: var(--amazon-text); }
+    .review-avg .stars { color: var(--amazon-orange); font-size: 20px; margin: 8px 0; }
+    .review-avg .total { color: #565959; font-size: 14px; }
+    .review-bars { flex: 1; }
+    .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .bar-label { font-size: 13px; color: #565959; min-width: 40px; }
+    .bar-track { flex: 1; height: 20px; background: #f0f2f2; border-radius: 10px; overflow: hidden; }
+    .bar-fill { height: 100%; background: var(--amazon-orange); border-radius: 10px; transition: width 0.5s; }
+    .bar-count { font-size: 13px; color: #565959; min-width: 30px; }
+    .review-form { background: var(--amazon-white); border: 1px solid var(--amazon-border); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+    .review-form h3 { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; color: #333; }
+    .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #d5d9d9; border-radius: 8px; font-size: 14px; transition: border-color 0.2s; }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--amazon-orange); outline: none; box-shadow: 0 0 0 3px rgba(255,153,0,0.1); }
+    .form-group textarea { min-height: 100px; resize: vertical; }
+    .star-rating { display: flex; gap: 6px; font-size: 28px; cursor: pointer; }
+    .star-rating i { color: #d5d9d9; transition: color 0.2s; }
+    .star-rating i.active, .star-rating i:hover { color: var(--amazon-orange); }
+    .submit-btn { background: linear-gradient(to bottom, #ffd814, #f7ca00); border: 1px solid #f2c200; border-radius: 8px; padding: 12px 28px; font-size: 14px; font-weight: 700; cursor: pointer; color: #0f1111; transition: all 0.2s; }
+    .submit-btn:hover { background: linear-gradient(to bottom, #f7ca00, #e6b800); }
+    .review-list { display: flex; flex-direction: column; gap: 16px; }
+    .review-card { background: var(--amazon-white); border: 1px solid var(--amazon-border); border-radius: 12px; padding: 20px; }
+    .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .reviewer-name { font-weight: 700; font-size: 15px; }
+    .review-date { color: #565959; font-size: 13px; }
+    .review-stars { color: var(--amazon-orange); font-size: 14px; margin-bottom: 8px; }
+    .review-title { font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+    .review-text { color: #333; font-size: 14px; line-height: 1.6; }
+    .review-helpful { margin-top: 12px; display: flex; gap: 12px; font-size: 13px; color: #565959; }
+    .review-helpful button { background: none; border: 1px solid #d5d9d9; border-radius: 20px; padding: 4px 12px; cursor: pointer; font-size: 12px; transition: all 0.2s; }
+    .review-helpful button:hover { background: #f0f2f2; border-color: #aaa; }
+  </style>
+</head>
+<body>
+  <header class="amz-header">
+    <div class="amz-header-top">
+      <a href="index.html" class="logo">
+        <div>
+          <span class="logo-text">MR shop</span>
+          <span class="logo-sub">Bangladesh</span>
+        </div>
+      </a>
+      <div class="amz-deliver-to"><span class="label">Deliver to</span><span class="location"><i class="fas fa-map-marker-alt"></i> Bangladesh</span></div>
+      <div class="amz-search-bar">
+        <select class="amz-search-category"><option>All</option><option>Food & Natural</option><option>Sweets & Dairy</option><option>Handicrafts</option><option>Clothing</option><option>Books</option><option>Antique</option></select>
+        <input type="text" class="amz-search-input" placeholder="Search MR Shop">
+        <button class="amz-search-btn"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="amz-header-right">
+        <a href="signin.html" class="amz-header-link"><span class="line1">Hello, Sign in</span><span class="line2">Account & Lists <i class="fas fa-caret-down"></i></span></a>
+        <a href="userprofile.html" class="amz-header-link"><span class="line1">Returns</span><span class="line2">& Orders</span></a>
+        <a href="wishlist.html" class="amz-header-link"><span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span><span class="line2">Wishlist</span></a>
+        <a href="cart.html" class="amz-cart"><span class="amz-cart-icon"><i class="fas fa-shopping-cart"></i><span class="amz-cart-count" id="cartCount">0</span></span><span class="amz-cart-text">Cart</span></a>
+      </div>
+    </div>
+    <nav class="amz-nav-bar">
+      <a href="index.html" class="amz-nav-item"><i class="fas fa-bars"></i> All</a>
+      <a href="food&natural.html" class="amz-nav-item">Food & Natural</a>
+      <a href="sweets&dairy.html" class="amz-nav-item">Sweets & Dairy</a>
+      <a href="handricrafts.html" class="amz-nav-item">Handicrafts</a>
+      <a href="clothing.html" class="amz-nav-item">Clothing</a>
+      <a href="book.html" class="amz-nav-item">Books</a>
+      <a href="antique.html" class="amz-nav-item">Antique</a>
+      <div class="amz-nav-divider"></div>
+      <a href="becomeseller.html" class="amz-nav-item">Sell</a>
+      <a href="chat.html" class="amz-nav-item"><i class="fas fa-headset"></i> Help</a>
+    </nav>
+  </header>
+
+  <div class="review-page">
+    <h2 style="font-size:22px;font-weight:700;margin-bottom:20px">Customer Reviews</h2>
+
+    <div class="review-summary">
+      <div class="review-avg">
+        <div class="big-num">4.6</div>
+        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+        <div class="total">2,847 ratings</div>
+      </div>
+      <div class="review-bars">
+        <div class="bar-row"><span class="bar-label">5 star</span><div class="bar-track"><div class="bar-fill" style="width:72%"></div></div><span class="bar-count">2,050</span></div>
+        <div class="bar-row"><span class="bar-label">4 star</span><div class="bar-track"><div class="bar-fill" style="width:15%"></div></div><span class="bar-count">427</span></div>
+        <div class="bar-row"><span class="bar-label">3 star</span><div class="bar-track"><div class="bar-fill" style="width:7%"></div></div><span class="bar-count">199</span></div>
+        <div class="bar-row"><span class="bar-label">2 star</span><div class="bar-track"><div class="bar-fill" style="width:4%"></div></div><span class="bar-count">114</span></div>
+        <div class="bar-row"><span class="bar-label">1 star</span><div class="bar-track"><div class="bar-fill" style="width:2%"></div></div><span class="bar-count">57</span></div>
+      </div>
+    </div>
+
+    <div class="review-form">
+      <h3>Write a Review</h3>
+      <div class="form-group">
+        <label>Your Rating</label>
+        <div class="star-rating" id="starRating">
+          <i class="fas fa-star" data-val="1"></i>
+          <i class="fas fa-star" data-val="2"></i>
+          <i class="fas fa-star" data-val="3"></i>
+          <i class="fas fa-star" data-val="4"></i>
+          <i class="fas fa-star" data-val="5"></i>
+        </div>
+      </div>
+      <div class="form-group"><label>Review Title</label><input type="text" id="reviewTitle" placeholder="Summarize your review"></div>
+      <div class="form-group"><label>Your Review</label><textarea id="reviewText" placeholder="What did you like or dislike?"></textarea></div>
+      <div class="form-group"><label>Your Name</label><input type="text" id="reviewName" placeholder="Display name"></div>
+      <button class="submit-btn" onclick="submitReview()">Submit Review</button>
+    </div>
+
+    <div class="review-list" id="reviewList">
+      <div class="review-card">
+        <div class="review-header"><span class="reviewer-name">Karim Uddin</span><span class="review-date">June 28, 2026</span></div>
+        <div class="review-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <div class="review-title">Authentic Product!</div>
+        <div class="review-text">Sundarbans honey is pure and authentic. Quality is excellent. Fast delivery to Chittagong.</div>
+        <div class="review-helpful"><span>12 people found this helpful</span><button onclick="this.textContent='Thanks!'">Helpful</button></div>
+      </div>
+      <div class="review-card">
+        <div class="review-header"><span class="reviewer-name">Fatima Rahman</span><span class="review-date">June 25, 2026</span></div>
+        <div class="review-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></div>
+        <div class="review-title">Good Quality Saree</div>
+        <div class="review-text">Beautiful Jamdani saree. The weaving is intricate and colors are vibrant. Packaging was good too.</div>
+        <div class="review-helpful"><span>8 people found this helpful</span><button onclick="this.textContent='Thanks!'">Helpful</button></div>
+      </div>
+      <div class="review-card">
+        <div class="review-header"><span class="reviewer-name">Rahat Hossain</span><span class="review-date">June 20, 2026</span></div>
+        <div class="review-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <div class="review-title">Amazing Roshogolla</div>
+        <div class="review-text">Fresh and soft roshogollas, just like my grandmother used to make. Will order again!</div>
+        <div class="review-helpful"><span>15 people found this helpful</span><button onclick="this.textContent='Thanks!'">Helpful</button></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedRating = 0;
+    document.querySelectorAll('#starRating i').forEach(star => {
+      star.addEventListener('click', () => {
+        selectedRating = parseInt(star.dataset.val);
+        document.querySelectorAll('#starRating i').forEach((s, i) => {
+          s.classList.toggle('active', i < selectedRating);
+        });
+      });
+      star.addEventListener('mouseenter', () => {
+        const val = parseInt(star.dataset.val);
+        document.querySelectorAll('#starRating i').forEach((s, i) => {
+          s.classList.toggle('active', i < val);
+        });
+      });
+      star.addEventListener('mouseleave', () => {
+        document.querySelectorAll('#starRating i').forEach((s, i) => {
+          s.classList.toggle('active', i < selectedRating);
+        });
+      });
+    });
+
+    function submitReview() {
+      const title = document.getElementById('reviewTitle').value;
+      const text = document.getElementById('reviewText').value;
+      const name = document.getElementById('reviewName').value;
+      if (!selectedRating || !text || !name) { alert('Please fill all required fields'); return; }
+      const stars = '<i class="fas fa-star"></i>'.repeat(selectedRating) + '<i class="far fa-star"></i>'.repeat(5 - selectedRating);
+      const card = document.createElement('div');
+      card.className = 'review-card';
+      card.innerHTML = `<div class="review-header"><span class="reviewer-name">${name}</span><span class="review-date">Just now</span></div><div class="review-stars">${stars}</div><div class="review-title">${title || 'My Review'}</div><div class="review-text">${text}</div><div class="review-helpful"><span>0 people found this helpful</span><button onclick="this.textContent='Thanks!'">Helpful</button></div>`;
+      document.getElementById('reviewList').prepend(card);
+      document.getElementById('reviewTitle').value = '';
+      document.getElementById('reviewText').value = '';
+      document.getElementById('reviewName').value = '';
+      selectedRating = 0;
+      document.querySelectorAll('#starRating i').forEach(s => s.classList.remove('active'));
+      alert('Review submitted!');
+    }
+  </script>
+</body>
+</html>

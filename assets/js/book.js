@@ -140,53 +140,58 @@ shareBtns.forEach((btn) => {
 });
 
 // === Cart Functions ===
-function getCart() {
-  const stored = localStorage.getItem('mr_shop_cart');
-  return stored ? JSON.parse(stored) : [];
-}
-
-function setCart(cart) {
-  localStorage.setItem('mr_shop_cart', JSON.stringify(cart));
-}
+// Use shared MR_Cart module instead of local cart functions
 
 function showToast(message) {
-  const toast = document.getElementById('bkToast');
-  toast.textContent = message;
-  toast.classList.add('show');
-  setTimeout(() => {
-    toast.classList.remove('show');
-  }, 2500);
+  if (typeof MR_Cart !== 'undefined') {
+    MR_Cart.showToast(message);
+  } else {
+    const toast = document.getElementById('bkToast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2500);
+  }
 }
 
 // === Add to Cart ===
 const addToCartBtn = document.getElementById('addToCartBtn');
 
-addToCartBtn.addEventListener('click', () => {
-  const cart = getCart();
+addToCartBtn.addEventListener('click', async () => {
   const formatData = book.formats[selectedFormat];
   
-  // Check if same format exists
-  const existingIndex = cart.findIndex(
-    (item) => item.id === book.id && item.format === selectedFormat
-  );
-
-  if (existingIndex !== -1) {
-    cart[existingIndex].quantity += 1;
+  if (typeof MR_Cart !== 'undefined') {
+    // Use shared cart module
+    await MR_Cart.addItem(book.id, 1);
+    showToast(`Added ${formatData.label} to cart`);
   } else {
-    cart.push({
-      id: book.id,
-      name: book.title,
-      author: book.author,
-      format: formatData.label,
-      price: formatData.price,
-      image: book.image,
-      description: book.description,
-      quantity: 1
-    });
-  }
+    // Fallback to local cart
+    const stored = localStorage.getItem('mr_shop_cart');
+    const cart = stored ? JSON.parse(stored) : [];
+    
+    const existingIndex = cart.findIndex(
+      (item) => item.id === book.id && item.format === selectedFormat
+    );
 
-  setCart(cart);
-  showToast(`Added ${formatData.label} to cart`);
+    if (existingIndex !== -1) {
+      cart[existingIndex].quantity += 1;
+    } else {
+      cart.push({
+        id: book.id,
+        name: book.title,
+        author: book.author,
+        format: formatData.label,
+        price: formatData.price,
+        image: book.image,
+        description: book.description,
+        quantity: 1
+      });
+    }
+
+    localStorage.setItem('mr_shop_cart', JSON.stringify(cart));
+    showToast(`Added ${formatData.label} to cart`);
+  }
 });
 
 // === Buy Now ===

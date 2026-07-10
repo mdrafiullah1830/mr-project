@@ -24,30 +24,41 @@
   // Handle Login Form Submission
   const loginForm = document.getElementById('loginForm');
   if(loginForm){
-    loginForm.addEventListener('submit', (e)=>{
+    loginForm.addEventListener('submit', async (e)=>{
       e.preventDefault();
       
       const username = document.getElementById('login-username').value;
       const password = document.getElementById('login-password').value;
       
-      // Simple validation
       if(username && password){
-        // Store user session (in real app, this would be done by backend)
-        const userData = {
-          username: username,
-          email: username.includes('@') ? username : username + '@mrshop.com',
-          loggedIn: true,
-          loginTime: new Date().toISOString()
-        };
-        localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-        
-        // Show success message
-        showAuthNotification('Login successful! Redirecting...', 'success');
-        
-        // Redirect to user profile after short delay
-        setTimeout(()=>{
-          window.location.href = 'userprofile.html';
-        }, 1000);
+        // Check seller credentials first
+        const sellers = JSON.parse(localStorage.getItem('mr_shop_sellers')) || [];
+        const seller = sellers.find(s => {
+          const isApproved = s.status === 'approved' || s.isApproved === true;
+          const hasCreds = s.credentials && s.credentials.username && s.credentials.password;
+          const matchUser = (s.credentials && s.credentials.username === username) || s.email === username;
+          const matchPass = s.credentials && s.credentials.password === password;
+          return isApproved && hasCreds && matchUser && matchPass;
+        });
+        if(seller){
+          localStorage.setItem('mr_shop_seller', JSON.stringify(seller));
+          localStorage.setItem('mr_shop_seller_token', 'seller_session_' + Date.now());
+          alert('Seller login successful!');
+          window.location.href = 'seller.html';
+          return;
+        }
+
+        // Use shared auth module
+        const email = username.includes('@') ? username : username + '@mrshop.com';
+        const success = await MR_Auth.login(email, password);
+        if(success){
+          const user = MR_Auth.getUser();
+          if(user && (user.isAdmin || user.role === 'admin')){
+            setTimeout(()=>{ window.location.href = 'admin.html'; }, 500);
+          } else {
+            setTimeout(()=>{ window.location.href = 'userprofile.html'; }, 500);
+          }
+        }
       } else {
         showAuthNotification('Please fill in all fields', 'error');
       }
@@ -57,14 +68,13 @@
   // Handle Register Form Submission
   const registerForm = document.getElementById('registerForm');
   if(registerForm){
-    registerForm.addEventListener('submit', (e)=>{
+    registerForm.addEventListener('submit', async (e)=>{
       e.preventDefault();
       
       const username = document.getElementById('reg-username').value;
       const email = document.getElementById('reg-email').value;
       const password = document.getElementById('reg-password').value;
       
-      // Simple validation
       if(username && email && password){
         // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -73,39 +83,16 @@
           return;
         }
         
-        // Validate password length
-        if(password.length < 6){
-          showAuthNotification('Password must be at least 6 characters', 'error');
-          return;
+        // Use shared auth module
+        const success = await MR_Auth.register(username, email, password);
+        if(success){
+          const user = MR_Auth.getUser();
+          if(user && (user.isAdmin || user.role === 'admin')){
+            setTimeout(()=>{ window.location.href = 'admin.html'; }, 500);
+          } else {
+            setTimeout(()=>{ window.location.href = 'userprofile.html'; }, 500);
+          }
         }
-        
-        // Store user data (in real app, this would be done by backend)
-        const userData = {
-          username: username,
-          email: email,
-          loggedIn: true,
-          loginTime: new Date().toISOString()
-        };
-        localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-        
-        // Store in profile data as well
-        const profileData = {
-          fullName: username,
-          phoneNumber: '',
-          emailAddress: email,
-          address: '',
-          dob: '',
-          gender: 'male'
-        };
-        localStorage.setItem('mr_shop_user_profile', JSON.stringify(profileData));
-        
-        // Show success message
-        showAuthNotification('Registration successful! Redirecting...', 'success');
-        
-        // Redirect to user profile after short delay
-        setTimeout(()=>{
-          window.location.href = 'userprofile.html';
-        }, 1000);
       } else {
         showAuthNotification('Please fill in all fields', 'error');
       }
@@ -116,57 +103,17 @@
   // (no extra interception here; just leave normal POST behavior)
 })();
 
-// Social Login Functions
+// Social Login Functions - require OAuth integration
 function loginWithGoogle(){
-  showAuthNotification('Connecting to Google...', 'info');
-  // In production, integrate with Google OAuth API
-  // For demo purposes, simulate successful login
-  setTimeout(()=>{
-    const userData = {
-      username: 'Google User',
-      email: 'user@gmail.com',
-      loggedIn: true,
-      loginTime: new Date().toISOString(),
-      provider: 'google'
-    };
-    localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-    showAuthNotification('Google login successful! Redirecting...', 'success');
-    setTimeout(()=>{ window.location.href = 'userprofile.html'; }, 1000);
-  }, 1500);
+  showAuthNotification('Google login coming soon! Use email/password to sign in.', 'info');
 }
 
 function loginWithFacebook(){
-  showAuthNotification('Connecting to Facebook...', 'info');
-  // In production, integrate with Facebook Login API
-  setTimeout(()=>{
-    const userData = {
-      username: 'Facebook User',
-      email: 'user@facebook.com',
-      loggedIn: true,
-      loginTime: new Date().toISOString(),
-      provider: 'facebook'
-    };
-    localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-    showAuthNotification('Facebook login successful! Redirecting...', 'success');
-    setTimeout(()=>{ window.location.href = 'userprofile.html'; }, 1000);
-  }, 1500);
+  showAuthNotification('Facebook login coming soon! Use email/password to sign in.', 'info');
 }
 
 function loginWithApple(){
-  showAuthNotification('Connecting to Apple...', 'info');
-  // In production, integrate with Sign in with Apple
-  setTimeout(()=>{
-    const userData = {
-      username: 'Apple User',
-      email: 'user@icloud.com',
-      loggedIn: true,
-      loginTime: new Date().toISOString(),
-      provider: 'apple'
-    };
-    localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-    showAuthNotification('Apple login successful! Redirecting...', 'success');
-    setTimeout(()=>{ window.location.href = 'userprofile.html'; }, 1000);
-  }, 1500);
+  showAuthNotification('Apple login coming soon! Use email/password to sign in.', 'info');
 }
 
 // Signup social functions (same as login for demo)

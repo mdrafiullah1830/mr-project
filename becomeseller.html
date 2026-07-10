@@ -3,716 +3,425 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<meta name="description" content="Become a seller on MR Shop. Start your online business and reach customers across Bangladesh with our seller platform.">
 	<title>Become a Seller — MR Shop</title>
+	<script src="assets/js/loader.js"></script>
+	<link rel="stylesheet" href="assets/css/amazon-style.css">
 	<style>
 		/* ============================================
-		   GLOBAL STYLES & COLOR THEME
-		   Edit colors here to match your brand
+		   SELLER PAGE OVERRIDES
 		   ============================================ */
-		:root {
-			--primary-blue: #7c3aed;
-			--secondary-cyan: #06b6d4;
-			--text-dark: #1e293b;
-			--text-muted: #64748b;
-			--bg-light: #f8fafc;
-			--white: #ffffff;
-			--border-color: #e2e8f0;
-			--shadow: 0 4px 20px rgba(0,0,0,0.08);
-			--shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+		.amz-seller-hero {
+			background: linear-gradient(135deg, #232f3e 0%, #37475a 100%);
+			color: #fff;
+			padding: 32px 20px 28px;
+			text-align: center;
 		}
-		
-		* { box-sizing: border-box; margin: 0; padding: 0; }
-		
-		body {
-			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-			background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-			color: var(--text-dark);
+		.amz-seller-hero h1 {
+			font-size: 28px;
+			font-weight: 700;
+			margin-bottom: 8px;
+		}
+		.amz-seller-hero p {
+			color: #ddd;
+			font-size: 14px;
+			max-width: 640px;
+			margin: 0 auto;
 			line-height: 1.6;
 		}
-
-		/* ============================================
-		   HEADER STYLES
-		   ============================================ */
-		header {
-			position: sticky;
-			top: 0;
-			z-index: 30;
-			background: linear-gradient(90deg, var(--primary-blue), var(--secondary-cyan));
-			color: var(--white);
-			box-shadow: var(--shadow);
-			padding: 18px 36px;
-		}
-		
-		.header-inner {
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			gap: 16px;
-		}
-		
-		.brand-link {
-			display: flex;
-			align-items: center;
-			gap: 8px;
-			color: inherit;
-			text-decoration: none;
-			font-weight: 700;
-			font-size: 20px;
-		}
-		
-		.mr-logo {
-			height: 40px;
-			border-radius: 8px;
-			padding: 4px;
-			border: 2px solid rgba(255,255,255,0.18);
-			background: rgba(255,255,255,0.03);
-		}
-		
-		.header-links {
-			display: flex;
-			gap: 12px;
-			align-items: center;
-		}
-		
-		.header-links a {
-			color: var(--white);
-			text-decoration: none;
-			padding: 8px 12px;
-			border-radius: 8px;
-			font-weight: 600;
-			transition: all 0.2s ease;
-		}
-		
-		.header-links a:hover {
-			background: rgba(255,255,255,0.15);
-		}
-
-		/* ============================================
-		   TYPEWRITER WELCOME MESSAGE
-		   ============================================ */
-		.welcome-box {
-			max-width: 1100px;
-			margin: 24px auto 0;
-			padding: 0 20px;
-		}
-		
-		.welcome-card {
-			background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(247,251,255,0.95));
-			border-radius: 16px;
-			padding: 24px 32px;
-			box-shadow: 0 8px 24px rgba(124,58,237,0.08);
-			border: 1px solid rgba(124,58,237,0.12);
-			position: relative;
-			overflow: hidden;
-		}
-		
-		.welcome-card::before {
-			content: '';
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			height: 3px;
-			background: linear-gradient(90deg, var(--primary-blue), var(--secondary-cyan));
-		}
-		
-		.typewriter-line {
-			font-size: 15px;
-			line-height: 1.8;
-			color: var(--text-dark);
-			margin: 0 0 12px 0;
-			font-family: 'Courier New', Courier, monospace;
-			min-height: 27px;
-		}
-		
-		.typewriter-line:last-child { margin-bottom: 0; }
-		
-		.typewriter-line .cursor {
-			display: inline-block;
-			width: 2px;
-			height: 18px;
-			background: var(--primary-blue);
-			margin-left: 2px;
-			animation: blink 0.7s infinite;
-			vertical-align: middle;
-		}
-		
-		@keyframes blink {
-			0%, 49% { opacity: 1; }
-			50%, 100% { opacity: 0; }
-		}
-
-		/* ============================================
-		   MAIN FORM CONTAINER
-		   ============================================ */
-		.page {
-			max-width: 1100px;
+		.amz-seller-container {
+			max-width: 980px;
 			margin: 24px auto 40px;
 			padding: 0 20px;
 		}
-		
-		.form-card {
-			background: var(--white);
-			border-radius: 16px;
-			padding: 32px;
-			box-shadow: var(--shadow-lg);
-			border-left: 4px solid var(--primary-blue);
-			border-right: 4px solid var(--secondary-cyan);
+		.amz-seller-card {
+			background: #fff;
+			border: 1px solid #ddd;
+			border-radius: 8px;
+			padding: 28px 32px;
+			box-shadow: 0 2px 8px rgba(0,0,0,.06);
 		}
-		
-		.form-title {
-			font-size: 28px;
+		.amz-seller-card h2 {
+			font-size: 22px;
+			color: #0f1111;
+			margin-bottom: 4px;
 			font-weight: 700;
-			background: linear-gradient(90deg, var(--primary-blue), var(--secondary-cyan));
-			-webkit-background-clip: text;
-			background-clip: text;
-			color: transparent;
-			margin-bottom: 8px;
 		}
-		
-		.form-subtitle {
-			color: var(--text-muted);
-			font-size: 14px;
-			margin-bottom: 28px;
+		.amz-seller-card .amz-subtitle {
+			color: #565959;
+			font-size: 13px;
+			margin-bottom: 24px;
 		}
-
-		/* ============================================
-		   FORM LAYOUT - Two columns on desktop
-		   ============================================ */
-		.form-grid {
+		.amz-seller-grid {
 			display: grid;
 			grid-template-columns: 1fr 1fr;
-			gap: 20px;
+			gap: 18px;
 		}
-		
-		.form-group {
-			display: flex;
-			flex-direction: column;
+		.amz-seller-grid .amz-full { grid-column: 1 / -1; }
+		.amz-form-group label {
+			display: block;
+			font-weight: 700;
+			font-size: 13px;
+			color: #0f1111;
+			margin-bottom: 6px;
 		}
-		
-		.form-group.full {
-			grid-column: 1 / -1;
-		}
-		
-		label {
-			font-weight: 600;
-			margin-bottom: 8px;
-			color: var(--text-dark);
-			font-size: 14px;
-		}
-		
-		label .required {
-			color: #ef4444;
-			margin-left: 2px;
-		}
-		
-		input[type="text"],
-		input[type="tel"],
-		input[type="email"],
-		select,
-		textarea {
+		.amz-form-group label .amz-required { color: #b12704; margin-left: 2px; }
+		.amz-form-group input[type="text"],
+		.amz-form-group input[type="tel"],
+		.amz-form-group input[type="email"],
+		.amz-form-group select,
+		.amz-form-group textarea {
 			width: 100%;
-			padding: 12px 14px;
-			border: 2px solid var(--border-color);
-			border-radius: 10px;
+			padding: 8px 10px;
+			border: 1px solid #a6a6a6;
+			border-radius: 4px;
 			font-size: 14px;
-			transition: all 0.2s ease;
-			font-family: inherit;
+			font-family: Arial, sans-serif;
+			transition: border-color .15s;
 		}
-		
-		input:focus,
-		select:focus,
-		textarea:focus {
+		.amz-form-group input:focus,
+		.amz-form-group select:focus,
+		.amz-form-group textarea:focus {
 			outline: none;
-			border-color: var(--primary-blue);
-			box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+			border-color: #e77600;
+			box-shadow: 0 0 3px 2px rgba(228,121,17,.5);
 		}
-		
-		textarea {
-			min-height: 80px;
-			resize: vertical;
-		}
-		
-		.input-hint {
-			font-size: 12px;
-			color: var(--text-muted);
-			margin-top: 4px;
-		}
+		.amz-form-group textarea { min-height: 80px; resize: vertical; }
+		.amz-hint { font-size: 12px; color: #565959; margin-top: 4px; }
 
-		/* ============================================
-		   PAYMENT METHOD SELECTION
-		   Uses images for visual selection
-		   ============================================ */
-		.payment-options {
+		/* Payment options */
+		.amz-payment-options {
 			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-			gap: 12px;
-			margin-top: 8px;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 10px;
+			margin-top: 6px;
 		}
-		
-		.payment-option {
-			position: relative;
-			cursor: pointer;
-		}
-		
-		.payment-option input[type="radio"] {
-			position: absolute;
-			opacity: 0;
-		}
-		
-		.payment-option label {
+		.amz-payment-option { position: relative; cursor: pointer; }
+		.amz-payment-option input[type="radio"] { position: absolute; opacity: 0; }
+		.amz-payment-option label {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-			padding: 16px 12px;
-			border: 2px solid var(--border-color);
-			border-radius: 12px;
+			padding: 14px 10px;
+			border: 1px solid #ddd;
+			border-radius: 8px;
 			cursor: pointer;
-			transition: all 0.2s ease;
-			background: var(--white);
+			background: #fff;
+			transition: border-color .15s;
 		}
-		
-		.payment-option img {
-			width: 60px;
-			height: 60px;
-			object-fit: contain;
-			margin-bottom: 8px;
+		.amz-payment-option img { width: 56px; height: 56px; object-fit: contain; margin-bottom: 6px; }
+		.amz-payment-option span { font-size: 12px; font-weight: 700; color: #0f1111; }
+		.amz-payment-option input[type="radio"]:checked + label {
+			border-color: #e77600;
+			box-shadow: 0 0 0 1px #e77600;
 		}
-		
-		.payment-option span {
-			font-size: 13px;
-			font-weight: 600;
-			color: var(--text-dark);
-		}
-		
-		.payment-option input[type="radio"]:checked + label {
-			border-color: var(--primary-blue);
-			background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(6,182,212,0.08));
-			box-shadow: 0 4px 12px rgba(124,58,237,0.15);
-		}
-		
-		.payment-option label:hover {
-			border-color: var(--secondary-cyan);
-			transform: translateY(-2px);
-		}
-		
-		.bank-select {
-			margin-top: 12px;
-			display: none;
-		}
-		
-		.bank-select.show {
-			display: block;
-		}
+		.amz-payment-option label:hover { border-color: #a6a6a6; }
+		.amz-bank-select { margin-top: 10px; display: none; }
+		.amz-bank-select.show { display: block; }
 
-		/* ============================================
-		   LOCATION PICKER
-		   ============================================ */
-		.location-picker {
-			display: flex;
-			flex-direction: column;
-			gap: 12px;
-		}
-		
-		.location-btn {
+		/* Location picker */
+		.amz-location-btn {
 			display: inline-flex;
 			align-items: center;
-			gap: 8px;
-			padding: 12px 20px;
-			background: linear-gradient(90deg, var(--primary-blue), var(--secondary-cyan));
-			color: var(--white);
-			border: none;
-			border-radius: 10px;
-			font-weight: 600;
-			cursor: pointer;
-			transition: all 0.2s ease;
-			font-size: 14px;
-		}
-		
-		.location-btn:hover {
-			transform: translateY(-2px);
-			box-shadow: 0 6px 20px rgba(124,58,237,0.3);
-		}
-		
-		.location-btn:disabled {
-			opacity: 0.6;
-			cursor: not-allowed;
-			transform: none;
-		}
-		
-		.location-display {
-			padding: 12px;
-			background: var(--bg-light);
+			gap: 6px;
+			padding: 8px 14px;
+			background: #ffd814;
+			border: 1px solid #fcd200;
 			border-radius: 8px;
 			font-size: 13px;
-			color: var(--text-muted);
+			font-weight: 700;
+			color: #0f1111;
+			cursor: pointer;
+		}
+		.amz-location-btn:hover { background: #f7ca00; }
+		.amz-location-btn:disabled { opacity: .6; cursor: not-allowed; }
+		.amz-location-display {
+			padding: 10px;
+			background: #f7f8f8;
+			border-radius: 4px;
+			font-size: 13px;
+			color: #565959;
 			display: none;
+			margin-top: 8px;
 		}
-		
-		.location-display.show {
-			display: block;
-		}
-		
-		.map-preview {
+		.amz-location-display.show { display: block; }
+		.amz-map-preview {
 			width: 100%;
 			height: 200px;
-			border-radius: 10px;
-			border: 2px solid var(--border-color);
+			border-radius: 6px;
+			border: 1px solid #ddd;
 			display: none;
+			margin-top: 8px;
 		}
-		
-		.map-preview.show {
-			display: block;
-		}
+		.amz-map-preview.show { display: block; }
 
-		/* ============================================
-		   FILE UPLOAD & PREVIEW
-		   ============================================ */
-		.file-upload-group {
-			display: flex;
-			gap: 16px;
-			align-items: flex-start;
-			flex-wrap: wrap;
-		}
-		
-		.file-input-wrapper {
-			flex: 1;
-			min-width: 200px;
-		}
-		
-		.file-input-wrapper input[type="file"] {
+		/* File upload */
+		.amz-file-upload { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
+		.amz-file-input-wrapper { flex: 1; min-width: 200px; }
+		.amz-file-input-wrapper input[type="file"] {
 			display: block;
 			width: 100%;
-			padding: 10px;
-			border: 2px dashed var(--border-color);
-			border-radius: 10px;
-			cursor: pointer;
+			padding: 8px;
+			border: 1px dashed #a6a6a6;
+			border-radius: 4px;
 			font-size: 13px;
+			cursor: pointer;
 		}
-		
-		.file-preview {
-			width: 120px;
-			height: 120px;
-			border-radius: 12px;
-			border: 2px dashed var(--border-color);
+		.amz-file-preview {
+			width: 110px;
+			height: 110px;
+			border-radius: 6px;
+			border: 1px dashed #ddd;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			overflow: hidden;
-			background: var(--bg-light);
+			background: #f7f8f8;
 		}
-		
-		.file-preview img {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-		}
-		
-		.file-preview .placeholder {
-			font-size: 12px;
-			color: var(--text-muted);
-			text-align: center;
-		}
+		.amz-file-preview img { width: 100%; height: 100%; object-fit: cover; }
+		.amz-file-preview .amz-placeholder { font-size: 12px; color: #888; text-align: center; }
 
-		/* ============================================
-		   DOCUMENT TYPE SELECTOR (NID or Birth Cert)
-		   ============================================ */
-		.doc-type-selector {
-			display: flex;
-			gap: 12px;
-			margin-bottom: 16px;
-		}
-		
-		.doc-type-option {
-			flex: 1;
-		}
-		
-		.doc-type-option input[type="radio"] {
-			display: none;
-		}
-		
-		.doc-type-option label {
+		/* Doc type selector */
+		.amz-doc-type-selector { display: flex; gap: 10px; margin-bottom: 14px; }
+		.amz-doc-type-option { flex: 1; }
+		.amz-doc-type-option input[type="radio"] { display: none; }
+		.amz-doc-type-option label {
 			display: block;
-			padding: 12px;
-			border: 2px solid var(--border-color);
-			border-radius: 10px;
+			padding: 10px;
+			border: 1px solid #ddd;
+			border-radius: 6px;
 			text-align: center;
 			cursor: pointer;
-			transition: all 0.2s ease;
-			font-weight: 600;
+			font-weight: 700;
+			font-size: 13px;
+			transition: border-color .15s;
 		}
-		
-		.doc-type-option input[type="radio"]:checked + label {
-			border-color: var(--primary-blue);
-			background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(6,182,212,0.08));
-			color: var(--primary-blue);
+		.amz-doc-type-option input[type="radio"]:checked + label {
+			border-color: #e77600;
+			background: #fef8e7;
 		}
-		
-		.doc-upload-section {
-			display: none;
-		}
-		
-		.doc-upload-section.show {
-			display: block;
-		}
+		.amz-doc-upload-section { display: none; }
+		.amz-doc-upload-section.show { display: block; }
 
-		/* ============================================
-		   CATEGORY CHECKBOXES
-		   ============================================ */
-		.category-grid {
+		/* Category checkboxes */
+		.amz-category-grid {
 			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-			gap: 12px;
-			margin-top: 8px;
+			grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+			gap: 10px;
+			margin-top: 6px;
 		}
-		
-		.category-item {
+		.amz-category-item {
 			display: flex;
 			align-items: center;
 			gap: 8px;
-			padding: 10px 12px;
-			border: 2px solid var(--border-color);
-			border-radius: 8px;
+			padding: 8px 10px;
+			border: 1px solid #ddd;
+			border-radius: 6px;
 			cursor: pointer;
-			transition: all 0.2s ease;
+			transition: border-color .15s;
 		}
-		
-		.category-item:hover {
-			border-color: var(--secondary-cyan);
-			background: var(--bg-light);
-		}
-		
-		.category-item input[type="checkbox"] {
-			width: 18px;
-			height: 18px;
-			cursor: pointer;
-		}
-		
-		.category-item label {
-			cursor: pointer;
-			margin: 0;
-			font-weight: 500;
-			font-size: 14px;
-		}
+		.amz-category-item:hover { border-color: #a6a6a6; }
+		.amz-category-item input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; }
+		.amz-category-item label { cursor: pointer; margin: 0; font-weight: 500; font-size: 13px; }
 
-		/* ============================================
-		   SUBMIT BUTTON
-		   ============================================ */
-		.submit-section {
-			margin-top: 32px;
-			padding-top: 24px;
-			border-top: 2px solid var(--border-color);
+		/* Buttons */
+		.amz-seller-actions {
+			margin-top: 28px;
+			padding-top: 18px;
+			border-top: 1px solid #ddd;
 			display: flex;
-			gap: 12px;
+			gap: 10px;
 			justify-content: flex-end;
 		}
-		
-		.btn-submit {
-			padding: 14px 32px;
-			background: linear-gradient(90deg, var(--primary-blue), var(--secondary-cyan));
-			color: var(--white);
-			border: none;
-			border-radius: 10px;
-			font-size: 16px;
+		.amz-btn-submit {
+			padding: 10px 24px;
+			background: #ffd814;
+			border: 1px solid #fcd200;
+			border-radius: 8px;
+			font-size: 14px;
 			font-weight: 700;
 			cursor: pointer;
-			transition: all 0.2s ease;
-			box-shadow: 0 4px 16px rgba(124,58,237,0.25);
+			color: #0f1111;
 		}
-		
-		.btn-submit:hover {
-			transform: translateY(-2px);
-			box-shadow: 0 6px 24px rgba(124,58,237,0.35);
-		}
-		
-		.btn-cancel {
-			padding: 14px 32px;
-			background: transparent;
-			color: var(--text-muted);
-			border: 2px solid var(--border-color);
-			border-radius: 10px;
-			font-size: 16px;
+		.amz-btn-submit:hover { background: #f7ca00; }
+		.amz-btn-cancel {
+			padding: 10px 24px;
+			background: #fff;
+			border: 1px solid #a6a6a6;
+			border-radius: 8px;
+			font-size: 14px;
 			font-weight: 600;
 			cursor: pointer;
-			transition: all 0.2s ease;
+			color: #0f1111;
 		}
-		
-		.btn-cancel:hover {
-			border-color: var(--text-dark);
-			color: var(--text-dark);
-		}
+		.amz-btn-cancel:hover { background: #f7f8f8; }
 
-		/* ============================================
-		   LOADING OVERLAY
-		   ============================================ */
-		.loading-overlay {
+		/* Loading */
+		.amz-loading-overlay {
 			position: fixed;
 			inset: 0;
-			background: rgba(0,0,0,0.5);
+			background: rgba(0,0,0,.5);
 			display: none;
 			align-items: center;
 			justify-content: center;
 			z-index: 9999;
 		}
-		
-		.loading-overlay.show {
-			display: flex;
-		}
-		
-		.spinner {
-			width: 60px;
-			height: 60px;
-			border: 4px solid rgba(255,255,255,0.3);
-			border-top-color: var(--white);
+		.amz-loading-overlay.show { display: flex; }
+		.amz-spinner {
+			width: 56px;
+			height: 56px;
+			border: 4px solid rgba(255,255,255,.3);
+			border-top-color: #fff;
 			border-radius: 50%;
-			animation: spin 0.8s linear infinite;
+			animation: amzSpin .8s linear infinite;
 		}
-		
-		@keyframes spin {
-			to { transform: rotate(360deg); }
-		}
+		@keyframes amzSpin { to { transform: rotate(360deg); } }
 
-		/* ============================================
-		   RESPONSIVE - Mobile View
-		   ============================================ */
+		/* Responsive */
 		@media (max-width: 768px) {
-			header {
-				padding: 12px 16px;
-			}
-			
-			.brand-link {
-				font-size: 18px;
-			}
-			
-			.form-grid {
-				grid-template-columns: 1fr;
-			}
-			
-			.form-card {
-				padding: 24px 20px;
-			}
-			
-			.payment-options {
-				grid-template-columns: repeat(2, 1fr);
-			}
-			
-			.file-upload-group {
-				flex-direction: column;
-			}
-			
-			.file-preview {
-				width: 100px;
-				height: 100px;
-			}
-			
-			.submit-section {
-				flex-direction: column-reverse;
-			}
-			
-			.btn-submit,
-			.btn-cancel {
-				width: 100%;
-			}
+			.amz-seller-grid { grid-template-columns: 1fr; }
+			.amz-payment-options { grid-template-columns: repeat(2, 1fr); }
+			.amz-file-upload { flex-direction: column; }
+			.amz-file-preview { width: 100px; height: 100px; }
+			.amz-seller-actions { flex-direction: column-reverse; }
+			.amz-btn-submit, .amz-btn-cancel { width: 100%; text-align: center; }
 		}
 	</style>
 </head>
 <body>
-	<!-- ============================================
-	     HEADER SECTION
-	     ============================================ -->
-	<header>
-		<div class="header-inner">
-			<a href="index.html" class="brand-link" aria-label="MR Shop home">
-				<img src="./assets/images/mrlogo.png" alt="MR" class="mr-logo" />
-				<span>MR Shop</span>
+
+	<header class="amz-header">
+		<div class="amz-header-top">
+			<a href="index.html" class="logo">
+        <div>
+          <span class="logo-text">MR shop</span>
+          <span class="logo-sub">Bangladesh</span>
+        </div>
+      </a>
+			<div class="amz-deliver-to"><span class="label">Deliver to</span><span class="location"><i class="fas fa-map-marker-alt"></i> Bangladesh</span></div>
+			<div class="amz-search-bar">
+				<select class="amz-search-category"><option>All</option><option>Food & Natural</option><option>Sweets & Dairy</option><option>Handicrafts</option><option>Clothing</option><option>Books</option><option>Antique</option></select>
+				<input type="text" class="amz-search-input" placeholder="Search MR Shop">
+				<button class="amz-search-btn" aria-label="Search"><i class="fas fa-search"></i></button>
+			</div>
+			<div class="amz-header-right">
+				<a href="signin.html" class="amz-header-link"><span class="line1">Hello, Sign in</span><span class="line2">Account & Lists <i class="fas fa-caret-down"></i></span></a>
+				<a href="userprofile.html" class="amz-header-link"><span class="line1">Returns</span><span class="line2">& Orders</span></a>
+				<a href="wishlist.html" class="amz-header-link">
+				<span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span>
+				<span class="line2">Wishlist</span>
 			</a>
-			<div class="header-links">
-				<a href="index.html">Home</a>
-				<a href="signup.html">Sign up</a>
-				<a href="signin.html">Sign in</a>
+			<a href="cart.html" class="amz-cart"><span class="amz-cart-icon"><i class="fas fa-shopping-cart"></i><span class="amz-cart-count" id="cartCount">0</span></span><span class="amz-cart-text">Cart</span></a>
 			</div>
 		</div>
+		<nav class="amz-nav-bar">
+			<a href="index.html" class="amz-nav-item"><i class="fas fa-bars"></i> All</a>
+			<a href="food&natural.html" class="amz-nav-item">Food & Natural</a>
+			<a href="sweets&dairy.html" class="amz-nav-item">Sweets & Dairy</a>
+			<a href="handricrafts.html" class="amz-nav-item">Handicrafts</a>
+			<a href="clothing.html" class="amz-nav-item">Clothing</a>
+			<a href="book.html" class="amz-nav-item">Books</a>
+			<a href="antique.html" class="amz-nav-item">Antique</a>
+			<div class="amz-nav-divider"></div>
+			<a href="becomeseller.html" class="amz-nav-item">Sell</a>
+			<a href="index.html" class="amz-nav-item">Best Sellers</a>
+			<a href="index.html" class="amz-nav-item">Today's Deals</a>
+			<a href="chat.html" class="amz-nav-item"><i class="fas fa-headset"></i> Help</a>
+		</nav>
 	</header>
 
-	<!-- ============================================
-	     TYPEWRITER WELCOME MESSAGE
-	     ============================================ -->
-	<div class="welcome-box">
-		<div class="welcome-card">
-			<div class="typewriter-line" id="line1"></div>
-			<div class="typewriter-line" id="line2"></div>
-			<div class="typewriter-line" id="line3"></div>
+	<!-- Features Bar -->
+	<div class="amz-features-bar">
+		<div class="amz-features-grid">
+			<div class="amz-feature-item">
+				<div class="amz-feature-icon green"><i class="fas fa-truck"></i></div>
+				<div class="amz-feature-text"><h4>Free Delivery</h4><p>On orders over ৳5,000</p></div>
+			</div>
+			<div class="amz-feature-item">
+				<div class="amz-feature-icon blue"><i class="fas fa-undo"></i></div>
+				<div class="amz-feature-text"><h4>Easy Returns</h4><p>7-day return policy</p></div>
+			</div>
+			<div class="amz-feature-item">
+				<div class="amz-feature-icon orange"><i class="fas fa-shield-alt"></i></div>
+				<div class="amz-feature-text"><h4>Secure Payment</h4><p>bKash, Nagad, COD</p></div>
+			</div>
+			<div class="amz-feature-item">
+				<div class="amz-feature-icon red"><i class="fas fa-headset"></i></div>
+				<div class="amz-feature-text"><h4>24/7 Support</h4><p>Dedicated help center</p></div>
+			</div>
 		</div>
 	</div>
 
 	<!-- ============================================
-	     MAIN FORM CONTAINER
+	     HERO SECTION
 	     ============================================ -->
-	<main class="page">
-		<div class="form-card">
-			<h2 class="form-title">Become a Seller</h2>
-			<p class="form-subtitle">Fill out the form below to start selling on MR Shop. All fields marked with * are required.</p>
+	<section class="amz-seller-hero">
+		<h1>Become a Seller on MR Shop</h1>
+		<p>Start selling your products to millions of customers. Your profit is completely yours &mdash; if you wish, you can voluntarily donate 5% for our charity program. We always appreciate your support.</p>
+	</section>
+
+	<!-- ============================================
+	     MAIN FORM
+	     ============================================ -->
+	<main class="amz-seller-container">
+		<div class="amz-seller-card">
+			<h2>Seller Registration</h2>
+			<p class="amz-subtitle">Fill out the form below to apply. All fields marked with * are required.</p>
 
 			<form id="sellerForm">
-				<div class="form-grid">
+				<div class="amz-seller-grid">
+
 					<!-- Full Name -->
-					<div class="form-group">
-						<label for="fullName">Full Name <span class="required">*</span></label>
+					<div class="amz-form-group">
+						<label for="fullName">Full Name <span class="amz-required">*</span></label>
 						<input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required />
 					</div>
 
-					<!-- Phone Number -->
-					<div class="form-group">
-						<label for="phone">Phone Number <span class="required">*</span></label>
+					<!-- Phone -->
+					<div class="amz-form-group">
+						<label for="phone">Phone Number <span class="amz-required">*</span></label>
 						<input type="tel" id="phone" name="phone" placeholder="01XXXXXXXXX" pattern="01[0-9]{9}" required />
-						<span class="input-hint">Bangladeshi format: 01XXXXXXXXX</span>
+						<span class="amz-hint">Bangladeshi format: 01XXXXXXXXX</span>
 					</div>
 
-					<!-- Email Address -->
-					<div class="form-group">
-						<label for="email">Email Address <span class="required">*</span></label>
+					<!-- Email -->
+					<div class="amz-form-group">
+						<label for="email">Email Address <span class="amz-required">*</span></label>
 						<input type="email" id="email" name="email" placeholder="your@email.com" required />
 					</div>
 
-					<!-- Business/Shop Name -->
-					<div class="form-group">
-						<label for="shopName">Business / Shop Name <span class="required">*</span></label>
+					<!-- Shop Name -->
+					<div class="amz-form-group">
+						<label for="shopName">Business / Shop Name <span class="amz-required">*</span></label>
 						<input type="text" id="shopName" name="shopName" placeholder="Enter your shop name" required />
 					</div>
 
-					<!-- Payment Receiving Method -->
-					<div class="form-group full">
-						<label>Payment Receiving Method <span class="required">*</span></label>
-						<div class="payment-options">
-							<!-- bKash Option -->
-							<div class="payment-option">
+					<!-- Payment Method -->
+					<div class="amz-form-group amz-full">
+						<label>Payment Receiving Method <span class="amz-required">*</span></label>
+						<div class="amz-payment-options">
+							<div class="amz-payment-option">
 								<input type="radio" id="bkash" name="paymentMethod" value="bkash" required />
 								<label for="bkash">
 									<img src="./assets/images/bkash.jpg" alt="bKash" />
 									<span>bKash</span>
 								</label>
 							</div>
-
-							<!-- Nagad Option -->
-							<div class="payment-option">
+							<div class="amz-payment-option">
 								<input type="radio" id="nagad" name="paymentMethod" value="nagad" />
 								<label for="nagad">
 									<img src="./assets/images/nagad.jpg" alt="Nagad" />
 									<span>Nagad</span>
 								</label>
 							</div>
-
-							<!-- Rocket Option -->
-							<div class="payment-option">
+							<div class="amz-payment-option">
 								<input type="radio" id="rocket" name="paymentMethod" value="rocket" />
 								<label for="rocket">
 									<img src="./assets/images/rocket.jpg" alt="Rocket" />
 									<span>Rocket</span>
 								</label>
 							</div>
-
-							<!-- Bank Transfer Option -->
-							<div class="payment-option">
+							<div class="amz-payment-option">
 								<input type="radio" id="bank" name="paymentMethod" value="bank" />
 								<label for="bank">
 									<img src="./assets/images/bank.jpg" alt="Bank" />
@@ -720,9 +429,7 @@
 								</label>
 							</div>
 						</div>
-
-						<!-- Bank Selection (shows only when Bank Transfer selected) -->
-						<div class="bank-select" id="bankSelect">
+						<div class="amz-bank-select" id="bankSelect">
 							<label for="bankName">Select Your Bank</label>
 							<select id="bankName" name="bankName">
 								<option value="">Choose a bank</option>
@@ -740,238 +447,183 @@
 						</div>
 					</div>
 
-					<!-- Account Number for Payment -->
-					<div class="form-group">
-						<label for="accountNumber">Payment Account Number <span class="required">*</span></label>
+					<!-- Account Number -->
+					<div class="amz-form-group">
+						<label for="accountNumber">Payment Account Number <span class="amz-required">*</span></label>
 						<input type="text" id="accountNumber" name="accountNumber" placeholder="Enter account/wallet number" required />
 					</div>
 
-					<!-- Shop Location -->
-					<div class="form-group">
-						<label>Shop Location <span class="required">*</span></label>
-						<div class="location-picker">
-							<button type="button" class="location-btn" id="locationBtn">
-								<span>📍</span> Choose Your Live Location
-							</button>
-							<div class="location-display" id="locationDisplay">
+					<!-- Location -->
+					<div class="amz-form-group">
+						<label>Shop Location <span class="amz-required">*</span></label>
+						<div class="amz-location-picker">
+							<button type="button" class="amz-location-btn" id="locationBtn">Choose Your Live Location</button>
+							<div class="amz-location-display" id="locationDisplay">
 								<strong>Location:</strong> <span id="locationText">Not selected</span><br>
 								<strong>Coordinates:</strong> <span id="locationCoords">-</span>
 							</div>
-							<div id="mapPreview" class="map-preview"></div>
+							<div id="mapPreview" class="amz-map-preview"></div>
 							<input type="hidden" id="latitude" name="latitude" />
 							<input type="hidden" id="longitude" name="longitude" />
 						</div>
 					</div>
 
-					<!-- Seller Categories -->
-					<div class="form-group full">
-						<label>What will you sell? <span class="required">*</span></label>
-						<span class="input-hint">Select all categories that apply</span>
-						<div class="category-grid">
-							<div class="category-item">
+					<!-- Categories -->
+					<div class="amz-form-group amz-full">
+						<label>What will you sell? <span class="amz-required">*</span></label>
+						<span class="amz-hint">Select all categories that apply</span>
+						<div class="amz-category-grid">
+							<div class="amz-category-item">
 								<input type="checkbox" id="cat-food" name="categories" value="food" />
-								<label for="cat-food">Food & Natural</label>
+								<label for="cat-food">Food &amp; Natural</label>
 							</div>
-							<div class="category-item">
+							<div class="amz-category-item">
 								<input type="checkbox" id="cat-sweets" name="categories" value="sweets" />
-								<label for="cat-sweets">Sweets & Dairy</label>
+								<label for="cat-sweets">Sweets &amp; Dairy</label>
 							</div>
-							<div class="category-item">
+							<div class="amz-category-item">
 								<input type="checkbox" id="cat-handicrafts" name="categories" value="handicrafts" />
 								<label for="cat-handicrafts">Handicrafts</label>
 							</div>
-							<div class="category-item">
+							<div class="amz-category-item">
 								<input type="checkbox" id="cat-clothing" name="categories" value="clothing" />
-								<label for="cat-clothing">Clothing & Fashion</label>
+								<label for="cat-clothing">Clothing &amp; Fashion</label>
 							</div>
-							<div class="category-item">
+							<div class="amz-category-item">
 								<input type="checkbox" id="cat-books" name="categories" value="books" />
 								<label for="cat-books">Books</label>
 							</div>
-							<div class="category-item">
+							<div class="amz-category-item">
 								<input type="checkbox" id="cat-antique" name="categories" value="antique" />
 								<label for="cat-antique">Antique</label>
 							</div>
-							<div class="category-item">
+							<div class="amz-category-item">
 								<input type="checkbox" id="cat-electronics" name="categories" value="electronics" />
 								<label for="cat-electronics">Electronics</label>
 							</div>
-							<div class="category-item">
+							<div class="amz-category-item">
 								<input type="checkbox" id="cat-others" name="categories" value="others" />
 								<label for="cat-others">Others</label>
 							</div>
 						</div>
 					</div>
 
-					<!-- Profile Photo Upload -->
-					<div class="form-group full">
+					<!-- Profile Photo -->
+					<div class="amz-form-group amz-full">
 						<label for="profilePhoto">Profile Photo (Optional)</label>
-						<div class="file-upload-group">
-							<div class="file-input-wrapper">
+						<div class="amz-file-upload">
+							<div class="amz-file-input-wrapper">
 								<input type="file" id="profilePhoto" name="profilePhoto" accept="image/*" />
 							</div>
-							<div class="file-preview" id="profilePreview">
-								<span class="placeholder">No image</span>
+							<div class="amz-file-preview" id="profilePreview">
+								<span class="amz-placeholder">No image</span>
 							</div>
 						</div>
 					</div>
 
-					<!-- Document Type Selection (NID or Birth Certificate) -->
-					<div class="form-group full">
-						<label>Identity Document <span class="required">*</span></label>
-						<div class="doc-type-selector">
-							<div class="doc-type-option">
+					<!-- Doc Type -->
+					<div class="amz-form-group amz-full">
+						<label>Identity Document <span class="amz-required">*</span></label>
+						<div class="amz-doc-type-selector">
+							<div class="amz-doc-type-option">
 								<input type="radio" id="docNID" name="docType" value="nid" checked />
 								<label for="docNID">National ID (NID)</label>
 							</div>
-							<div class="doc-type-option">
+							<div class="amz-doc-type-option">
 								<input type="radio" id="docBirth" name="docType" value="birth" />
 								<label for="docBirth">Birth Certificate</label>
 							</div>
 						</div>
 					</div>
 
-					<!-- NID Upload Section -->
-					<div class="form-group full doc-upload-section show" id="nidSection">
-						<label>Upload NID (Front & Back) <span class="required">*</span></label>
-						<div class="form-grid">
-							<div class="form-group">
+					<!-- NID Upload -->
+					<div class="amz-form-group amz-full amz-doc-upload-section show" id="nidSection">
+						<label>Upload NID (Front &amp; Back) <span class="amz-required">*</span></label>
+						<div class="amz-seller-grid">
+							<div class="amz-form-group">
 								<label for="nidFront">NID Front Side</label>
-								<div class="file-upload-group">
-									<div class="file-input-wrapper">
+								<div class="amz-file-upload">
+									<div class="amz-file-input-wrapper">
 										<input type="file" id="nidFront" name="nidFront" accept="image/*,application/pdf" />
 									</div>
-									<div class="file-preview" id="nidFrontPreview">
-										<span class="placeholder">No file</span>
+									<div class="amz-file-preview" id="nidFrontPreview">
+										<span class="amz-placeholder">No file</span>
 									</div>
 								</div>
 							</div>
-							<div class="form-group">
+							<div class="amz-form-group">
 								<label for="nidBack">NID Back Side</label>
-								<div class="file-upload-group">
-									<div class="file-input-wrapper">
+								<div class="amz-file-upload">
+									<div class="amz-file-input-wrapper">
 										<input type="file" id="nidBack" name="nidBack" accept="image/*,application/pdf" />
 									</div>
-									<div class="file-preview" id="nidBackPreview">
-										<span class="placeholder">No file</span>
+									<div class="amz-file-preview" id="nidBackPreview">
+										<span class="amz-placeholder">No file</span>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 
-					<!-- Birth Certificate Upload Section -->
-					<div class="form-group full doc-upload-section" id="birthSection">
-						<label for="birthCert">Upload Birth Certificate <span class="required">*</span></label>
-						<div class="file-upload-group">
-							<div class="file-input-wrapper">
+					<!-- Birth Cert Upload -->
+					<div class="amz-form-group amz-full amz-doc-upload-section" id="birthSection">
+						<label for="birthCert">Upload Birth Certificate <span class="amz-required">*</span></label>
+						<div class="amz-file-upload">
+							<div class="amz-file-input-wrapper">
 								<input type="file" id="birthCert" name="birthCert" accept="image/*,application/pdf" />
 							</div>
-							<div class="file-preview" id="birthPreview">
-								<span class="placeholder">No file</span>
+							<div class="amz-file-preview" id="birthPreview">
+								<span class="amz-placeholder">No file</span>
 							</div>
 						</div>
 					</div>
 
-					<!-- Additional Information -->
-					<div class="form-group full">
+					<!-- Additional Info -->
+					<div class="amz-form-group amz-full">
 						<label for="additionalInfo">Additional Information (Optional)</label>
 						<textarea id="additionalInfo" name="additionalInfo" placeholder="Tell us more about your business, products, or any special requirements..."></textarea>
 					</div>
 
 				</div>
 
-				<!-- Submit Section -->
-				<div class="submit-section">
-					<button type="button" class="btn-cancel" onclick="history.back();">Cancel</button>
-					<button type="submit" class="btn-submit">Submit for Seller Approval</button>
+				<div class="amz-seller-actions">
+					<button type="button" class="amz-btn-cancel" onclick="history.back();">Cancel</button>
+					<button type="submit" class="amz-btn-submit">Submit for Seller Approval</button>
 				</div>
 			</form>
 		</div>
 	</main>
 
 	<!-- Loading Overlay -->
-	<div class="loading-overlay" id="loadingOverlay">
-		<div class="spinner"></div>
+	<div class="amz-loading-overlay" id="loadingOverlay">
+		<div class="amz-spinner"></div>
 	</div>
+
+	<div class="amz-back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</div>
+	<footer class="amz-footer">
+		<div class="amz-footer-grid">
+			<div class="amz-footer-col"><h4>Get to Know Us</h4><a href="#">About MR Shop</a><a href="#">Careers</a><a href="#">Press Releases</a></div>
+			<div class="amz-footer-col"><h4>Make Money with Us</h4><a href="becomeseller.html">Sell on MR Shop</a><a href="#">Become an Affiliate</a></div>
+			<div class="amz-footer-col"><h4>Let Us Help You</h4><a href="userprofile.html">Your Account</a><a href="chat.html">Customer Service</a></div>
+			<div class="amz-footer-col"><h4>Connect with Us</h4><a href="#"><i class="fab fa-facebook"></i> Facebook</a><a href="#"><i class="fab fa-instagram"></i> Instagram</a><a href="#"><i class="fab fa-youtube"></i> YouTube</a></div>
+		</div>
+	</footer>
+	<div class="amz-footer-bottom"><div class="amz-footer-logo">MR Shop</div><div class="amz-footer-copyright">&copy; 2026 MR Shop. All Rights Reserved.</div></div>
 
 	<!-- ============================================
 	     JAVASCRIPT
 	     ============================================ -->
 	<script>
-		// ============================================
-		// TYPEWRITER EFFECT
-		// ============================================
-		(function() {
-			const messages = [
-				"Thanks for visiting our Become a Seller page.",
-				"Your profit is completely yours. However, if you wish, you can voluntarily donate 5% for our charity program.",
-				"We always appreciate your support."
-			];
-			
-			function typeWriter(element, text, speed, callback) {
-				let i = 0;
-				element.textContent = '';
-				const cursor = document.createElement('span');
-				cursor.className = 'cursor';
-				
-				function type() {
-					if (i < text.length) {
-						element.textContent = text.substring(0, i + 1);
-						element.appendChild(cursor);
-						i++;
-						setTimeout(type, speed);
-					} else {
-						setTimeout(() => {
-							cursor.remove();
-							if (callback) callback();
-						}, 400);
-					}
-				}
-				type();
-			}
-			
-			function startTypewriter() {
-				const line1 = document.getElementById('line1');
-				const line2 = document.getElementById('line2');
-				const line3 = document.getElementById('line3');
-				
-				if (!line1 || !line2 || !line3) return;
-				
-				typeWriter(line1, messages[0], 40, () => {
-					typeWriter(line2, messages[1], 25, () => {
-						typeWriter(line3, messages[2], 40);
-					});
-				});
-			}
-			
-			if (document.readyState === 'loading') {
-				document.addEventListener('DOMContentLoaded', startTypewriter);
-			} else {
-				startTypewriter();
-			}
-		})();
-
-		// ============================================
-		// PAYMENT METHOD SELECTION
-		// Show bank dropdown only when Bank Transfer is selected
-		// ============================================
+		// Payment method toggle
 		const paymentRadios = document.querySelectorAll('input[name="paymentMethod"]');
 		const bankSelect = document.getElementById('bankSelect');
-		
 		paymentRadios.forEach(radio => {
 			radio.addEventListener('change', function() {
-				if (this.value === 'bank') {
-					bankSelect.classList.add('show');
-				} else {
-					bankSelect.classList.remove('show');
-				}
+				bankSelect.classList.toggle('show', this.value === 'bank');
 			});
 		});
 
-		// ============================================
-		// GEOLOCATION - Live Location Picker
-		// ============================================
+		// Geolocation
 		const locationBtn = document.getElementById('locationBtn');
 		const locationDisplay = document.getElementById('locationDisplay');
 		const locationText = document.getElementById('locationText');
@@ -985,143 +637,68 @@
 				alert('Geolocation is not supported by your browser.');
 				return;
 			}
-
 			locationBtn.disabled = true;
-			locationBtn.textContent = '🔄 Getting location...';
-
+			locationBtn.textContent = 'Getting location...';
 			navigator.geolocation.getCurrentPosition(
-				function(position) {
-					const lat = position.coords.latitude;
-					const lon = position.coords.longitude;
-
-					// Store coordinates in hidden inputs
+				function(pos) {
+					const lat = pos.coords.latitude;
+					const lon = pos.coords.longitude;
 					latInput.value = lat;
 					lonInput.value = lon;
-
-					// Display coordinates
-					locationCoords.textContent = `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
+					locationCoords.textContent = lat.toFixed(6) + ', ' + lon.toFixed(6);
 					locationText.textContent = 'Location detected successfully';
 					locationDisplay.classList.add('show');
-
-					// Show map preview with marker
-					// Using OpenStreetMap static image as fallback (no API key needed)
-					mapPreview.innerHTML = `
-						<iframe 
-							width="100%" 
-							height="100%" 
-							frameborder="0" 
-							style="border:0;border-radius:10px;" 
-							src="https://www.openstreetmap.org/export/embed.html?bbox=${lon-0.01},${lat-0.01},${lon+0.01},${lat+0.01}&layer=mapnik&marker=${lat},${lon}" 
-							allowfullscreen>
-						</iframe>
-					`;
+					mapPreview.innerHTML = '<iframe width="100%" height="100%" frameborder="0" style="border:0;border-radius:6px;" src="https://www.openstreetmap.org/export/embed.html?bbox=' + (lon-0.01) + ',' + (lat-0.01) + ',' + (lon+0.01) + ',' + (lat+0.01) + '&layer=mapnik&marker=' + lat + ',' + lon + '" allowfullscreen></iframe>';
 					mapPreview.classList.add('show');
-
-					locationBtn.textContent = '✅ Location Selected';
+					locationBtn.textContent = 'Location Selected';
 					locationBtn.disabled = false;
 				},
-				function(error) {
+				function() {
 					alert('Unable to get your location. Please enable location services.');
-					locationBtn.textContent = '📍 Choose Your Live Location';
+					locationBtn.textContent = 'Choose Your Live Location';
 					locationBtn.disabled = false;
 				}
 			);
 		});
 
-		// ============================================
-		// FILE PREVIEW - Profile Photo
-		// ============================================
-		const profilePhoto = document.getElementById('profilePhoto');
-		const profilePreview = document.getElementById('profilePreview');
+		// File previews
+		function setupFilePreview(inputId, previewId) {
+			const input = document.getElementById(inputId);
+			const preview = document.getElementById(previewId);
+			if (!input || !preview) return;
+			input.addEventListener('change', function() {
+				const file = this.files[0];
+				if (file && file.type.startsWith('image/')) {
+					const reader = new FileReader();
+					reader.onload = function(e) {
+						preview.innerHTML = '<img src="' + e.target.result + '" alt="Preview" />';
+					};
+					reader.readAsDataURL(file);
+				} else if (file) {
+					preview.innerHTML = '<span class="amz-placeholder">PDF uploaded</span>';
+				}
+			});
+		}
+		setupFilePreview('profilePhoto', 'profilePreview');
+		setupFilePreview('nidFront', 'nidFrontPreview');
+		setupFilePreview('nidBack', 'nidBackPreview');
+		setupFilePreview('birthCert', 'birthPreview');
 
-		profilePhoto.addEventListener('change', function() {
-			const file = this.files[0];
-			if (file && file.type.startsWith('image/')) {
-				const reader = new FileReader();
-				reader.onload = function(e) {
-					profilePreview.innerHTML = `<img src="${e.target.result}" alt="Profile preview" />`;
-				};
-				reader.readAsDataURL(file);
-			}
-		});
-
-		// ============================================
-		// FILE PREVIEW - NID Front
-		// ============================================
-		const nidFront = document.getElementById('nidFront');
-		const nidFrontPreview = document.getElementById('nidFrontPreview');
-
-		nidFront.addEventListener('change', function() {
-			const file = this.files[0];
-			if (file && file.type.startsWith('image/')) {
-				const reader = new FileReader();
-				reader.onload = function(e) {
-					nidFrontPreview.innerHTML = `<img src="${e.target.result}" alt="NID front" />`;
-				};
-				reader.readAsDataURL(file);
-			} else if (file) {
-				nidFrontPreview.innerHTML = '<span class="placeholder">PDF uploaded</span>';
-			}
-		});
-
-		// ============================================
-		// FILE PREVIEW - NID Back
-		// ============================================
-		const nidBack = document.getElementById('nidBack');
-		const nidBackPreview = document.getElementById('nidBackPreview');
-
-		nidBack.addEventListener('change', function() {
-			const file = this.files[0];
-			if (file && file.type.startsWith('image/')) {
-				const reader = new FileReader();
-				reader.onload = function(e) {
-					nidBackPreview.innerHTML = `<img src="${e.target.result}" alt="NID back" />`;
-				};
-				reader.readAsDataURL(file);
-			} else if (file) {
-				nidBackPreview.innerHTML = '<span class="placeholder">PDF uploaded</span>';
-			}
-		});
-
-		// ============================================
-		// FILE PREVIEW - Birth Certificate
-		// ============================================
-		const birthCert = document.getElementById('birthCert');
-		const birthPreview = document.getElementById('birthPreview');
-
-		birthCert.addEventListener('change', function() {
-			const file = this.files[0];
-			if (file && file.type.startsWith('image/')) {
-				const reader = new FileReader();
-				reader.onload = function(e) {
-					birthPreview.innerHTML = `<img src="${e.target.result}" alt="Birth certificate" />`;
-				};
-				reader.readAsDataURL(file);
-			} else if (file) {
-				birthPreview.innerHTML = '<span class="placeholder">PDF uploaded</span>';
-			}
-		});
-
-		// ============================================
-		// DOCUMENT TYPE TOGGLE (NID vs Birth Certificate)
-		// ============================================
+		// Doc type toggle
 		const docTypeRadios = document.querySelectorAll('input[name="docType"]');
 		const nidSection = document.getElementById('nidSection');
 		const birthSection = document.getElementById('birthSection');
-
 		docTypeRadios.forEach(radio => {
 			radio.addEventListener('change', function() {
 				if (this.value === 'nid') {
 					nidSection.classList.add('show');
 					birthSection.classList.remove('show');
-					// Make NID required, birth cert optional
 					document.getElementById('nidFront').required = true;
 					document.getElementById('nidBack').required = true;
 					document.getElementById('birthCert').required = false;
 				} else {
 					nidSection.classList.remove('show');
 					birthSection.classList.add('show');
-					// Make birth cert required, NID optional
 					document.getElementById('nidFront').required = false;
 					document.getElementById('nidBack').required = false;
 					document.getElementById('birthCert').required = true;
@@ -1129,69 +706,77 @@
 			});
 		});
 
-		// ============================================
-		// FORM SUBMISSION
-		// ============================================
+		// Form submission
 		const sellerForm = document.getElementById('sellerForm');
 		const loadingOverlay = document.getElementById('loadingOverlay');
+		const SELLER_API = window.location.protocol === 'https:' ? 'https://localhost:5000/api' : 'http://localhost:5000/api';
 
-		sellerForm.addEventListener('submit', function(e) {
+		sellerForm.addEventListener('submit', async function(e) {
 			e.preventDefault();
-
-			// Validate categories (at least one must be selected)
-			const categories = document.querySelectorAll('input[name="categories"]:checked');
-			if (categories.length === 0) {
+			const cats = document.querySelectorAll('input[name="categories"]:checked');
+			if (cats.length === 0) {
 				alert('Please select at least one category you want to sell in.');
 				return;
 			}
-
-			// Validate location is selected
 			if (!latInput.value || !lonInput.value) {
 				alert('Please select your shop location using the location button.');
 				return;
 			}
-
-			// Show loading overlay
 			loadingOverlay.classList.add('show');
 
-			// Collect form data
-			const formData = new FormData(this);
-			
-			// Add selected categories as array
-			const selectedCategories = Array.from(categories).map(cb => cb.value);
-			formData.append('selectedCategories', JSON.stringify(selectedCategories));
+			const sellerData = {
+				fullName: document.getElementById('fullName').value,
+				phone: document.getElementById('phone').value,
+				email: document.getElementById('email').value,
+				shopName: document.getElementById('shopName').value,
+				paymentMethod: document.querySelector('input[name="paymentMethod"]:checked')?.value || '',
+				bankName: document.getElementById('bankName')?.value || '',
+				accountNumber: document.getElementById('accountNumber').value,
+				latitude: document.getElementById('latitude')?.value || '',
+				longitude: document.getElementById('longitude')?.value || '',
+				categories: Array.from(cats).map(function(c){return c.value;}).join(','),
+				additionalInfo: document.getElementById('additionalInfo').value
+			};
 
-			// Simulate form submission (replace with actual API call)
-			setTimeout(() => {
-				loadingOverlay.classList.remove('show');
-				alert('✅ Application submitted successfully! We will review and contact you soon.');
-				// Optionally redirect or reset form
-				// window.location.href = 'index.html';
-				// sellerForm.reset();
-			}, 2000);
+			try {
+				const res = await fetch(`${SELLER_API}/sellerauth/register`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(sellerData)
+				});
 
-			// TODO: Replace the above with actual fetch API call
-			/*
-			fetch('/api/seller-registration', {
-				method: 'POST',
-				body: formData
-			})
-			.then(response => response.json())
-			.then(data => {
-				loadingOverlay.classList.remove('show');
-				if (data.success) {
-					alert('✅ Application submitted successfully!');
-					window.location.href = 'index.html';
+				if (res.ok) {
+					loadingOverlay.classList.remove('show');
+					alert('Application submitted successfully! Admin will review and approve your account. You will receive your seller login credentials after approval.');
+					sellerForm.reset();
+					locationDisplay.classList.remove('show');
+					mapPreview.classList.remove('show');
 				} else {
-					alert('❌ Error: ' + data.message);
+					const err = await res.json();
+					loadingOverlay.classList.remove('show');
+					alert(err.message || 'Failed to submit application');
 				}
-			})
-			.catch(error => {
+			} catch (err) {
+				// Fallback to localStorage
+				let sellers = JSON.parse(localStorage.getItem('mr_shop_sellers')) || [];
+				sellerData.id = Date.now();
+				sellerData.status = 'pending';
+				sellerData.createdAt = new Date().toISOString();
+				sellerData.credentials = null;
+				sellers.push(sellerData);
+				localStorage.setItem('mr_shop_sellers', JSON.stringify(sellers));
+
 				loadingOverlay.classList.remove('show');
-				alert('❌ Network error. Please try again.');
-			});
-			*/
+				alert('Application submitted successfully! (Offline mode - Admin will review)');
+				sellerForm.reset();
+				locationDisplay.classList.remove('show');
+				mapPreview.classList.remove('show');
+			}
 		});
 	</script>
+	<script src="assets/js/api.js"></script>
+  <script src="assets/js/products.js"></script>
+	<script src="assets/js/cart.js"></script>
+	<script src="assets/js/auth-shared.js"></script>
 </body>
 </html>
