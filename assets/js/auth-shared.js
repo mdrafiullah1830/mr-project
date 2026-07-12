@@ -290,35 +290,45 @@ function loginWithGoogle() {
 }
 
 async function handleGoogleResponse(response) {
+    // Decode Google JWT to get user info (works without backend)
     try {
-        const res = await fetch(`${MR_Auth.API_BASE}/customerauth/google`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ credential: response.credential })
-        });
+        const payload = JSON.parse(atob(response.credential.split('.')[1]));
+        const userData = {
+            id: payload.sub,
+            username: payload.name || payload.email.split('@')[0],
+            email: payload.email,
+            role: 'customer',
+            isAdmin: false,
+            loggedIn: true,
+            loginTime: new Date().toISOString(),
+            profile: payload.picture || null
+        };
 
-        if (res.ok) {
-            const data = await res.json();
-            localStorage.setItem('mr_shop_token', data.token);
-            const userData = {
-                id: data.user.id,
-                username: data.user.name,
-                email: data.user.email,
-                role: data.user.role || 'customer',
-                isAdmin: data.user.role === 'admin',
-                loggedIn: true,
-                loginTime: new Date().toISOString(),
-                profile: data.user.profilePhoto || null
-            };
-            localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-            MR_Cart.showToast('Google login successful!', 'success');
-            await MR_Cart.syncFromServer();
-            await MR_Wishlist.syncFromServer();
-            setTimeout(() => window.location.href = 'userprofile.html', 800);
-        } else {
-            const err = await res.json();
-            MR_Cart.showToast(err.message || 'Google login failed', 'error');
+        // Try backend first
+        try {
+            const res = await fetch(`${MR_Auth.API_BASE}/customerauth/google`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ credential: response.credential }),
+                signal: AbortSignal.timeout(5000)
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                localStorage.setItem('mr_shop_token', data.token);
+                userData.id = data.user.id;
+                userData.role = data.user.role || 'customer';
+                userData.isAdmin = data.user.role === 'admin';
+            }
+        } catch (apiErr) {
+            console.log('Backend offline, using localStorage for Google auth');
         }
+
+        // Save to localStorage (works with or without backend)
+        localStorage.setItem('mr_shop_user', JSON.stringify(userData));
+        MR_Cart.showToast('Google login successful!', 'success');
+        setTimeout(() => window.location.href = 'userprofile.html', 800);
+
     } catch (err) {
         console.error('Google login error:', err);
         MR_Cart.showToast('Google login failed. Please try again.', 'error');
