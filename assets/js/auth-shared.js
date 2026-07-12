@@ -230,17 +230,17 @@ const MR_Auth = {
     const user = this.getUser();
     if (!user || !user.loggedIn) return;
 
-    const selectors = ['#accountLink', '.amz-header-link'];
-    for (const sel of selectors) {
-      const links = document.querySelectorAll(sel);
-      for (const link of links) {
-        const line1 = link.querySelector('.line1');
-        if (line1 && (line1.textContent.includes('Hello, Sign in') || line1.textContent.includes('Hello,'))) {
-          line1.textContent = `Hello, ${user.username}`;
-          const line2 = link.querySelector('.line2');
-          if (line2) line2.innerHTML = 'Account & Lists <i class="fas fa-caret-down"></i>';
-          return;
-        }
+    // Update ALL account links on the page
+    const allLinks = document.querySelectorAll('a');
+    for (const link of allLinks) {
+      const line1 = link.querySelector('.line1');
+      if (line1 && (line1.textContent.includes('Hello, Sign in') || line1.textContent.includes('Hello,') || line1.textContent.includes('Hello, sign in'))) {
+        // Update text
+        line1.textContent = `Hello, ${user.username}`;
+        const line2 = link.querySelector('.line2');
+        if (line2) line2.innerHTML = 'Account & Lists <i class="fas fa-caret-down"></i>';
+        // Update href to profile page
+        link.setAttribute('href', 'userprofile.html');
       }
     }
   }
@@ -326,8 +326,22 @@ async function handleGoogleResponse(response) {
 
         // Save to localStorage (works with or without backend)
         localStorage.setItem('mr_shop_user', JSON.stringify(userData));
+        
+        // Immediately update UI
+        MR_Auth.updateAuthUI();
+        
         MR_Cart.showToast('Google login successful!', 'success');
-        setTimeout(() => window.location.href = 'userprofile.html', 800);
+        
+        // Redirect based on current page
+        setTimeout(() => {
+            const currentPage = window.location.pathname.split('/').pop();
+            if (currentPage === 'signin.html' || currentPage === 'signup.html' || currentPage === 'auth.html') {
+                window.location.href = 'userprofile.html';
+            } else {
+                // On other pages, reload to update header
+                window.location.reload();
+            }
+        }, 800);
 
     } catch (err) {
         console.error('Google login error:', err);
@@ -348,6 +362,18 @@ function signupWithFacebook() { loginWithFacebook(); }
 function signupWithApple() { loginWithApple(); }
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Check if user is already logged in - redirect from auth pages
+  const user = MR_Auth.getUser();
+  const currentPage = window.location.pathname.split('/').pop();
+  
+  if (user && user.loggedIn) {
+    // If on auth pages, redirect to profile
+    if (currentPage === 'signin.html' || currentPage === 'signup.html' || currentPage === 'auth.html') {
+      window.location.href = 'userprofile.html';
+      return;
+    }
+  }
+  
   MR_Auth.updateAuthUI();
   initGoogleSignIn();
 });
