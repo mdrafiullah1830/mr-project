@@ -248,15 +248,60 @@ const MR_Auth = {
 
 // Social login functions - require OAuth integration
 function loginWithGoogle() {
-  MR_Cart.showToast('Google login coming soon! Use email/password to sign in.', 'info');
+    if (typeof google !== 'undefined' && google.accounts) {
+        google.accounts.id.initialize({
+            client_id: '407138009600-5qc9upb4bec6iss4n1ujhef5g92mbvso.apps.googleusercontent.com',
+            callback: handleGoogleResponse,
+            auto_select: false
+        });
+        google.accounts.id.prompt();
+    } else {
+        MR_Cart.showToast('Google Sign-In is loading. Please try again in a moment.', 'info');
+    }
+}
+
+async function handleGoogleResponse(response) {
+    try {
+        const res = await fetch(`${MR_Auth.API_BASE}/customerauth/google`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ credential: response.credential })
+        });
+
+        if (res.ok) {
+            const data = await res.json();
+            localStorage.setItem('mr_shop_token', data.token);
+            const userData = {
+                id: data.user.id,
+                username: data.user.name,
+                email: data.user.email,
+                role: data.user.role || 'customer',
+                isAdmin: data.user.role === 'admin',
+                loggedIn: true,
+                loginTime: new Date().toISOString(),
+                profile: data.user.profilePhoto || null
+            };
+            localStorage.setItem('mr_shop_user', JSON.stringify(userData));
+            MR_Cart.showToast('Google login successful!', 'success');
+            await MR_Cart.syncFromServer();
+            await MR_Wishlist.syncFromServer();
+            setTimeout(() => window.location.href = 'userprofile.html', 800);
+        } else {
+            const err = await res.json();
+            MR_Cart.showToast(err.message || 'Google login failed', 'error');
+        }
+    } catch (err) {
+        console.error('Google login error:', err);
+        MR_Cart.showToast('Google login failed. Please try again.', 'error');
+    }
 }
 
 function loginWithFacebook() {
-  MR_Cart.showToast('Facebook login coming soon! Use email/password to sign in.', 'info');
+    MR_Cart.showToast('Facebook login coming soon! Use email/password to sign in.', 'info');
 }
 
 function loginWithApple() {
-  MR_Cart.showToast('Apple login coming soon! Use email/password to sign in.', 'info');
+    MR_Cart.showToast('Apple login coming soon! Use email/password to sign in.', 'info');
 }
 
 function signupWithGoogle() { loginWithGoogle(); }
