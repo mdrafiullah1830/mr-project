@@ -247,13 +247,42 @@ const MR_Auth = {
 };
 
 // Social login functions - require OAuth integration
+var googleInitialized = false;
+
+function initGoogleSignIn() {
+    if (typeof google === 'undefined' || !google.accounts) {
+        setTimeout(initGoogleSignIn, 200);
+        return;
+    }
+    google.accounts.id.initialize({
+        client_id: '407138009600-5qc9upb4bec6iss4n1ujhef5g92mbvso.apps.googleusercontent.com',
+        callback: handleGoogleResponse,
+        auto_select: false,
+        cancel_on_tap_outside: true
+    });
+    googleInitialized = true;
+    renderGoogleButtons();
+}
+
+function renderGoogleButtons() {
+    if (!googleInitialized) return;
+    var containers = document.querySelectorAll('.google-signin-btn');
+    containers.forEach(function(container) {
+        if (container.children.length === 0) {
+            google.accounts.id.renderButton(container, {
+                type: 'standard',
+                theme: 'outline',
+                size: 'large',
+                width: container.offsetWidth || 300,
+                text: 'continue_with',
+                shape: 'rectangular'
+            });
+        }
+    });
+}
+
 function loginWithGoogle() {
-    if (typeof google !== 'undefined' && google.accounts) {
-        google.accounts.id.initialize({
-            client_id: '407138009600-5qc9upb4bec6iss4n1ujhef5g92mbvso.apps.googleusercontent.com',
-            callback: handleGoogleResponse,
-            auto_select: false
-        });
+    if (googleInitialized) {
         google.accounts.id.prompt();
     } else {
         MR_Cart.showToast('Google Sign-In is loading. Please try again in a moment.', 'info');
@@ -310,4 +339,5 @@ function signupWithApple() { loginWithApple(); }
 
 document.addEventListener('DOMContentLoaded', () => {
   MR_Auth.updateAuthUI();
+  initGoogleSignIn();
 });
