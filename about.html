@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xkbf74mr8r");
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn about MR Shop - Bangladesh's #1 online marketplace for authentic Bangladeshi products. Our mission, story, and values.">
+  <meta name="keywords" content="MR Shop, about MR Shop, Bangladesh marketplace, our story, mission">
+  <title>About Us — MR Shop</title>
+  <script src="assets/js/loader.js"></script>
+  <link rel="stylesheet" href="assets/css/dark-mode.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ff9900">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --dark: #0f1111;
+      --darker: #131921;
+      --orange: #ff9900;
+      --orange-light: #febd69;
+      --yellow: #ffd814;
+      --blue: #146eb4;
+      --green: #007600;
+      --light: #f5f5f5;
+      --white: #ffffff;
+      --border: #d5d9d9;
+      --text: #0f1111;
+      --link: #007185;
+      --red: #cc0c39;
+    }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--light); color: var(--text); line-height: 1.6; }
+    a { text-decoration: none; color: inherit; }
+
+    /* Header */
+    .header { background: var(--darker); position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    .header-top { display: flex; align-items: center; padding: 10px 20px; gap: 16px; max-width: 1500px; margin: 0 auto; }
+    .logo { display: flex; align-items: center; padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .logo:hover { border-color: #fff; background: rgba(255,255,255,0.05); }
+    .logo-text { color: var(--white); font-size: 22px; font-weight: 800; letter-spacing: -1px; }
+    .logo-sub { color: var(--orange); font-size: 10px; font-weight: 600; display: block; letter-spacing: 2px; text-transform: uppercase; }
+    .deliver-to { color: var(--white); padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .deliver-to:hover { border-color: #fff; }
+    .deliver-to .label { color: #999; font-size: 11px; display: block; }
+    .deliver-to .loc { font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 4px; }
+    .search-bar { flex: 1; display: flex; height: 46px; border-radius: 8px; overflow: hidden; }
+    .search-cat { background: #e6e6e6; border: none; padding: 0 12px; font-size: 13px; color: #555; cursor: pointer; border-right: 1px solid var(--border); }
+    .search-input { flex: 1; border: none; padding: 0 16px; font-size: 15px; outline: none; }
+    .search-btn { background: var(--orange); border: none; padding: 0 20px; cursor: pointer; font-size: 20px; color: var(--dark); transition: all 0.2s; }
+    .search-btn:hover { background: var(--orange-light); }
+    .header-actions { display: flex; align-items: center; gap: 6px; }
+    .header-link { color: var(--white); padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; font-size: 13px; white-space: nowrap; transition: all 0.2s; }
+    .header-link:hover { border-color: #fff; }
+    .header-link .line1 { color: #999; font-size: 11px; display: block; }
+    .header-link .line2 { font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 4px; }
+    .cart-btn { display: flex; align-items: center; gap: 4px; padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; color: var(--white); transition: all 0.2s; }
+    .cart-btn:hover { border-color: #fff; }
+    .cart-icon { font-size: 24px; position: relative; }
+    .cart-count { position: absolute; top: -6px; right: -8px; background: var(--orange); color: var(--dark); font-size: 13px; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .cart-text { font-weight: 700; font-size: 13px; }
+    .nav-bar { background: #232f3e; padding: 8px 20px; display: flex; align-items: center; gap: 4px; overflow-x: auto; max-width: 1500px; margin: 0 auto; }
+    .nav-item { color: var(--white); padding: 8px 14px; font-size: 13px; font-weight: 500; border: 1px solid transparent; border-radius: 4px; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+    .nav-item:hover { border-color: #fff; }
+    .nav-item.active { border-color: #fff; font-weight: 700; }
+    .nav-divider { width: 1px; height: 24px; background: #4a5568; margin: 0 6px; }
+
+    /* Hero */
+    .about-hero { background: linear-gradient(135deg, #0f1111 0%, #1a2332 50%, #0f1111 100%); padding: 80px 20px; text-align: center; }
+    .about-hero h1 { font-size: 48px; font-weight: 800; color: var(--white); margin-bottom: 16px; }
+    .about-hero h1 span { background: linear-gradient(135deg, var(--orange), var(--yellow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .about-hero p { font-size: 18px; color: #999; max-width: 700px; margin: 0 auto; line-height: 1.7; }
+
+    /* Stats */
+    .stats-section { max-width: 1200px; margin: -40px auto 40px; padding: 0 20px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .stat-card { background: var(--white); border-radius: 16px; padding: 30px; text-align: center; border: 1px solid var(--border); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+    .stat-icon { font-size: 36px; margin-bottom: 12px; }
+    .stat-number { font-size: 36px; font-weight: 800; color: var(--text); }
+    .stat-label { font-size: 14px; color: #666; margin-top: 4px; }
+
+    /* Content */
+    .content-section { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+    .section-title { font-size: 28px; font-weight: 800; margin-bottom: 20px; position: relative; padding-left: 16px; }
+    .section-title::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--orange); border-radius: 2px; }
+
+    /* Story Cards */
+    .story-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
+    .story-card { background: var(--white); border-radius: 16px; padding: 30px; border: 1px solid var(--border); transition: all 0.3s; }
+    .story-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
+    .story-icon { width: 60px; height: 60px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 16px; }
+    .story-icon.green { background: #e6f4e6; color: var(--green); }
+    .story-icon.blue { background: #e6f0fa; color: var(--blue); }
+    .story-icon.orange { background: #fff3e0; color: var(--orange); }
+    .story-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+    .story-card p { font-size: 14px; color: #666; line-height: 1.7; }
+
+    /* Timeline */
+    .timeline { position: relative; padding: 20px 0; }
+    .timeline::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 3px; background: var(--orange); transform: translateX(-50%); }
+    .timeline-item { display: flex; margin-bottom: 40px; position: relative; }
+    .timeline-item:nth-child(odd) { flex-direction: row-reverse; }
+    .timeline-content { width: 45%; background: var(--white); border-radius: 12px; padding: 24px; border: 1px solid var(--border); }
+    .timeline-dot { position: absolute; left: 50%; transform: translateX(-50%); width: 20px; height: 20px; background: var(--orange); border-radius: 50%; border: 4px solid var(--white); z-index: 1; }
+    .timeline-year { font-size: 14px; font-weight: 700; color: var(--orange); margin-bottom: 8px; }
+    .timeline-content h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .timeline-content p { font-size: 14px; color: #666; }
+
+    /* Team */
+    .team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 40px; }
+    .team-card { background: var(--white); border-radius: 16px; padding: 24px; text-align: center; border: 1px solid var(--border); transition: all 0.3s; }
+    .team-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
+    .team-avatar { width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 40px; background: linear-gradient(135deg, var(--orange), var(--yellow)); color: var(--dark); }
+    .team-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .team-card .role { font-size: 13px; color: var(--orange); font-weight: 600; margin-bottom: 8px; }
+    .team-card p { font-size: 13px; color: #666; }
+    .team-social { display: flex; justify-content: center; gap: 12px; margin-top: 12px; }
+    .team-social a { width: 36px; height: 36px; border-radius: 50%; background: #f0f2f2; display: flex; align-items: center; justify-content: center; color: #555; transition: all 0.2s; }
+    .team-social a:hover { background: var(--orange); color: var(--dark); }
+
+    /* Values */
+    .values-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 40px; }
+    .value-card { background: var(--white); border-radius: 16px; padding: 30px; border: 1px solid var(--border); display: flex; gap: 20px; transition: all 0.3s; }
+    .value-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
+    .value-number { font-size: 48px; font-weight: 800; color: var(--orange); opacity: 0.3; line-height: 1; }
+    .value-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .value-card p { font-size: 14px; color: #666; line-height: 1.7; }
+
+    /* CTA */
+    .cta-section { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); padding: 60px 20px; text-align: center; margin-top: 40px; }
+    .cta-section h2 { font-size: 32px; font-weight: 800; color: var(--white); margin-bottom: 12px; }
+    .cta-section p { font-size: 16px; color: #999; margin-bottom: 24px; }
+    .cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .cta-btn { padding: 14px 32px; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; border: none; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px; }
+    .cta-primary { background: linear-gradient(135deg, var(--orange), var(--yellow)); color: var(--dark); }
+    .cta-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,153,0,0.4); }
+    .cta-secondary { background: rgba(255,255,255,0.1); color: var(--white); border: 1px solid rgba(255,255,255,0.2); }
+    .cta-secondary:hover { background: rgba(255,255,255,0.15); }
+
+    /* Footer */
+    .back-to-top { background: #37475a; text-align: center; padding: 14px; color: var(--white); font-size: 13px; cursor: pointer; transition: background 0.2s; }
+    .back-to-top:hover { background: #485769; }
+    .footer { background: var(--darker); color: var(--white); padding: 40px 20px 20px; }
+    .footer-grid { max-width: 1500px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-bottom: 30px; }
+    .footer-col h4 { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
+    .footer-col a { display: block; color: #ddd; font-size: 13px; padding: 4px 0; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--white); text-decoration: underline; }
+    .footer-quick-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 16px 0; max-width: 1500px; margin: 0 auto; }
+    .footer-quick-links a { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); padding: 6px 14px; border-radius: 20px; font-size: 12px; color: #ccc; transition: all 0.2s; }
+    .footer-quick-links a:hover { background: rgba(255,255,255,0.15); color: var(--white); border-color: var(--orange); }
+    .footer-divider { height: 1px; background: #3a4553; margin: 16px 0; }
+    .footer-bottom { text-align: center; padding: 20px; }
+    .footer-logo { font-size: 20px; font-weight: 800; color: var(--white); margin-bottom: 6px; }
+    .footer-copyright { color: #999; font-size: 12px; margin-bottom: 10px; }
+    .footer-copyright strong { color: var(--orange); }
+    .footer-payment { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px; color: #999; font-size: 12px; }
+    .footer-payment i { font-size: 20px; color: #ccc; transition: transform 0.2s; }
+    .footer-payment i:hover { transform: scale(1.2); color: var(--white); }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .story-grid { grid-template-columns: repeat(2, 1fr); }
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+      .timeline::before { left: 30px; }
+      .timeline-item, .timeline-item:nth-child(odd) { flex-direction: row; padding-left: 60px; }
+      .timeline-content { width: 100%; }
+      .timeline-dot { left: 30px; }
+    }
+    @media (max-width: 768px) {
+      .about-hero h1 { font-size: 32px; }
+      .stats-grid, .story-grid, .values-grid { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .team-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-top">
+      <a href="index.html" class="logo">
+        <div>
+          <span class="logo-text">MR shop</span>
+          <span class="logo-sub">Bangladesh</span>
+        </div>
+      </a>
+      <div class="deliver-to">
+        <span class="label">Deliver to</span>
+        <span class="loc"><i class="fas fa-map-marker-alt"></i> Bangladesh</span>
+      </div>
+      <div class="search-bar">
+        <select class="search-cat">
+          <option>All</option>
+          <option>Food & Natural</option>
+          <option>Sweets & Dairy</option>
+          <option>Handicrafts</option>
+          <option>Clothing</option>
+          <option>Books</option>
+          <option>Antique</option>
+        </select>
+        <input type="text" class="search-input" placeholder="Search MR Shop" id="searchInput">
+        <button class="search-btn"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="header-actions">
+        <a href="signin.html" class="header-link">
+          <span class="line1">Hello, Sign in</span>
+          <span class="line2">Account <i class="fas fa-caret-down"></i></span>
+        </a>
+        <a href="wishlist.html" class="header-link">
+          <span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span>
+          <span class="line2">Wishlist</span>
+        </a>
+        <a href="cart.html" class="cart-btn">
+          <span class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count amz-cart-count">0</span></span>
+          <span class="cart-text">Cart</span>
+        </a>
+      </div>
+    </div>
+    <nav class="nav-bar">
+      <a href="index.html" class="nav-item"><i class="fas fa-bars"></i> All</a>
+      <a href="food&natural.html" class="nav-item">Food & Natural</a>
+      <a href="sweets&dairy.html" class="nav-item">Sweets & Dairy</a>
+      <a href="handricrafts.html" class="nav-item">Handicrafts</a>
+      <a href="clothing.html" class="nav-item">Clothing</a>
+      <a href="book.html" class="nav-item">Books</a>
+      <a href="antique.html" class="nav-item">Antique</a>
+      <div class="nav-divider"></div>
+      <a href="blog.html" class="nav-item"><i class="fas fa-newspaper"></i> Blog</a>
+      <a href="compare.html" class="nav-item"><i class="fas fa-balance-scale"></i> Compare</a>
+      <a href="order-tracking.html" class="nav-item"><i class="fas fa-truck"></i> Track Order</a>
+      <a href="about.html" class="nav-item active"><i class="fas fa-info-circle"></i> About</a>
+      <div class="nav-divider"></div>
+      <a href="becomeseller.html" class="nav-item">Sell</a>
+      <a href="chat.html" class="nav-item"><i class="fas fa-headset"></i> Help</a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="about-hero">
+    <h1>About <span>MR Shop</span></h1>
+    <p>Bangladesh's #1 online marketplace for authentic Bangladeshi products. We connect local artisans, farmers, and brands with customers across all 64 districts.</p>
+  </section>
+
+  <!-- Stats Section -->
+  <div class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">🛍️</div>
+        <div class="stat-number">500+</div>
+        <div class="stat-label">Products</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">😊</div>
+        <div class="stat-number">10,000+</div>
+        <div class="stat-label">Happy Customers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📍</div>
+        <div class="stat-number">64</div>
+        <div class="stat-label">Districts Covered</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-number">4.8</div>
+        <div class="stat-label">Average Rating</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Our Story -->
+  <div class="content-section">
+    <h2 class="section-title">Our Story</h2>
+    <div class="story-grid">
+      <div class="story-card">
+        <div class="story-icon green">🌱</div>
+        <h3>Started with a Dream</h3>
+        <p>MR Shop was born from a simple idea: bring authentic Bangladeshi products to everyone. From Sundarbans honey to Jamdani sarees, we wanted to celebrate our heritage through commerce.</p>
+      </div>
+      <div class="story-card">
+        <div class="story-icon blue">🤝</div>
+        <h3>Supporting Local Artisans</h3>
+        <p>We work directly with local farmers, artisans, and small businesses. Every purchase supports a Bangladeshi family and helps preserve our traditional crafts.</p>
+      </div>
+      <div class="story-card">
+        <div class="story-icon orange">🚀</div>
+        <h3>Growing Every Day</h3>
+        <p>From a small startup to Bangladesh's trusted marketplace, we've grown by putting customers first. Our 10,000+ happy customers are our biggest achievement.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="content-section">
+    <h2 class="section-title">Our Journey</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-year">2024</div>
+          <h3>The Beginning</h3>
+          <p>MR Shop was founded with a vision to promote Bangladeshi products globally. Started with just 10 products from local artisans.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-year">2025</div>
+          <h3>Growing Fast</h3>
+          <p>Expanded to 200+ products across 6 categories. Launched seller platform and reached 5,000 customers.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-year">2026</div>
+          <h3>Today</h3>
+          <p>500+ products, 10,000+ customers, 64 districts. Introducing AI-powered shopping and mobile app coming soon.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mission & Values -->
+  <div class="content-section">
+    <h2 class="section-title">Our Mission & Values</h2>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-number">01</div>
+        <div>
+          <h3>Authenticity First</h3>
+          <p>Every product on MR Shop is verified for authenticity. We guarantee genuine Bangladeshi products — from Sundarbans honey to Bogura doi.</p>
+        </div>
+      </div>
+      <div class="value-card">
+        <div class="value-number">02</div>
+        <div>
+          <h3>Support Local</h3>
+          <p>We empower local artisans, farmers, and small businesses. By selling on MR Shop, they reach customers across Bangladesh and beyond.</p>
+        </div>
+      </div>
+      <div class="value-card">
+        <div class="value-number">03</div>
+        <div>
+          <h3>Customer Trust</h3>
+          <p>100% secure payments, 7-day returns, and dedicated support. We build trust through transparency and reliability.</p>
+        </div>
+      </div>
+      <div class="value-card">
+        <div class="value-number">04</div>
+        <div>
+          <h3>Social Impact</h3>
+          <p>10% of our profits go to help underprivileged children. Every purchase you make creates a positive impact in someone's life.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Team -->
+  <div class="content-section">
+    <h2 class="section-title">Meet Our Team</h2>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">👨‍💻</div>
+        <h3>Md. Rafi Ullah</h3>
+        <div class="role">Founder & CEO</div>
+        <p>Full-stack developer and entrepreneur passionate about Bangladeshi products.</p>
+        <div class="team-social">
+          <a href="https://www.facebook.com/profile.php?id=61583616496782" target="_blank"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/mrshopbd18/" target="_blank"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/@mrshop18" target="_blank"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">👩‍💼</div>
+        <h3>Operations Team</h3>
+        <div class="role">Logistics & Support</div>
+        <p>Ensuring smooth deliveries and customer satisfaction across 64 districts.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">👨‍🎨</div>
+        <h3>Design Team</h3>
+        <div class="role">UI/UX & Branding</div>
+        <p>Creating beautiful shopping experiences that celebrate Bangladeshi culture.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">👩‍🔬</div>
+        <h3>Quality Team</h3>
+        <div class="role">Product Verification</div>
+        <p>Every product is checked for authenticity before listing on our platform.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <h2>Join the MR Shop Family</h2>
+    <p>Experience authentic Bangladesh at your doorstep. Shop now or become a seller.</p>
+    <div class="cta-btns">
+      <a href="food&natural.html" class="cta-btn cta-primary"><i class="fas fa-shopping-bag"></i> Shop Now</a>
+      <a href="becomeseller.html" class="cta-btn cta-secondary"><i class="fas fa-store"></i> Become a Seller</a>
+      <a href="chat.html" class="cta-btn cta-secondary"><i class="fas fa-headset"></i> Contact Us</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <div class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</div>
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Get to Know Us</h4>
+        <a href="about.html">About MR Shop</a>
+        <a href="workfor.html">Careers</a>
+        <a href="workforpeople.html">Our Story</a>
+        <a href="blog.html">Blog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Make Money with Us</h4>
+        <a href="becomeseller.html">Sell on MR Shop</a>
+        <a href="seller.html">Seller Dashboard</a>
+        <a href="becomeseller.html">Become an Affiliate</a>
+      </div>
+      <div class="footer-col">
+        <h4>Help & Support</h4>
+        <a href="faq.html">FAQ</a>
+        <a href="chat.html">Customer Service</a>
+        <a href="userprofile.html">Your Account</a>
+        <a href="notification.html">Notifications</a>
+      </div>
+      <div class="footer-col">
+        <h4>Payment & Delivery</h4>
+        <a href="cart.html">Shopping Cart</a>
+        <a href="checkout.html">Checkout</a>
+        <a href="payment.html">Payment Methods</a>
+        <a href="order-tracking.html">Track Order</a>
+      </div>
+      <div class="footer-col">
+        <h4>Shop by Category</h4>
+        <a href="food&natural.html">Food & Natural</a>
+        <a href="sweets&dairy.html">Sweets & Dairy</a>
+        <a href="handricrafts.html">Handicrafts</a>
+        <a href="clothing.html">Clothing</a>
+      </div>
+      <div class="footer-col">
+        <h4>Connect with Us</h4>
+        <a href="https://www.facebook.com/profile.php?id=61583616496782" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+        <a href="https://www.instagram.com/mrshopbd18/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+        <a href="https://www.youtube.com/@mrshop18" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
+        <a href="chat.html"><i class="fas fa-headset"></i> Live Chat</a>
+      </div>
+    </div>
+    <div class="footer-quick-links">
+      <a href="index.html">Home</a>
+      <a href="search-results.html">All Products</a>
+      <a href="food&natural.html">Food</a>
+      <a href="sweets&dairy.html">Sweets</a>
+      <a href="handricrafts.html">Handicrafts</a>
+      <a href="clothing.html">Clothing</a>
+      <a href="book.html">Books</a>
+      <a href="antique.html">Antique</a>
+      <a href="blog.html">Blog</a>
+      <a href="compare.html">Compare</a>
+      <a href="about.html">About</a>
+      <a href="faq.html">FAQ</a>
+      <a href="order-tracking.html">Track Order</a>
+      <a href="review.html">Reviews</a>
+      <a href="seller.html">Sell</a>
+      <a href="chat.html">Help</a>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <div class="footer-logo">MR shop</div>
+      <div class="footer-copyright">&copy; 2026 MR Shop. All Rights Reserved. | Powered by <strong>MR IT Company</strong></div>
+      <div class="footer-payment">
+        <span>We Accept:</span>
+        <i class="fas fa-money-bill-wave" title="Cash on Delivery"></i>
+        <i class="fas fa-mobile-alt" title="bKash" style="color:#e2136e;"></i>
+        <i class="fas fa-wallet" title="Nagad" style="color:#f6921e;"></i>
+        <i class="fas fa-rocket" title="Rocket" style="color:#8b2393;"></i>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/products.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/auth-shared.js"></script>
+  <script src="assets/js/wishlist.js"></script>
+  <script src="assets/js/darkmode.js"></script>
+</body>
+</html>

@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xkbf74mr8r");
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Frequently Asked Questions about MR Shop - Orders, Payments, Shipping, Returns, and Account support.">
+  <meta name="keywords" content="MR Shop FAQ, help, support, orders, payment, shipping, returns">
+  <title>FAQ — MR Shop</title>
+  <script src="assets/js/loader.js"></script>
+  <link rel="stylesheet" href="assets/css/dark-mode.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ff9900">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --dark: #0f1111;
+      --darker: #131921;
+      --orange: #ff9900;
+      --orange-light: #febd69;
+      --yellow: #ffd814;
+      --blue: #146eb4;
+      --green: #007600;
+      --light: #f5f5f5;
+      --white: #ffffff;
+      --border: #d5d9d9;
+      --text: #0f1111;
+      --link: #007185;
+      --red: #cc0c39;
+    }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--light); color: var(--text); line-height: 1.6; }
+    a { text-decoration: none; color: inherit; }
+
+    /* Header */
+    .header { background: var(--darker); position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    .header-top { display: flex; align-items: center; padding: 10px 20px; gap: 16px; max-width: 1500px; margin: 0 auto; }
+    .logo { display: flex; align-items: center; padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .logo:hover { border-color: #fff; background: rgba(255,255,255,0.05); }
+    .logo-text { color: var(--white); font-size: 22px; font-weight: 800; letter-spacing: -1px; }
+    .logo-sub { color: var(--orange); font-size: 10px; font-weight: 600; display: block; letter-spacing: 2px; text-transform: uppercase; }
+    .deliver-to { color: var(--white); padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .deliver-to:hover { border-color: #fff; }
+    .deliver-to .label { color: #999; font-size: 11px; display: block; }
+    .deliver-to .loc { font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 4px; }
+    .search-bar { flex: 1; display: flex; height: 46px; border-radius: 8px; overflow: hidden; }
+    .search-cat { background: #e6e6e6; border: none; padding: 0 12px; font-size: 13px; color: #555; cursor: pointer; border-right: 1px solid var(--border); }
+    .search-input { flex: 1; border: none; padding: 0 16px; font-size: 15px; outline: none; }
+    .search-btn { background: var(--orange); border: none; padding: 0 20px; cursor: pointer; font-size: 20px; color: var(--dark); transition: all 0.2s; }
+    .search-btn:hover { background: var(--orange-light); }
+    .header-actions { display: flex; align-items: center; gap: 6px; }
+    .header-link { color: var(--white); padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; font-size: 13px; white-space: nowrap; transition: all 0.2s; }
+    .header-link:hover { border-color: #fff; }
+    .header-link .line1 { color: #999; font-size: 11px; display: block; }
+    .header-link .line2 { font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 4px; }
+    .cart-btn { display: flex; align-items: center; gap: 4px; padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; color: var(--white); transition: all 0.2s; }
+    .cart-btn:hover { border-color: #fff; }
+    .cart-icon { font-size: 24px; position: relative; }
+    .cart-count { position: absolute; top: -6px; right: -8px; background: var(--orange); color: var(--dark); font-size: 13px; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .cart-text { font-weight: 700; font-size: 13px; }
+    .nav-bar { background: #232f3e; padding: 8px 20px; display: flex; align-items: center; gap: 4px; overflow-x: auto; max-width: 1500px; margin: 0 auto; }
+    .nav-item { color: var(--white); padding: 8px 14px; font-size: 13px; font-weight: 500; border: 1px solid transparent; border-radius: 4px; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+    .nav-item:hover { border-color: #fff; }
+    .nav-item.active { border-color: #fff; font-weight: 700; }
+    .nav-divider { width: 1px; height: 24px; background: #4a5568; margin: 0 6px; }
+
+    /* Hero */
+    .faq-hero { background: linear-gradient(135deg, #0f1111 0%, #1a2332 50%, #0f1111 100%); padding: 60px 20px; text-align: center; }
+    .faq-hero h1 { font-size: 42px; font-weight: 800; color: var(--white); margin-bottom: 12px; }
+    .faq-hero h1 span { background: linear-gradient(135deg, var(--orange), var(--yellow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .faq-hero p { font-size: 16px; color: #999; max-width: 600px; margin: 0 auto; }
+
+    /* Search */
+    .faq-search { max-width: 700px; margin: -30px auto 30px; padding: 0 20px; position: relative; z-index: 10; }
+    .faq-search-box { display: flex; background: var(--white); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); border: 1px solid var(--border); overflow: hidden; }
+    .faq-search-box input { flex: 1; padding: 18px 24px; border: none; font-size: 16px; outline: none; }
+    .faq-search-box button { padding: 18px 28px; background: var(--orange); border: none; cursor: pointer; font-size: 18px; color: var(--dark); transition: all 0.2s; }
+    .faq-search-box button:hover { background: var(--orange-light); }
+
+    /* Categories */
+    .faq-categories { max-width: 1200px; margin: 0 auto 30px; padding: 0 20px; }
+    .cat-tabs { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+    .cat-tab { padding: 10px 20px; border: 1px solid var(--border); border-radius: 24px; background: var(--white); cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; }
+    .cat-tab:hover { border-color: var(--orange); color: var(--orange); }
+    .cat-tab.active { background: var(--orange); color: var(--dark); border-color: var(--orange); font-weight: 700; }
+
+    /* FAQ List */
+    .faq-container { max-width: 900px; margin: 0 auto; padding: 0 20px 60px; }
+    .faq-section { margin-bottom: 30px; }
+    .faq-section-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid var(--orange); display: flex; align-items: center; gap: 10px; }
+    .faq-item { background: var(--white); border-radius: 12px; margin-bottom: 12px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; }
+    .faq-item:hover { border-color: var(--orange); }
+    .faq-question { padding: 18px 24px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-weight: 600; font-size: 15px; transition: background 0.2s; }
+    .faq-question:hover { background: #f8f9fa; }
+    .faq-question i { color: var(--orange); transition: transform 0.3s; font-size: 14px; }
+    .faq-item.active .faq-question i { transform: rotate(180deg); }
+    .faq-answer { padding: 0 24px; max-height: 0; overflow: hidden; transition: all 0.3s ease; }
+    .faq-item.active .faq-answer { padding: 0 24px 18px; max-height: 500px; }
+    .faq-answer p { font-size: 14px; color: #555; line-height: 1.8; }
+    .faq-answer ul { margin: 8px 0; padding-left: 20px; }
+    .faq-answer li { font-size: 14px; color: #555; margin-bottom: 6px; }
+    .faq-answer a { color: var(--link); font-weight: 600; }
+    .faq-answer a:hover { text-decoration: underline; color: #c7511f; }
+
+    /* Contact CTA */
+    .contact-cta { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); border-radius: 16px; padding: 40px; text-align: center; margin-top: 40px; }
+    .contact-cta h3 { font-size: 24px; font-weight: 800; color: var(--white); margin-bottom: 10px; }
+    .contact-cta p { color: #999; font-size: 15px; margin-bottom: 20px; }
+    .contact-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .contact-btn { padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px; }
+    .contact-primary { background: linear-gradient(135deg, var(--orange), var(--yellow)); color: var(--dark); }
+    .contact-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,153,0,0.4); }
+    .contact-secondary { background: rgba(255,255,255,0.1); color: var(--white); border: 1px solid rgba(255,255,255,0.2); }
+    .contact-secondary:hover { background: rgba(255,255,255,0.15); }
+
+    /* Footer */
+    .back-to-top { background: #37475a; text-align: center; padding: 14px; color: var(--white); font-size: 13px; cursor: pointer; transition: background 0.2s; }
+    .back-to-top:hover { background: #485769; }
+    .footer { background: var(--darker); color: var(--white); padding: 40px 20px 20px; }
+    .footer-grid { max-width: 1500px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-bottom: 30px; }
+    .footer-col h4 { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
+    .footer-col a { display: block; color: #ddd; font-size: 13px; padding: 4px 0; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--white); text-decoration: underline; }
+    .footer-quick-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 16px 0; max-width: 1500px; margin: 0 auto; }
+    .footer-quick-links a { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); padding: 6px 14px; border-radius: 20px; font-size: 12px; color: #ccc; transition: all 0.2s; }
+    .footer-quick-links a:hover { background: rgba(255,255,255,0.15); color: var(--white); border-color: var(--orange); }
+    .footer-divider { height: 1px; background: #3a4553; margin: 16px 0; }
+    .footer-bottom { text-align: center; padding: 20px; }
+    .footer-logo { font-size: 20px; font-weight: 800; color: var(--white); margin-bottom: 6px; }
+    .footer-copyright { color: #999; font-size: 12px; margin-bottom: 10px; }
+    .footer-copyright strong { color: var(--orange); }
+    .footer-payment { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px; color: #999; font-size: 12px; }
+    .footer-payment i { font-size: 20px; color: #ccc; transition: transform 0.2s; }
+    .footer-payment i:hover { transform: scale(1.2); color: var(--white); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .faq-hero h1 { font-size: 28px; }
+      .faq-search-box input { padding: 14px 18px; font-size: 14px; }
+      .faq-question { font-size: 14px; padding: 14px 18px; }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-top">
+      <a href="index.html" class="logo">
+        <div>
+          <span class="logo-text">MR shop</span>
+          <span class="logo-sub">Bangladesh</span>
+        </div>
+      </a>
+      <div class="deliver-to">
+        <span class="label">Deliver to</span>
+        <span class="loc"><i class="fas fa-map-marker-alt"></i> Bangladesh</span>
+      </div>
+      <div class="search-bar">
+        <select class="search-cat">
+          <option>All</option>
+          <option>Food & Natural</option>
+          <option>Sweets & Dairy</option>
+          <option>Handicrafts</option>
+          <option>Clothing</option>
+          <option>Books</option>
+          <option>Antique</option>
+        </select>
+        <input type="text" class="search-input" placeholder="Search MR Shop" id="searchInput">
+        <button class="search-btn"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="header-actions">
+        <a href="signin.html" class="header-link">
+          <span class="line1">Hello, Sign in</span>
+          <span class="line2">Account <i class="fas fa-caret-down"></i></span>
+        </a>
+        <a href="wishlist.html" class="header-link">
+          <span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span>
+          <span class="line2">Wishlist</span>
+        </a>
+        <a href="cart.html" class="cart-btn">
+          <span class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count amz-cart-count">0</span></span>
+          <span class="cart-text">Cart</span>
+        </a>
+      </div>
+    </div>
+    <nav class="nav-bar">
+      <a href="index.html" class="nav-item"><i class="fas fa-bars"></i> All</a>
+      <a href="food&natural.html" class="nav-item">Food & Natural</a>
+      <a href="sweets&dairy.html" class="nav-item">Sweets & Dairy</a>
+      <a href="handricrafts.html" class="nav-item">Handicrafts</a>
+      <a href="clothing.html" class="nav-item">Clothing</a>
+      <a href="book.html" class="nav-item">Books</a>
+      <a href="antique.html" class="nav-item">Antique</a>
+      <div class="nav-divider"></div>
+      <a href="blog.html" class="nav-item"><i class="fas fa-newspaper"></i> Blog</a>
+      <a href="compare.html" class="nav-item"><i class="fas fa-balance-scale"></i> Compare</a>
+      <a href="order-tracking.html" class="nav-item"><i class="fas fa-truck"></i> Track Order</a>
+      <a href="about.html" class="nav-item"><i class="fas fa-info-circle"></i> About</a>
+      <a href="faq.html" class="nav-item active"><i class="fas fa-question-circle"></i> FAQ</a>
+      <div class="nav-divider"></div>
+      <a href="becomeseller.html" class="nav-item">Sell</a>
+      <a href="chat.html" class="nav-item"><i class="fas fa-headset"></i> Help</a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="faq-hero">
+    <h1>Frequently Asked <span>Questions</span></h1>
+    <p>Find answers to common questions about orders, payments, shipping, returns, and more.</p>
+  </section>
+
+  <!-- Search -->
+  <div class="faq-search">
+    <div class="faq-search-box">
+      <input type="text" placeholder="Search your question..." id="faqSearchInput">
+      <button><i class="fas fa-search"></i></button>
+    </div>
+  </div>
+
+  <!-- Categories -->
+  <div class="faq-categories">
+    <div class="cat-tabs">
+      <div class="cat-tab active" onclick="filterFAQ('all', this)">All Questions</div>
+      <div class="cat-tab" onclick="filterFAQ('orders', this)">Orders</div>
+      <div class="cat-tab" onclick="filterFAQ('payment', this)">Payment</div>
+      <div class="cat-tab" onclick="filterFAQ('shipping', this)">Shipping</div>
+      <div class="cat-tab" onclick="filterFAQ('returns', this)">Returns</div>
+      <div class="cat-tab" onclick="filterFAQ('account', this)">Account</div>
+      <div class="cat-tab" onclick="filterFAQ('seller', this)">Seller</div>
+    </div>
+  </div>
+
+  <!-- FAQ List -->
+  <div class="faq-container">
+
+    <!-- Orders -->
+    <div class="faq-section" data-category="orders">
+      <div class="faq-section-title"><i class="fas fa-shopping-bag"></i> Orders & Tracking</div>
+      
+      <div class="faq-item" data-category="orders">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          How do I place an order?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Placing an order on MR Shop is easy:</p>
+          <ul>
+            <li>Browse products and click "Add to Cart"</li>
+            <li>Go to your cart and click "Proceed to Checkout"</li>
+            <li>Enter your shipping address</li>
+            <li>Select payment method (bKash, Nagad, COD, etc.)</li>
+            <li>Review your order and click "Place Your Order"</li>
+          </ul>
+          <p>You'll receive an order confirmation immediately.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="orders">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          How can I track my order?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>You can track your order in two ways:</p>
+          <ul>
+            <li><strong>Order Tracking Page:</strong> Go to <a href="order-tracking.html">Track Order</a> and enter your Order ID</li>
+            <li><strong>Your Account:</strong> Login → My Orders → Click on the order to see status</li>
+          </ul>
+          <p>We'll also send you SMS/email updates at each stage.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="orders">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          Can I cancel my order?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Yes, you can cancel your order if it hasn't been shipped yet. To cancel:</p>
+          <ul>
+            <li>Go to My Orders in your account</li>
+            <li>Find the order you want to cancel</li>
+            <li>Click "Cancel Order"</li>
+          </ul>
+          <p>If the order is already shipped, you can refuse delivery or request a return after delivery.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="orders">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          What is the order status timeline?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Order statuses update in this order:</p>
+          <ul>
+            <li><strong>Processing:</strong> Order confirmed, being prepared</li>
+            <li><strong>Shipped:</strong> Order dispatched, on its way</li>
+            <li><strong>Out for Delivery:</strong> Delivery agent on the way</li>
+            <li><strong>Delivered:</strong> Order successfully delivered</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment -->
+    <div class="faq-section" data-category="payment">
+      <div class="faq-section-title"><i class="fas fa-credit-card"></i> Payment</div>
+      
+      <div class="faq-item" data-category="payment">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          What payment methods do you accept?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>We accept multiple payment methods for your convenience:</p>
+          <ul>
+            <li><strong>Cash on Delivery (COD)</strong> — Pay when you receive</li>
+            <li><strong>bKash</strong> — Mobile financial service</li>
+            <li><strong>Nagad</strong> — Mobile financial service</li>
+            <li><strong>Rocket</strong> — Dutch-Bangla Bank mobile service</li>
+          </ul>
+          <p>All online payments are secure and encrypted.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="payment">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          Is Cash on Delivery (COD) available?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Yes! Cash on Delivery is available for all orders across Bangladesh. You pay cash when the delivery agent brings your order to your doorstep.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="payment">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          How do I pay with bKash?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>To pay with bKash:</p>
+          <ul>
+            <li>Select "bKash" as payment method at checkout</li>
+            <li>Enter your bKash account number</li>
+            <li>You'll receive a confirmation SMS</li>
+            <li>Approve the payment from your bKash app</li>
+          </ul>
+          <p>Your order will be confirmed once payment is received.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="payment">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          Do you accept credit/debit cards?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Currently, we accept bKash, Nagad, Rocket, and Cash on Delivery. Credit/debit card support is coming soon! Stay tuned for updates.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="payment">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          Are there any hidden charges?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>No hidden charges! The price you see is what you pay. The only additional costs are:</p>
+          <ul>
+            <li><strong>Shipping:</strong> Free on orders over ৳5,000. Standard shipping ৳60-120</li>
+            <li><strong>VAT:</strong> 5% VAT included in the final price</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="payment">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          How do I use a coupon code?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>To use a coupon code:</p>
+          <ul>
+            <li>Add products to your cart</li>
+            <li>Go to cart or checkout page</li>
+            <li>Find the "Apply coupon code" section</li>
+            <li>Enter your code and click "Apply"</li>
+          </ul>
+          <p><strong>Available coupons:</strong> SAVE10 (10% off), SAVE20 (20% off), WELCOME (15% off), FREESHIP (Free shipping)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shipping -->
+    <div class="faq-section" data-category="shipping">
+      <div class="faq-section-title"><i class="fas fa-truck"></i> Shipping & Delivery</div>
+      
+      <div class="faq-item" data-category="shipping">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          How long does delivery take?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Delivery times depend on your location:</p>
+          <ul>
+            <li><strong>Dhaka:</strong> 1-3 business days</li>
+            <li><strong>Chattogram, Sylhet, Rajshahi:</strong> 2-4 business days</li>
+            <li><strong>Other districts:</strong> 3-7 business days</li>
+          </ul>
+          <p>You'll receive tracking information once your order is shipped.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="shipping">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          Is free shipping available?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p><strong>Yes!</strong> We offer FREE delivery on all orders over ৳5,000. For orders below ৳5,000, a shipping fee of ৳60-120 applies depending on your location.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="shipping">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          Do you deliver to all 64 districts?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Yes! We deliver to all 64 districts of Bangladesh. Whether you're in Dhaka, Chattogram, Sylhet, or any remote area, we'll get your order to you.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="shipping">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          Which courier service do you use?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>We partner with trusted courier services including:</p>
+          <ul>
+            <li>Pathao Courier</li>
+            <li>Sundarban Express</li>
+            <li>SA Paribahan</li>
+            <li>Janani Courier</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="shipping">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          Can I change my delivery address after ordering?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>If your order hasn't been shipped yet, you can contact our support team to change the address. Once shipped, address changes are not possible. Please contact <a href="chat.html">Customer Service</a> for assistance.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Returns -->
+    <div class="faq-section" data-category="returns">
+      <div class="faq-section-title"><i class="fas fa-undo"></i> Returns & Refunds</div>
+      
+      <div class="faq-item" data-category="returns">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          What is your return policy?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>We have a <strong>7-day return policy</strong>. You can return products if:</p>
+          <ul>
+            <li>Product is damaged or defective</li>
+            <li>Wrong product delivered</li>
+            <li>Product doesn't match description</li>
+          </ul>
+          <p><strong>Note:</strong> Food items cannot be returned once delivered for hygiene reasons.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="returns">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          How do I request a return?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>To request a return:</p>
+          <ul>
+            <li>Go to My Orders in your account</li>
+            <li>Select the order you want to return</li>
+            <li>Click "Request Return"</li>
+            <li>Select reason and upload photos if needed</li>
+            <li>Submit the request</li>
+          </ul>
+          <p>Our team will review and approve within 24-48 hours.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="returns">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          When will I get my refund?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Refund timeline depends on your payment method:</p>
+          <ul>
+            <li><strong>bKash/Nagad:</strong> 3-5 business days</li>
+            <li><strong>Cash on Delivery:</strong> 5-7 business days (bank transfer)</li>
+          </ul>
+          <p>You'll receive an SMS confirmation once the refund is processed.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="returns">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          Can I exchange a product instead of returning?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Yes! For clothing items, you can request a size exchange within 7 days. For other products, we offer replacement for defective items. Contact our support team to arrange an exchange.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account -->
+    <div class="faq-section" data-category="account">
+      <div class="faq-section-title"><i class="fas fa-user"></i> Account & Profile</div>
+      
+      <div class="faq-item" data-category="account">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          How do I create an account?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Creating an account is free and easy:</p>
+          <ul>
+            <li>Click "Sign in" in the header</li>
+            <li>Click "Create your MR Shop account"</li>
+            <li>Enter your name, email, and password</li>
+            <li>Click "Create Account"</li>
+          </ul>
+          <p>You can also sign up using Google, Facebook, or Apple.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="account">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          I forgot my password. What do I do?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>To reset your password:</p>
+          <ul>
+            <li>Go to the Sign In page</li>
+            <li>Click "Forgot Password?"</li>
+            <li>Enter your email address</li>
+            <li>Check your email for the reset link</li>
+            <li>Create a new password</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="account">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          How do I update my profile information?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>To update your profile:</p>
+          <ul>
+            <li>Login to your account</li>
+            <li>Go to "Your Account" or "Profile"</li>
+            <li>Click "Edit Profile"</li>
+            <li>Update your name, phone, address, etc.</li>
+            <li>Click "Save Changes"</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="account">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          Is my personal information safe?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p><strong>Yes!</strong> We take your privacy seriously. Your personal information is encrypted and never shared with third parties. We follow strict data protection policies. Read our <a href="workforchild.html">Privacy Policy</a> for details.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seller -->
+    <div class="faq-section" data-category="seller">
+      <div class="faq-section-title"><i class="fas fa-store"></i> Sell on MR Shop</div>
+      
+      <div class="faq-item" data-category="seller">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          How do I become a seller?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Becoming a seller on MR Shop is easy:</p>
+          <ul>
+            <li>Go to <a href="becomeseller.html">Become a Seller</a> page</li>
+            <li>Fill in your shop details</li>
+            <li>Submit your application</li>
+            <li>Wait for admin approval (24-48 hours)</li>
+            <li>Receive your seller credentials</li>
+            <li>Login to <a href="seller.html">Seller Dashboard</a></li>
+          </ul>
+          <p><strong>No listing fees!</strong> Low commission rates.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="seller">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          What are the seller fees?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>MR Shop offers seller-friendly pricing:</p>
+          <ul>
+            <li><strong>Listing Fee:</strong> FREE (no charges to list products)</li>
+            <li><strong>Commission:</strong> 1-5% per sale (varies by category)</li>
+            <li><strong>Payment Processing:</strong> Included</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="seller">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          How do I add products?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>After logging into your seller dashboard:</p>
+          <ul>
+            <li>Go to Products section</li>
+            <li>Click "Add New Product"</li>
+            <li>Enter product name, price, description</li>
+            <li>Upload product images (max 4, 1MB each)</li>
+            <li>Click "Add Product"</li>
+          </ul>
+          <p>Your product will be live immediately!</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="seller">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          How do I get paid?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Payments are processed weekly:</p>
+          <ul>
+            <li>Earnings are calculated every Monday</li>
+            <li>Payment is sent to your bKash/Nagad/bank account</li>
+            <li>Minimum payout: ৳500</li>
+            <li>You can view earnings in the Payments section</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact CTA -->
+    <div class="contact-cta">
+      <h3>Still have questions?</h3>
+      <p>Our support team is here to help you 24/7</p>
+      <div class="contact-btns">
+        <a href="chat.html" class="contact-btn contact-primary"><i class="fas fa-headset"></i> Chat with Us</a>
+        <a href="https://www.facebook.com/profile.php?id=61583616496782" target="_blank" class="contact-btn contact-secondary"><i class="fab fa-facebook"></i> Facebook</a>
+        <a href="https://www.instagram.com/mrshopbd18/" target="_blank" class="contact-btn contact-secondary"><i class="fab fa-instagram"></i> Instagram</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</div>
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Get to Know Us</h4>
+        <a href="about.html">About MR Shop</a>
+        <a href="workfor.html">Careers</a>
+        <a href="workforpeople.html">Our Story</a>
+        <a href="blog.html">Blog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Make Money with Us</h4>
+        <a href="becomeseller.html">Sell on MR Shop</a>
+        <a href="seller.html">Seller Dashboard</a>
+        <a href="becomeseller.html">Become an Affiliate</a>
+      </div>
+      <div class="footer-col">
+        <h4>Help & Support</h4>
+        <a href="faq.html">FAQ</a>
+        <a href="chat.html">Customer Service</a>
+        <a href="userprofile.html">Your Account</a>
+        <a href="notification.html">Notifications</a>
+      </div>
+      <div class="footer-col">
+        <h4>Payment & Delivery</h4>
+        <a href="cart.html">Shopping Cart</a>
+        <a href="checkout.html">Checkout</a>
+        <a href="payment.html">Payment Methods</a>
+        <a href="order-tracking.html">Track Order</a>
+      </div>
+      <div class="footer-col">
+        <h4>Shop by Category</h4>
+        <a href="food&natural.html">Food & Natural</a>
+        <a href="sweets&dairy.html">Sweets & Dairy</a>
+        <a href="handricrafts.html">Handicrafts</a>
+        <a href="clothing.html">Clothing</a>
+      </div>
+      <div class="footer-col">
+        <h4>Connect with Us</h4>
+        <a href="https://www.facebook.com/profile.php?id=61583616496782" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+        <a href="https://www.instagram.com/mrshopbd18/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+        <a href="https://www.youtube.com/@mrshop18" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
+        <a href="chat.html"><i class="fas fa-headset"></i> Live Chat</a>
+      </div>
+    </div>
+    <div class="footer-quick-links">
+      <a href="index.html">Home</a>
+      <a href="search-results.html">All Products</a>
+      <a href="food&natural.html">Food</a>
+      <a href="sweets&dairy.html">Sweets</a>
+      <a href="handricrafts.html">Handicrafts</a>
+      <a href="clothing.html">Clothing</a>
+      <a href="book.html">Books</a>
+      <a href="antique.html">Antique</a>
+      <a href="blog.html">Blog</a>
+      <a href="compare.html">Compare</a>
+      <a href="about.html">About</a>
+      <a href="faq.html">FAQ</a>
+      <a href="order-tracking.html">Track Order</a>
+      <a href="review.html">Reviews</a>
+      <a href="seller.html">Sell</a>
+      <a href="chat.html">Help</a>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <div class="footer-logo">MR shop</div>
+      <div class="footer-copyright">&copy; 2026 MR Shop. All Rights Reserved. | Powered by <strong>MR IT Company</strong></div>
+      <div class="footer-payment">
+        <span>We Accept:</span>
+        <i class="fas fa-money-bill-wave" title="Cash on Delivery"></i>
+        <i class="fas fa-mobile-alt" title="bKash" style="color:#e2136e;"></i>
+        <i class="fas fa-wallet" title="Nagad" style="color:#f6921e;"></i>
+        <i class="fas fa-rocket" title="Rocket" style="color:#8b2393;"></i>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/products.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/auth-shared.js"></script>
+  <script src="assets/js/wishlist.js"></script>
+  <script src="assets/js/darkmode.js"></script>
+  <script>
+    // Toggle FAQ item
+    function toggleFAQ(el) {
+      const item = el.parentElement;
+      const wasActive = item.classList.contains('active');
+      
+      // Close all items in same section
+      const section = item.closest('.faq-section');
+      if (section) {
+        section.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+      }
+      
+      // Toggle clicked item
+      if (!wasActive) {
+        item.classList.add('active');
+      }
+    }
+
+    // Filter FAQ by category
+    function filterFAQ(category, btn) {
+      // Update active tab
+      document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      
+      // Filter sections
+      document.querySelectorAll('.faq-section').forEach(section => {
+        if (category === 'all' || section.dataset.category === category) {
+          section.style.display = 'block';
+        } else {
+          section.style.display = 'none';
+        }
+      });
+      
+      // Close all open items
+      document.querySelectorAll('.faq-item').forEach(item => item.classList.remove('active'));
+    }
+
+    // Search FAQ
+    const faqSearchInput = document.getElementById('faqSearchInput');
+    faqSearchInput.addEventListener('input', function(e) {
+      const query = e.target.value.toLowerCase();
+      document.querySelectorAll('.faq-item').forEach(item => {
+        const question = item.querySelector('.faq-question').textContent.toLowerCase();
+        const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+        if (question.includes(query) || answer.includes(query)) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+      
+      // Show all sections when searching
+      if (query) {
+        document.querySelectorAll('.faq-section').forEach(s => s.style.display = 'block');
+        document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+      }
+    });
+  </script>
+</body>
+</html>
