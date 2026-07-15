@@ -1,0 +1,12 @@
+bin/
+obj/
+.env
+*.user
+*.suo
+.vs/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+appsettings.Development.json

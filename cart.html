@@ -199,14 +199,21 @@
   <script src="assets/js/cart.js"></script>
   <script src="assets/js/wishlist.js"></script>
   <script>
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
     const COUPONS = {
-      'SAVE10': { percent: 10, label: '10% off' },
-      'SAVE20': { percent: 20, label: '20% off' },
-      'WELCOME': { percent: 15, label: '15% off' },
-      'MRSHOP': { percent: 5, label: '5% off' }
+      'MRSHOP100': { fixed: 100, label: '৳100 off' },
+      'MRSHOP50': { percent: 5, label: '5% off' },
+      'FREESHIP': { shipping: 0, label: 'Free shipping' }
     };
     let appliedCoupon = null;
     let discountPercent = 0;
+    let discountFixed = 0;
+    let freeShipping = false;
 
     function renderCart() {
       const container = document.getElementById('cartItems');
@@ -235,7 +242,7 @@
           <div class="amz-cart-item">
             <img src="${item.image}" alt="${item.name}" class="amz-cart-item-img" onerror="this.src='https://via.placeholder.com/180x180?text=No+Image'">
             <div>
-              <div class="amz-cart-item-title">${item.name}</div>
+              <div class="amz-cart-item-title">${escapeHtml(item.name)}</div>
               <div class="amz-cart-item-stock" style="color:${stockColor};">${stockText}</div>
               <div class="amz-cart-item-price">&#2547; ${item.price.toLocaleString()}</div>
               <div class="amz-cart-qty">
@@ -288,8 +295,8 @@
     function updateCalculations() {
       const subtotal = MR_Cart.getSubtotal();
       const tax = MR_Cart.getTax();
-      const shipping = MR_Cart.getShipping();
-      const discount = Math.round(subtotal * discountPercent / 100);
+      const shipping = freeShipping ? 0 : MR_Cart.getShipping();
+      const discount = Math.round(subtotal * discountPercent / 100) + discountFixed;
       const total = subtotal + tax + shipping - discount;
 
       document.getElementById('itemCount').textContent = MR_Cart.getTotalItems();
@@ -318,12 +325,14 @@
 
       if (COUPONS[code]) {
         appliedCoupon = code;
-        discountPercent = COUPONS[code].percent;
+        discountPercent = COUPONS[code].percent || 0;
+        discountFixed = COUPONS[code].fixed || 0;
+        freeShipping = COUPONS[code].shipping === 0;
         msg.textContent = `Coupon applied: ${COUPONS[code].label}`;
         msg.style.color = 'var(--amazon-green)';
         updateCalculations();
       } else {
-        msg.textContent = 'Invalid coupon code. Try SAVE10, SAVE20, or WELCOME.';
+        msg.textContent = 'Invalid coupon code. Try MRSHOP100, MRSHOP50, or FREESHIP.';
         msg.style.color = '#cc0c39';
       }
     }

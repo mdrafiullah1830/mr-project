@@ -83,7 +83,7 @@
   <div class="amz-auth-container" id="authWrapper">
     <div class="amz-auth-box">
       <h1>Sign in</h1>
-      <form action="/login" method="post" id="loginForm" onsubmit="handleLogin(event)">
+      <form action="javascript:void(0)" method="post" id="loginForm" onsubmit="handleLogin(event)">
         <label class="amz-auth-label" for="email">Email or mobile phone number</label>
         <input class="amz-auth-input" id="email" name="email" type="text" required />
 
@@ -186,7 +186,11 @@
     if (seller) {
       localStorage.setItem('mr_shop_seller', JSON.stringify(seller));
       localStorage.setItem('mr_shop_seller_token', 'seller_session_' + Date.now());
-      alert('Seller login successful!');
+      if (typeof MR_Cart !== 'undefined' && MR_Cart.showToast) {
+        MR_Cart.showToast('Seller login successful!', 'success');
+      } else {
+        alert('Seller login successful!');
+      }
       window.location.href = 'seller.html';
       return;
     }

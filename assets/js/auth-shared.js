@@ -62,46 +62,8 @@ const MR_Auth = {
       console.log('API offline, using localStorage auth');
     }
 
-    // Fallback to localStorage auth
-    // Check admin credentials first
-    const adminEmail = 'admin@mrmart18.com';
-    const adminPassword = 'mrmart18.bd';
-    const usernameOnly = email.split('@')[0];
-    
-    if ((email === adminEmail || usernameOnly === 'mrmart18') && password === adminPassword) {
-      const userData = {
-        id: 1,
-        username: 'mrmart18',
-        email: adminEmail,
-        role: 'admin',
-        isAdmin: true,
-        loggedIn: true,
-        loginTime: new Date().toISOString()
-      };
-      localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-      MR_Cart.showToast('Admin login successful!', 'success');
-      return true;
-    }
-
-    const users = this.getUsers();
-    const user = users.find(u => u.email === email && u.password === password);
-
-    if (user) {
-      const userData = {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: user.role || 'user',
-        isAdmin: user.role === 'admin',
-        loggedIn: true,
-        loginTime: new Date().toISOString()
-      };
-      localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-      MR_Cart.showToast('Login successful!', 'success');
-      return true;
-    }
-
-    MR_Cart.showToast('Invalid credentials', 'error');
+    // Offline fallback - cannot authenticate without server
+    MR_Cart.showToast('Admin login not available offline. Please try again when the server is reachable.', 'error');
     return false;
   },
 
@@ -146,37 +108,9 @@ const MR_Auth = {
       console.log('API offline, using localStorage auth');
     }
 
-    // Fallback to localStorage
-    const users = this.getUsers();
-
-    if (users.find(u => u.email === email)) {
-      MR_Cart.showToast('Email already registered', 'error');
-      return false;
-    }
-
-    const newUser = {
-      id: Date.now(),
-      username,
-      email,
-      password,
-      createdAt: new Date().toISOString()
-    };
-    users.push(newUser);
-    localStorage.setItem('mr_shop_users', JSON.stringify(users));
-
-        const userData = {
-          id: newUser.id,
-          username: newUser.username,
-          email: newUser.email,
-          role: newUser.role || 'user',
-          isAdmin: newUser.role === 'admin',
-          loggedIn: true,
-          loginTime: new Date().toISOString()
-        };
-        localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-
-    MR_Cart.showToast('Account created successfully!', 'success');
-    return true;
+    // Offline fallback - registration requires the server
+    MR_Cart.showToast('Registration requires the server to be online. Please try again later.', 'error');
+    return false;
   },
 
   async getProfile() {

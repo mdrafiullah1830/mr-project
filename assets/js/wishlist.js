@@ -11,7 +11,12 @@ const MR_Wishlist = {
   },
 
   saveWishlist(wishlist) {
-    localStorage.setItem('mr_shop_wishlist', JSON.stringify(wishlist));
+    try {
+      localStorage.setItem('mr_shop_wishlist', JSON.stringify(wishlist));
+    } catch (e) {
+      MR_Cart.showToast('Storage full. Please clear some data.', 'error');
+      return;
+    }
     this.updateWishlistCount();
   },
 

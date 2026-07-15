@@ -13,6 +13,7 @@
   <meta name="description" content="MR Shop - Bangladesh's #1 Online Marketplace. Shop authentic Bangladeshi products including Sundarbans honey, Jamdani sarees, handicrafts & more. Free delivery on orders over ৳5,000.">
   <meta name="keywords" content="MR Shop, Bangladesh online shop, Bangladeshi products, honey, saree, handicrafts, sweets, dairy">
   <meta name="author" content="MR IT Company">
+  <link rel="icon" href="assets/images/mrlogo.png" type="image/png">
   <title>MR Shop - Bangladesh's #1 Online Shopping Destination</title>
   <script src="assets/js/loader.js"></script>
   <link rel="stylesheet" href="assets/css/dark-mode.css">
@@ -38,7 +39,7 @@
       --red: #cc0c39;
       --bg-gradient: linear-gradient(135deg, #0f1111 0%, #1a2332 50%, #0f1111 100%);
     }
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--light); color: var(--text); line-height: 1.5; overflow-x: hidden; }
+    body { font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif; background: var(--light); color: var(--text); line-height: 1.5; overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
     a { text-decoration: none; color: inherit; }
 
     /* ==================== HEADER ==================== */
@@ -540,6 +541,12 @@
   <script src="assets/js/auth-shared.js"></script>
   <script src="assets/js/wishlist.js"></script>
   <script>
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
     // Product Database (local for homepage)
     let allProducts = [
       { id: 1, name: "Sundarbans Wild Honey 500g", price: 850, originalPrice: 1200, category: "food", image: "./assets/images/honey.jpg", rating: 4.8, reviews: 234, prime: true, link: "food&natural.html" },
@@ -624,7 +631,7 @@
           ${disc > 0 ? `<span class="deal-badge">${disc}% off</span>` : ''}
           <div class="product-img-wrap"><img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"></div>
           <div class="product-info">
-            <div class="product-title">${p.name}</div>
+            <div class="product-title">${escapeHtml(p.name)}</div>
             <div class="product-rating"><span class="stars">${generateStars(p.rating)}</span><span class="rating-count">${p.reviews.toLocaleString()}</span></div>
             <div class="product-price">
               <span class="price-symbol">৳</span><span class="price-whole">${p.price.toLocaleString()}</span>
@@ -684,7 +691,7 @@
         const cn = { food:'Food & Natural', sweets:'Sweets & Dairy', handicrafts:'Handicrafts', clothing:'Clothing', books:'Books', antique:'Antique' };
         for (const [c, ps] of Object.entries(cats)) {
           h += `<div class="search-category-label">${cn[c]||c}</div>`;
-          ps.forEach(p => { h += `<div class="search-suggestion-item" onclick="location.href='${p.link}'"><img src="${p.image}" alt=""><div class="search-suggestion-info"><div class="search-suggestion-name">${p.name}</div><div class="search-suggestion-price"><span class="search-price-current">৳${p.price.toLocaleString()}</span></div></div><div class="search-suggestion-arrow"><i class="fas fa-arrow-right"></i></div></div>`; });
+          ps.forEach(p => {           h += `<div class="search-suggestion-item" onclick="location.href='${p.link}'"><img src="${p.image}" alt=""><div class="search-suggestion-info"><div class="search-suggestion-name">${escapeHtml(p.name)}</div><div class="search-suggestion-price"><span class="search-price-current">৳${p.price.toLocaleString()}</span></div></div><div class="search-suggestion-arrow"><i class="fas fa-arrow-right"></i></div></div>`; });
         }
         dd.innerHTML = h;
       }

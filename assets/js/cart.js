@@ -13,7 +13,12 @@ const MR_Cart = {
   },
 
   saveCart(cart) {
-    localStorage.setItem('mr_shop_cart', JSON.stringify(cart));
+    try {
+      localStorage.setItem('mr_shop_cart', JSON.stringify(cart));
+    } catch (e) {
+      this.showToast('Storage full. Please clear some data.', 'error');
+      return;
+    }
     this.updateCartCount();
     this.updateCartBadge();
   },
@@ -21,6 +26,10 @@ const MR_Cart = {
   // Sync cart from server
   async syncFromServer() {
     if (!MR_API.isLoggedIn()) return;
+
+    const container = document.getElementById('cartItems');
+    const loadingHtml = '<div style="text-align:center;padding:40px;color:#565959;font-size:14px;"><i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Loading cart...</div>';
+    if (container && container.children.length === 0) container.innerHTML = loadingHtml;
 
     try {
       const result = await MR_API.get('/cart');
@@ -48,10 +57,16 @@ const MR_Cart = {
     const product = MR_getProductById(productId);
     if (!product) return false;
 
-    // Update localStorage immediately
+    // Check stock before adding
     const cart = this.getCart();
     const existing = cart.find(item => item.id === productId);
+    const currentQty = existing ? existing.quantity : 0;
+    if (product.stock !== undefined && product.stock !== null && (currentQty + quantity) > product.stock) {
+      this.showToast(`Only ${product.stock} available in stock!`, 'error');
+      return false;
+    }
 
+    // Update localStorage immediately
     if (existing) {
       existing.quantity += quantity;
     } else {
