@@ -214,10 +214,9 @@ const MR_Auth = {
     localStorage.removeItem('mr_shop_token');
     localStorage.removeItem('mr_shop_cart');
     localStorage.removeItem('mr_shop_wishlist');
-    MR_Cart.showToast('Logged out successfully', 'success');
-    setTimeout(() => {
-      window.location.href = 'index.html';
-    }, 1000);
+    localStorage.removeItem('mr_shop_seller');
+    localStorage.removeItem('mr_shop_seller_token');
+    window.location.href = 'index.html';
   },
 
   getUsers() {
