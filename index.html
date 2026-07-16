@@ -258,30 +258,165 @@
     .footer-payment i { font-size: 20px; color: #ccc; transition: transform 0.2s; }
     .footer-payment i:hover { transform: scale(1.2); color: var(--white); }
 
-    /* ==================== RESPONSIVE ==================== */
+    /* ==================== RESPONSIVE - PC / TABLET / MOBILE ==================== */
+
+    /* ---- TABLET (768px - 1024px) ---- */
     @media (max-width: 1024px) {
       .hero-content { padding: 60px 20px; }
       .hero-title { font-size: 42px; }
+      .hero-desc { font-size: 16px; }
+      .hero-stats { gap: 32px; }
+      .hero-stat-num { font-size: 28px; }
       .category-grid { grid-template-columns: repeat(2, 1fr); }
       .features-grid { grid-template-columns: repeat(2, 1fr); }
       .feature-item:nth-child(2) { border-right: none; }
+      .feature-item:nth-child(3) { border-right: none; }
+      .feature-item:nth-child(4) { border-right: none; }
       .hero-float { display: none; }
+      .section-title { font-size: 20px; }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+      .deals-inner { padding: 32px; }
+      .deals-content h2 { font-size: 24px; }
+      .products-grid { grid-template-columns: repeat(3, 1fr); gap: 14px; }
+      .nav-bar { gap: 2px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .nav-item { padding: 6px 10px; font-size: 12px; }
     }
-    @media (max-width: 768px) {
-      .hero-title { font-size: 36px; }
-      .category-grid { grid-template-columns: 1fr; }
-      .products-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-      .deals-inner { flex-direction: column; text-align: center; gap: 20px; padding: 30px; }
-      .footer-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 480px) {
-      .header-top { padding: 8px 12px; gap: 8px; }
+
+    /* ---- MOBILE (481px - 767px) ---- */
+    @media (max-width: 767px) {
+      .header-top { padding: 8px 12px; gap: 8px; flex-wrap: wrap; }
       .logo-text { font-size: 18px; }
-      .deliver-to, .header-link .line1 { display: none; }
-      .hero-title { font-size: 28px; }
-      .products-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .logo-sub { font-size: 9px; }
+      .deliver-to { display: none; }
+      .search-bar { order: 3; width: 100%; margin-top: 6px; height: 40px; }
+      .search-cat { display: none; }
+      .search-input { font-size: 14px; padding: 0 12px; }
+      .search-btn { padding: 0 14px; font-size: 16px; }
+      .header-actions { gap: 2px; }
+      .header-link { padding: 6px 8px; font-size: 12px; }
+      .header-link .line1 { display: none; }
+      .header-link .line2 { font-size: 12px; }
+      .cart-btn { padding: 6px 8px; }
+      .cart-text { font-size: 12px; }
+      .cart-icon { font-size: 20px; }
+
+      .nav-bar { padding: 6px 8px; gap: 2px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+      .nav-bar::-webkit-scrollbar { display: none; }
+      .nav-item { padding: 6px 8px; font-size: 11px; white-space: nowrap; }
+      .nav-divider { display: none; }
+
+      .hero { min-height: 400px; }
+      .hero-content { padding: 40px 16px; min-height: 400px; }
+      .hero-title { font-size: 28px; letter-spacing: -0.5px; }
+      .hero-desc { font-size: 14px; margin-bottom: 24px; }
+      .hero-btn { padding: 12px 24px; font-size: 14px; }
+      .hero-stats { gap: 20px; flex-wrap: wrap; justify-content: center; }
+      .hero-stat-num { font-size: 24px; }
+      .hero-stat-label { font-size: 11px; }
+
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .feature-item { padding: 12px 14px; gap: 10px; border-right: none !important; border-bottom: 1px solid var(--border); }
+      .feature-item:nth-child(odd) { border-right: 1px solid var(--border) !important; }
+      .feature-icon { width: 36px; height: 36px; font-size: 14px; }
+      .feature-text h4 { font-size: 12px; }
+      .feature-text p { font-size: 11px; }
+
+      .section { padding: 16px 12px; }
+      .section-title { font-size: 18px; }
+      .section-header { margin-bottom: 14px; }
+
+      .category-grid { grid-template-columns: 1fr; gap: 12px; }
+      .cat-card-bg { height: 140px; }
+      .cat-card-items { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+      .cat-mini { padding: 6px; }
+      .cat-mini img { width: 28px; height: 28px; }
+      .cat-mini span { font-size: 10px; }
+
+      .products-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
       .product-img-wrap { height: 140px; padding: 10px; }
-      .price-whole { font-size: 18px; }
+      .product-info { padding: 10px; }
+      .product-title { font-size: 12px; min-height: 30px; margin-bottom: 6px; }
+      .product-rating { margin-bottom: 6px; }
+      .stars { font-size: 11px; }
+      .rating-count { font-size: 11px; }
+      .price-whole { font-size: 16px; }
+      .price-symbol { font-size: 11px; }
+      .price-original { font-size: 11px; }
+      .price-discount { font-size: 11px; }
+      .product-btn { padding: 8px; font-size: 12px; }
+      .deal-badge { font-size: 10px; padding: 3px 8px; }
+      .prime-badge { font-size: 10px; padding: 2px 6px; }
+      .delivery-info { font-size: 11px; }
+
+      .deals-banner { padding: 0 12px; margin-bottom: 16px; }
+      .deals-inner { flex-direction: column; text-align: center; gap: 16px; padding: 24px 16px; border-radius: 12px; }
+      .deals-content h2 { font-size: 20px; }
+      .deals-content p { font-size: 14px; }
+      .deals-timer { gap: 8px; }
+      .timer-box { padding: 8px 12px; }
+      .timer-num { font-size: 18px; }
+      .timer-label { font-size: 10px; }
+      .deals-btn { padding: 12px 24px; font-size: 14px; }
+
+      .footer-grid { grid-template-columns: 1fr; gap: 20px; }
+      .footer-col h4 { font-size: 14px; margin-bottom: 10px; }
+      .footer-col a { font-size: 12px; }
+      .footer-quick-links { gap: 6px; padding: 12px; }
+      .footer-quick-links a { font-size: 11px; padding: 5px 10px; }
+      .footer-logo { font-size: 18px; }
+      .footer-copyright { font-size: 11px; }
+    }
+
+    /* ---- MOBILE SMALL (max 480px) ---- */
+    @media (max-width: 480px) {
+      .header-top { padding: 6px 10px; gap: 6px; }
+      .logo { padding: 6px 8px; }
+      .logo-text { font-size: 16px; }
+      .logo-sub { font-size: 8px; letter-spacing: 1px; }
+      .search-bar { height: 38px; border-radius: 6px; }
+      .search-input { font-size: 13px; }
+      .search-btn { padding: 0 12px; font-size: 14px; }
+      .header-link { padding: 4px 6px; }
+      .header-link .line2 { font-size: 11px; }
+      .cart-btn { padding: 4px 6px; }
+      .cart-icon { font-size: 18px; }
+      .cart-text { font-size: 11px; }
+      .cart-count { width: 16px; height: 16px; font-size: 10px; top: -4px; right: -6px; }
+
+      .nav-item { padding: 5px 6px; font-size: 10px; }
+
+      .hero { min-height: 350px; }
+      .hero-content { padding: 30px 12px; min-height: 350px; }
+      .hero-badge { font-size: 11px; padding: 6px 12px; margin-bottom: 16px; }
+      .hero-title { font-size: 24px; }
+      .hero-desc { font-size: 13px; margin-bottom: 20px; }
+      .hero-btns { gap: 10px; }
+      .hero-btn { padding: 10px 18px; font-size: 13px; }
+      .hero-stats { gap: 16px; }
+      .hero-stat-num { font-size: 20px; }
+      .hero-stat-label { font-size: 10px; }
+
+      .features-grid { grid-template-columns: 1fr; }
+      .feature-item { border-right: none !important; border-bottom: 1px solid var(--border); }
+      .feature-item:last-child { border-bottom: none; }
+
+      .products-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+      .product-img-wrap { height: 120px; padding: 8px; }
+      .product-info { padding: 8px; }
+      .product-title { font-size: 11px; min-height: 26px; -webkit-line-clamp: 2; }
+      .price-whole { font-size: 14px; }
+      .product-btn { padding: 6px; font-size: 11px; }
+
+      .cat-card-bg { height: 120px; }
+      .cat-card-content { padding: 12px; }
+      .cat-card-title { font-size: 14px; }
+      .cat-card-count { font-size: 11px; }
+
+      .deals-inner { padding: 20px 14px; }
+      .deals-content h2 { font-size: 18px; }
+      .deals-content p { font-size: 13px; }
+      .timer-num { font-size: 16px; }
+      .timer-box { padding: 6px 10px; }
     }
 
     /* ==================== ANIMATIONS ==================== */
