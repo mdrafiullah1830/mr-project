@@ -2,7 +2,7 @@
 // Cart with API sync and localStorage persistence
 
 const MR_Cart = {
-  API_BASE: window.location.protocol === 'https:' ? 'https://localhost:5000/api' : 'http://localhost:5000/api',
+  API_BASE: '/api',
 
   getCart() {
     try {

@@ -1,7 +1,7 @@
 // ==================== MR SHOP - UNIFIED PRODUCT DATA ====================
 // Now fetches from C# API with localStorage fallback
 
-const API_BASE_URL = window.location.protocol === 'https:' ? 'https://localhost:5000/api' : 'http://localhost:5000/api';
+const API_BASE_URL = '/api';
 
 // Fallback products (used when API is offline)
 const MR_PRODUCTS_FALLBACK = [

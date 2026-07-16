@@ -2,7 +2,7 @@
 // Now connects to C# API with localStorage fallback
 
 const MR_Auth = {
-  API_BASE: window.location.protocol === 'https:' ? 'https://localhost:5000/api' : 'http://localhost:5000/api',
+  API_BASE: '/api',
 
   getUser() {
     try {
@@ -292,7 +292,6 @@ function loginWithGoogle() {
 }
 
 async function handleGoogleResponse(response) {
-    // Decode Google JWT to get user info (works without backend)
     try {
         const payload = JSON.parse(atob(response.credential.split('.')[1]));
         const userData = {
@@ -306,48 +305,19 @@ async function handleGoogleResponse(response) {
             profile: payload.picture || null
         };
 
-        // Try backend first
-        try {
-            const res = await fetch(`${MR_Auth.API_BASE}/customerauth/google`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ credential: response.credential }),
-                signal: AbortSignal.timeout(5000)
-            });
-
-            if (res.ok) {
-                const data = await res.json();
-                localStorage.setItem('mr_shop_token', data.token);
-                userData.id = data.user.id;
-                userData.role = data.user.role || 'customer';
-                userData.isAdmin = data.user.role === 'admin';
-            }
-        } catch (apiErr) {
-            console.log('Backend offline, using localStorage for Google auth');
-        }
-
-        // Save to localStorage (works with or without backend)
         localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-        
-        // Immediately update UI
         MR_Auth.updateAuthUI();
-        
-        MR_Cart.showToast('Google login successful!', 'success');
-        
-        // Redirect based on current page
-        setTimeout(() => {
-            const currentPage = window.location.pathname.split('/').pop();
-            if (currentPage === 'signin.html' || currentPage === 'signup.html' || currentPage === 'auth.html') {
-                window.location.href = 'userprofile.html';
-            } else {
-                // On other pages, reload to update header
-                window.location.reload();
-            }
-        }, 800);
+
+        const currentPage = window.location.pathname.split('/').pop();
+        if (currentPage === 'signin.html' || currentPage === 'signup.html' || currentPage === 'auth.html') {
+            window.location.href = 'userprofile.html';
+        } else {
+            window.location.reload();
+        }
 
     } catch (err) {
         console.error('Google login error:', err);
-        MR_Cart.showToast('Google login failed. Please try again.', 'error');
+        alert('Google login failed. Please try again.');
     }
 }
 

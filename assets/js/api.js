@@ -2,7 +2,7 @@
 // Centralized API client with auth token handling
 
 const MR_API = {
-  BASE_URL: window.location.protocol === 'https:' ? 'https://localhost:5000/api' : 'http://localhost:5000/api',
+  BASE_URL: '/api',
 
   // Get auth token from localStorage
   getToken() {
