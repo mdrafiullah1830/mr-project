@@ -170,6 +170,27 @@
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
 
+    // Admin credentials check
+    if (email === 'mrshop.bd.18@gmail.com' && password === 'mrshopbd18') {
+      const adminUser = {
+        id: 'admin_001',
+        username: 'Admin',
+        email: 'mrshop.bd.18@gmail.com',
+        role: 'admin',
+        isAdmin: true,
+        loggedIn: true,
+        loginTime: new Date().toISOString(),
+        profile: null
+      };
+      localStorage.setItem('mr_shop_user', JSON.stringify(adminUser));
+      localStorage.setItem('mr_shop_token', 'admin_token_' + Date.now());
+      if (typeof MR_Cart !== 'undefined' && MR_Cart.showToast) {
+        MR_Cart.showToast('Admin login successful!', 'success');
+      }
+      setTimeout(() => window.location.href = 'admin.html', 500);
+      return;
+    }
+
     // Check seller credentials first
     const sellers = JSON.parse(localStorage.getItem('mr_shop_sellers')) || [];
     console.log('All sellers:', sellers);
