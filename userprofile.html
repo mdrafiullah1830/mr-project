@@ -286,14 +286,28 @@
   <script>
     // Load user data from localStorage
     const user = JSON.parse(localStorage.getItem('mr_shop_user') || '{}');
+    const savedProfile = JSON.parse(localStorage.getItem('mr_shop_profile') || '{}');
+
     if (user.username) {
       document.getElementById('profileName').textContent = user.username;
       document.getElementById('headerName').textContent = user.username;
-      document.getElementById('fullName').value = user.username;
+      document.getElementById('fullName').value = savedProfile.fullName || user.username;
+    } else {
+      document.getElementById('fullName').value = savedProfile.fullName || '';
     }
     if (user.email) {
       document.getElementById('profileEmail').textContent = user.email;
-      document.getElementById('email').value = user.email;
+      document.getElementById('email').value = savedProfile.email || user.email;
+    } else {
+      document.getElementById('email').value = savedProfile.email || '';
+    }
+
+    // Load other profile fields from saved profile
+    document.getElementById('phone').value = savedProfile.phone || '';
+    document.getElementById('dob').value = savedProfile.dob || '';
+    document.getElementById('address').value = savedProfile.address || '';
+    if (savedProfile.gender) {
+      document.getElementById('gender').value = savedProfile.gender;
     }
 
     // Load saved profile photo
@@ -322,21 +336,31 @@
 
     function saveProfile(e) {
       e.preventDefault();
-      const data = {
-        username: document.getElementById('fullName').value,
+      
+      // Save to separate profile storage
+      const profileData = {
+        fullName: document.getElementById('fullName').value,
         email: document.getElementById('email').value,
         phone: document.getElementById('phone').value,
         dob: document.getElementById('dob').value,
         address: document.getElementById('address').value,
-        gender: document.getElementById('gender').value,
-        loggedIn: true
+        gender: document.getElementById('gender').value
       };
-      localStorage.setItem('mr_shop_user', JSON.stringify(data));
-      document.getElementById('profileName').textContent = data.username;
-      document.getElementById('headerName').textContent = data.username;
-      document.getElementById('profileEmail').textContent = data.email;
+      localStorage.setItem('mr_shop_profile', JSON.stringify(profileData));
+
+      // Also update main user data
+      const userData = JSON.parse(localStorage.getItem('mr_shop_user') || '{}');
+      userData.username = profileData.fullName;
+      userData.email = profileData.email;
+      localStorage.setItem('mr_shop_user', JSON.stringify(userData));
+
+      // Update display
+      document.getElementById('profileName').textContent = profileData.fullName;
+      document.getElementById('headerName').textContent = profileData.fullName;
+      document.getElementById('profileEmail').textContent = profileData.email;
+
       toggleEdit();
-      showNotification('Profile saved!');
+      showNotification('Profile saved successfully!');
     }
 
     // Change profile photo

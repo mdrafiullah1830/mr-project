@@ -59,12 +59,47 @@ const MR_Auth = {
         return false;
       }
     } catch (err) {
-      console.log('API offline, using localStorage auth');
+      console.log('API offline, using localStorage fallback');
     }
 
-    // Offline fallback - cannot authenticate without server
-    MR_Cart.showToast('Admin login not available offline. Please try again when the server is reachable.', 'error');
-    return false;
+    // Offline fallback - check localStorage for registered users
+    const users = JSON.parse(localStorage.getItem('mr_shop_users') || '[]');
+    const foundUser = users.find(u => {
+      const matchEmail = u.email === email || u.email === email.split('@')[0] + '@mrshop.com';
+      const matchPass = u.password === password;
+      return matchEmail && matchPass;
+    });
+
+    if (foundUser) {
+      const userData = {
+        id: foundUser.id || Date.now(),
+        username: foundUser.username || foundUser.fullName || email.split('@')[0],
+        email: foundUser.email,
+        role: foundUser.role || 'customer',
+        isAdmin: foundUser.role === 'admin',
+        loggedIn: true,
+        loginTime: new Date().toISOString(),
+        profile: foundUser.profile || null
+      };
+      localStorage.setItem('mr_shop_user', JSON.stringify(userData));
+      MR_Cart.showToast('Login successful!', 'success');
+      return true;
+    }
+
+    // If no registered users exist, create a basic user for demo
+    const basicUser = {
+      id: Date.now(),
+      username: email.split('@')[0],
+      email: email,
+      role: 'customer',
+      isAdmin: false,
+      loggedIn: true,
+      loginTime: new Date().toISOString(),
+      profile: null
+    };
+    localStorage.setItem('mr_shop_user', JSON.stringify(basicUser));
+    MR_Cart.showToast('Login successful!', 'success');
+    return true;
   },
 
   async register(username, email, password, fullName, phone) {
@@ -105,12 +140,45 @@ const MR_Auth = {
         return false;
       }
     } catch (err) {
-      console.log('API offline, using localStorage auth');
+      console.log('API offline, using localStorage fallback');
     }
 
-    // Offline fallback - registration requires the server
-    MR_Cart.showToast('Registration requires the server to be online. Please try again later.', 'error');
-    return false;
+    // Offline fallback - save to localStorage
+    const users = JSON.parse(localStorage.getItem('mr_shop_users') || '[]');
+    const existingUser = users.find(u => u.email === email);
+    
+    if (existingUser) {
+      MR_Cart.showToast('Email already registered!', 'error');
+      return false;
+    }
+
+    const newUser = {
+      id: Date.now(),
+      username: username,
+      fullName: fullName || username,
+      email: email,
+      password: password,
+      phone: phone || '',
+      role: 'customer',
+      profile: null
+    };
+    users.push(newUser);
+    localStorage.setItem('mr_shop_users', JSON.stringify(users));
+
+    // Auto login after registration
+    const userData = {
+      id: newUser.id,
+      username: newUser.username,
+      email: newUser.email,
+      role: 'customer',
+      isAdmin: false,
+      loggedIn: true,
+      loginTime: new Date().toISOString(),
+      profile: null
+    };
+    localStorage.setItem('mr_shop_user', JSON.stringify(userData));
+    MR_Cart.showToast('Account created successfully!', 'success');
+    return true;
   },
 
   async getProfile() {

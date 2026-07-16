@@ -1,5 +1,5 @@
 # MR Shop - robots.txt
-# https://mrshopbangladesh.tech
+# https://mrshopbd.com
 
 User-agent: *
 Allow: /
@@ -7,7 +7,7 @@ Disallow: /admin.html
 Disallow: /seller-settings.html
 
 # Sitemap
-Sitemap: https://mrshopbangladesh.tech/sitemap.xml
+Sitemap: https://mrshopbd.com/sitemap.xml
 
 # Crawl-delay
 Crawl-delay: 1
