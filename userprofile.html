@@ -490,6 +490,13 @@
       if (confirm('Are you sure you want to logout?')) {
         localStorage.removeItem('mr_shop_user');
         localStorage.removeItem('mr_shop_token');
+        localStorage.removeItem('mr_shop_cart');
+        localStorage.removeItem('mr_shop_wishlist');
+        localStorage.removeItem('mr_shop_seller');
+        localStorage.removeItem('mr_shop_seller_token');
+        localStorage.removeItem('mr_shop_profile');
+        localStorage.removeItem('mr_shop_profile_photo');
+        localStorage.removeItem('mr_shop_password');
         window.location.href = 'index.html';
       }
     }
