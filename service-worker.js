@@ -1,5 +1,5 @@
 // Service Worker for MR Shop PWA
-const CACHE_NAME = 'mrshop-v3';
+const CACHE_NAME = 'mrshop-v4';
 const urlsToCache = [
   './',
   './index.html',
@@ -21,7 +21,9 @@ const urlsToCache = [
   './blog.html',
   './email-notifications.html',
   './seller.html',
-  './admin.html'
+  './admin.html',
+  './userprofile.html',
+  './becomeseller.html'
 ];
 
 // Install event
