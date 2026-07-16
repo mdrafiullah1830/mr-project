@@ -284,9 +284,125 @@
   <script src="assets/js/cart.js"></script>
   <script src="assets/js/auth-shared.js"></script>
   <script>
+    // API base URL
+    var API_BASE = 'https://mrshopbangladesh-fmb9h7g2csbwawd3.centralindia-01.azurewebsites.net';
+
     // Load user data from localStorage
     const user = JSON.parse(localStorage.getItem('mr_shop_user') || '{}');
     const savedProfile = JSON.parse(localStorage.getItem('mr_shop_profile') || '{}');
+    const authToken = localStorage.getItem('mr_shop_token');
+
+    // ===== FEATURE 1: PROFILE - Sync with Backend =====
+    async function loadProfileFromBackend() {
+      if (!authToken) return;
+      try {
+        const res = await fetch(API_BASE + '/api/customerauth/me', {
+          headers: { 'Authorization': 'Bearer ' + authToken }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          // Update UI with backend data
+          document.getElementById('profileName').textContent = data.name || user.username;
+          document.getElementById('headerName').textContent = data.name || user.username;
+          document.getElementById('profileEmail').textContent = data.email || user.email;
+          document.getElementById('fullName').value = data.name || savedProfile.fullName || '';
+          document.getElementById('email').value = data.email || savedProfile.email || '';
+          document.getElementById('phone').value = data.phone || savedProfile.phone || '';
+          document.getElementById('address').value = data.address || savedProfile.address || '';
+          // Update localStorage with backend data
+          var updatedProfile = {
+            fullName: data.name || savedProfile.fullName,
+            email: data.email || savedProfile.email,
+            phone: data.phone || savedProfile.phone,
+            address: data.address || savedProfile.address,
+            dob: savedProfile.dob || '',
+            gender: savedProfile.gender || ''
+          };
+          localStorage.setItem('mr_shop_profile', JSON.stringify(updatedProfile));
+          if (data.profilePhoto) {
+            document.getElementById('profilePhoto').src = data.profilePhoto;
+          }
+        }
+      } catch (err) {
+        console.log('Backend offline, using localStorage');
+      }
+    }
+
+    // ===== FEATURE 2: ORDERS - Fetch from Backend =====
+    var backendOrders = [];
+    async function loadOrdersFromBackend() {
+      if (!authToken) { loadOrders(); return; }
+      try {
+        const res = await fetch(API_BASE + '/api/orders', {
+          headers: { 'Authorization': 'Bearer ' + authToken }
+        });
+        if (res.ok) {
+          backendOrders = await res.json();
+          if (backendOrders.length > 0) {
+            orders = backendOrders.map(function(o) {
+              return {
+                id: o.id || o._id || '#MR' + Math.floor(Math.random() * 9000 + 1000),
+                status: (o.status || 'pending').toLowerCase(),
+                date: o.createdAt || o.orderDate || new Date().toISOString(),
+                total: o.totalAmount || o.total || 0,
+                items: (o.items || []).length || o.itemCount || 1,
+                imgs: (o.items || []).slice(0, 3).map(function(item) {
+                  return item.image || item.productImage || './assets/images/honey.jpg';
+                })
+              };
+            });
+          }
+        }
+      } catch (err) {
+        console.log('Backend offline, using local orders');
+      }
+      loadOrders();
+    }
+
+    // ===== FEATURE 3: WISHLIST - Sync with Backend =====
+    async function loadWishlistFromBackend() {
+      if (!authToken) { loadWishlist(); return; }
+      try {
+        const res = await fetch(API_BASE + '/api/wishlist', {
+          headers: { 'Authorization': 'Bearer ' + authToken }
+        });
+        if (res.ok) {
+          var serverWishlist = await res.json();
+          if (serverWishlist.length > 0) {
+            // Merge with local wishlist
+            var localWl = JSON.parse(localStorage.getItem('mr_shop_wishlist') || '[]');
+            var merged = serverWishlist.map(function(item) {
+              return {
+                id: item.productId || item.id,
+                name: item.productName || item.name || 'Product',
+                price: item.price || 0,
+                image: item.image || item.productImage || './assets/images/honey.jpg'
+              };
+            });
+            // Add local items not in server
+            localWl.forEach(function(localItem) {
+              if (!merged.find(function(m) { return m.id === localItem.id; })) {
+                merged.push(localItem);
+              }
+            });
+            localStorage.setItem('mr_shop_wishlist', JSON.stringify(merged));
+          }
+        }
+      } catch (err) {
+        console.log('Backend offline, using local wishlist');
+      }
+      loadWishlist();
+    }
+
+    async function removeWishlistFromBackend(productId) {
+      if (!authToken) return;
+      try {
+        await fetch(API_BASE + '/api/wishlist/product/' + productId, {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + authToken }
+        });
+      } catch (err) {}
+    }
 
     if (user.username) {
       document.getElementById('profileName').textContent = user.username;
@@ -325,8 +441,8 @@
       var section = document.getElementById('sec-' + name);
       if (section) section.classList.add('active');
       if (el) el.classList.add('active');
-      if (name === 'orders') loadOrders();
-      if (name === 'wishlist') loadWishlist();
+      if (name === 'orders') loadOrdersFromBackend();
+      if (name === 'wishlist') loadWishlistFromBackend();
     }
 
     // Edit profile
@@ -339,7 +455,7 @@
       document.getElementById('saveBtn').style.display = editing ? 'block' : 'none';
     }
 
-    function saveProfile(e) {
+    async function saveProfile(e) {
       e.preventDefault();
       var profileData = {
         fullName: document.getElementById('fullName').value,
@@ -350,6 +466,17 @@
         gender: document.getElementById('gender').value
       };
       localStorage.setItem('mr_shop_profile', JSON.stringify(profileData));
+
+      // Save to backend
+      if (authToken) {
+        try {
+          await fetch(API_BASE + '/api/customerauth/profile', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+            body: JSON.stringify({ name: profileData.fullName, phone: profileData.phone, address: profileData.address })
+          });
+        } catch (err) {}
+      }
 
       var userData = JSON.parse(localStorage.getItem('mr_shop_user') || '{}');
       userData.username = profileData.fullName;
@@ -475,12 +602,20 @@
       var wl = JSON.parse(localStorage.getItem('mr_shop_wishlist') || '[]');
       wl = wl.filter(function(i) { return i.id !== id; });
       localStorage.setItem('mr_shop_wishlist', JSON.stringify(wl));
+      removeWishlistFromBackend(id);
       loadWishlist();
     }
 
     function clearWishlist() {
       if (confirm('Clear entire wishlist?')) {
         localStorage.removeItem('mr_shop_wishlist');
+        // Clear from backend too
+        if (authToken) {
+          fetch(API_BASE + '/api/wishlist', {
+            method: 'DELETE',
+            headers: { 'Authorization': 'Bearer ' + authToken }
+          }).catch(function() {});
+        }
         loadWishlist();
       }
     }
@@ -501,10 +636,10 @@
       }
     }
 
-    // Init
-    loadOrders();
-    var initWl = JSON.parse(localStorage.getItem('mr_shop_wishlist') || '[]');
-    document.getElementById('wishlistCount').textContent = initWl.length;
+    // Init - Load from backend on page load
+    loadProfileFromBackend();
+    loadOrdersFromBackend();
+    loadWishlistFromBackend();
   </script>
 </body>
 </html>
