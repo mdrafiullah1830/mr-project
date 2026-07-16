@@ -1,7 +1,7 @@
 // ==================== MR SHOP - UNIFIED PRODUCT DATA ====================
 // Now fetches from C# API with localStorage fallback
 
-const API_BASE_URL = '/api';
+const API_BASE_URL = 'https://mrshopbangladesh-fmb9h7g2csbwawd3.centralindia-01.azurewebsites.net';
 
 // Fallback products (used when API is offline)
 const MR_PRODUCTS_FALLBACK = [

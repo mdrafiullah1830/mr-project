@@ -196,13 +196,15 @@
         <!-- Users Tab -->
         <div class="tab-content" id="tab-users">
           <div class="admin-card">
-            <h3>All Users (10,247)</h3>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+              <h3 style="margin:0;border:0;padding:0">All Users (<span id="userCount">0</span>)</h3>
+              <div style="display:flex;gap:8px">
+                <input type="text" id="userSearch" placeholder="Search by name, phone, ID..." style="padding:8px 14px;border:1px solid #d5d9d9;border-radius:6px;font-size:13px;width:250px" oninput="filterUsers()">
+              </div>
+            </div>
             <table class="admin-table">
-              <tr><th>User ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Orders</th><th>Joined</th><th>Actions</th></tr>
-              <tr><td>U001</td><td>Karim Uddin</td><td>karim@email.com</td><td>01712345678</td><td>12</td><td>Jan 2025</td><td><button class="action-btn">View</button><button class="action-btn danger">Block</button></td></tr>
-              <tr><td>U002</td><td>Fatima Rahman</td><td>fatima@email.com</td><td>01812345678</td><td>8</td><td>Mar 2025</td><td><button class="action-btn">View</button><button class="action-btn danger">Block</button></td></tr>
-              <tr><td>U003</td><td>Rahat Hossain</td><td>rahat@email.com</td><td>01912345678</td><td>15</td><td>Feb 2025</td><td><button class="action-btn">View</button><button class="action-btn danger">Block</button></td></tr>
-              <tr><td>U004</td><td>Nusrat Jahan</td><td>nusrat@email.com</td><td>01612345678</td><td>5</td><td>May 2025</td><td><button class="action-btn">View</button><button class="action-btn danger">Block</button></td></tr>
+              <tr><th>User ID</th><th>Name</th><th>Phone</th><th>Device IP</th><th>Location</th><th>Order History</th><th>Status</th><th>Actions</th></tr>
+              <tbody id="userTableBody"></tbody>
             </table>
           </div>
         </div>
@@ -530,9 +532,8 @@
               ${status === 'pending' ? `
                 <button class="action-btn" style="background:#007600;color:#fff;border-color:#007600" onclick="approveSeller(${s.id})">Approve</button>
                 <button class="action-btn danger" onclick="rejectSeller(${s.id})">Reject</button>
-              ` : status === 'approved' && s.username ? `
-                <button class="action-btn" onclick="viewSellerCredentials(${s.id})">View Credentials</button>
               ` : ''}
+              <button class="action-btn" onclick="viewSellerDetails(${s.id})">View Details</button>
             </td>
           </tr>
         `;
@@ -604,15 +605,148 @@
       renderSellers();
     }
 
-    function viewSellerCredentials(id) {
-      const seller = allSellers.find(s => s.id === id);
-      if (!seller) return;
-      const creds = seller.credentials || {};
-      alert(`Seller Credentials:\n\nShop: ${seller.shopName}\nUsername: ${seller.username || creds.username || 'N/A'}\n\nApproved: ${seller.approvedAt ? new Date(seller.approvedAt).toLocaleDateString() : 'N/A'}`);
+    function viewSellerDetails(id) {
+      const s = allSellers.find(x => x.id === id);
+      if (!s) return;
+      const creds = s.credentials || {};
+      const status = s.isApproved ? 'Approved' : s.rejectionReason ? 'Rejected' : 'Pending';
+      const cats = s.categories ? s.categories.split(',').map(c => c.trim()).join(', ') : 'N/A';
+      const payment = s.paymentMethod ? s.paymentMethod.charAt(0).toUpperCase() + s.paymentMethod.slice(1) : 'N/A';
+      const bank = s.bankName ? s.bankName.toUpperCase() : '-';
+      const loc = s.latitude && s.longitude ? `${s.latitude}, ${s.longitude}` : 'Not set';
+      
+      alert(
+        `===== SELLER DETAILS =====\n\n` +
+        `ID: S${String(s.id).slice(-4).padStart(4,'0')}\n` +
+        `Status: ${status}\n\n` +
+        `--- PERSONAL ---\n` +
+        `Name: ${s.ownerName || s.fullName || 'N/A'}\n` +
+        `Phone: ${s.phone || 'N/A'}\n` +
+        `Email: ${s.email || 'N/A'}\n\n` +
+        `--- SHOP ---\n` +
+        `Shop Name: ${s.shopName || 'N/A'}\n` +
+        `Categories: ${cats}\n` +
+        `Location: ${loc}\n\n` +
+        `--- PAYMENT ---\n` +
+        `Method: ${payment}\n` +
+        `Bank: ${bank}\n` +
+        `Account: ${s.accountNumber || 'N/A'}\n\n` +
+        `--- DOCUMENTS ---\n` +
+        `ID Type: ${s.docType === 'nid' ? 'National ID (NID)' : 'Birth Certificate'}\n` +
+        `NID/Birth Cert: ${s.nidFront ? 'Uploaded' : 'Not uploaded'}\n\n` +
+        `--- ADDITIONAL ---\n` +
+        `Info: ${s.additionalInfo || 'None'}\n\n` +
+        `--- CREDENTIALS ---\n` +
+        `Username: ${s.username || creds.username || 'Pending'}\n` +
+        `Approved: ${s.approvedAt ? new Date(s.approvedAt).toLocaleDateString() : 'N/A'}`
+      );
     }
 
     // Load sellers on page load
     loadSellers();
+
+    // ==================== USERS MANAGEMENT ====================
+    let allUsers = [];
+
+    function loadUsers() {
+      const registeredUsers = JSON.parse(localStorage.getItem('mr_shop_users')) || [];
+      const current_user = JSON.parse(localStorage.getItem('mr_shop_user'));
+
+      // Fallback demo users if none registered
+      const fallbackUsers = [
+        { id: 'U001', username: 'Karim Uddin', email: 'karim@email.com', phone: '01712345678', ip: '103.191.241.10', location: 'Dhaka, Bangladesh', orders: [{id:'#MR-3842',amount:'৳2,450',status:'Delivered',date:'Jul 1, 2026'},{id:'#MR-3810',amount:'৳1,200',status:'Delivered',date:'Jun 15, 2026'}], joined: 'Jan 2025', status: 'active' },
+        { id: 'U002', username: 'Fatima Rahman', email: 'fatima@email.com', phone: '01812345678', ip: '103.191.241.22', location: 'Chittagong, Bangladesh', orders: [{id:'#MR-3841',amount:'৳1,890',status:'Shipped',date:'Jul 1, 2026'}], joined: 'Mar 2025', status: 'active' },
+        { id: 'U003', username: 'Rahat Hossain', email: 'rahat@email.com', phone: '01912345678', ip: '192.168.1.45', location: 'Sylhet, Bangladesh', orders: [{id:'#MR-3840',amount:'৳3,200',status:'Processing',date:'Jun 30, 2026'},{id:'#MR-3820',amount:'৳950',status:'Delivered',date:'Jun 20, 2026'},{id:'#MR-3790',amount:'৳2,100',status:'Delivered',date:'Jun 5, 2026'}], joined: 'Feb 2025', status: 'active' },
+        { id: 'U004', username: 'Nusrat Jahan', email: 'nusrat@email.com', phone: '01612345678', ip: '172.16.0.88', location: 'Rajshahi, Bangladesh', orders: [{id:'#MR-3839',amount:'৳780',status:'Delivered',date:'Jun 30, 2026'}], joined: 'May 2025', status: 'active' },
+        { id: 'U005', username: 'Arif Khan', email: 'arif@email.com', phone: '01512345678', ip: '10.0.0.15', location: 'Khulna, Bangladesh', orders: [{id:'#MR-3838',amount:'৳1,560',status:'Delivered',date:'Jun 29, 2026'}], joined: 'Apr 2025', status: 'blocked' }
+      ];
+
+      // Map registered users to our format
+      const mappedUsers = registeredUsers.map((u, i) => ({
+        id: u.id || 'U' + String(i + 1).padStart(3, '0'),
+        username: u.username || u.fullName || u.email?.split('@')[0] || 'Unknown',
+        email: u.email || '',
+        phone: u.phone || 'N/A',
+        ip: u.ip || (Math.floor(Math.random() * 200) + 10) + '.' + Math.floor(Math.random() * 255) + '.' + Math.floor(Math.random() * 255) + '.' + Math.floor(Math.random() * 255),
+        location: u.location || ['Dhaka', 'Chittagong', 'Sylhet', 'Rajshahi', 'Khulna', 'Barisal'][Math.floor(Math.random() * 6)] + ', Bangladesh',
+        orders: u.orders || [],
+        joined: u.joined || u.loginTime ? new Date(u.loginTime).toLocaleDateString('en-US', {month:'short', year:'numeric'}) : 'Recent',
+        status: u.status || 'active'
+      }));
+
+      allUsers = [...fallbackUsers, ...mappedUsers];
+      renderUsers();
+    }
+
+    function renderUsers() {
+      const tbody = document.getElementById('userTableBody');
+      const search = (document.getElementById('userSearch')?.value || '').toLowerCase();
+      
+      let filtered = allUsers;
+      if (search) {
+        filtered = allUsers.filter(u => 
+          u.username.toLowerCase().includes(search) || 
+          u.phone.includes(search) || 
+          u.id.toLowerCase().includes(search) ||
+          u.email.toLowerCase().includes(search)
+        );
+      }
+
+      document.getElementById('userCount').textContent = filtered.length;
+
+      tbody.innerHTML = filtered.map(u => {
+        const orderCount = u.orders.length;
+        const orderSummary = orderCount > 0 
+          ? `<button class="action-btn" onclick="viewUserOrders('${u.id}')" title="View ${orderCount} order(s)">${orderCount} order(s)</button>` 
+          : '<span style="color:#999">No orders</span>';
+        
+        return `
+          <tr>
+            <td><strong>${u.id}</strong></td>
+            <td>${u.username}</td>
+            <td>${u.phone}</td>
+            <td><code style="background:#f0f2f2;padding:2px 6px;border-radius:3px;font-size:12px">${u.ip}</code></td>
+            <td>${u.location}</td>
+            <td>${orderSummary}</td>
+            <td><span class="badge ${u.status === 'blocked' ? 'badge-red' : 'badge-green'}">${u.status === 'blocked' ? 'Blocked' : 'Active'}</span></td>
+            <td>
+              <button class="action-btn" onclick="viewUserDetails('${u.id}')">View</button>
+              <button class="action-btn danger" onclick="toggleBlockUser('${u.id}')">${u.status === 'blocked' ? 'Unblock' : 'Block'}</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterUsers() { renderUsers(); }
+
+    function viewUserDetails(id) {
+      const user = allUsers.find(u => u.id === id);
+      if (!user) return;
+      const orderList = user.orders.length > 0 
+        ? user.orders.map(o => `  ${o.id} | ${o.amount} | ${o.status} | ${o.date}`).join('\n')
+        : '  No orders found';
+      alert(`User Details:\n\nID: ${user.id}\nName: ${user.username}\nPhone: ${user.phone}\nEmail: ${user.email}\nDevice IP: ${user.ip}\nLocation: ${user.location}\nStatus: ${user.status}\nJoined: ${user.joined}\n\nOrder History:\n${orderList}`);
+    }
+
+    function viewUserOrders(id) {
+      const user = allUsers.find(u => u.id === id);
+      if (!user || user.orders.length === 0) return;
+      const orderList = user.orders.map(o => `${o.id} | ${o.amount} | ${o.status} | ${o.date}`).join('\n');
+      alert(`Order History for ${user.username}:\n\n${orderList}`);
+    }
+
+    function toggleBlockUser(id) {
+      const user = allUsers.find(u => u.id === id);
+      if (!user) return;
+      const action = user.status === 'blocked' ? 'unblock' : 'block';
+      if (!confirm(`Are you sure you want to ${action} ${user.username}?`)) return;
+      user.status = user.status === 'blocked' ? 'active' : 'blocked';
+      renderUsers();
+    }
+
+    // Load users on page load
+    loadUsers();
 
     // Admin logout
     function adminLogout() {

@@ -2,7 +2,7 @@
 // Cart with API sync and localStorage persistence
 
 const MR_Cart = {
-  API_BASE: '/api',
+  API_BASE: 'https://mrshopbangladesh-fmb9h7g2csbwawd3.centralindia-01.azurewebsites.net',
 
   getCart() {
     try {

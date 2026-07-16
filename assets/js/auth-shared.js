@@ -2,7 +2,7 @@
 // Now connects to C# API with localStorage fallback
 
 const MR_Auth = {
-  API_BASE: '/api',
+  API_BASE: 'https://mrshopbangladesh-fmb9h7g2csbwawd3.centralindia-01.azurewebsites.net',
 
   getUser() {
     try {
