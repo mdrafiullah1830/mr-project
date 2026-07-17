@@ -2,7 +2,7 @@
 // Centralized API client with auth token handling
 
 const MR_API = {
-  BASE_URL: 'https://mrshopbangladesh-fmb9h7g2csbwawd3.centralindia-01.azurewebsites.net',
+  BASE_URL: window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : 'https://mrshop-bd.azurewebsites.net/api',
 
   // Get auth token from localStorage
   getToken() {

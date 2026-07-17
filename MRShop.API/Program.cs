@@ -75,7 +75,8 @@ builder.Services.AddCors(options =>
         {
             policy.WithOrigins(
                     "https://mrshopbangladesh.tech",
-                    "https://www.mrshopbangladesh.tech"
+                    "https://www.mrshopbangladesh.tech",
+                    "https://mrshop-bd.azurewebsites.net"
                 )
                 .SetIsOriginAllowedToAllowWildcardSubdomains()
                 .AllowAnyHeader()
