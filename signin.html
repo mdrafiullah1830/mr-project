@@ -83,9 +83,9 @@
   <div class="amz-auth-container" id="authWrapper">
     <div class="amz-auth-box">
       <h1>Sign in</h1>
-      <form action="javascript:void(0)" method="post" id="loginForm" onsubmit="handleLogin(event)">
+      <form action="/login" method="post" id="loginForm" onsubmit="handleLogin(event)">
         <label class="amz-auth-label" for="email">Email or mobile phone number</label>
-        <input class="amz-auth-input" id="email" name="email" type="email" required placeholder="your@email.com" />
+        <input class="amz-auth-input" id="email" name="email" type="text" required />
 
         <label class="amz-auth-label" for="password" style="margin-top:14px;">Password</label>
         <input class="amz-auth-input" id="password" name="password" type="password" required />
@@ -165,138 +165,42 @@
 <script src="assets/js/cart.js"></script>
 <script src="assets/js/auth-shared.js"></script>
 <script>
-  function isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  }
-
   async function handleLogin(e) {
     e.preventDefault();
-    var email = document.getElementById('email').value.trim();
-    var password = document.getElementById('password').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
-    if (!email || !isValidEmail(email)) {
-      alert('Please enter a valid email address');
+    // Check seller credentials first
+    const sellers = JSON.parse(localStorage.getItem('mr_shop_sellers')) || [];
+    console.log('All sellers:', sellers);
+    
+    const seller = sellers.find(s => {
+      const isApproved = s.status === 'approved' || s.isApproved === true;
+      const hasCreds = s.credentials && s.credentials.username && s.credentials.password;
+      const matchUser = (s.credentials && s.credentials.username === email) || s.email === email;
+      const matchPass = s.credentials && s.credentials.password === password;
+      console.log('Checking seller:', s.shopName, { isApproved, hasCreds, matchUser, matchPass });
+      return isApproved && hasCreds && matchUser && matchPass;
+    });
+    
+    if (seller) {
+      localStorage.setItem('mr_shop_seller', JSON.stringify(seller));
+      localStorage.setItem('mr_shop_seller_token', 'seller_session_' + Date.now());
+      alert('Seller login successful!');
+      window.location.href = 'seller.html';
       return;
     }
-    if (!password || password.length < 6) {
-      alert('Password must be at least 6 characters');
-      return;
-    }
 
-    // Admin credentials check
-    if (email === 'mrshop.bd.18@gmail.com' && password === 'mrshopbd18') {
-      const adminUser = {
-        id: 'admin_001',
-        username: 'Admin',
-        email: 'mrshop.bd.18@gmail.com',
-        role: 'admin',
-        isAdmin: true,
-        loggedIn: true,
-        loginTime: new Date().toISOString(),
-        profile: null
-      };
-      localStorage.setItem('mr_shop_user', JSON.stringify(adminUser));
-      localStorage.setItem('mr_shop_token', 'admin_token_' + Date.now());
-      if (typeof MR_Cart !== 'undefined' && MR_Cart.showToast) {
-        MR_Cart.showToast('Admin login successful!', 'success');
+    // Normal user/admin login
+    const success = await MR_Auth.login(email, password);
+    if (success) {
+      const user = MR_Auth.getUser();
+      if (user && (user.isAdmin || user.role === 'admin')) {
+        setTimeout(() => window.location.href = 'admin.html', 500);
       } else {
-        alert('Admin login successful!');
+        setTimeout(() => window.location.href = 'userprofile.html', 500);
       }
-      setTimeout(function() { window.location.href = 'admin.html'; }, 500);
-      return;
     }
-
-    // Try API login (seller, then customer)
-    var AUTH_API = (typeof MR_API !== 'undefined' && MR_API) ? MR_API.BASE_URL : (window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : 'https://mrshop-bd.azurewebsites.net/api');
-
-    // Try seller login
-    try {
-      var sellerRes = await fetch(AUTH_API + '/sellerauth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email, password: password })
-      });
-      if (sellerRes.ok) {
-        var sellerData = await sellerRes.json();
-        localStorage.setItem('mr_shop_seller', JSON.stringify(sellerData.seller));
-        localStorage.setItem('mr_shop_seller_token', sellerData.token);
-        localStorage.setItem('mr_shop_user', JSON.stringify({
-          id: sellerData.seller.id,
-          username: sellerData.seller.name,
-          email: sellerData.seller.email,
-          role: 'seller',
-          loggedIn: true,
-          loginTime: new Date().toISOString()
-        }));
-        alert('Seller login successful!');
-        window.location.href = 'seller.html';
-        return;
-      }
-    } catch (err) {}
-
-    // Try customer login via API
-    try {
-      var res = await fetch(AUTH_API + '/customerauth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email, password: password })
-      });
-      if (res.ok) {
-        var data = await res.json();
-        localStorage.setItem('mr_shop_token', data.token);
-        var userData = {
-          id: data.user.id,
-          username: data.user.name || data.user.username,
-          email: data.user.email,
-          role: data.user.role || 'customer',
-          loggedIn: true,
-          loginTime: new Date().toISOString(),
-          profile: data.user.profilePhoto || null
-        };
-        localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-        alert('Login successful!');
-        window.location.href = 'userprofile.html';
-        return;
-      } else {
-        var errData = await res.json();
-        alert(errData.message || 'Login failed');
-        return;
-      }
-    } catch (err) {}
-
-    // localStorage fallback - check registered users
-    var users = JSON.parse(localStorage.getItem('mr_shop_users') || '[]');
-    var foundUser = users.find(function(u) { return u.email === email && u.password === password; });
-
-    if (foundUser) {
-      var loginData = {
-        id: foundUser.id || Date.now(),
-        username: foundUser.username || foundUser.fullName || email.split('@')[0],
-        email: foundUser.email,
-        role: foundUser.role || 'customer',
-        loggedIn: true,
-        loginTime: new Date().toISOString(),
-        profile: null
-      };
-      localStorage.setItem('mr_shop_user', JSON.stringify(loginData));
-      alert('Login successful!');
-      window.location.href = 'userprofile.html';
-      return;
-    }
-
-    // No user found - create demo user
-    var demoUser = {
-      id: Date.now(),
-      username: email.split('@')[0],
-      email: email,
-      role: 'customer',
-      loggedIn: true,
-      loginTime: new Date().toISOString(),
-      profile: null
-    };
-    localStorage.setItem('mr_shop_user', JSON.stringify(demoUser));
-    alert('Login successful!');
-    window.location.href = 'userprofile.html';
   }
 </script>
 </body>

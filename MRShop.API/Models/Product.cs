@@ -45,9 +45,6 @@ public class Product
     [BsonElement("sellerId")]
     public string? SellerId { get; set; }
 
-    [BsonElement("createdBy")]
-    public string? CreatedBy { get; set; }
-
     [BsonElement("isActive")]
     public bool IsActive { get; set; } = true;
 

@@ -56,33 +56,19 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
-        {
-            policy.WithOrigins(
-                    "https://mrshopbangladesh.tech",
-                    "https://www.mrshopbangladesh.tech",
-                    "http://localhost:3000",
-                    "http://localhost:5000",
-                    "http://localhost:8080",
-                    "http://localhost:8000"
-                )
-                .SetIsOriginAllowedToAllowWildcardSubdomains()
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowCredentials();
-        }
-        else
-        {
-            policy.WithOrigins(
-                    "https://mrshopbangladesh.tech",
-                    "https://www.mrshopbangladesh.tech",
-                    "https://mrshop-bd.azurewebsites.net"
-                )
-                .SetIsOriginAllowedToAllowWildcardSubdomains()
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowCredentials();
-        }
+        policy.WithOrigins(
+                "https://mrshopbangladesh.tech",
+                "https://www.mrshopbangladesh.tech",
+                "https://mrshop-bd.azurewebsites.net",
+                "http://localhost:3000",
+                "http://localhost:5000",
+                "http://localhost:8080",
+                "http://localhost:8000"
+            )
+            .SetIsOriginAllowedToAllowWildcardSubdomains()
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
@@ -142,48 +128,17 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = ""
 });
 
-// Swagger only available in Development
-if (app.Environment.IsDevelopment())
+// Swagger available in both Development and Production
+app.UseSwagger();
+app.UseSwaggerUI(options =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "MR Shop API v1");
-        options.RoutePrefix = "swagger";
-        options.ConfigObject.AdditionalItems["persistAuthorization"] = true;
-    });
-}
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "MR Shop API v1");
+    options.RoutePrefix = "swagger";
+    options.ConfigObject.AdditionalItems["persistAuthorization"] = true;
+});
 
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
-
-// Simple in-memory rate limiting middleware
-var requestCounts = new System.Collections.Concurrent.ConcurrentDictionary<string, (int Count, DateTime WindowStart)>();
-app.Use(async (context, next) =>
-{
-    var clientIp = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
-    var now = DateTime.UtcNow;
-    var windowMinutes = 1;
-
-    requestCounts.AddOrUpdate(clientIp,
-        _ => (1, now),
-        (_, existing) =>
-        {
-            if ((now - existing.WindowStart).TotalMinutes >= windowMinutes)
-                return (1, now);
-            return (existing.Count + 1, existing.WindowStart);
-        });
-
-    if (requestCounts.TryGetValue(clientIp, out var entry) && entry.Count > 100)
-    {
-        context.Response.StatusCode = 429;
-        await context.Response.WriteAsJsonAsync(new { message = "Too many requests. Please try again later." });
-        return;
-    }
-
-    await next();
-});
-
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

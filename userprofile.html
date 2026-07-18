@@ -12,7 +12,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Manage your MR Shop profile, view orders, track shipments, and update your account settings.">
   <title>My Profile - MR Shop</title>
-  <link rel="icon" href="assets/images/mrlogo.png" type="image/png">
   <script src="assets/js/loader.js"></script>
   <link rel="stylesheet" href="assets/css/amazon-style.css">
   <style>
@@ -157,7 +156,7 @@
     <!-- Sidebar -->
     <aside class="up-sidebar">
       <div class="up-profile-card">
-        <img src="https://i.pravatar.cc/200?img=33" alt="User" class="up-avatar" id="profilePhoto" onclick="changePhoto()" style="cursor:pointer;" title="Click to change photo">
+        <img src="https://i.pravatar.cc/200?img=33" alt="User" class="up-avatar" id="profilePhoto">
         <div class="up-name" id="profileName">User</div>
         <div class="up-email" id="profileEmail">user@mrshop.com</div>
         <div class="up-stats">
@@ -167,10 +166,10 @@
         </div>
       </div>
       <nav class="up-nav">
-        <button class="up-nav-item active" onclick="showSection('personal', this)"><span class="icon">&#x1F464;</span> Personal Info</button>
-        <button class="up-nav-item" onclick="showSection('orders', this)"><span class="icon">&#x1F4E6;</span> Order History</button>
-        <button class="up-nav-item" onclick="showSection('wishlist', this)"><span class="icon">&#x2764;&#xFE0F;</span> Wishlist</button>
-        <button class="up-nav-item" onclick="showSection('settings', this)"><span class="icon">&#x2699;&#xFE0F;</span> Settings</button>
+        <button class="up-nav-item active" onclick="showSection('personal')"><span class="icon">&#x1F464;</span> Personal Info</button>
+        <button class="up-nav-item" onclick="showSection('orders')"><span class="icon">&#x1F4E6;</span> Order History</button>
+        <button class="up-nav-item" onclick="showSection('wishlist')"><span class="icon">&#x2764;&#xFE0F;</span> Wishlist</button>
+        <button class="up-nav-item" onclick="showSection('settings')"><span class="icon">&#x2699;&#xFE0F;</span> Settings</button>
         <button class="up-nav-item logout" onclick="doLogout()"><span class="icon">&#x1F6AA;</span> Logout</button>
       </nav>
     </aside>
@@ -230,38 +229,15 @@
         </div>
         <div class="up-settings-card">
           <h3>Security</h3>
-          <button class="up-btn" style="width:100%;margin-bottom:8px;" onclick="showChangePassword()">Change Password</button>
-          <button class="up-btn" style="width:100%;margin-bottom:8px;" onclick="alert('Two-Factor Authentication coming soon!')">Two-Factor Authentication</button>
-          <button class="up-btn" style="width:100%;" onclick="alert('Connected Devices feature coming soon!')">Connected Devices</button>
+          <button class="up-btn" style="width:100%;margin-bottom:8px;">Change Password</button>
+          <button class="up-btn" style="width:100%;margin-bottom:8px;">Two-Factor Authentication</button>
+          <button class="up-btn" style="width:100%;">Connected Devices</button>
         </div>
         <div class="up-settings-card" style="border-color:#fce4ec;">
           <h3 style="color:#cc0c39;">Danger Zone</h3>
-          <button class="up-btn" style="width:100%;margin-bottom:8px;" onclick="deactivateAccount()">Deactivate Account</button>
-          <button class="up-btn danger" style="width:100%;" onclick="deleteAccount()">Delete Account</button>
+          <button class="up-btn" style="width:100%;margin-bottom:8px;">Deactivate Account</button>
+          <button class="up-btn danger" style="width:100%;">Delete Account</button>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Change Password Modal -->
-  <div id="passwordModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
-    <div style="background:white;border-radius:12px;padding:28px;width:90%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
-      <h3 style="margin:0 0 20px;font-size:18px;font-weight:700;">Change Password</h3>
-      <div style="margin-bottom:14px;">
-        <label style="display:block;font-size:13px;font-weight:600;margin-bottom:4px;color:#555;">Current Password</label>
-        <input type="password" id="currentPassword" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:8px;font-size:14px;box-sizing:border-box;">
-      </div>
-      <div style="margin-bottom:14px;">
-        <label style="display:block;font-size:13px;font-weight:600;margin-bottom:4px;color:#555;">New Password</label>
-        <input type="password" id="newPassword" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:8px;font-size:14px;box-sizing:border-box;">
-      </div>
-      <div style="margin-bottom:20px;">
-        <label style="display:block;font-size:13px;font-weight:600;margin-bottom:4px;color:#555;">Confirm New Password</label>
-        <input type="password" id="confirmPassword" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:8px;font-size:14px;box-sizing:border-box;">
-      </div>
-      <div style="display:flex;gap:10px;">
-        <button onclick="closePasswordModal()" style="flex:1;padding:10px;border:1px solid #d5d9d9;border-radius:8px;background:#f0f2f2;font-weight:600;cursor:pointer;">Cancel</button>
-        <button onclick="savePassword()" style="flex:1;padding:10px;border:none;border-radius:8px;background:linear-gradient(to bottom,#f7dfa5,#f0c14b);font-weight:600;cursor:pointer;">Save</button>
       </div>
     </div>
   </div>
@@ -284,369 +260,119 @@
   <script src="assets/js/cart.js"></script>
   <script src="assets/js/auth-shared.js"></script>
   <script>
-    (function() {
-      try {
-        var _API = (typeof MR_API !== 'undefined' && MR_API) ? MR_API : null;
-        var API_BASE = _API ? _API.BASE_URL.replace('/api', '') : (window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://mrshop-bd.azurewebsites.net');
+    // Load user data from localStorage
+    const user = JSON.parse(localStorage.getItem('mr_shop_user') || '{}');
+    if (user.username) {
+      document.getElementById('profileName').textContent = user.username;
+      document.getElementById('headerName').textContent = user.username;
+      document.getElementById('fullName').value = user.username;
+    }
+    if (user.email) {
+      document.getElementById('profileEmail').textContent = user.email;
+      document.getElementById('email').value = user.email;
+    }
 
-        var user = JSON.parse(localStorage.getItem('mr_shop_user') || '{}');
-        var savedProfile = JSON.parse(localStorage.getItem('mr_shop_profile') || '{}');
-        var authToken = localStorage.getItem('mr_shop_token');
+    // Section switching
+    function showSection(name) {
+      document.querySelectorAll('.up-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.up-nav-item').forEach(n => n.classList.remove('active'));
+      document.getElementById('sec-' + name).classList.add('active');
+      event.currentTarget.classList.add('active');
+      if (name === 'orders') loadOrders();
+      if (name === 'wishlist') loadWishlist();
+    }
 
-        window._upLoadProfile = async function() {
-          if (!authToken) return;
-          try {
-            var res = await fetch(API_BASE + '/api/customerauth/me', {
-              headers: { 'Authorization': 'Bearer ' + authToken }
-            });
-            if (res.ok) {
-              var data = await res.json();
-              document.getElementById('profileName').textContent = data.name || user.username;
-              document.getElementById('headerName').textContent = data.name || user.username;
-              document.getElementById('profileEmail').textContent = data.email || user.email;
-              document.getElementById('fullName').value = data.name || savedProfile.fullName || '';
-              document.getElementById('email').value = data.email || savedProfile.email || '';
-              document.getElementById('phone').value = data.phone || savedProfile.phone || '';
-              document.getElementById('address').value = data.address || savedProfile.address || '';
-              var updatedProfile = {
-                fullName: data.name || savedProfile.fullName,
-                email: data.email || savedProfile.email,
-                phone: data.phone || savedProfile.phone,
-                address: data.address || savedProfile.address,
-                dob: savedProfile.dob || '',
-                gender: savedProfile.gender || ''
-              };
-              localStorage.setItem('mr_shop_profile', JSON.stringify(updatedProfile));
-              if (data.profilePhoto) {
-                document.getElementById('profilePhoto').src = data.profilePhoto;
-              }
-            }
-          } catch (err) {
-            console.log('Backend offline, using localStorage');
-          }
-        };
+    // Edit profile
+    let editing = false;
+    function toggleEdit() {
+      editing = !editing;
+      const inputs = document.querySelectorAll('#profileForm input, #profileForm textarea, #profileForm select');
+      inputs.forEach(i => i.disabled = !editing);
+      document.getElementById('editBtn').textContent = editing ? 'Cancel' : 'Edit';
+      document.getElementById('saveBtn').style.display = editing ? 'block' : 'none';
+    }
 
-        var backendOrders = [];
-        window._upLoadOrders = async function() {
-          if (!authToken) { _upRenderOrders(); return; }
-          try {
-            var res = await fetch(API_BASE + '/api/orders', {
-              headers: { 'Authorization': 'Bearer ' + authToken }
-            });
-            if (res.ok) {
-              var response = await res.json();
-              backendOrders = response.orders || response;
-              if (!Array.isArray(backendOrders)) backendOrders = [];
-              if (backendOrders.length > 0) {
-                orders = backendOrders.map(function(o) {
-                  return {
-                    id: o.id || o._id || '#MR' + Math.floor(Math.random() * 9000 + 1000),
-                    status: (o.status || 'pending').toLowerCase(),
-                    date: o.createdAt || o.orderDate || new Date().toISOString(),
-                    total: o.totalAmount || o.total || 0,
-                    items: (o.items || []).length || o.itemCount || 1,
-                    imgs: (o.items || []).slice(0, 3).map(function(item) {
-                      return item.image || item.productImage || './assets/images/honey.jpg';
-                    })
-                  };
-                });
-              }
-            }
-          } catch (err) {
-            console.log('Backend offline, using local orders');
-          }
-          _upRenderOrders();
-        };
+    function saveProfile(e) {
+      e.preventDefault();
+      const data = {
+        username: document.getElementById('fullName').value,
+        email: document.getElementById('email').value,
+        loggedIn: true
+      };
+      localStorage.setItem('mr_shop_user', JSON.stringify(data));
+      document.getElementById('profileName').textContent = data.username;
+      document.getElementById('headerName').textContent = data.username;
+      document.getElementById('profileEmail').textContent = data.email;
+      toggleEdit();
+      alert('Profile saved!');
+    }
 
-        window._upLoadWishlist = async function() {
-          if (!authToken) { _upRenderWishlist(); return; }
-          try {
-            var res = await fetch(API_BASE + '/api/wishlist', {
-              headers: { 'Authorization': 'Bearer ' + authToken }
-            });
-            if (res.ok) {
-              var response = await res.json();
-              var serverWishlist = response.items || response;
-              if (!Array.isArray(serverWishlist)) serverWishlist = [];
-              if (serverWishlist.length > 0) {
-                var localWl = JSON.parse(localStorage.getItem('mr_shop_wishlist') || '[]');
-                var merged = serverWishlist.map(function(item) {
-                  return {
-                    id: item.productId || item.id,
-                    name: item.productName || item.name || 'Product',
-                    price: item.price || 0,
-                    image: item.image || item.productImage || './assets/images/honey.jpg'
-                  };
-                });
-                localWl.forEach(function(localItem) {
-                  if (!merged.find(function(m) { return m.id === localItem.id; })) {
-                    merged.push(localItem);
-                  }
-                });
-                localStorage.setItem('mr_shop_wishlist', JSON.stringify(merged));
-              }
-            }
-          } catch (err) {
-            console.log('Backend offline, using local wishlist');
-          }
-          _upRenderWishlist();
-        };
+    // Orders
+    const orders = [
+      { id: '#MR5001', status: 'delivered', date: '2026-01-15', total: 1250, items: 3, imgs: ['./assets/images/honey.jpg', './assets/images/oil.jpg', './assets/images/rice.jpg'] },
+      { id: '#MR5000', status: 'pending', date: '2026-01-14', total: 850, items: 2, imgs: ['./assets/images/doi.jpg', './assets/images/roshogolla.jpg'] },
+      { id: '#MR4999', status: 'delivered', date: '2026-01-12', total: 2100, items: 5, imgs: ['./assets/images/saree.jpg', './assets/images/nakshi.jpg'] },
+      { id: '#MR4998', status: 'delivered', date: '2026-01-10', total: 650, items: 1, imgs: ['./assets/images/basket.jpg'] },
+      { id: '#MR4997', status: 'cancelled', date: '2026-01-08', total: 320, items: 1, imgs: ['./assets/images/clay.jpg'] },
+      { id: '#MR4996', status: 'delivered', date: '2026-01-05', total: 1450, items: 4, imgs: ['./assets/images/panjabi.jpg', './assets/images/tea.jpg'] }
+    ];
 
-        window._upRemoveWishlistBackend = async function(productId) {
-          if (!authToken) return;
-          try {
-            await fetch(API_BASE + '/api/wishlist/product/' + productId, {
-              method: 'DELETE',
-              headers: { 'Authorization': 'Bearer ' + authToken }
-            });
-          } catch (err) {}
-        };
+    function loadOrders(filter = 'all') {
+      const list = document.getElementById('ordersList');
+      const filtered = filter === 'all' ? orders : orders.filter(o => o.status === filter);
+      if (!filtered.length) { list.innerHTML = '<div class="up-empty"><div class="icon">&#x1F4E6;</div><p>No orders found</p></div>'; return; }
+      list.innerHTML = filtered.map(o => `
+        <div class="up-order">
+          <div class="up-order-header"><span class="up-order-id">${o.id}</span><span class="up-order-status ${o.status}">${o.status}</span></div>
+          <div class="up-order-meta"><span>&#x1F4C5; ${new Date(o.date).toLocaleDateString('en-GB')}</span><span>&#x1F4B0; &#2547;${o.total.toLocaleString()}</span><span>&#x1F4E6; ${o.items} item${o.items>1?'s':''}</span></div>
+          <div class="up-order-items">${o.imgs.map(i => `<img src="${i}" alt="">`).join('')}</div>
+        </div>`).join('');
+    }
 
-        if (user.username) {
-          document.getElementById('profileName').textContent = user.username;
-          document.getElementById('headerName').textContent = user.username;
-          document.getElementById('fullName').value = savedProfile.fullName || user.username;
-        } else {
-          document.getElementById('fullName').value = savedProfile.fullName || '';
-        }
-        if (user.email) {
-          document.getElementById('profileEmail').textContent = user.email;
-          document.getElementById('email').value = savedProfile.email || user.email;
-        } else {
-          document.getElementById('email').value = savedProfile.email || '';
-        }
+    function filterOrders(f, btn) {
+      document.querySelectorAll('.up-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      loadOrders(f);
+    }
 
-        document.getElementById('phone').value = savedProfile.phone || '';
-        document.getElementById('dob').value = savedProfile.dob || '';
-        document.getElementById('address').value = savedProfile.address || '';
-        if (savedProfile.gender) {
-          document.getElementById('gender').value = savedProfile.gender;
-        }
+    // Wishlist
+    function loadWishlist() {
+      const grid = document.getElementById('wishlistGrid');
+      const wl = JSON.parse(localStorage.getItem('mr_shop_wishlist') || '[]');
+      document.getElementById('wishlistCount').textContent = wl.length;
+      if (!wl.length) { grid.innerHTML = '<div class="up-empty"><div class="icon">&#x2764;&#xFE0F;</div><p>Your wishlist is empty</p></div>'; return; }
+      grid.innerHTML = wl.map(item => `
+        <div class="up-product">
+          <button class="up-product-remove" onclick="removeWish(${item.id})">&#x2715;</button>
+          <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/180x140?text=No+Image'">
+          <div class="up-product-info"><div class="up-product-name">${item.name}</div><div class="up-product-price">&#2547;${item.price.toLocaleString()}</div></div>
+        </div>`).join('');
+    }
 
-        var savedPhoto = localStorage.getItem('mr_shop_profile_photo');
-        if (savedPhoto) {
-          document.getElementById('profilePhoto').src = savedPhoto;
-        } else if (user.profile && user.profile.startsWith('http')) {
-          document.getElementById('profilePhoto').src = user.profile;
-        }
+    function removeWish(id) {
+      let wl = JSON.parse(localStorage.getItem('mr_shop_wishlist') || '[]');
+      wl = wl.filter(i => i.id !== id);
+      localStorage.setItem('mr_shop_wishlist', JSON.stringify(wl));
+      loadWishlist();
+    }
 
-        var orders = [
-          { id: '#MR5001', status: 'delivered', date: '2026-01-15', total: 1250, items: 3, imgs: ['./assets/images/honey.jpg', './assets/images/oil.jpg', './assets/images/rice.jpg'] },
-          { id: '#MR5000', status: 'pending', date: '2026-01-14', total: 850, items: 2, imgs: ['./assets/images/doi.jpg', './assets/images/roshogolla.jpg'] },
-          { id: '#MR4999', status: 'delivered', date: '2026-01-12', total: 2100, items: 5, imgs: ['./assets/images/saree.jpg', './assets/images/nakshi.jpg'] },
-          { id: '#MR4998', status: 'delivered', date: '2026-01-10', total: 650, items: 1, imgs: ['./assets/images/basket.jpg'] },
-          { id: '#MR4997', status: 'cancelled', date: '2026-01-08', total: 320, items: 1, imgs: ['./assets/images/clay.jpg'] },
-          { id: '#MR4996', status: 'delivered', date: '2026-01-05', total: 1450, items: 4, imgs: ['./assets/images/panjabi.jpg', './assets/images/tea.jpg'] }
-        ];
-
-        window._upRenderOrders = function(filter) {
-          filter = filter || 'all';
-          var list = document.getElementById('ordersList');
-          var filtered = filter === 'all' ? orders : orders.filter(function(o) { return o.status === filter; });
-          if (!filtered.length) { list.innerHTML = '<div class="up-empty"><div class="icon">&#x1F4E6;</div><p>No orders found</p></div>'; return; }
-          list.innerHTML = filtered.map(function(o) {
-            return '<div class="up-order"><div class="up-order-header"><span class="up-order-id">' + o.id + '</span><span class="up-order-status ' + o.status + '">' + o.status + '</span></div><div class="up-order-meta"><span>&#x1F4C5; ' + new Date(o.date).toLocaleDateString('en-GB') + '</span><span>&#x1F4B0; &#2547;' + o.total.toLocaleString() + '</span><span>&#x1F4E6; ' + o.items + ' item' + (o.items > 1 ? 's' : '') + '</span></div><div class="up-order-items">' + o.imgs.map(function(i) { return '<img src="' + i + '" alt="">'; }).join('') + '</div></div>';
-          }).join('');
-        };
-
-        window._upRenderWishlist = function() {
-          var grid = document.getElementById('wishlistGrid');
-          var wl = JSON.parse(localStorage.getItem('mr_shop_wishlist') || '[]');
-          document.getElementById('wishlistCount').textContent = wl.length;
-          if (!wl.length) { grid.innerHTML = '<div class="up-empty"><div class="icon">&#x2764;&#xFE0F;</div><p>Your wishlist is empty</p></div>'; return; }
-          grid.innerHTML = wl.map(function(item) {
-            return '<div class="up-product"><button class="up-product-remove" onclick="removeWish(' + item.id + ')">&#x2715;</button><img src="' + item.image + '" alt="' + item.name + '" onerror="this.src=\'https://via.placeholder.com/180x140?text=No+Image\'"><div class="up-product-info"><div class="up-product-name">' + item.name + '</div><div class="up-product-price">&#2547;' + item.price.toLocaleString() + '</div></div></div>';
-          }).join('');
-        };
-
-        window.showSection = function(name, el) {
-          document.querySelectorAll('.up-section').forEach(function(s) { s.classList.remove('active'); });
-          document.querySelectorAll('.up-nav-item').forEach(function(n) { n.classList.remove('active'); });
-          var section = document.getElementById('sec-' + name);
-          if (section) section.classList.add('active');
-          if (el) el.classList.add('active');
-          if (name === 'orders') _upLoadOrders();
-          if (name === 'wishlist') _upLoadWishlist();
-        };
-
-        window.toggleEdit = function() {
-          var editing = document.getElementById('editBtn').textContent === 'Cancel';
-          editing = !editing;
-          var inputs = document.querySelectorAll('#profileForm input, #profileForm textarea, #profileForm select');
-          inputs.forEach(function(i) { i.disabled = !editing; });
-          document.getElementById('editBtn').textContent = editing ? 'Cancel' : 'Edit';
-          document.getElementById('saveBtn').style.display = editing ? 'block' : 'none';
-        };
-
-        window.saveProfile = async function(e) {
-          e.preventDefault();
-          var profileData = {
-            fullName: document.getElementById('fullName').value,
-            email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
-            dob: document.getElementById('dob').value,
-            address: document.getElementById('address').value,
-            gender: document.getElementById('gender').value
-          };
-          localStorage.setItem('mr_shop_profile', JSON.stringify(profileData));
-
-          if (authToken) {
-            try {
-              await fetch(API_BASE + '/api/customerauth/profile', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
-                body: JSON.stringify({ name: profileData.fullName, phone: profileData.phone, address: profileData.address })
-              });
-            } catch (err) {}
-          }
-
-          var userData = JSON.parse(localStorage.getItem('mr_shop_user') || '{}');
-          userData.username = profileData.fullName;
-          userData.email = profileData.email;
-          localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-
-          document.getElementById('profileName').textContent = profileData.fullName;
-          document.getElementById('headerName').textContent = profileData.fullName;
-          document.getElementById('profileEmail').textContent = profileData.email;
-
-          toggleEdit();
-          showNotification('Profile saved successfully!');
-        };
-
-        window.changePhoto = function() {
-          var input = document.createElement('input');
-          input.type = 'file';
-          input.accept = 'image/*';
-          input.onchange = function(e) {
-            var file = e.target.files[0];
-            if (file) {
-              var reader = new FileReader();
-              reader.onload = function(ev) {
-                document.getElementById('profilePhoto').src = ev.target.result;
-                localStorage.setItem('mr_shop_profile_photo', ev.target.result);
-                showNotification('Profile photo updated!');
-              };
-              reader.readAsDataURL(file);
-            }
-          };
-          input.click();
-        };
-
-        window.showChangePassword = function() {
-          document.getElementById('passwordModal').style.display = 'flex';
-        };
-        window.closePasswordModal = function() {
-          document.getElementById('passwordModal').style.display = 'none';
-          document.getElementById('currentPassword').value = '';
-          document.getElementById('newPassword').value = '';
-          document.getElementById('confirmPassword').value = '';
-        };
-        window.savePassword = function() {
-          var cur = document.getElementById('currentPassword').value;
-          var nw = document.getElementById('newPassword').value;
-          var cf = document.getElementById('confirmPassword').value;
-          if (!cur || !nw || !cf) { alert('Please fill all fields'); return; }
-          if (nw.length < 6) { alert('New password must be at least 6 characters'); return; }
-          if (nw !== cf) { alert('New passwords do not match'); return; }
-          var saved = localStorage.getItem('mr_shop_password');
-          if (saved && saved !== cur) { alert('Current password is incorrect'); return; }
-          localStorage.setItem('mr_shop_password', nw);
-          closePasswordModal();
-          showNotification('Password changed successfully!');
-        };
-
-        window.deactivateAccount = function() {
-          if (confirm('Are you sure you want to deactivate your account?')) {
-            alert('Account deactivated. You can reactivate by logging in again.');
-          }
-        };
-        window.deleteAccount = function() {
-          if (confirm('This will permanently delete your account and all data. This cannot be undone.')) {
-            if (confirm('Are you absolutely sure?')) {
-              localStorage.removeItem('mr_shop_user');
-              localStorage.removeItem('mr_shop_wishlist');
-              localStorage.removeItem('mr_shop_cart');
-              localStorage.removeItem('mr_shop_password');
-              localStorage.removeItem('mr_shop_profile_photo');
-              localStorage.removeItem('mr_shop_profile');
-              localStorage.removeItem('mr_shop_token');
-              window.location.href = 'index.html';
-            }
-          }
-        };
-
-        window.showNotification = function(msg) {
-          var n = document.createElement('div');
-          n.style.cssText = 'position:fixed;top:20px;right:20px;padding:12px 24px;background:linear-gradient(135deg,#43e97b,#38f9d7);color:white;border-radius:8px;font-weight:600;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.15);';
-          n.textContent = msg;
-          document.body.appendChild(n);
-          setTimeout(function() { n.remove(); }, 3000);
-        };
-
-        window.filterOrders = function(f, btn) {
-          document.querySelectorAll('.up-filter-btn').forEach(function(b) { b.classList.remove('active'); });
-          btn.classList.add('active');
-          _upRenderOrders(f);
-        };
-
-        window.removeWish = function(id) {
-          var wl = JSON.parse(localStorage.getItem('mr_shop_wishlist') || '[]');
-          wl = wl.filter(function(i) { return i.id !== id; });
-          localStorage.setItem('mr_shop_wishlist', JSON.stringify(wl));
-          _upRemoveWishlistBackend(id);
-          _upRenderWishlist();
-        };
-
-        window.clearWishlist = function() {
-          if (confirm('Clear entire wishlist?')) {
-            localStorage.removeItem('mr_shop_wishlist');
-            if (authToken) {
-              fetch(API_BASE + '/api/wishlist', {
-                method: 'DELETE',
-                headers: { 'Authorization': 'Bearer ' + authToken }
-              }).catch(function() {});
-            }
-            _upRenderWishlist();
-          }
-        };
-
-        window.doLogout = function() {
-          localStorage.removeItem('mr_shop_user');
-          localStorage.removeItem('mr_shop_token');
-          localStorage.removeItem('mr_shop_cart');
-          localStorage.removeItem('mr_shop_wishlist');
-          localStorage.removeItem('mr_shop_seller');
-          localStorage.removeItem('mr_shop_seller_token');
-          localStorage.removeItem('mr_shop_profile');
-          localStorage.removeItem('mr_shop_profile_photo');
-          localStorage.removeItem('mr_shop_password');
-          sessionStorage.clear();
-          window.location.replace('index.html');
-        };
-
-        _upLoadProfile();
-        _upLoadOrders();
-        _upLoadWishlist();
-
-      } catch (e) {
-        console.error('Userprofile init error:', e);
-        window.doLogout = function() {
-          localStorage.clear();
-          sessionStorage.clear();
-          window.location.replace('index.html');
-        };
-        window.toggleEdit = function() {
-          var btn = document.getElementById('editBtn');
-          if (!btn) return;
-          var editing = btn.textContent === 'Cancel';
-          editing = !editing;
-          document.querySelectorAll('#profileForm input, #profileForm textarea, #profileForm select').forEach(function(i) { i.disabled = !editing; });
-          btn.textContent = editing ? 'Cancel' : 'Edit';
-          var saveBtn = document.getElementById('saveBtn');
-          if (saveBtn) saveBtn.style.display = editing ? 'block' : 'none';
-        };
+    function clearWishlist() {
+      if (confirm('Clear entire wishlist?')) {
+        localStorage.removeItem('mr_shop_wishlist');
+        loadWishlist();
       }
-    })();
+    }
+
+    // Logout
+    function doLogout() {
+      if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('mr_shop_user');
+        window.location.href = 'index.html';
+      }
+    }
+
+    // Init
+    loadOrders();
   </script>
 </body>
 </html>

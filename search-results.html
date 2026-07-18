@@ -12,80 +12,96 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Search results for Bangladeshi products at MR Shop. Find honey, sweets, handicrafts, clothing, and more.">
   <title>Search Results - MR Shop</title>
-  <link rel="icon" href="assets/images/mrlogo.png" type="image/png">
   <script src="assets/js/loader.js"></script>
   <link rel="stylesheet" href="assets/css/amazon-style.css">
   <style>
-    body { font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif; background: var(--amazon-light); color: var(--amazon-text); line-height: 1.5; overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    :root {
+      --orange: #ff9900;
+      --orange-light: #ffad33;
+      --yellow: #febd69;
+      --yellow-dark: #f0a030;
+      --dark: #131921;
+      --darker: #0f1111;
+      --text: #0f1111;
+      --light: #eaeded;
+      --white: #ffffff;
+      --border: #ddd;
+      --green: #067d62;
+      --blue: #1a73e8;
+      --link: #007185;
+      --red: #cc0c39;
+      --bg-gradient: linear-gradient(135deg, #0f1111 0%, #1a2332 50%, #0f1111 100%);
+    }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--light); color: var(--text); line-height: 1.5; overflow-x: hidden; }
     a { text-decoration: none; color: inherit; }
 
     /* Header */
-    .header { background: var(--amazon-dark); position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    .header { background: var(--darker); position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
     .header-top { display: flex; align-items: center; padding: 10px 20px; gap: 16px; max-width: 1500px; margin: 0 auto; }
     .logo { display: flex; align-items: center; padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
     .logo:hover { border-color: #fff; background: rgba(255,255,255,0.05); }
-    .logo-text { color: var(--amazon-white); font-size: 22px; font-weight: 800; letter-spacing: -1px; }
-    .logo-sub { color: var(--amazon-orange); font-size: 10px; font-weight: 600; display: block; letter-spacing: 2px; text-transform: uppercase; }
-    .deliver-to { color: var(--amazon-white); padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .logo-text { color: var(--white); font-size: 22px; font-weight: 800; letter-spacing: -1px; }
+    .logo-sub { color: var(--orange); font-size: 10px; font-weight: 600; display: block; letter-spacing: 2px; text-transform: uppercase; }
+    .deliver-to { color: var(--white); padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
     .deliver-to:hover { border-color: #fff; }
     .deliver-to .label { color: #999; font-size: 11px; display: block; }
     .deliver-to .loc { font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 4px; }
     .search-bar { flex: 1; display: flex; height: 46px; border-radius: 8px; overflow: hidden; position: relative; }
-    .search-cat { background: #e6e6e6; border: none; padding: 0 12px; font-size: 13px; color: #555; cursor: pointer; border-right: 1px solid var(--amazon-border); }
+    .search-cat { background: #e6e6e6; border: none; padding: 0 12px; font-size: 13px; color: #555; cursor: pointer; border-right: 1px solid var(--border); }
     .search-input { flex: 1; border: none; padding: 0 16px; font-size: 15px; outline: none; }
-    .search-btn { background: var(--amazon-orange); border: none; padding: 0 20px; cursor: pointer; font-size: 20px; color: var(--amazon-dark); transition: all 0.2s; }
-    .search-btn:hover { background: var(--amazon-yellow); }
+    .search-btn { background: var(--orange); border: none; padding: 0 20px; cursor: pointer; font-size: 20px; color: var(--dark); transition: all 0.2s; }
+    .search-btn:hover { background: var(--orange-light); }
     .header-actions { display: flex; align-items: center; gap: 6px; }
-    .header-link { color: var(--amazon-white); padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; font-size: 13px; white-space: nowrap; transition: all 0.2s; }
+    .header-link { color: var(--white); padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; font-size: 13px; white-space: nowrap; transition: all 0.2s; }
     .header-link:hover { border-color: #fff; }
     .header-link .line1 { color: #999; font-size: 11px; display: block; }
     .header-link .line2 { font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 4px; }
-    .cart-btn { display: flex; align-items: center; gap: 4px; padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; color: var(--amazon-white); transition: all 0.2s; }
+    .cart-btn { display: flex; align-items: center; gap: 4px; padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; color: var(--white); transition: all 0.2s; }
     .cart-btn:hover { border-color: #fff; }
     .cart-icon { font-size: 24px; position: relative; }
-    .cart-count { position: absolute; top: -6px; right: -8px; background: var(--amazon-orange); color: var(--amazon-dark); font-size: 13px; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .cart-count { position: absolute; top: -6px; right: -8px; background: var(--orange); color: var(--dark); font-size: 13px; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
     .cart-text { font-weight: 700; font-size: 13px; }
 
     /* Nav Bar */
     .nav-bar { background: #232f3e; padding: 8px 20px; display: flex; align-items: center; gap: 4px; overflow-x: auto; max-width: 1500px; margin: 0 auto; }
-    .nav-item { color: var(--amazon-white); padding: 8px 14px; font-size: 13px; font-weight: 500; border: 1px solid transparent; border-radius: 4px; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+    .nav-item { color: var(--white); padding: 8px 14px; font-size: 13px; font-weight: 500; border: 1px solid transparent; border-radius: 4px; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
     .nav-item:hover { border-color: #fff; }
     .nav-item.active { border-color: #fff; font-weight: 700; }
     .nav-divider { width: 1px; height: 24px; background: #4a5568; margin: 0 6px; }
 
     /* Features Bar */
-    .features-bar { background: var(--amazon-white); border-bottom: 1px solid var(--amazon-border); }
+    .features-bar { background: var(--white); border-bottom: 1px solid var(--border); }
     .features-grid { max-width: 1500px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); }
-    .feature-item { display: flex; align-items: center; gap: 14px; padding: 18px 24px; border-right: 1px solid var(--amazon-border); transition: background 0.2s; }
+    .feature-item { display: flex; align-items: center; gap: 14px; padding: 18px 24px; border-right: 1px solid var(--border); transition: background 0.2s; }
     .feature-item:last-child { border-right: none; }
     .feature-item:hover { background: #f8f9fa; }
     .feature-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-    .feature-icon.green { background: #e6f4e6; color: var(--amazon-green); }
-    .feature-icon.blue { background: #e6f0fa; color: var(--amazon-blue); }
-    .feature-icon.orange { background: #fff3e0; color: var(--amazon-orange); }
-    .feature-icon.red { background: #fce4ec; color: #cc0c39; }
-    .feature-text h4 { font-size: 14px; font-weight: 700; color: var(--amazon-text); }
+    .feature-icon.green { background: #e6f4e6; color: var(--green); }
+    .feature-icon.blue { background: #e6f0fa; color: var(--blue); }
+    .feature-icon.orange { background: #fff3e0; color: var(--orange); }
+    .feature-icon.red { background: #fce4ec; color: var(--red); }
+    .feature-text h4 { font-size: 14px; font-weight: 700; color: var(--text); }
     .feature-text p { font-size: 12px; color: #666; margin-top: 2px; }
 
     /* Footer */
-    .back-to-top { background: #37475a; text-align: center; padding: 14px; color: var(--amazon-white); font-size: 13px; cursor: pointer; transition: background 0.2s; }
+    .back-to-top { background: #37475a; text-align: center; padding: 14px; color: var(--white); font-size: 13px; cursor: pointer; transition: background 0.2s; }
     .back-to-top:hover { background: #485769; }
-    .footer { background: var(--amazon-dark); color: var(--amazon-white); padding: 40px 20px 20px; }
+    .footer { background: var(--darker); color: var(--white); padding: 40px 20px 20px; }
     .footer-links { max-width: 1500px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); gap: 30px; margin-bottom: 30px; }
     .footer-col h4 { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
     .footer-col a { display: block; color: #ddd; font-size: 13px; padding: 4px 0; transition: color 0.2s; }
-    .footer-col a:hover { color: var(--amazon-white); text-decoration: underline; }
+    .footer-col a:hover { color: var(--white); text-decoration: underline; }
     .footer-quick-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 16px 0; max-width: 1500px; margin: 0 auto; }
     .footer-quick-links a { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); padding: 6px 14px; border-radius: 20px; font-size: 12px; color: #ccc; transition: all 0.2s; }
-    .footer-quick-links a:hover { background: rgba(255,255,255,0.15); color: var(--amazon-white); border-color: var(--amazon-orange); }
+    .footer-quick-links a:hover { background: rgba(255,255,255,0.15); color: var(--white); border-color: var(--orange); }
     .footer-divider { height: 1px; background: #3a4553; margin: 16px 0; }
     .footer-bottom { text-align: center; padding: 20px; }
-    .footer-logo { font-size: 20px; font-weight: 800; color: var(--amazon-white); margin-bottom: 6px; }
+    .footer-logo { font-size: 20px; font-weight: 800; color: var(--white); margin-bottom: 6px; }
     .footer-copyright { color: #999; font-size: 12px; margin-bottom: 10px; }
-    .footer-copyright strong { color: var(--amazon-orange); }
+    .footer-copyright strong { color: var(--orange); }
     .footer-payment { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px; color: #999; font-size: 12px; }
     .footer-payment i { font-size: 20px; color: #ccc; transition: transform 0.2s; }
-    .footer-payment i:hover { transform: scale(1.2); color: var(--amazon-white); }
+    .footer-payment i:hover { transform: scale(1.2); color: var(--white); }
 
     /* Search Results */
     .search-results-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
@@ -173,6 +189,7 @@
       <a href="blog.html" class="nav-item"><i class="fas fa-newspaper"></i> Blog</a>
       <a href="compare.html" class="nav-item"><i class="fas fa-balance-scale"></i> Compare</a>
       <a href="order-tracking.html" class="nav-item"><i class="fas fa-truck"></i> Track Order</a>
+      <a href="admin.html" class="nav-item"><i class="fas fa-cog"></i> Admin</a>
       <div class="nav-divider"></div>
       <a href="becomeseller.html" class="nav-item">Sell</a>
       <a href="chat.html" class="nav-item"><i class="fas fa-headset"></i> Help</a>
@@ -284,7 +301,7 @@
       <a href="compare.html">Compare</a>
       <a href="order-tracking.html">Track Order</a>
       <a href="review.html">Reviews</a>
-      <a href="admin.html" style="display:none;">Admin</a>
+      <a href="admin.html">Admin</a>
       <a href="seller.html">Sell</a>
       <a href="chat.html">Help</a>
     </div>
@@ -309,12 +326,6 @@
   <script src="assets/js/wishlist.js"></script>
   <script src="assets/js/search.js"></script>
   <script>
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-
     let currentProducts = [];
 
     function doSearch() {
@@ -345,7 +356,7 @@
       currentProducts = products;
       document.getElementById('searchInput').value = query;
       document.getElementById('searchTitle').innerHTML = query 
-        ? `Results for "<span>${escapeHtml(query)}</span>"` 
+        ? `Results for "<span>${query}</span>"` 
         : 'All Products';
       document.getElementById('resultsCount').textContent = `${products.length} results`;
 

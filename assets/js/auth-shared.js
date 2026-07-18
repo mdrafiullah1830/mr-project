@@ -31,7 +31,7 @@ const MR_Auth = {
       const response = await fetch(`${this.API_BASE}/customerauth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ username: email.split('@')[0], password })
       });
 
       if (response.ok) {
@@ -59,47 +59,50 @@ const MR_Auth = {
         return false;
       }
     } catch (err) {
-      console.log('API offline, using localStorage fallback');
+      console.log('API offline, using localStorage auth');
     }
 
-    // Offline fallback - check localStorage for registered users
-    const users = JSON.parse(localStorage.getItem('mr_shop_users') || '[]');
-    const foundUser = users.find(u => {
-      const matchEmail = u.email === email || u.email === email.split('@')[0] + '@mrshop.com';
-      const matchPass = u.password === password;
-      return matchEmail && matchPass;
-    });
-
-    if (foundUser) {
+    // Fallback to localStorage auth
+    // Check admin credentials first
+    const adminEmail = 'admin@mrmart18.com';
+    const adminPassword = 'mrmart18.bd';
+    const usernameOnly = email.split('@')[0];
+    
+    if ((email === adminEmail || usernameOnly === 'mrmart18') && password === adminPassword) {
       const userData = {
-        id: foundUser.id || Date.now(),
-        username: foundUser.username || foundUser.fullName || email.split('@')[0],
-        email: foundUser.email,
-        role: foundUser.role || 'customer',
-        isAdmin: foundUser.role === 'admin',
+        id: 1,
+        username: 'mrmart18',
+        email: adminEmail,
+        role: 'admin',
+        isAdmin: true,
         loggedIn: true,
-        loginTime: new Date().toISOString(),
-        profile: foundUser.profile || null
+        loginTime: new Date().toISOString()
+      };
+      localStorage.setItem('mr_shop_user', JSON.stringify(userData));
+      MR_Cart.showToast('Admin login successful!', 'success');
+      return true;
+    }
+
+    const users = this.getUsers();
+    const user = users.find(u => u.email === email && u.password === password);
+
+    if (user) {
+      const userData = {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role || 'user',
+        isAdmin: user.role === 'admin',
+        loggedIn: true,
+        loginTime: new Date().toISOString()
       };
       localStorage.setItem('mr_shop_user', JSON.stringify(userData));
       MR_Cart.showToast('Login successful!', 'success');
       return true;
     }
 
-    // If no registered users exist, create a basic user for demo
-    const basicUser = {
-      id: Date.now(),
-      username: email.split('@')[0],
-      email: email,
-      role: 'customer',
-      isAdmin: false,
-      loggedIn: true,
-      loginTime: new Date().toISOString(),
-      profile: null
-    };
-    localStorage.setItem('mr_shop_user', JSON.stringify(basicUser));
-    MR_Cart.showToast('Login successful!', 'success');
-    return true;
+    MR_Cart.showToast('Invalid credentials', 'error');
+    return false;
   },
 
   async register(username, email, password, fullName, phone) {
@@ -117,7 +120,7 @@ const MR_Auth = {
       const response = await fetch(`${this.API_BASE}/customerauth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: fullName || username, email, password, phone: phone || '' })
+        body: JSON.stringify({ username, email, password, fullName: fullName || username, phone: phone || '' })
       });
 
       if (response.ok) {
@@ -140,43 +143,38 @@ const MR_Auth = {
         return false;
       }
     } catch (err) {
-      console.log('API offline, using localStorage fallback');
+      console.log('API offline, using localStorage auth');
     }
 
-    // Offline fallback - save to localStorage
-    const users = JSON.parse(localStorage.getItem('mr_shop_users') || '[]');
-    const existingUser = users.find(u => u.email === email);
-    
-    if (existingUser) {
-      MR_Cart.showToast('Email already registered!', 'error');
+    // Fallback to localStorage
+    const users = this.getUsers();
+
+    if (users.find(u => u.email === email)) {
+      MR_Cart.showToast('Email already registered', 'error');
       return false;
     }
 
     const newUser = {
       id: Date.now(),
-      username: username,
-      fullName: fullName || username,
-      email: email,
-      password: password,
-      phone: phone || '',
-      role: 'customer',
-      profile: null
+      username,
+      email,
+      password,
+      createdAt: new Date().toISOString()
     };
     users.push(newUser);
     localStorage.setItem('mr_shop_users', JSON.stringify(users));
 
-    // Auto login after registration
-    const userData = {
-      id: newUser.id,
-      username: newUser.username,
-      email: newUser.email,
-      role: 'customer',
-      isAdmin: false,
-      loggedIn: true,
-      loginTime: new Date().toISOString(),
-      profile: null
-    };
-    localStorage.setItem('mr_shop_user', JSON.stringify(userData));
+        const userData = {
+          id: newUser.id,
+          username: newUser.username,
+          email: newUser.email,
+          role: newUser.role || 'user',
+          isAdmin: newUser.role === 'admin',
+          loggedIn: true,
+          loginTime: new Date().toISOString()
+        };
+        localStorage.setItem('mr_shop_user', JSON.stringify(userData));
+
     MR_Cart.showToast('Account created successfully!', 'success');
     return true;
   },
@@ -214,9 +212,10 @@ const MR_Auth = {
     localStorage.removeItem('mr_shop_token');
     localStorage.removeItem('mr_shop_cart');
     localStorage.removeItem('mr_shop_wishlist');
-    localStorage.removeItem('mr_shop_seller');
-    localStorage.removeItem('mr_shop_seller_token');
-    window.location.href = 'index.html';
+    MR_Cart.showToast('Logged out successfully', 'success');
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 1000);
   },
 
   getUsers() {
@@ -231,17 +230,17 @@ const MR_Auth = {
     const user = this.getUser();
     if (!user || !user.loggedIn) return;
 
-    // Update ALL account links on the page
-    const allLinks = document.querySelectorAll('a');
-    for (const link of allLinks) {
-      const line1 = link.querySelector('.line1');
-      if (line1 && (line1.textContent.includes('Hello, Sign in') || line1.textContent.includes('Hello,') || line1.textContent.includes('Hello, sign in'))) {
-        // Update text
-        line1.textContent = `Hello, ${user.username}`;
-        const line2 = link.querySelector('.line2');
-        if (line2) line2.innerHTML = 'Account & Lists <i class="fas fa-caret-down"></i>';
-        // Update href to profile page
-        link.setAttribute('href', 'userprofile.html');
+    const selectors = ['#accountLink', '.amz-header-link'];
+    for (const sel of selectors) {
+      const links = document.querySelectorAll(sel);
+      for (const link of links) {
+        const line1 = link.querySelector('.line1');
+        if (line1 && (line1.textContent.includes('Hello, Sign in') || line1.textContent.includes('Hello,'))) {
+          line1.textContent = `Hello, ${user.username}`;
+          const line2 = link.querySelector('.line2');
+          if (line2) line2.innerHTML = 'Account & Lists <i class="fas fa-caret-down"></i>';
+          return;
+        }
       }
     }
   }
@@ -291,6 +290,7 @@ function loginWithGoogle() {
 }
 
 async function handleGoogleResponse(response) {
+    // Decode Google JWT to get user info (works without backend)
     try {
         const payload = JSON.parse(atob(response.credential.split('.')[1]));
         const userData = {
@@ -304,19 +304,34 @@ async function handleGoogleResponse(response) {
             profile: payload.picture || null
         };
 
-        localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-        MR_Auth.updateAuthUI();
+        // Try backend first
+        try {
+            const res = await fetch(`${MR_Auth.API_BASE}/customerauth/google`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ credential: response.credential }),
+                signal: AbortSignal.timeout(5000)
+            });
 
-        const currentPage = window.location.pathname.split('/').pop();
-        if (currentPage === 'signin.html' || currentPage === 'signup.html' || currentPage === 'auth.html') {
-            window.location.href = 'userprofile.html';
-        } else {
-            window.location.reload();
+            if (res.ok) {
+                const data = await res.json();
+                localStorage.setItem('mr_shop_token', data.token);
+                userData.id = data.user.id;
+                userData.role = data.user.role || 'customer';
+                userData.isAdmin = data.user.role === 'admin';
+            }
+        } catch (apiErr) {
+            console.log('Backend offline, using localStorage for Google auth');
         }
+
+        // Save to localStorage (works with or without backend)
+        localStorage.setItem('mr_shop_user', JSON.stringify(userData));
+        MR_Cart.showToast('Google login successful!', 'success');
+        setTimeout(() => window.location.href = 'userprofile.html', 800);
 
     } catch (err) {
         console.error('Google login error:', err);
-        alert('Google login failed. Please try again.');
+        MR_Cart.showToast('Google login failed. Please try again.', 'error');
     }
 }
 
@@ -333,18 +348,6 @@ function signupWithFacebook() { loginWithFacebook(); }
 function signupWithApple() { loginWithApple(); }
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Check if user is already logged in - redirect from auth pages
-  const user = MR_Auth.getUser();
-  const currentPage = window.location.pathname.split('/').pop();
-  
-  if (user && user.loggedIn) {
-    // If on auth pages, redirect to profile
-    if (currentPage === 'signin.html' || currentPage === 'signup.html' || currentPage === 'auth.html') {
-      window.location.href = 'userprofile.html';
-      return;
-    }
-  }
-  
   MR_Auth.updateAuthUI();
   initGoogleSignIn();
 });

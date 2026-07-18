@@ -255,8 +255,6 @@ public class AuthController : ControllerBase
         }
     }
 
-    // TODO: Replace SHA256 with BCrypt (BCrypt.Net package) for production use.
-    // SHA256 is not suitable for password hashing. Use BCrypt.Net.BCrypt.HashPassword() and BCrypt.Net.BCrypt.Verify() instead.
     private static string HashPassword(string password)
     {
         using var sha256 = SHA256.Create();

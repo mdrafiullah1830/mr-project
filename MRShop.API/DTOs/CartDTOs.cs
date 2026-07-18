@@ -18,8 +18,3 @@ public class AddToCartRequest
     public string Image { get; set; } = string.Empty;
     public int Quantity { get; set; } = 1;
 }
-
-public class UpdateCartRequest
-{
-    public int Quantity { get; set; } = 1;
-}

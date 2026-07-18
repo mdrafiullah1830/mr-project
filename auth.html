@@ -205,25 +205,6 @@
     const email = document.getElementById('login-username').value;
     const password = document.getElementById('login-password').value;
 
-    // Admin credentials check
-    if (email === 'mrshop.bd.18@gmail.com' && password === 'mrshopbd18') {
-      const adminUser = {
-        id: 'admin_001',
-        username: 'Admin',
-        email: 'mrshop.bd.18@gmail.com',
-        role: 'admin',
-        isAdmin: true,
-        loggedIn: true,
-        loginTime: new Date().toISOString(),
-        profile: null
-      };
-      localStorage.setItem('mr_shop_user', JSON.stringify(adminUser));
-      localStorage.setItem('mr_shop_token', 'admin_token_' + Date.now());
-      alert('Admin login successful!');
-      setTimeout(() => window.location.href = 'admin.html', 500);
-      return;
-    }
-
     // Check seller credentials first
     const sellers = JSON.parse(localStorage.getItem('mr_shop_sellers')) || [];
     const seller = sellers.find(s => {

@@ -35,7 +35,6 @@ const MR_API = {
         // Token expired or invalid
         localStorage.removeItem('mr_shop_token');
         localStorage.removeItem('mr_shop_user');
-        window.location.href = 'signin.html';
         return null;
       }
 

@@ -72,12 +72,6 @@ function getCategoryLink(category) {
   return links[category] || 'index.html';
 }
 
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
-
 // Helper functions
 function MR_getProductById(id) {
   return MR_PRODUCTS.find(p => p.id === id);
@@ -133,7 +127,7 @@ function MR_createProductCard(product) {
         <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'">
       </div>
       <div class="amz-product-info">
-        <div class="amz-product-title">${escapeHtml(product.name)}</div>
+        <div class="amz-product-title">${product.name}</div>
         <div class="amz-product-rating">
           <span class="amz-stars">${MR_generateStars(product.rating)}</span>
           <span class="amz-rating-count">${product.reviews.toLocaleString()}</span>

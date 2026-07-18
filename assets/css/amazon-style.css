@@ -12,18 +12,15 @@
   --amazon-border: #d5d9d9;
   --amazon-text: #0f1111;
   --amazon-link: #007185;
-  --font-primary: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+  font-family: 'Inter', Arial, sans-serif;
   background: var(--amazon-light);
   color: var(--amazon-text);
   line-height: 1.4;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 a { text-decoration: none; color: inherit; }
@@ -1358,10 +1355,8 @@ select:focus {
   margin-top: 2px;
 }
 
-/* ==================== RESPONSIVE - PC / TABLET / MOBILE ==================== */
-
-/* ---- TABLET (768px - 1024px) ---- */
-@media (max-width: 1024px) {
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 900px) {
   .amz-header-top { flex-wrap: wrap; }
   .amz-deliver-to { display: none; }
   .amz-search-bar { order: 3; width: 100%; margin-top: 8px; }
@@ -1369,106 +1364,19 @@ select:focus {
   .amz-footer-grid { grid-template-columns: repeat(2, 1fr); }
   .amz-deals-banner { flex-direction: column; text-align: center; gap: 16px; }
   .amz-cart-layout { grid-template-columns: 1fr; }
-  .amz-products-grid { grid-template-columns: repeat(3, 1fr); gap: 14px; }
-  .amz-category-cards { grid-template-columns: repeat(2, 1fr); }
-  .amz-nav-bar { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 }
 
-/* ---- MOBILE (481px - 767px) ---- */
-@media (max-width: 767px) {
-  .amz-header-top { padding: 8px 12px; gap: 8px; }
-  .amz-logo-text, .logo-text { font-size: 18px; }
-  .amz-deliver-to { display: none; }
-  .amz-search-bar { order: 3; width: 100%; margin-top: 6px; height: 40px; }
-  .amz-search-category { display: none; }
-  .amz-search-input, .search-input { font-size: 14px; }
-  .amz-header-right { gap: 4px; }
-  .amz-header-link { padding: 6px 8px; font-size: 12px; }
+@media (max-width: 600px) {
   .amz-header-link .line1 { display: none; }
-  .amz-header-link .line2 { font-size: 12px; }
-  .amz-cart { padding: 6px 8px; }
-  .amz-cart-text { font-size: 12px; }
-  .amz-cart-icon { font-size: 20px; }
-
-  .amz-nav-bar { padding: 6px 8px; gap: 2px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-  .amz-nav-bar::-webkit-scrollbar { display: none; }
-  .amz-nav-item { padding: 6px 8px; font-size: 11px; white-space: nowrap; }
-
+  .amz-logo-text, .logo-text { font-size: 16px; }
   .amz-products-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .amz-product-img-wrap { height: 140px; padding: 8px; }
   .amz-product-info { padding: 8px; }
-  .amz-product-title { font-size: 12px; }
-  .amz-price-whole { font-size: 16px; }
-  .amz-product-btn { padding: 8px; font-size: 12px; }
-
+  .amz-price-whole { font-size: 18px; }
+  .amz-footer-grid { grid-template-columns: 1fr; }
+  .amz-nav-bar { padding: 6px 8px; }
+  .amz-nav-item { padding: 6px 8px; font-size: 12px; }
   .amz-category-cards { grid-template-columns: 1fr; }
-  .amz-category-card { padding: 16px; }
-  .amz-category-card h3 { font-size: 16px; }
-
-  .amz-deals-banner { margin: 12px; padding: 24px 16px; }
-  .amz-deals-content h2 { font-size: 20px; }
-  .amz-deals-content p { font-size: 14px; }
-
-  .amz-footer-grid { grid-template-columns: 1fr; gap: 20px; }
-  .amz-footer-col h4 { font-size: 14px; }
-  .amz-footer-col a { font-size: 12px; }
-
-  .amz-cart-item { grid-template-columns: 100px 1fr; gap: 12px; }
+  .amz-cart-item { grid-template-columns: 100px 1fr; }
   .amz-cart-item-img { width: 100px; height: 100px; }
-  .amz-cart-item-title { font-size: 14px; }
-  .amz-cart-item-price { font-size: 16px; }
-
-  .amz-chat-messages { height: 350px; }
-  .amz-chat-input input { padding: 10px 12px; font-size: 13px; }
-  .amz-chat-input button { padding: 10px 16px; font-size: 13px; }
-
-  .amz-seller-card { padding: 16px; }
-  .amz-seller-card h2 { font-size: 20px; }
-
-  .amz-auth-container { margin: 20px auto; }
-  .amz-auth-box { padding: 20px; }
-  .amz-auth-box h1 { font-size: 24px; }
-}
-
-/* ---- MOBILE SMALL (max 480px) ---- */
-@media (max-width: 480px) {
-  .amz-header-top { padding: 6px 10px; gap: 6px; }
-  .amz-logo-text, .logo-text { font-size: 16px; }
-  .amz-logo-subtitle, .logo-sub { font-size: 9px; }
-  .amz-search-bar, .search-bar { height: 38px; border-radius: 6px; }
-  .amz-search-input, .search-input { font-size: 13px; }
-  .amz-header-link { padding: 4px 6px; font-size: 11px; }
-  .amz-cart { padding: 4px 6px; }
-  .amz-cart-icon { font-size: 18px; }
-  .amz-cart-text { font-size: 11px; }
-  .amz-cart-count { width: 16px; height: 16px; font-size: 10px; }
-
-  .amz-nav-item { padding: 5px 6px; font-size: 10px; }
-
-  .amz-products-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
-  .amz-product-img-wrap { height: 120px; padding: 6px; }
-  .amz-product-info { padding: 6px; }
-  .amz-product-title { font-size: 11px; }
-  .amz-price-whole { font-size: 14px; }
-  .amz-product-btn { padding: 6px; font-size: 11px; }
-
-  .amz-category-card .grid-item img { height: 80px; }
-  .amz-category-card .grid-item span { font-size: 11px; }
-
-  .amz-deals-banner { margin: 8px; padding: 20px 12px; border-radius: 8px; }
-  .amz-deals-content h2 { font-size: 18px; }
-
-  .amz-cart-item { grid-template-columns: 80px 1fr; gap: 10px; }
-  .amz-cart-item-img { width: 80px; height: 80px; }
-
-  .amz-chat-container { padding: 0 8px; }
-  .amz-chat-messages { height: 300px; padding: 12px; }
-  .amz-chat-msg { max-width: 90%; font-size: 13px; }
-
-  .amz-auth-container { padding: 0 12px; }
-  .amz-auth-box { padding: 16px; }
-  .amz-auth-box h1 { font-size: 22px; }
-
-  .amz-footer-bottom { padding: 16px; }
-  .amz-footer-logo { font-size: 20px; }
 }
