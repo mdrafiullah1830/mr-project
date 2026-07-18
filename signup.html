@@ -168,15 +168,95 @@
 <script src="assets/js/cart.js"></script>
 <script src="assets/js/auth-shared.js"></script>
 <script>
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
   async function handleRegister(e) {
     e.preventDefault();
-    const username = document.getElementById('username').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const success = await MR_Auth.register(username, email, password);
-    if (success) {
-      setTimeout(() => window.location.href = 'userprofile.html', 1000);
+    var username = document.getElementById('username').value.trim();
+    var email = document.getElementById('email').value.trim();
+    var password = document.getElementById('password').value;
+
+    if (!username || username.length < 3) {
+      alert('Name must be at least 3 characters');
+      return;
     }
+    if (!isValidEmail(email)) {
+      alert('Please enter a valid email address');
+      return;
+    }
+    if (!password || password.length < 6) {
+      alert('Password must be at least 6 characters');
+      return;
+    }
+
+    // Check if email already exists in localStorage
+    var users = JSON.parse(localStorage.getItem('mr_shop_users') || '[]');
+    var existingUser = users.find(function(u) { return u.email === email; });
+    if (existingUser) {
+      alert('This email is already registered! Please sign in.');
+      return;
+    }
+
+    var AUTH_API = (typeof MR_API !== 'undefined' && MR_API) ? MR_API.BASE_URL : (window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : 'https://mrshop-bd.azurewebsites.net/api');
+
+    // Try API registration first
+    try {
+      var res = await fetch(AUTH_API + '/customerauth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: username, email: email, password: password })
+      });
+      if (res.ok) {
+        var data = await res.json();
+        localStorage.setItem('mr_shop_token', data.token);
+        var userData = {
+          id: data.user.id,
+          username: data.user.name || data.user.username,
+          email: data.user.email,
+          role: data.user.role || 'customer',
+          loggedIn: true,
+          loginTime: new Date().toISOString(),
+          profile: data.user.profilePhoto || null
+        };
+        localStorage.setItem('mr_shop_user', JSON.stringify(userData));
+        alert('Registration successful!');
+        window.location.href = 'userprofile.html';
+        return;
+      } else {
+        var errData = await res.json();
+        alert(errData.message || 'Registration failed');
+        return;
+      }
+    } catch (err) {}
+
+    // localStorage fallback - save user locally
+    var newUser = {
+      id: Date.now(),
+      username: username,
+      fullName: username,
+      email: email,
+      password: password,
+      role: 'customer',
+      profile: null
+    };
+    users.push(newUser);
+    localStorage.setItem('mr_shop_users', JSON.stringify(users));
+
+    // Auto login after registration
+    var loginData = {
+      id: newUser.id,
+      username: newUser.username,
+      email: newUser.email,
+      role: 'customer',
+      loggedIn: true,
+      loginTime: new Date().toISOString(),
+      profile: null
+    };
+    localStorage.setItem('mr_shop_user', JSON.stringify(loginData));
+    alert('Registration successful!');
+    window.location.href = 'userprofile.html';
   }
 </script>
 </body>

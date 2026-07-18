@@ -717,7 +717,7 @@
 		// Form submission
 		const sellerForm = document.getElementById('sellerForm');
 		const loadingOverlay = document.getElementById('loadingOverlay');
-		const SELLER_API = window.location.protocol === 'https:' ? 'https://localhost:5000/api' : 'http://localhost:5000/api';
+		const SELLER_API = window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : 'https://mrshop-bd.azurewebsites.net/api';
 
 		sellerForm.addEventListener('submit', async function(e) {
 			e.preventDefault();
@@ -747,10 +747,18 @@
 			};
 
 			try {
-				const res = await fetch(`${SELLER_API}/sellerauth/register`, {
+			const SELLER_API = window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : 'https://mrshop-bd.azurewebsites.net/api';
+			try {
+				const res = await fetch(`${SELLER_API}/sellers/applications`, {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify(sellerData)
+					body: JSON.stringify({
+						name: sellerData.fullName,
+						email: sellerData.email,
+						phone: sellerData.phone,
+						shopName: sellerData.shopName,
+						businessType: sellerData.categories
+					})
 				});
 
 				if (res.ok) {

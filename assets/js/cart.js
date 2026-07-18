@@ -34,15 +34,16 @@ const MR_Cart = {
     try {
       const result = await MR_API.get('/cart');
       if (result && result.ok) {
-        const serverCart = result.data.map(item => ({
-          id: item.product.id,
-          name: item.product.name,
-          price: item.product.price,
-          originalPrice: item.product.originalPrice,
-          image: item.product.image,
-          category: item.product.category,
+        const items = result.data.items || result.data;
+        const serverCart = (Array.isArray(items) ? items : []).map(item => ({
+          id: item.productId,
+          name: item.productName,
+          price: item.price,
+          originalPrice: item.originalPrice || item.price,
+          image: item.image,
+          category: item.category || '',
           quantity: item.quantity,
-          stock: item.product.stock,
+          stock: item.stock || 99,
           cartItemId: item.id
         }));
         this.saveCart(serverCart);
@@ -88,7 +89,13 @@ const MR_Cart = {
     // Sync to server if logged in
     if (MR_API.isLoggedIn()) {
       try {
-        await MR_API.post('/cart', { productId, quantity });
+        await MR_API.post('/cart', {
+          productId,
+          productName: product.name,
+          price: product.price,
+          image: product.image,
+          quantity
+        });
       } catch (err) {
         console.log('Failed to sync cart to server');
       }

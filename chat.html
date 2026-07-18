@@ -654,12 +654,42 @@
 
     function sendQuick(text) { chatInput.value = text; sendMessage(); }
 
+    const CHAT_API = window.location.hostname === 'localhost' ? 'http://localhost:8000' : 'https://mrshop-bd.azurewebsites.net';
+
     async function sendMessage() {
       const text = chatInput.value.trim();
       if (!text) return;
       addMessage(text, true);
       chatInput.value = '';
       showTyping();
+
+      // Try Python backend first
+      try {
+        const response = await fetch(CHAT_API + '/api/query', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: text })
+        });
+        if (response.ok) {
+          const data = await response.json();
+          removeTyping();
+          if (data.results && data.results.length > 0) {
+            let html = '<strong>Here\'s what I found:</strong><br><br>';
+            data.results.slice(0, 3).forEach(r => {
+              html += '• <strong>' + sanitizeHTML(r.path || 'Result') + '</strong><br>';
+              if (r.snippet) html += '<div style="font-size:13px;color:#565959;margin:4px 0 8px;">' + sanitizeHTML(r.snippet) + '</div>';
+            });
+            addMessage(html);
+          } else {
+            addMessage(generateResponse(text));
+          }
+          return;
+        }
+      } catch (err) {
+        console.log('Python chat backend not available, using client-side responses');
+      }
+
+      // Fallback to client-side smart response generator
       await new Promise(r => setTimeout(r, 800 + Math.random() * 700));
       removeTyping();
       addMessage(generateResponse(text));

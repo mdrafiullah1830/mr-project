@@ -27,16 +27,17 @@ const MR_Wishlist = {
     try {
       const result = await MR_API.get('/wishlist');
       if (result && result.ok) {
-        const serverWishlist = result.data.map(item => ({
-          id: item.product.id,
-          name: item.product.name,
-          price: item.product.price,
-          originalPrice: item.product.originalPrice,
-          image: item.product.image,
-          category: item.product.category,
-          rating: item.product.rating,
-          reviews: item.product.reviews,
-          addedAt: item.addedAt,
+        const items = result.data.items || result.data;
+        const serverWishlist = (Array.isArray(items) ? items : []).map(item => ({
+          id: item.productId,
+          name: item.productName,
+          price: item.price,
+          originalPrice: item.originalPrice || item.price,
+          image: item.image,
+          category: item.category || '',
+          rating: item.rating || 4.5,
+          reviews: item.reviews || 0,
+          addedAt: item.createdAt || new Date().toISOString(),
           wishlistItemId: item.id
         }));
         this.saveWishlist(serverWishlist);
@@ -85,7 +86,12 @@ const MR_Wishlist = {
       // Sync to server if logged in
       if (MR_API.isLoggedIn()) {
         try {
-          await MR_API.post('/wishlist', { productId });
+          await MR_API.post('/wishlist', {
+            productId,
+            productName: product.name,
+            price: product.price,
+            image: product.image
+          });
         } catch (err) {
           console.log('Failed to sync wishlist to server');
         }

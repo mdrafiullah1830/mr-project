@@ -36,4 +36,5 @@ public class MongoDbService
     public IMongoCollection<CartItem> CartItems => _database.GetCollection<CartItem>("cartItems");
     public IMongoCollection<WishlistItem> WishlistItems => _database.GetCollection<WishlistItem>("wishlistItems");
     public IMongoCollection<Order> Orders => _database.GetCollection<Order>("orders");
+    public IMongoCollection<SellerApplication> SellerApplications => _database.GetCollection<SellerApplication>("sellerApplications");
 }

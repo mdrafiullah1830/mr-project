@@ -284,362 +284,369 @@
   <script src="assets/js/cart.js"></script>
   <script src="assets/js/auth-shared.js"></script>
   <script>
-    // API base URL
-    var API_BASE = 'https://mrshopbangladesh-fmb9h7g2csbwawd3.centralindia-01.azurewebsites.net';
-
-    // Load user data from localStorage
-    const user = JSON.parse(localStorage.getItem('mr_shop_user') || '{}');
-    const savedProfile = JSON.parse(localStorage.getItem('mr_shop_profile') || '{}');
-    const authToken = localStorage.getItem('mr_shop_token');
-
-    // ===== FEATURE 1: PROFILE - Sync with Backend =====
-    async function loadProfileFromBackend() {
-      if (!authToken) return;
+    (function() {
       try {
-        const res = await fetch(API_BASE + '/api/customerauth/me', {
-          headers: { 'Authorization': 'Bearer ' + authToken }
-        });
-        if (res.ok) {
-          const data = await res.json();
-          // Update UI with backend data
-          document.getElementById('profileName').textContent = data.name || user.username;
-          document.getElementById('headerName').textContent = data.name || user.username;
-          document.getElementById('profileEmail').textContent = data.email || user.email;
-          document.getElementById('fullName').value = data.name || savedProfile.fullName || '';
-          document.getElementById('email').value = data.email || savedProfile.email || '';
-          document.getElementById('phone').value = data.phone || savedProfile.phone || '';
-          document.getElementById('address').value = data.address || savedProfile.address || '';
-          // Update localStorage with backend data
-          var updatedProfile = {
-            fullName: data.name || savedProfile.fullName,
-            email: data.email || savedProfile.email,
-            phone: data.phone || savedProfile.phone,
-            address: data.address || savedProfile.address,
-            dob: savedProfile.dob || '',
-            gender: savedProfile.gender || ''
-          };
-          localStorage.setItem('mr_shop_profile', JSON.stringify(updatedProfile));
-          if (data.profilePhoto) {
-            document.getElementById('profilePhoto').src = data.profilePhoto;
-          }
-        }
-      } catch (err) {
-        console.log('Backend offline, using localStorage');
-      }
-    }
+        var _API = (typeof MR_API !== 'undefined' && MR_API) ? MR_API : null;
+        var API_BASE = _API ? _API.BASE_URL.replace('/api', '') : (window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://mrshop-bd.azurewebsites.net');
 
-    // ===== FEATURE 2: ORDERS - Fetch from Backend =====
-    var backendOrders = [];
-    async function loadOrdersFromBackend() {
-      if (!authToken) { loadOrders(); return; }
-      try {
-        const res = await fetch(API_BASE + '/api/orders', {
-          headers: { 'Authorization': 'Bearer ' + authToken }
-        });
-        if (res.ok) {
-          backendOrders = await res.json();
-          if (backendOrders.length > 0) {
-            orders = backendOrders.map(function(o) {
-              return {
-                id: o.id || o._id || '#MR' + Math.floor(Math.random() * 9000 + 1000),
-                status: (o.status || 'pending').toLowerCase(),
-                date: o.createdAt || o.orderDate || new Date().toISOString(),
-                total: o.totalAmount || o.total || 0,
-                items: (o.items || []).length || o.itemCount || 1,
-                imgs: (o.items || []).slice(0, 3).map(function(item) {
-                  return item.image || item.productImage || './assets/images/honey.jpg';
-                })
-              };
+        var user = JSON.parse(localStorage.getItem('mr_shop_user') || '{}');
+        var savedProfile = JSON.parse(localStorage.getItem('mr_shop_profile') || '{}');
+        var authToken = localStorage.getItem('mr_shop_token');
+
+        window._upLoadProfile = async function() {
+          if (!authToken) return;
+          try {
+            var res = await fetch(API_BASE + '/api/customerauth/me', {
+              headers: { 'Authorization': 'Bearer ' + authToken }
             });
-          }
-        }
-      } catch (err) {
-        console.log('Backend offline, using local orders');
-      }
-      loadOrders();
-    }
-
-    // ===== FEATURE 3: WISHLIST - Sync with Backend =====
-    async function loadWishlistFromBackend() {
-      if (!authToken) { loadWishlist(); return; }
-      try {
-        const res = await fetch(API_BASE + '/api/wishlist', {
-          headers: { 'Authorization': 'Bearer ' + authToken }
-        });
-        if (res.ok) {
-          var serverWishlist = await res.json();
-          if (serverWishlist.length > 0) {
-            // Merge with local wishlist
-            var localWl = JSON.parse(localStorage.getItem('mr_shop_wishlist') || '[]');
-            var merged = serverWishlist.map(function(item) {
-              return {
-                id: item.productId || item.id,
-                name: item.productName || item.name || 'Product',
-                price: item.price || 0,
-                image: item.image || item.productImage || './assets/images/honey.jpg'
+            if (res.ok) {
+              var data = await res.json();
+              document.getElementById('profileName').textContent = data.name || user.username;
+              document.getElementById('headerName').textContent = data.name || user.username;
+              document.getElementById('profileEmail').textContent = data.email || user.email;
+              document.getElementById('fullName').value = data.name || savedProfile.fullName || '';
+              document.getElementById('email').value = data.email || savedProfile.email || '';
+              document.getElementById('phone').value = data.phone || savedProfile.phone || '';
+              document.getElementById('address').value = data.address || savedProfile.address || '';
+              var updatedProfile = {
+                fullName: data.name || savedProfile.fullName,
+                email: data.email || savedProfile.email,
+                phone: data.phone || savedProfile.phone,
+                address: data.address || savedProfile.address,
+                dob: savedProfile.dob || '',
+                gender: savedProfile.gender || ''
               };
-            });
-            // Add local items not in server
-            localWl.forEach(function(localItem) {
-              if (!merged.find(function(m) { return m.id === localItem.id; })) {
-                merged.push(localItem);
+              localStorage.setItem('mr_shop_profile', JSON.stringify(updatedProfile));
+              if (data.profilePhoto) {
+                document.getElementById('profilePhoto').src = data.profilePhoto;
               }
-            });
-            localStorage.setItem('mr_shop_wishlist', JSON.stringify(merged));
+            }
+          } catch (err) {
+            console.log('Backend offline, using localStorage');
           }
+        };
+
+        var backendOrders = [];
+        window._upLoadOrders = async function() {
+          if (!authToken) { _upRenderOrders(); return; }
+          try {
+            var res = await fetch(API_BASE + '/api/orders', {
+              headers: { 'Authorization': 'Bearer ' + authToken }
+            });
+            if (res.ok) {
+              var response = await res.json();
+              backendOrders = response.orders || response;
+              if (!Array.isArray(backendOrders)) backendOrders = [];
+              if (backendOrders.length > 0) {
+                orders = backendOrders.map(function(o) {
+                  return {
+                    id: o.id || o._id || '#MR' + Math.floor(Math.random() * 9000 + 1000),
+                    status: (o.status || 'pending').toLowerCase(),
+                    date: o.createdAt || o.orderDate || new Date().toISOString(),
+                    total: o.totalAmount || o.total || 0,
+                    items: (o.items || []).length || o.itemCount || 1,
+                    imgs: (o.items || []).slice(0, 3).map(function(item) {
+                      return item.image || item.productImage || './assets/images/honey.jpg';
+                    })
+                  };
+                });
+              }
+            }
+          } catch (err) {
+            console.log('Backend offline, using local orders');
+          }
+          _upRenderOrders();
+        };
+
+        window._upLoadWishlist = async function() {
+          if (!authToken) { _upRenderWishlist(); return; }
+          try {
+            var res = await fetch(API_BASE + '/api/wishlist', {
+              headers: { 'Authorization': 'Bearer ' + authToken }
+            });
+            if (res.ok) {
+              var response = await res.json();
+              var serverWishlist = response.items || response;
+              if (!Array.isArray(serverWishlist)) serverWishlist = [];
+              if (serverWishlist.length > 0) {
+                var localWl = JSON.parse(localStorage.getItem('mr_shop_wishlist') || '[]');
+                var merged = serverWishlist.map(function(item) {
+                  return {
+                    id: item.productId || item.id,
+                    name: item.productName || item.name || 'Product',
+                    price: item.price || 0,
+                    image: item.image || item.productImage || './assets/images/honey.jpg'
+                  };
+                });
+                localWl.forEach(function(localItem) {
+                  if (!merged.find(function(m) { return m.id === localItem.id; })) {
+                    merged.push(localItem);
+                  }
+                });
+                localStorage.setItem('mr_shop_wishlist', JSON.stringify(merged));
+              }
+            }
+          } catch (err) {
+            console.log('Backend offline, using local wishlist');
+          }
+          _upRenderWishlist();
+        };
+
+        window._upRemoveWishlistBackend = async function(productId) {
+          if (!authToken) return;
+          try {
+            await fetch(API_BASE + '/api/wishlist/product/' + productId, {
+              method: 'DELETE',
+              headers: { 'Authorization': 'Bearer ' + authToken }
+            });
+          } catch (err) {}
+        };
+
+        if (user.username) {
+          document.getElementById('profileName').textContent = user.username;
+          document.getElementById('headerName').textContent = user.username;
+          document.getElementById('fullName').value = savedProfile.fullName || user.username;
+        } else {
+          document.getElementById('fullName').value = savedProfile.fullName || '';
         }
-      } catch (err) {
-        console.log('Backend offline, using local wishlist');
-      }
-      loadWishlist();
-    }
+        if (user.email) {
+          document.getElementById('profileEmail').textContent = user.email;
+          document.getElementById('email').value = savedProfile.email || user.email;
+        } else {
+          document.getElementById('email').value = savedProfile.email || '';
+        }
 
-    async function removeWishlistFromBackend(productId) {
-      if (!authToken) return;
-      try {
-        await fetch(API_BASE + '/api/wishlist/product/' + productId, {
-          method: 'DELETE',
-          headers: { 'Authorization': 'Bearer ' + authToken }
-        });
-      } catch (err) {}
-    }
+        document.getElementById('phone').value = savedProfile.phone || '';
+        document.getElementById('dob').value = savedProfile.dob || '';
+        document.getElementById('address').value = savedProfile.address || '';
+        if (savedProfile.gender) {
+          document.getElementById('gender').value = savedProfile.gender;
+        }
 
-    if (user.username) {
-      document.getElementById('profileName').textContent = user.username;
-      document.getElementById('headerName').textContent = user.username;
-      document.getElementById('fullName').value = savedProfile.fullName || user.username;
-    } else {
-      document.getElementById('fullName').value = savedProfile.fullName || '';
-    }
-    if (user.email) {
-      document.getElementById('profileEmail').textContent = user.email;
-      document.getElementById('email').value = savedProfile.email || user.email;
-    } else {
-      document.getElementById('email').value = savedProfile.email || '';
-    }
+        var savedPhoto = localStorage.getItem('mr_shop_profile_photo');
+        if (savedPhoto) {
+          document.getElementById('profilePhoto').src = savedPhoto;
+        } else if (user.profile && user.profile.startsWith('http')) {
+          document.getElementById('profilePhoto').src = user.profile;
+        }
 
-    // Load other profile fields from saved profile
-    document.getElementById('phone').value = savedProfile.phone || '';
-    document.getElementById('dob').value = savedProfile.dob || '';
-    document.getElementById('address').value = savedProfile.address || '';
-    if (savedProfile.gender) {
-      document.getElementById('gender').value = savedProfile.gender;
-    }
+        var orders = [
+          { id: '#MR5001', status: 'delivered', date: '2026-01-15', total: 1250, items: 3, imgs: ['./assets/images/honey.jpg', './assets/images/oil.jpg', './assets/images/rice.jpg'] },
+          { id: '#MR5000', status: 'pending', date: '2026-01-14', total: 850, items: 2, imgs: ['./assets/images/doi.jpg', './assets/images/roshogolla.jpg'] },
+          { id: '#MR4999', status: 'delivered', date: '2026-01-12', total: 2100, items: 5, imgs: ['./assets/images/saree.jpg', './assets/images/nakshi.jpg'] },
+          { id: '#MR4998', status: 'delivered', date: '2026-01-10', total: 650, items: 1, imgs: ['./assets/images/basket.jpg'] },
+          { id: '#MR4997', status: 'cancelled', date: '2026-01-08', total: 320, items: 1, imgs: ['./assets/images/clay.jpg'] },
+          { id: '#MR4996', status: 'delivered', date: '2026-01-05', total: 1450, items: 4, imgs: ['./assets/images/panjabi.jpg', './assets/images/tea.jpg'] }
+        ];
 
-    // Load saved profile photo (Google photo or uploaded)
-    var savedPhoto = localStorage.getItem('mr_shop_profile_photo');
-    if (savedPhoto) {
-      document.getElementById('profilePhoto').src = savedPhoto;
-    } else if (user.profile && user.profile.startsWith('http')) {
-      document.getElementById('profilePhoto').src = user.profile;
-    }
+        window._upRenderOrders = function(filter) {
+          filter = filter || 'all';
+          var list = document.getElementById('ordersList');
+          var filtered = filter === 'all' ? orders : orders.filter(function(o) { return o.status === filter; });
+          if (!filtered.length) { list.innerHTML = '<div class="up-empty"><div class="icon">&#x1F4E6;</div><p>No orders found</p></div>'; return; }
+          list.innerHTML = filtered.map(function(o) {
+            return '<div class="up-order"><div class="up-order-header"><span class="up-order-id">' + o.id + '</span><span class="up-order-status ' + o.status + '">' + o.status + '</span></div><div class="up-order-meta"><span>&#x1F4C5; ' + new Date(o.date).toLocaleDateString('en-GB') + '</span><span>&#x1F4B0; &#2547;' + o.total.toLocaleString() + '</span><span>&#x1F4E6; ' + o.items + ' item' + (o.items > 1 ? 's' : '') + '</span></div><div class="up-order-items">' + o.imgs.map(function(i) { return '<img src="' + i + '" alt="">'; }).join('') + '</div></div>';
+          }).join('');
+        };
 
-    // Section switching
-    function showSection(name, el) {
-      document.querySelectorAll('.up-section').forEach(function(s) { s.classList.remove('active'); });
-      document.querySelectorAll('.up-nav-item').forEach(function(n) { n.classList.remove('active'); });
-      var section = document.getElementById('sec-' + name);
-      if (section) section.classList.add('active');
-      if (el) el.classList.add('active');
-      if (name === 'orders') loadOrdersFromBackend();
-      if (name === 'wishlist') loadWishlistFromBackend();
-    }
+        window._upRenderWishlist = function() {
+          var grid = document.getElementById('wishlistGrid');
+          var wl = JSON.parse(localStorage.getItem('mr_shop_wishlist') || '[]');
+          document.getElementById('wishlistCount').textContent = wl.length;
+          if (!wl.length) { grid.innerHTML = '<div class="up-empty"><div class="icon">&#x2764;&#xFE0F;</div><p>Your wishlist is empty</p></div>'; return; }
+          grid.innerHTML = wl.map(function(item) {
+            return '<div class="up-product"><button class="up-product-remove" onclick="removeWish(' + item.id + ')">&#x2715;</button><img src="' + item.image + '" alt="' + item.name + '" onerror="this.src=\'https://via.placeholder.com/180x140?text=No+Image\'"><div class="up-product-info"><div class="up-product-name">' + item.name + '</div><div class="up-product-price">&#2547;' + item.price.toLocaleString() + '</div></div></div>';
+          }).join('');
+        };
 
-    // Edit profile
-    var editing = false;
-    function toggleEdit() {
-      editing = !editing;
-      var inputs = document.querySelectorAll('#profileForm input, #profileForm textarea, #profileForm select');
-      inputs.forEach(function(i) { i.disabled = !editing; });
-      document.getElementById('editBtn').textContent = editing ? 'Cancel' : 'Edit';
-      document.getElementById('saveBtn').style.display = editing ? 'block' : 'none';
-    }
+        window.showSection = function(name, el) {
+          document.querySelectorAll('.up-section').forEach(function(s) { s.classList.remove('active'); });
+          document.querySelectorAll('.up-nav-item').forEach(function(n) { n.classList.remove('active'); });
+          var section = document.getElementById('sec-' + name);
+          if (section) section.classList.add('active');
+          if (el) el.classList.add('active');
+          if (name === 'orders') _upLoadOrders();
+          if (name === 'wishlist') _upLoadWishlist();
+        };
 
-    async function saveProfile(e) {
-      e.preventDefault();
-      var profileData = {
-        fullName: document.getElementById('fullName').value,
-        email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value,
-        dob: document.getElementById('dob').value,
-        address: document.getElementById('address').value,
-        gender: document.getElementById('gender').value
-      };
-      localStorage.setItem('mr_shop_profile', JSON.stringify(profileData));
+        window.toggleEdit = function() {
+          var editing = document.getElementById('editBtn').textContent === 'Cancel';
+          editing = !editing;
+          var inputs = document.querySelectorAll('#profileForm input, #profileForm textarea, #profileForm select');
+          inputs.forEach(function(i) { i.disabled = !editing; });
+          document.getElementById('editBtn').textContent = editing ? 'Cancel' : 'Edit';
+          document.getElementById('saveBtn').style.display = editing ? 'block' : 'none';
+        };
 
-      // Save to backend
-      if (authToken) {
-        try {
-          await fetch(API_BASE + '/api/customerauth/profile', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
-            body: JSON.stringify({ name: profileData.fullName, phone: profileData.phone, address: profileData.address })
-          });
-        } catch (err) {}
-      }
-
-      var userData = JSON.parse(localStorage.getItem('mr_shop_user') || '{}');
-      userData.username = profileData.fullName;
-      userData.email = profileData.email;
-      localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-
-      document.getElementById('profileName').textContent = profileData.fullName;
-      document.getElementById('headerName').textContent = profileData.fullName;
-      document.getElementById('profileEmail').textContent = profileData.email;
-
-      toggleEdit();
-      showNotification('Profile saved successfully!');
-    }
-
-    function changePhoto() {
-      var input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'image/*';
-      input.onchange = function(e) {
-        var file = e.target.files[0];
-        if (file) {
-          var reader = new FileReader();
-          reader.onload = function(ev) {
-            document.getElementById('profilePhoto').src = ev.target.result;
-            localStorage.setItem('mr_shop_profile_photo', ev.target.result);
-            showNotification('Profile photo updated!');
+        window.saveProfile = async function(e) {
+          e.preventDefault();
+          var profileData = {
+            fullName: document.getElementById('fullName').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            dob: document.getElementById('dob').value,
+            address: document.getElementById('address').value,
+            gender: document.getElementById('gender').value
           };
-          reader.readAsDataURL(file);
-        }
-      };
-      input.click();
-    }
+          localStorage.setItem('mr_shop_profile', JSON.stringify(profileData));
 
-    function showChangePassword() {
-      document.getElementById('passwordModal').style.display = 'flex';
-    }
-    function closePasswordModal() {
-      document.getElementById('passwordModal').style.display = 'none';
-      document.getElementById('currentPassword').value = '';
-      document.getElementById('newPassword').value = '';
-      document.getElementById('confirmPassword').value = '';
-    }
-    function savePassword() {
-      var cur = document.getElementById('currentPassword').value;
-      var nw = document.getElementById('newPassword').value;
-      var cf = document.getElementById('confirmPassword').value;
-      if (!cur || !nw || !cf) { alert('Please fill all fields'); return; }
-      if (nw.length < 6) { alert('New password must be at least 6 characters'); return; }
-      if (nw !== cf) { alert('New passwords do not match'); return; }
-      var saved = localStorage.getItem('mr_shop_password');
-      if (saved && saved !== cur) { alert('Current password is incorrect'); return; }
-      localStorage.setItem('mr_shop_password', nw);
-      closePasswordModal();
-      showNotification('Password changed successfully!');
-    }
+          if (authToken) {
+            try {
+              await fetch(API_BASE + '/api/customerauth/profile', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+                body: JSON.stringify({ name: profileData.fullName, phone: profileData.phone, address: profileData.address })
+              });
+            } catch (err) {}
+          }
 
-    function deactivateAccount() {
-      if (confirm('Are you sure you want to deactivate your account?')) {
-        alert('Account deactivated. You can reactivate by logging in again.');
-      }
-    }
-    function deleteAccount() {
-      if (confirm('This will permanently delete your account and all data. This cannot be undone.')) {
-        if (confirm('Are you absolutely sure?')) {
+          var userData = JSON.parse(localStorage.getItem('mr_shop_user') || '{}');
+          userData.username = profileData.fullName;
+          userData.email = profileData.email;
+          localStorage.setItem('mr_shop_user', JSON.stringify(userData));
+
+          document.getElementById('profileName').textContent = profileData.fullName;
+          document.getElementById('headerName').textContent = profileData.fullName;
+          document.getElementById('profileEmail').textContent = profileData.email;
+
+          toggleEdit();
+          showNotification('Profile saved successfully!');
+        };
+
+        window.changePhoto = function() {
+          var input = document.createElement('input');
+          input.type = 'file';
+          input.accept = 'image/*';
+          input.onchange = function(e) {
+            var file = e.target.files[0];
+            if (file) {
+              var reader = new FileReader();
+              reader.onload = function(ev) {
+                document.getElementById('profilePhoto').src = ev.target.result;
+                localStorage.setItem('mr_shop_profile_photo', ev.target.result);
+                showNotification('Profile photo updated!');
+              };
+              reader.readAsDataURL(file);
+            }
+          };
+          input.click();
+        };
+
+        window.showChangePassword = function() {
+          document.getElementById('passwordModal').style.display = 'flex';
+        };
+        window.closePasswordModal = function() {
+          document.getElementById('passwordModal').style.display = 'none';
+          document.getElementById('currentPassword').value = '';
+          document.getElementById('newPassword').value = '';
+          document.getElementById('confirmPassword').value = '';
+        };
+        window.savePassword = function() {
+          var cur = document.getElementById('currentPassword').value;
+          var nw = document.getElementById('newPassword').value;
+          var cf = document.getElementById('confirmPassword').value;
+          if (!cur || !nw || !cf) { alert('Please fill all fields'); return; }
+          if (nw.length < 6) { alert('New password must be at least 6 characters'); return; }
+          if (nw !== cf) { alert('New passwords do not match'); return; }
+          var saved = localStorage.getItem('mr_shop_password');
+          if (saved && saved !== cur) { alert('Current password is incorrect'); return; }
+          localStorage.setItem('mr_shop_password', nw);
+          closePasswordModal();
+          showNotification('Password changed successfully!');
+        };
+
+        window.deactivateAccount = function() {
+          if (confirm('Are you sure you want to deactivate your account?')) {
+            alert('Account deactivated. You can reactivate by logging in again.');
+          }
+        };
+        window.deleteAccount = function() {
+          if (confirm('This will permanently delete your account and all data. This cannot be undone.')) {
+            if (confirm('Are you absolutely sure?')) {
+              localStorage.removeItem('mr_shop_user');
+              localStorage.removeItem('mr_shop_wishlist');
+              localStorage.removeItem('mr_shop_cart');
+              localStorage.removeItem('mr_shop_password');
+              localStorage.removeItem('mr_shop_profile_photo');
+              localStorage.removeItem('mr_shop_profile');
+              localStorage.removeItem('mr_shop_token');
+              window.location.href = 'index.html';
+            }
+          }
+        };
+
+        window.showNotification = function(msg) {
+          var n = document.createElement('div');
+          n.style.cssText = 'position:fixed;top:20px;right:20px;padding:12px 24px;background:linear-gradient(135deg,#43e97b,#38f9d7);color:white;border-radius:8px;font-weight:600;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.15);';
+          n.textContent = msg;
+          document.body.appendChild(n);
+          setTimeout(function() { n.remove(); }, 3000);
+        };
+
+        window.filterOrders = function(f, btn) {
+          document.querySelectorAll('.up-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          _upRenderOrders(f);
+        };
+
+        window.removeWish = function(id) {
+          var wl = JSON.parse(localStorage.getItem('mr_shop_wishlist') || '[]');
+          wl = wl.filter(function(i) { return i.id !== id; });
+          localStorage.setItem('mr_shop_wishlist', JSON.stringify(wl));
+          _upRemoveWishlistBackend(id);
+          _upRenderWishlist();
+        };
+
+        window.clearWishlist = function() {
+          if (confirm('Clear entire wishlist?')) {
+            localStorage.removeItem('mr_shop_wishlist');
+            if (authToken) {
+              fetch(API_BASE + '/api/wishlist', {
+                method: 'DELETE',
+                headers: { 'Authorization': 'Bearer ' + authToken }
+              }).catch(function() {});
+            }
+            _upRenderWishlist();
+          }
+        };
+
+        window.doLogout = function() {
           localStorage.removeItem('mr_shop_user');
-          localStorage.removeItem('mr_shop_wishlist');
-          localStorage.removeItem('mr_shop_cart');
-          localStorage.removeItem('mr_shop_password');
-          localStorage.removeItem('mr_shop_profile_photo');
-          localStorage.removeItem('mr_shop_profile');
           localStorage.removeItem('mr_shop_token');
-          window.location.href = 'index.html';
-        }
+          localStorage.removeItem('mr_shop_cart');
+          localStorage.removeItem('mr_shop_wishlist');
+          localStorage.removeItem('mr_shop_seller');
+          localStorage.removeItem('mr_shop_seller_token');
+          localStorage.removeItem('mr_shop_profile');
+          localStorage.removeItem('mr_shop_profile_photo');
+          localStorage.removeItem('mr_shop_password');
+          sessionStorage.clear();
+          window.location.replace('index.html');
+        };
+
+        _upLoadProfile();
+        _upLoadOrders();
+        _upLoadWishlist();
+
+      } catch (e) {
+        console.error('Userprofile init error:', e);
+        window.doLogout = function() {
+          localStorage.clear();
+          sessionStorage.clear();
+          window.location.replace('index.html');
+        };
+        window.toggleEdit = function() {
+          var btn = document.getElementById('editBtn');
+          if (!btn) return;
+          var editing = btn.textContent === 'Cancel';
+          editing = !editing;
+          document.querySelectorAll('#profileForm input, #profileForm textarea, #profileForm select').forEach(function(i) { i.disabled = !editing; });
+          btn.textContent = editing ? 'Cancel' : 'Edit';
+          var saveBtn = document.getElementById('saveBtn');
+          if (saveBtn) saveBtn.style.display = editing ? 'block' : 'none';
+        };
       }
-    }
-
-    function showNotification(msg) {
-      var n = document.createElement('div');
-      n.style.cssText = 'position:fixed;top:20px;right:20px;padding:12px 24px;background:linear-gradient(135deg,#43e97b,#38f9d7);color:white;border-radius:8px;font-weight:600;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.15);';
-      n.textContent = msg;
-      document.body.appendChild(n);
-      setTimeout(function() { n.remove(); }, 3000);
-    }
-
-    // Orders
-    var orders = [
-      { id: '#MR5001', status: 'delivered', date: '2026-01-15', total: 1250, items: 3, imgs: ['./assets/images/honey.jpg', './assets/images/oil.jpg', './assets/images/rice.jpg'] },
-      { id: '#MR5000', status: 'pending', date: '2026-01-14', total: 850, items: 2, imgs: ['./assets/images/doi.jpg', './assets/images/roshogolla.jpg'] },
-      { id: '#MR4999', status: 'delivered', date: '2026-01-12', total: 2100, items: 5, imgs: ['./assets/images/saree.jpg', './assets/images/nakshi.jpg'] },
-      { id: '#MR4998', status: 'delivered', date: '2026-01-10', total: 650, items: 1, imgs: ['./assets/images/basket.jpg'] },
-      { id: '#MR4997', status: 'cancelled', date: '2026-01-08', total: 320, items: 1, imgs: ['./assets/images/clay.jpg'] },
-      { id: '#MR4996', status: 'delivered', date: '2026-01-05', total: 1450, items: 4, imgs: ['./assets/images/panjabi.jpg', './assets/images/tea.jpg'] }
-    ];
-
-    function loadOrders(filter) {
-      filter = filter || 'all';
-      var list = document.getElementById('ordersList');
-      var filtered = filter === 'all' ? orders : orders.filter(function(o) { return o.status === filter; });
-      if (!filtered.length) { list.innerHTML = '<div class="up-empty"><div class="icon">&#x1F4E6;</div><p>No orders found</p></div>'; return; }
-      list.innerHTML = filtered.map(function(o) {
-        return '<div class="up-order"><div class="up-order-header"><span class="up-order-id">' + o.id + '</span><span class="up-order-status ' + o.status + '">' + o.status + '</span></div><div class="up-order-meta"><span>&#x1F4C5; ' + new Date(o.date).toLocaleDateString('en-GB') + '</span><span>&#x1F4B0; &#2547;' + o.total.toLocaleString() + '</span><span>&#x1F4E6; ' + o.items + ' item' + (o.items > 1 ? 's' : '') + '</span></div><div class="up-order-items">' + o.imgs.map(function(i) { return '<img src="' + i '" alt="">'; }).join('') + '</div></div>';
-      }).join('');
-    }
-
-    function filterOrders(f, btn) {
-      document.querySelectorAll('.up-filter-btn').forEach(function(b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      loadOrders(f);
-    }
-
-    // Wishlist
-    function loadWishlist() {
-      var grid = document.getElementById('wishlistGrid');
-      var wl = JSON.parse(localStorage.getItem('mr_shop_wishlist') || '[]');
-      document.getElementById('wishlistCount').textContent = wl.length;
-      if (!wl.length) { grid.innerHTML = '<div class="up-empty"><div class="icon">&#x2764;&#xFE0F;</div><p>Your wishlist is empty</p></div>'; return; }
-      grid.innerHTML = wl.map(function(item) {
-        return '<div class="up-product"><button class="up-product-remove" onclick="removeWish(' + item.id + ')">&#x2715;</button><img src="' + item.image + '" alt="' + item.name + '" onerror="this.src=\'https://via.placeholder.com/180x140?text=No+Image\'"><div class="up-product-info"><div class="up-product-name">' + item.name + '</div><div class="up-product-price">&#2547;' + item.price.toLocaleString() + '</div></div></div>';
-      }).join('');
-    }
-
-    function removeWish(id) {
-      var wl = JSON.parse(localStorage.getItem('mr_shop_wishlist') || '[]');
-      wl = wl.filter(function(i) { return i.id !== id; });
-      localStorage.setItem('mr_shop_wishlist', JSON.stringify(wl));
-      removeWishlistFromBackend(id);
-      loadWishlist();
-    }
-
-    function clearWishlist() {
-      if (confirm('Clear entire wishlist?')) {
-        localStorage.removeItem('mr_shop_wishlist');
-        // Clear from backend too
-        if (authToken) {
-          fetch(API_BASE + '/api/wishlist', {
-            method: 'DELETE',
-            headers: { 'Authorization': 'Bearer ' + authToken }
-          }).catch(function() {});
-        }
-        loadWishlist();
-      }
-    }
-
-    // Logout
-    function doLogout() {
-      if (confirm('Are you sure you want to logout?')) {
-        localStorage.removeItem('mr_shop_user');
-        localStorage.removeItem('mr_shop_token');
-        localStorage.removeItem('mr_shop_cart');
-        localStorage.removeItem('mr_shop_wishlist');
-        localStorage.removeItem('mr_shop_seller');
-        localStorage.removeItem('mr_shop_seller_token');
-        localStorage.removeItem('mr_shop_profile');
-        localStorage.removeItem('mr_shop_profile_photo');
-        localStorage.removeItem('mr_shop_password');
-        window.location.href = 'index.html';
-      }
-    }
-
-    // Init - Load from backend on page load
-    loadProfileFromBackend();
-    loadOrdersFromBackend();
-    loadWishlistFromBackend();
+    })();
   </script>
 </body>
 </html>

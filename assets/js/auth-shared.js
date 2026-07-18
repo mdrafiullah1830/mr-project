@@ -31,7 +31,7 @@ const MR_Auth = {
       const response = await fetch(`${this.API_BASE}/customerauth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: email.split('@')[0], password })
+        body: JSON.stringify({ email, password })
       });
 
       if (response.ok) {
@@ -117,7 +117,7 @@ const MR_Auth = {
       const response = await fetch(`${this.API_BASE}/customerauth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password, fullName: fullName || username, phone: phone || '' })
+        body: JSON.stringify({ name: fullName || username, email, password, phone: phone || '' })
       });
 
       if (response.ok) {

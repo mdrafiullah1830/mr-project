@@ -95,6 +95,33 @@ public class CartController : ControllerBase
         return Ok(new { message = "Item removed from cart." });
     }
 
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateCartItem(string id, [FromBody] UpdateCartRequest request)
+    {
+        var userId = GetUserId();
+        if (userId == null) return Unauthorized();
+
+        if (request.Quantity <= 0)
+        {
+            var deleteResult = await _mongoDb.CartItems
+                .DeleteOneAsync(c => c.Id == id && c.UserId == userId);
+            return Ok(new { message = "Item removed from cart." });
+        }
+
+        var result = await _mongoDb.CartItems.UpdateOneAsync(
+            c => c.Id == id && c.UserId == userId,
+            Builders<CartItem>.Update
+                .Set(c => c.Quantity, request.Quantity)
+        );
+
+        if (result.MatchedCount == 0)
+        {
+            return NotFound(new { message = "Cart item not found." });
+        }
+
+        return Ok(new { message = "Cart item updated." });
+    }
+
     [HttpDelete]
     public async Task<IActionResult> ClearCart()
     {

@@ -485,7 +485,7 @@
     // ==================== SELLERS MANAGEMENT ====================
     let currentSellerFilter = 'all';
     let allSellers = [];
-    const ADMIN_API = window.location.protocol === 'https:' ? 'https://localhost:5000/api' : 'http://localhost:5000/api';
+    const ADMIN_API = window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : 'https://mrshop-bd.azurewebsites.net/api';
 
     async function loadSellers() {
       try {
