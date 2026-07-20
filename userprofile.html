@@ -307,26 +307,41 @@
       alert('Profile saved!');
     }
 
-    // Orders
-    const orders = [
-      { id: '#MR5001', status: 'delivered', date: '2026-01-15', total: 1250, items: 3, imgs: ['./assets/images/honey.jpg', './assets/images/oil.jpg', './assets/images/rice.jpg'] },
-      { id: '#MR5000', status: 'pending', date: '2026-01-14', total: 850, items: 2, imgs: ['./assets/images/doi.jpg', './assets/images/roshogolla.jpg'] },
-      { id: '#MR4999', status: 'delivered', date: '2026-01-12', total: 2100, items: 5, imgs: ['./assets/images/saree.jpg', './assets/images/nakshi.jpg'] },
-      { id: '#MR4998', status: 'delivered', date: '2026-01-10', total: 650, items: 1, imgs: ['./assets/images/basket.jpg'] },
-      { id: '#MR4997', status: 'cancelled', date: '2026-01-08', total: 320, items: 1, imgs: ['./assets/images/clay.jpg'] },
-      { id: '#MR4996', status: 'delivered', date: '2026-01-05', total: 1450, items: 4, imgs: ['./assets/images/panjabi.jpg', './assets/images/tea.jpg'] }
-    ];
-
-    function loadOrders(filter = 'all') {
+    // Orders - load from API
+    async function loadOrders(filter = 'all') {
       const list = document.getElementById('ordersList');
+      let orders = [];
+
+      try {
+        const token = localStorage.getItem('mr_shop_token');
+        if (token) {
+          const res = await fetch('/api/orders', { headers: { 'Authorization': 'Bearer ' + token } });
+          if (res.ok) {
+            const data = await res.json();
+            orders = data.orders || [];
+          }
+        }
+      } catch(e) {}
+
       const filtered = filter === 'all' ? orders : orders.filter(o => o.status === filter);
-      if (!filtered.length) { list.innerHTML = '<div class="up-empty"><div class="icon">&#x1F4E6;</div><p>No orders found</p></div>'; return; }
-      list.innerHTML = filtered.map(o => `
+      if (!filtered.length) {
+        list.innerHTML = '<div class="up-empty"><div class="icon">&#x1F4E6;</div><p>No orders found. Start shopping to see your orders here!</p></div>';
+        return;
+      }
+      list.innerHTML = filtered.map(o => {
+        const orderId = o.id ? '#MR-' + String(o.id).slice(-4) : '#MR-0000';
+        const date = o.createdAt || new Date().toISOString();
+        const total = o.totalAmount || 0;
+        const items = o.items ? o.items.length : 0;
+        const status = o.status || 'pending';
+        const imgs = o.items ? o.items.slice(0, 4).map(i => i.image || 'https://via.placeholder.com/60x60?text=Item') : [];
+        return `
         <div class="up-order">
-          <div class="up-order-header"><span class="up-order-id">${o.id}</span><span class="up-order-status ${o.status}">${o.status}</span></div>
-          <div class="up-order-meta"><span>&#x1F4C5; ${new Date(o.date).toLocaleDateString('en-GB')}</span><span>&#x1F4B0; &#2547;${o.total.toLocaleString()}</span><span>&#x1F4E6; ${o.items} item${o.items>1?'s':''}</span></div>
-          <div class="up-order-items">${o.imgs.map(i => `<img src="${i}" alt="">`).join('')}</div>
-        </div>`).join('');
+          <div class="up-order-header"><span class="up-order-id">${orderId}</span><span class="up-order-status ${status}">${status}</span></div>
+          <div class="up-order-meta"><span>&#x1F4C5; ${new Date(date).toLocaleDateString('en-GB')}</span><span>&#x1F4B0; &#2547;${total.toLocaleString()}</span><span>&#x1F4E6; ${items} item${items>1?'s':''}</span></div>
+          <div class="up-order-items">${imgs.map(i => `<img src="${i}" alt="" onerror="this.src='https://via.placeholder.com/60x60?text=Item'">`).join('')}</div>
+        </div>`;
+      }).join('');
     }
 
     function filterOrders(f, btn) {
@@ -367,6 +382,11 @@
     function doLogout() {
       if (confirm('Are you sure you want to logout?')) {
         localStorage.removeItem('mr_shop_user');
+        localStorage.removeItem('mr_shop_token');
+        localStorage.removeItem('mr_shop_cart');
+        localStorage.removeItem('mr_shop_wishlist');
+        localStorage.removeItem('mr_shop_seller');
+        localStorage.removeItem('mr_shop_seller_token');
         window.location.href = 'index.html';
       }
     }

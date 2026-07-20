@@ -24,10 +24,8 @@ public class MongoDbService
         var settings = MongoClientSettings.FromConnectionString(connectionString);
         settings.SslSettings = new SslSettings
         {
-            EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13,
-            ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true
+            EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13
         };
-        settings.AllowInsecureTls = true;
 
         var client = new MongoClient(settings);
         _database = client.GetDatabase(databaseName);
@@ -38,4 +36,6 @@ public class MongoDbService
     public IMongoCollection<CartItem> CartItems => _database.GetCollection<CartItem>("cartItems");
     public IMongoCollection<WishlistItem> WishlistItems => _database.GetCollection<WishlistItem>("wishlistItems");
     public IMongoCollection<Order> Orders => _database.GetCollection<Order>("orders");
+    public IMongoCollection<SellerApplication> SellerApplications => _database.GetCollection<SellerApplication>("sellerApplications");
+    public IMongoCollection<Coupon> Coupons => _database.GetCollection<Coupon>("coupons");
 }

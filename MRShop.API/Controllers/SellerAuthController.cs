@@ -2,7 +2,9 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using MongoDB.Driver;
 using MRShop.API.DTOs;
 using MRShop.API.Models;
@@ -24,6 +26,7 @@ public class SellerAuthController : ControllerBase
     }
 
     [HttpPost("register")]
+    [EnableRateLimiting("auth")]
     public async Task<IActionResult> Register([FromBody] SellerRegisterRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Name) ||
@@ -32,6 +35,18 @@ public class SellerAuthController : ControllerBase
         {
             return BadRequest(new { message = "Name, email, and password are required." });
         }
+
+        if (request.Password.Length < 8)
+            return BadRequest(new { message = "Password must be at least 8 characters long." });
+
+        if (!System.Text.RegularExpressions.Regex.IsMatch(request.Password, @"[A-Z]"))
+            return BadRequest(new { message = "Password must contain at least one uppercase letter." });
+
+        if (!System.Text.RegularExpressions.Regex.IsMatch(request.Password, @"[a-z]"))
+            return BadRequest(new { message = "Password must contain at least one lowercase letter." });
+
+        if (!System.Text.RegularExpressions.Regex.IsMatch(request.Password, @"[0-9]"))
+            return BadRequest(new { message = "Password must contain at least one digit." });
 
         var existingUser = await _mongoDb.Users
             .Find(u => u.Email == request.Email.ToLower().Trim())
@@ -72,6 +87,7 @@ public class SellerAuthController : ControllerBase
     }
 
     [HttpPost("login")]
+    [EnableRateLimiting("auth")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
@@ -135,14 +151,29 @@ public class SellerAuthController : ControllerBase
 
     private static string HashPassword(string password)
     {
-        using var sha256 = SHA256.Create();
-        var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password + "MRShop_Salt_2024"));
-        return Convert.ToBase64String(bytes);
+        byte[] salt = RandomNumberGenerator.GetBytes(16);
+        byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
+            Encoding.UTF8.GetBytes(password),
+            salt,
+            iterations: 100_000,
+            HashAlgorithmName.SHA256,
+            outputLength: 32);
+        return $"{Convert.ToBase64String(salt)}.{Convert.ToBase64String(hash)}";
     }
 
-    private static bool VerifyPassword(string password, string hash)
+    private static bool VerifyPassword(string password, string storedHash)
     {
-        return HashPassword(password) == hash;
+        var parts = storedHash.Split('.', 2);
+        if (parts.Length != 2) return false;
+        var salt = Convert.FromBase64String(parts[0]);
+        var hash = Convert.FromBase64String(parts[1]);
+        var computed = Rfc2898DeriveBytes.Pbkdf2(
+            Encoding.UTF8.GetBytes(password),
+            salt,
+            iterations: 100_000,
+            HashAlgorithmName.SHA256,
+            outputLength: 32);
+        return CryptographicOperations.FixedTimeEquals(computed, hash);
     }
 }
 

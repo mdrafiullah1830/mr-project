@@ -144,33 +144,62 @@
 
     <div class="order-summary">
       <h3>Order Summary</h3>
-      <div class="summary-item">
-        <img src="./assets/images/honey.jpg" alt="Honey">
-        <div class="summary-item-info">
-          <div class="name">Sundarbans Pure Honey</div>
-          <div class="qty">Qty: 1</div>
-          <div class="price">৳850</div>
-        </div>
-      </div>
-      <div class="summary-item">
-        <img src="./assets/images/roshogolla.jpg" alt="Roshogolla">
-        <div class="summary-item-info">
-          <div class="name">Roshogolla Box (12 pcs)</div>
-          <div class="qty">Qty: 2</div>
-          <div class="price">৳1,200</div>
-        </div>
-      </div>
-      <div class="summary-totals">
-        <div class="summary-row"><span>Subtotal</span><span>৳2,050</span></div>
-        <div class="summary-row"><span>Shipping</span><span>৳100</span></div>
-        <div class="summary-row"><span>VAT (5%)</span><span>৳300</span></div>
-        <div class="summary-row total"><span>Total</span><span>৳2,450</span></div>
-      </div>
+      <div id="summaryItems"></div>
+      <div class="summary-totals" id="summaryTotals"></div>
       <div class="secure-badge"><i class="fas fa-shield-alt"></i> Your payment is 100% secure</div>
     </div>
   </div>
 
   <script>
+    // Load cart data from localStorage
+    function loadPaymentSummary() {
+      let cart = [];
+      try { cart = JSON.parse(localStorage.getItem('mr_shop_cart')) || []; } catch(e) {}
+
+      const itemsDiv = document.getElementById('summaryItems');
+      const totalsDiv = document.getElementById('summaryTotals');
+
+      if (cart.length === 0) {
+        itemsDiv.innerHTML = '<p style="text-align:center;color:#999;padding:20px">No items in cart. <a href="index.html">Go shopping</a></p>';
+        totalsDiv.innerHTML = '';
+        return;
+      }
+
+      let subtotal = 0;
+      itemsDiv.innerHTML = cart.map(item => {
+        const itemTotal = (item.price || 0) * (item.quantity || 1);
+        subtotal += itemTotal;
+        return `
+          <div class="summary-item">
+            <img src="${item.image || 'https://via.placeholder.com/60x60?text=Item'}" alt="${item.name || 'Item'}" onerror="this.src='https://via.placeholder.com/60x60?text=Item'">
+            <div class="summary-item-info">
+              <div class="name">${item.name || item.productName || 'Product'}</div>
+              <div class="qty">Qty: ${item.quantity || 1}</div>
+              <div class="price">৳${itemTotal.toLocaleString()}</div>
+            </div>
+          </div>`;
+      }).join('');
+
+      const shipping = subtotal >= 5000 ? 0 : 100;
+      const vat = Math.round(subtotal * 0.05);
+      const total = subtotal + shipping + vat;
+
+      totalsDiv.innerHTML = `
+        <div class="summary-row"><span>Subtotal</span><span>৳${subtotal.toLocaleString()}</span></div>
+        <div class="summary-row"><span>Shipping</span><span>${shipping === 0 ? 'FREE' : '৳' + shipping}</span></div>
+        <div class="summary-row"><span>VAT (5%)</span><span>৳${vat.toLocaleString()}</span></div>
+        <div class="summary-row total"><span>Total</span><span>৳${total.toLocaleString()}</span></div>
+      `;
+
+      // Update all payment form amounts
+      document.querySelectorAll('input[value*="৳"]').forEach(el => {
+        if (el.readOnly) el.value = '৳' + total.toLocaleString();
+      });
+
+      // Store total for payment processing
+      window._paymentTotal = total;
+    }
+
     function selectMethod(method) {
       document.querySelectorAll('.method-card').forEach(c => c.classList.remove('selected'));
       document.querySelectorAll('.bkash-form, .nagad-form, .card-form').forEach(f => f.classList.remove('active'));
@@ -179,10 +208,40 @@
       else if (method === 'nagad') document.getElementById('nagadForm').classList.add('active');
       else if (method === 'card') document.getElementById('cardForm').classList.add('active');
     }
+
     function processPayment(method) {
-      alert('Processing ' + method + ' payment...\n\nIn production, this would connect to the ' + method + ' API.\nPayment of ৳2,450 would be processed.');
-      window.location.href = 'order-tracking.html';
+      const total = window._paymentTotal || 0;
+      if (total <= 0) { alert('No items to pay for!'); return; }
+
+      // Try API first
+      if (MR_API.isLoggedIn()) {
+        fetch(MR_API.BASE_URL + '/orders', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('mr_shop_token')
+          },
+          body: JSON.stringify({
+            shippingAddress: localStorage.getItem('mr_checkout_address') || 'N/A',
+            paymentMethod: method
+          })
+        }).then(res => {
+          if (res.ok) {
+            localStorage.removeItem('mr_shop_cart');
+            alert('Payment of ৳' + total.toLocaleString() + ' via ' + method + ' successful!');
+            window.location.href = 'order-tracking.html';
+          } else {
+            res.json().then(err => alert(err.message || 'Order failed'));
+          }
+        }).catch(() => alert('Server offline. Please try again.'));
+        return;
+      }
+
+      alert('Please login to place an order.');
     }
+
+    // Load summary on page load
+    loadPaymentSummary();
   </script>
 </body>
 </html>

@@ -172,14 +172,12 @@
 
     // Check seller credentials first
     const sellers = JSON.parse(localStorage.getItem('mr_shop_sellers')) || [];
-    console.log('All sellers:', sellers);
     
     const seller = sellers.find(s => {
       const isApproved = s.status === 'approved' || s.isApproved === true;
       const hasCreds = s.credentials && s.credentials.username && s.credentials.password;
       const matchUser = (s.credentials && s.credentials.username === email) || s.email === email;
       const matchPass = s.credentials && s.credentials.password === password;
-      console.log('Checking seller:', s.shopName, { isApproved, hasCreds, matchUser, matchPass });
       return isApproved && hasCreds && matchUser && matchPass;
     });
     

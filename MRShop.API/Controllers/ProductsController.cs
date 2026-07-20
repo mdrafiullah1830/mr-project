@@ -36,9 +36,10 @@ public class ProductsController : ControllerBase
 
         if (!string.IsNullOrWhiteSpace(search))
         {
+            var escapedSearch = System.Text.RegularExpressions.Regex.Escape(search);
             filter = Builders<Product>.Filter.And(filter,
                 Builders<Product>.Filter.Regex(p => p.Name,
-                    new MongoDB.Bson.BsonRegularExpression(search, "i")));
+                    new MongoDB.Bson.BsonRegularExpression(escapedSearch, "i")));
         }
 
         var totalCount = await _mongoDb.Products.CountDocumentsAsync(filter);
@@ -110,7 +111,7 @@ public class ProductsController : ControllerBase
         return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, MapToProductResponse(product));
     }
 
-    [Authorize(Roles = "admin,seller")]
+    [Authorize(Roles = "admin")]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateProduct(string id, [FromBody] UpdateProductRequest request)
     {
@@ -127,7 +128,7 @@ public class ProductsController : ControllerBase
             update = update.Set(p => p.Name, request.Name);
         if (request.Description != null)
             update = update.Set(p => p.Description, request.Description);
-        if (request.Price.HasValue)
+        if (request.Price.HasValue && request.Price.Value > 0)
             update = update.Set(p => p.Price, request.Price.Value);
         if (request.OriginalPrice.HasValue)
             update = update.Set(p => p.OriginalPrice, request.OriginalPrice.Value);
@@ -139,7 +140,7 @@ public class ProductsController : ControllerBase
             update = update.Set(p => p.Image, request.Image);
         if (request.Images != null)
             update = update.Set(p => p.Images, request.Images);
-        if (request.Stock.HasValue)
+        if (request.Stock.HasValue && request.Stock.Value >= 0)
             update = update.Set(p => p.Stock, request.Stock.Value);
 
         await _mongoDb.Products.UpdateOneAsync(p => p.Id == id, update);
@@ -148,7 +149,7 @@ public class ProductsController : ControllerBase
         return Ok(MapToProductResponse(product!));
     }
 
-    [Authorize(Roles = "admin,seller")]
+    [Authorize(Roles = "admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteProduct(string id)
     {

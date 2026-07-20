@@ -1,4 +1,5 @@
 using System.Text;
+using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -14,6 +15,38 @@ builder.Services.AddSingleton<MongoDbService>();
 
 // JWT
 builder.Services.AddSingleton<JwtService>();
+
+// Rate Limiting
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    options.AddPolicy("auth", partitioner: Context =>
+    {
+        var ipAddress = Context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        return RateLimitPartition.GetFixedWindowLimiter(
+            ipAddress,
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10,
+                QueueLimit = 0,
+                Window = TimeSpan.FromMinutes(1)
+            });
+    });
+
+    options.AddPolicy("api", partitioner: Context =>
+    {
+        var ipAddress = Context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        return RateLimitPartition.GetFixedWindowLimiter(
+            ipAddress,
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 60,
+                QueueLimit = 0,
+                Window = TimeSpan.FromMinutes(1)
+            });
+    });
+});
 
 // Authentication
 var jwtSecretKey = Environment.GetEnvironmentVariable("JWT_SECRET")
@@ -128,17 +161,21 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = ""
 });
 
-// Swagger available in both Development and Production
-app.UseSwagger();
-app.UseSwaggerUI(options =>
+// Swagger only in Development
+if (app.Environment.IsDevelopment())
 {
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "MR Shop API v1");
-    options.RoutePrefix = "swagger";
-    options.ConfigObject.AdditionalItems["persistAuthorization"] = true;
-});
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "MR Shop API v1");
+        options.RoutePrefix = "swagger";
+        options.ConfigObject.AdditionalItems["persistAuthorization"] = true;
+    });
+}
 
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

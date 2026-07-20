@@ -199,14 +199,38 @@
   <script src="assets/js/cart.js"></script>
   <script src="assets/js/wishlist.js"></script>
   <script>
-    const COUPONS = {
-      'SAVE10': { percent: 10, label: '10% off' },
-      'SAVE20': { percent: 20, label: '20% off' },
-      'WELCOME': { percent: 15, label: '15% off' },
-      'MRSHOP': { percent: 5, label: '5% off' }
-    };
     let appliedCoupon = null;
-    let discountPercent = 0;
+
+    async function applyCouponCode() {
+      const input = document.getElementById('couponInput');
+      const msg = document.getElementById('couponMsg');
+      if (!input || !msg) return;
+      const code = input.value.trim().toUpperCase();
+      if (!code) { msg.textContent = 'Please enter a coupon code'; msg.style.color = '#cc0c39'; return; }
+
+      try {
+        const subtotal = MR_Cart.getSubtotal();
+        const res = await fetch(MR_API.BASE_URL + '/coupons/validate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code, subtotal })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          appliedCoupon = data;
+          msg.textContent = 'Coupon applied! ' + data.message;
+          msg.style.color = '#007600';
+          updateCalculations();
+        } else {
+          const err = await res.json();
+          msg.textContent = err.message || 'Invalid coupon';
+          msg.style.color = '#cc0c39';
+        }
+      } catch(e) {
+        msg.textContent = 'Cannot validate coupon. Server offline.';
+        msg.style.color = '#cc0c39';
+      }
+    }
 
     function renderCart() {
       const container = document.getElementById('cartItems');
@@ -289,7 +313,16 @@
       const subtotal = MR_Cart.getSubtotal();
       const tax = MR_Cart.getTax();
       const shipping = MR_Cart.getShipping();
-      const discount = Math.round(subtotal * discountPercent / 100);
+      let discount = 0;
+      if (appliedCoupon) {
+        if (appliedCoupon.type === 'percent') {
+          discount = Math.round(subtotal * appliedCoupon.discount / 100);
+        } else if (appliedCoupon.type === 'fixed') {
+          discount = appliedCoupon.discount;
+        } else if (appliedCoupon.type === 'shipping') {
+          // Free shipping - handled in shipping calculation
+        }
+      }
       const total = subtotal + tax + shipping - discount;
 
       document.getElementById('itemCount').textContent = MR_Cart.getTotalItems();
@@ -307,25 +340,7 @@
     }
 
     function applyCoupon() {
-      const code = document.getElementById('couponInput').value.toUpperCase().trim();
-      const msg = document.getElementById('couponMsg');
-
-      if (!code) {
-        msg.textContent = 'Please enter a coupon code';
-        msg.style.color = '#cc0c39';
-        return;
-      }
-
-      if (COUPONS[code]) {
-        appliedCoupon = code;
-        discountPercent = COUPONS[code].percent;
-        msg.textContent = `Coupon applied: ${COUPONS[code].label}`;
-        msg.style.color = 'var(--amazon-green)';
-        updateCalculations();
-      } else {
-        msg.textContent = 'Invalid coupon code. Try SAVE10, SAVE20, or WELCOME.';
-        msg.style.color = '#cc0c39';
-      }
+      applyCouponCode();
     }
 
     function proceedToCheckout() {

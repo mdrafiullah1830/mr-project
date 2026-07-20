@@ -178,12 +178,12 @@
       <div class="seller-section">
         <h3>Quick Actions</h3>
         <div class="quick-actions">
-          <div class="quick-action"><i class="fas fa-plus-circle"></i><span>Add New Product</span></div>
-          <div class="quick-action"><i class="fas fa-truck"></i><span>Process Orders</span></div>
-          <div class="quick-action"><i class="fas fa-tags"></i><span>Create Promotion</span></div>
-          <div class="quick-action"><i class="fas fa-chart-pie"></i><span>View Reports</span></div>
-          <div class="quick-action"><i class="fas fa-comment-dots"></i><span>Messages (3)</span></div>
-          <div class="quick-action"><i class="fas fa-tools"></i><span>Store Settings</span></div>
+          <div class="quick-action" onclick="openSellerProductModal()"><i class="fas fa-plus-circle"></i><span>Add New Product</span></div>
+          <div class="quick-action" onclick="showSellerSection('orders')"><i class="fas fa-truck"></i><span>Process Orders</span></div>
+          <div class="quick-action" onclick="alert('Promotions feature coming soon!')"><i class="fas fa-tags"></i><span>Create Promotion</span></div>
+          <div class="quick-action" onclick="showSellerSection('reports')"><i class="fas fa-chart-pie"></i><span>View Reports</span></div>
+          <div class="quick-action" onclick="alert('Messages feature coming soon!')"><i class="fas fa-comment-dots"></i><span>Messages (3)</span></div>
+          <div class="quick-action" onclick="showSellerSection('settings')"><i class="fas fa-tools"></i><span>Store Settings</span></div>
         </div>
       </div>
 
@@ -230,8 +230,8 @@
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
             <h3 style="margin-bottom:0;padding-bottom:0;border-bottom:none">Product Management</h3>
             <div style="display:flex;gap:8px">
-              <input type="text" placeholder="Search products..." style="padding:8px 12px;border:1px solid var(--amazon-border);border-radius:6px;font-size:14px;width:250px">
-              <button class="seller-btn seller-btn-primary">+ Add Product</button>
+              <input type="text" id="sellerProductSearch" placeholder="Search products..." oninput="searchSellerProducts(this.value)" style="padding:8px 12px;border:1px solid var(--amazon-border);border-radius:6px;font-size:14px;width:250px">
+              <button class="seller-btn seller-btn-primary" onclick="openSellerProductModal()">+ Add Product</button>
             </div>
           </div>
           <table class="seller-table">
@@ -396,7 +396,45 @@
 
   <script>
     // ==================== SELLER API ====================
-    const SELLER_API = window.location.protocol === 'https:' ? 'https://localhost:5000/api' : 'http://localhost:5000/api';
+    const SELLER_API = window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : 'https://mrshop-bd.azurewebsites.net/api';
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    }
+
+    function showSellerSection(name) {
+      document.querySelectorAll('.seller-body section').forEach(s => s.style.display = 'none');
+      const section = document.getElementById(name);
+      if (section) section.style.display = '';
+    }
+
+    function searchSellerProducts(query) {
+      const tbody = document.querySelector('#products table tbody');
+      if (!tbody) return;
+      const q = query.toLowerCase().trim();
+      // Re-fetch from API and filter
+      loadSellerProducts().then(products => {
+        const filtered = q ? products.filter(p => (p.name || '').toLowerCase().includes(q) || (p.category || '').toLowerCase().includes(q)) : products;
+        if (filtered.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#565959;padding:20px">' + (q ? 'No products match your search' : 'No products yet. Add your first product!') + '</td></tr>';
+          return;
+        }
+        tbody.innerHTML = filtered.map(p => `
+          <tr>
+            <td>P${String(p.id || p._id).slice(-3).padStart(3,'0')}</td>
+            <td>${escapeHtml(p.name)}</td>
+            <td>৳${(p.price || 0).toLocaleString()}</td>
+            <td>${p.stock || 0}</td>
+            <td><span class="badge ${(p.stock || 0) > 0 ? 'badge-success' : 'badge-danger'}">${(p.stock || 0) > 0 ? 'Active' : 'Out of Stock'}</span></td>
+            <td>
+              <button class="seller-btn seller-btn-secondary" onclick="editSellerProduct('${p._id || p.id}')">Edit</button>
+              <button class="seller-btn seller-btn-danger" onclick="deleteSellerProduct('${p._id || p.id}')">Delete</button>
+            </td>
+          </tr>
+        `).join('');
+      });
+    }
 
     function getSellerToken() {
       return localStorage.getItem('mr_shop_seller_token');
@@ -434,7 +472,6 @@
     // Check if seller is logged in
     let currentSeller = JSON.parse(localStorage.getItem('mr_shop_seller') || 'null');
     let sellerToken = getSellerToken();
-    console.log('Seller data:', currentSeller, 'Token:', sellerToken);
     if (!currentSeller || (!sellerToken && !currentSeller.credentials)) {
       window.location.href = 'signin.html';
     } else {
@@ -460,15 +497,13 @@
         });
       });
 
-      // Load seller's products from API
+      // Load seller's products from API only
       async function loadSellerProducts() {
         const data = await sellerApiCall('/sellerproducts');
-        if (data) {
+        if (data && Array.isArray(data)) {
           return data;
         }
-        // Fallback to localStorage
-        const allProducts = JSON.parse(localStorage.getItem('mr_shop_products')) || [];
-        return allProducts.filter(p => p.sellerId === currentSeller.id);
+        return [];
       }
 
       // Render seller products
@@ -479,7 +514,7 @@
         tbody.innerHTML = products.length > 0 ? products.map(p => `
           <tr>
             <td>P${String(p.id).slice(-3).padStart(3,'0')}</td>
-            <td>${p.name}</td>
+            <td>${escapeHtml(p.name)}</td>
             <td>৳${p.price.toLocaleString()}</td>
             <td>${p.stock}</td>
             <td><span class="badge ${p.stock > 0 ? 'badge-success' : 'badge-danger'}">${p.stock > 0 ? 'Active' : 'Out of Stock'}</span></td>
@@ -509,12 +544,12 @@
         modal.innerHTML = `
           <div style="background:#fff;border-radius:12px;padding:24px;width:500px;max-height:80vh;overflow-y:auto">
             <h3 style="margin-bottom:16px">${isEdit ? 'Edit Product' : 'Add New Product'}</h3>
-            <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Product Name</label><input type="text" id="spName" value="${isEdit ? product.name : ''}" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
+            <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Product Name</label><input type="text" id="spName" value="${isEdit ? escapeHtml(product.name) : ''}" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
             <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Category</label><select id="spCategory" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"><option value="food">Food & Natural</option><option value="sweets">Sweets & Dairy</option><option value="handicrafts">Handicrafts</option><option value="clothing">Clothing</option><option value="books">Books</option><option value="antique">Antique</option></select></div>
             <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Price (৳)</label><input type="number" id="spPrice" value="${isEdit ? product.price : ''}" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
             <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Original Price (৳)</label><input type="number" id="spOrigPrice" value="${isEdit ? product.originalPrice : ''}" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
             <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Stock</label><input type="number" id="spStock" value="${isEdit ? product.stock : ''}" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
-            <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Description</label><textarea id="spDesc" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px;min-height:80px">${isEdit ? product.description : ''}</textarea></div>
+            <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Description</label><textarea id="spDesc" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px;min-height:80px">${isEdit ? escapeHtml(product.description) : ''}</textarea></div>
             <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Product Image</label><input type="file" id="spImage" accept="image/*" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
             <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">
               <button onclick="document.getElementById('sellerProductModal').remove()" style="padding:8px 20px;border:1px solid #d5d9d9;border-radius:6px;background:#fff;cursor:pointer">Cancel</button>

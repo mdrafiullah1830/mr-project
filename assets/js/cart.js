@@ -1,5 +1,5 @@
 // ==================== MR SHOP - SHARED CART MODULE ====================
-// Cart with API sync and localStorage persistence
+// API-first cart - localStorage only for offline caching
 
 const MR_Cart = {
   API_BASE: window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : 'https://mrshop-bd.azurewebsites.net/api',
@@ -15,108 +15,81 @@ const MR_Cart = {
   saveCart(cart) {
     localStorage.setItem('mr_shop_cart', JSON.stringify(cart));
     this.updateCartCount();
-    this.updateCartBadge();
   },
 
-  // Sync cart from server
   async syncFromServer() {
     if (!MR_API.isLoggedIn()) return;
-
     try {
       const result = await MR_API.get('/cart');
-      if (result && result.ok) {
-        const serverCart = result.data.map(item => ({
-          id: item.product.id,
-          name: item.product.name,
-          price: item.product.price,
-          originalPrice: item.product.originalPrice,
-          image: item.product.image,
-          category: item.product.category,
+      if (result && result.ok && result.data.items) {
+        const serverCart = result.data.items.map(item => ({
+          id: item.productId,
+          name: item.productName,
+          price: item.price,
+          image: item.image,
           quantity: item.quantity,
-          stock: item.product.stock,
           cartItemId: item.id
         }));
         this.saveCart(serverCart);
-        console.log('Cart synced from server:', serverCart.length, 'items');
       }
     } catch (err) {
-      console.log('Failed to sync cart from server');
+      console.log('Cart sync failed');
     }
   },
 
   async addItem(productId, quantity = 1) {
-    const product = MR_getProductById(productId);
-    if (!product) return false;
+    if (MR_API.isLoggedIn()) {
+      try {
+        const result = await MR_API.post('/cart', { productId, quantity });
+        if (result && result.ok) {
+          await this.syncFromServer();
+          MR_Cart.showToast('Added to cart!');
+          return true;
+        }
+      } catch (err) {}
+    }
 
-    // Update localStorage immediately
+    // Offline fallback - localStorage only
     const cart = this.getCart();
     const existing = cart.find(item => item.id === productId);
-
     if (existing) {
       existing.quantity += quantity;
     } else {
-      cart.push({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        originalPrice: product.originalPrice,
-        image: product.image,
-        category: product.category,
-        quantity: quantity,
-        stock: product.stock
-      });
+      cart.push({ id: productId, quantity });
     }
-
     this.saveCart(cart);
-    this.showToast(`${product.name} added to cart!`);
-
-    // Sync to server if logged in
-    if (MR_API.isLoggedIn()) {
-      try {
-        await MR_API.post('/cart', { productId, quantity });
-      } catch (err) {
-        console.log('Failed to sync cart to server');
-      }
-    }
-
+    MR_Cart.showToast('Added to cart (offline mode)');
     return true;
   },
 
   async removeItem(productId) {
-    let cart = this.getCart();
-    const item = cart.find(i => i.id === productId);
-    cart = cart.filter(item => item.id !== productId);
-    this.saveCart(cart);
-
-    // Sync to server if logged in
-    if (MR_API.isLoggedIn() && item && item.cartItemId) {
-      try {
-        await MR_API.delete(`/cart/${item.cartItemId}`);
-      } catch (err) {
-        console.log('Failed to sync cart removal to server');
+    if (MR_API.isLoggedIn()) {
+      const cart = this.getCart();
+      const item = cart.find(i => i.id === productId);
+      if (item && item.cartItemId) {
+        try { await MR_API.delete(`/cart/${item.cartItemId}`); } catch(e) {}
       }
     }
+    let cart = this.getCart();
+    cart = cart.filter(item => item.id !== productId);
+    this.saveCart(cart);
   },
 
   async updateQuantity(productId, quantity) {
+    if (quantity <= 0) return this.removeItem(productId);
+
+    if (MR_API.isLoggedIn()) {
+      const cart = this.getCart();
+      const item = cart.find(i => i.id === productId);
+      if (item && item.cartItemId) {
+        try { await MR_API.put(`/cart/${item.cartItemId}`, { quantity }); } catch(e) {}
+      }
+    }
     const cart = this.getCart();
     const item = cart.find(i => i.id === productId);
     if (item) {
-      if (quantity <= 0) {
-        await this.removeItem(productId);
-      } else {
-        item.quantity = quantity;
-        this.saveCart(cart);
-
-        // Sync to server if logged in
-        if (MR_API.isLoggedIn() && item.cartItemId) {
-          try {
-            await MR_API.put(`/cart/${item.cartItemId}`, { quantity });
-          } catch (err) {
-            console.log('Failed to sync cart quantity to server');
-          }
-        }
-      }
+      item.quantity = quantity;
+      this.saveCart(cart);
     }
   },
 
@@ -125,7 +98,7 @@ const MR_Cart = {
   },
 
   getSubtotal() {
-    return this.getCart().reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    return this.getCart().reduce((sum, item) => sum + ((item.price || 0) * item.quantity), 0);
   },
 
   getTax() {
@@ -141,18 +114,11 @@ const MR_Cart = {
   },
 
   async clearCart() {
+    if (MR_API.isLoggedIn()) {
+      try { await MR_API.delete('/cart'); } catch(e) {}
+    }
     localStorage.removeItem('mr_shop_cart');
     this.updateCartCount();
-    this.updateCartBadge();
-
-    // Sync to server if logged in
-    if (MR_API.isLoggedIn()) {
-      try {
-        await MR_API.delete('/cart');
-      } catch (err) {
-        console.log('Failed to sync cart clear to server');
-      }
-    }
   },
 
   updateCartCount() {
@@ -177,29 +143,15 @@ const MR_Cart = {
     const toast = document.createElement('div');
     toast.className = 'mr-toast';
     toast.style.cssText = `
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px);
       background: ${type === 'success' ? '#007600' : type === 'error' ? '#cc0c39' : '#131921'};
-      color: white;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      z-index: 9999;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      transition: transform 0.3s ease;
-      max-width: 90vw;
-      text-align: center;
+      color: white; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600;
+      z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: transform 0.3s ease;
+      max-width: 90vw; text-align: center;
     `;
     toast.textContent = message;
     document.body.appendChild(toast);
-
-    setTimeout(() => {
-      toast.style.transform = 'translateX(-50%) translateY(0)';
-    }, 10);
-
+    setTimeout(() => toast.style.transform = 'translateX(-50%) translateY(0)', 10);
     setTimeout(() => {
       toast.style.transform = 'translateX(-50%) translateY(100px)';
       setTimeout(() => toast.remove(), 300);
@@ -213,7 +165,6 @@ function MR_addToCart(productId, quantity = 1) {
 
 document.addEventListener('DOMContentLoaded', () => {
   MR_Cart.updateCartCount();
-  // Sync cart from server if logged in
   if (MR_API.isLoggedIn()) {
     MR_Cart.syncFromServer();
   }

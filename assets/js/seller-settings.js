@@ -44,8 +44,13 @@ document.addEventListener('DOMContentLoaded', ()=>{
   form.addEventListener('submit', (e)=>{
     e.preventDefault();
     // basic validation for email
-    if(inputs.sellerEmail.value && !inputs.sellerEmail.value.includes('@')){ alert('Please enter a valid email'); return; }
-    if(inputs.newPassword && inputs.newPassword.value){ /* password change would go to backend in real app */ }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(inputs.sellerEmail.value && !emailRegex.test(inputs.sellerEmail.value)){ alert('Please enter a valid email'); return; }
+    if(inputs.newPassword && inputs.newPassword.value){
+      if(inputs.newPassword.value.length < 6){ alert('Password must be at least 6 characters'); return; }
+      alert('Password change requires backend API. This is a demo feature.');
+      inputs.newPassword.value = '';
+    }
 
     const out = {};
     Object.keys(inputs).forEach(k=>{ const el = inputs[k]; if(!el) return; out[k] = el.type === 'checkbox' ? el.checked : el.value; });

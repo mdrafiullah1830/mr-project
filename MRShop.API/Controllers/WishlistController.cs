@@ -44,6 +44,13 @@ public class WishlistController : ControllerBase
         var userId = GetUserId();
         if (userId == null) return Unauthorized();
 
+        var product = await _mongoDb.Products
+            .Find(p => p.Id == request.ProductId && p.IsActive)
+            .FirstOrDefaultAsync();
+
+        if (product == null)
+            return BadRequest(new { message = "Product not found." });
+
         var existingItem = await _mongoDb.WishlistItems
             .Find(w => w.UserId == userId && w.ProductId == request.ProductId)
             .FirstOrDefaultAsync();
@@ -57,9 +64,9 @@ public class WishlistController : ControllerBase
         {
             UserId = userId,
             ProductId = request.ProductId,
-            ProductName = request.ProductName,
-            Price = request.Price,
-            Image = request.Image,
+            ProductName = product.Name,
+            Price = product.Price,
+            Image = product.Image,
             CreatedAt = DateTime.UtcNow
         };
 

@@ -62,6 +62,9 @@ public class OrdersController : ControllerBase
         var userId = GetUserId();
         if (userId == null) return Unauthorized();
 
+        if (string.IsNullOrWhiteSpace(request.ShippingAddress) || request.ShippingAddress.Length < 10)
+            return BadRequest(new { message = "Valid shipping address is required (min 10 characters)." });
+
         var cartItems = await _mongoDb.CartItems
             .Find(c => c.UserId == userId)
             .ToListAsync();
@@ -71,14 +74,35 @@ public class OrdersController : ControllerBase
             return BadRequest(new { message = "Cart is empty." });
         }
 
-        var orderItems = cartItems.Select(ci => new OrderItem
+        // Validate stock for each item and use server-side prices
+        var orderItems = new List<OrderItem>();
+        foreach (var ci in cartItems)
         {
-            ProductId = ci.ProductId,
-            ProductName = ci.ProductName,
-            Price = ci.Price,
-            Quantity = ci.Quantity,
-            Image = ci.Image
-        }).ToList();
+            var product = await _mongoDb.Products
+                .Find(p => p.Id == ci.ProductId && p.IsActive)
+                .FirstOrDefaultAsync();
+
+            if (product == null)
+                return BadRequest(new { message = $"Product '{ci.ProductName}' is no longer available." });
+
+            if (product.Stock < ci.Quantity)
+                return BadRequest(new { message = $"Insufficient stock for '{product.Name}'. Only {product.Stock} available." });
+
+            orderItems.Add(new OrderItem
+            {
+                ProductId = ci.ProductId,
+                ProductName = product.Name,
+                Price = product.Price,
+                Quantity = ci.Quantity,
+                Image = product.Image
+            });
+
+            // Decrease stock
+            await _mongoDb.Products.UpdateOneAsync(
+                p => p.Id == ci.ProductId,
+                Builders<Product>.Update.Inc(p => p.Stock, -ci.Quantity)
+            );
+        }
 
         var totalAmount = orderItems.Sum(i => i.Price * i.Quantity);
 
@@ -112,6 +136,26 @@ public class OrdersController : ControllerBase
             return BadRequest(new { message = "Invalid status." });
         }
 
+        var order = await _mongoDb.Orders.Find(o => o.Id == id).FirstOrDefaultAsync();
+        if (order == null)
+        {
+            return NotFound(new { message = "Order not found." });
+        }
+
+        // Sellers can only update orders containing their products
+        var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
+        if (userRole == "seller")
+        {
+            var userId = GetUserId();
+            var sellerProducts = await _mongoDb.Products
+                .Find(p => p.SellerId == userId || p.CreatedBy == userId)
+                .ToListAsync();
+            var sellerProductIds = sellerProducts.Select(p => p.Id).ToHashSet();
+            var hasSellerProduct = order.Items.Any(i => sellerProductIds.Contains(i.ProductId));
+            if (!hasSellerProduct)
+                return Forbid();
+        }
+
         var result = await _mongoDb.Orders.UpdateOneAsync(
             o => o.Id == id,
             Builders<Order>.Update
@@ -119,17 +163,29 @@ public class OrdersController : ControllerBase
                 .Set(o => o.UpdatedAt, DateTime.UtcNow)
         );
 
-        if (result.MatchedCount == 0)
-        {
-            return NotFound(new { message = "Order not found." });
-        }
-
         return Ok(new { message = $"Order status updated to {status}." });
     }
 
     private string? GetUserId()
     {
         return User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    }
+
+    // Admin - get all orders
+    [Authorize(Roles = "admin")]
+    [HttpGet("all")]
+    public async Task<IActionResult> GetAllOrders()
+    {
+        var orders = await _mongoDb.Orders
+            .Find(_ => true)
+            .SortByDescending(o => o.CreatedAt)
+            .ToListAsync();
+
+        return Ok(new
+        {
+            orders = orders.Select(MapToOrderResponse),
+            totalCount = orders.Count
+        });
     }
 
     private static OrderResponse MapToOrderResponse(Order order)

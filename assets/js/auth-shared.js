@@ -1,5 +1,5 @@
 // ==================== MR SHOP - SHARED AUTH MODULE ====================
-// Now connects to C# API with localStorage fallback
+// API-only auth - no localStorage fallback for data
 
 const MR_Auth = {
   API_BASE: window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : 'https://mrshop-bd.azurewebsites.net/api',
@@ -31,7 +31,7 @@ const MR_Auth = {
       const response = await fetch(`${this.API_BASE}/customerauth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: email.split('@')[0], password })
+        body: JSON.stringify({ email: email.trim(), password })
       });
 
       if (response.ok) {
@@ -39,17 +39,15 @@ const MR_Auth = {
         localStorage.setItem('mr_shop_token', data.token);
         const userData = {
           id: data.user.id,
-          username: data.user.username,
+          username: data.user.name,
           email: data.user.email,
           role: data.user.role,
           isAdmin: data.user.role === 'admin',
           loggedIn: true,
-          loginTime: new Date().toISOString(),
-          profile: data.user.profile || null
+          loginTime: new Date().toISOString()
         };
         localStorage.setItem('mr_shop_user', JSON.stringify(userData));
         MR_Cart.showToast('Login successful!', 'success');
-        // Sync cart and wishlist from server
         await MR_Cart.syncFromServer();
         await MR_Wishlist.syncFromServer();
         return true;
@@ -59,50 +57,9 @@ const MR_Auth = {
         return false;
       }
     } catch (err) {
-      console.log('API offline, using localStorage auth');
+      MR_Cart.showToast('Cannot connect to server. Please try again.', 'error');
+      return false;
     }
-
-    // Fallback to localStorage auth
-    // Check admin credentials first
-    const adminEmail = 'admin@mrmart18.com';
-    const adminPassword = 'mrmart18.bd';
-    const usernameOnly = email.split('@')[0];
-    
-    if ((email === adminEmail || usernameOnly === 'mrmart18') && password === adminPassword) {
-      const userData = {
-        id: 1,
-        username: 'mrmart18',
-        email: adminEmail,
-        role: 'admin',
-        isAdmin: true,
-        loggedIn: true,
-        loginTime: new Date().toISOString()
-      };
-      localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-      MR_Cart.showToast('Admin login successful!', 'success');
-      return true;
-    }
-
-    const users = this.getUsers();
-    const user = users.find(u => u.email === email && u.password === password);
-
-    if (user) {
-      const userData = {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: user.role || 'user',
-        isAdmin: user.role === 'admin',
-        loggedIn: true,
-        loginTime: new Date().toISOString()
-      };
-      localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-      MR_Cart.showToast('Login successful!', 'success');
-      return true;
-    }
-
-    MR_Cart.showToast('Invalid credentials', 'error');
-    return false;
   },
 
   async register(username, email, password, fullName, phone) {
@@ -111,8 +68,8 @@ const MR_Auth = {
       return false;
     }
 
-    if (password.length < 6) {
-      MR_Cart.showToast('Password must be at least 6 characters', 'error');
+    if (password.length < 8) {
+      MR_Cart.showToast('Password must be at least 8 characters', 'error');
       return false;
     }
 
@@ -120,7 +77,12 @@ const MR_Auth = {
       const response = await fetch(`${this.API_BASE}/customerauth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password, fullName: fullName || username, phone: phone || '' })
+        body: JSON.stringify({
+          name: fullName || username,
+          email: email.trim(),
+          password,
+          phone: phone || ''
+        })
       });
 
       if (response.ok) {
@@ -128,11 +90,12 @@ const MR_Auth = {
         localStorage.setItem('mr_shop_token', data.token);
         const userData = {
           id: data.user.id,
-          username: data.user.username,
+          username: data.user.name,
           email: data.user.email,
+          role: data.user.role || 'customer',
+          isAdmin: data.user.role === 'admin',
           loggedIn: true,
-          loginTime: new Date().toISOString(),
-          profile: data.user.profile || null
+          loginTime: new Date().toISOString()
         };
         localStorage.setItem('mr_shop_user', JSON.stringify(userData));
         MR_Cart.showToast('Account created successfully!', 'success');
@@ -143,40 +106,9 @@ const MR_Auth = {
         return false;
       }
     } catch (err) {
-      console.log('API offline, using localStorage auth');
-    }
-
-    // Fallback to localStorage
-    const users = this.getUsers();
-
-    if (users.find(u => u.email === email)) {
-      MR_Cart.showToast('Email already registered', 'error');
+      MR_Cart.showToast('Cannot connect to server. Please try again.', 'error');
       return false;
     }
-
-    const newUser = {
-      id: Date.now(),
-      username,
-      email,
-      password,
-      createdAt: new Date().toISOString()
-    };
-    users.push(newUser);
-    localStorage.setItem('mr_shop_users', JSON.stringify(users));
-
-        const userData = {
-          id: newUser.id,
-          username: newUser.username,
-          email: newUser.email,
-          role: newUser.role || 'user',
-          isAdmin: newUser.role === 'admin',
-          loggedIn: true,
-          loginTime: new Date().toISOString()
-        };
-        localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-
-    MR_Cart.showToast('Account created successfully!', 'success');
-    return true;
   },
 
   async getProfile() {
@@ -218,14 +150,6 @@ const MR_Auth = {
     }, 1000);
   },
 
-  getUsers() {
-    try {
-      return JSON.parse(localStorage.getItem('mr_shop_users')) || [];
-    } catch {
-      return [];
-    }
-  },
-
   updateAuthUI() {
     const user = this.getUser();
     if (!user || !user.loggedIn) return;
@@ -246,7 +170,7 @@ const MR_Auth = {
   }
 };
 
-// Social login functions - require OAuth integration
+// Google OAuth
 var googleInitialized = false;
 
 function initGoogleSignIn() {
@@ -285,62 +209,48 @@ function loginWithGoogle() {
     if (googleInitialized) {
         google.accounts.id.prompt();
     } else {
-        MR_Cart.showToast('Google Sign-In is loading. Please try again in a moment.', 'info');
+        MR_Cart.showToast('Google Sign-In is loading. Please try again.', 'info');
     }
 }
 
 async function handleGoogleResponse(response) {
-    // Decode Google JWT to get user info (works without backend)
     try {
-        const payload = JSON.parse(atob(response.credential.split('.')[1]));
-        const userData = {
-            id: payload.sub,
-            username: payload.name || payload.email.split('@')[0],
-            email: payload.email,
-            role: 'customer',
-            isAdmin: false,
-            loggedIn: true,
-            loginTime: new Date().toISOString(),
-            profile: payload.picture || null
-        };
+        const res = await fetch(`${MR_Auth.API_BASE}/customerauth/google`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ credential: response.credential })
+        });
 
-        // Try backend first
-        try {
-            const res = await fetch(`${MR_Auth.API_BASE}/customerauth/google`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ credential: response.credential }),
-                signal: AbortSignal.timeout(5000)
-            });
-
-            if (res.ok) {
-                const data = await res.json();
-                localStorage.setItem('mr_shop_token', data.token);
-                userData.id = data.user.id;
-                userData.role = data.user.role || 'customer';
-                userData.isAdmin = data.user.role === 'admin';
-            }
-        } catch (apiErr) {
-            console.log('Backend offline, using localStorage for Google auth');
+        if (res.ok) {
+            const data = await res.json();
+            localStorage.setItem('mr_shop_token', data.token);
+            const userData = {
+                id: data.user.id,
+                username: data.user.name,
+                email: data.user.email,
+                role: data.user.role || 'customer',
+                isAdmin: data.user.role === 'admin',
+                loggedIn: true,
+                loginTime: new Date().toISOString()
+            };
+            localStorage.setItem('mr_shop_user', JSON.stringify(userData));
+            MR_Cart.showToast('Google login successful!', 'success');
+            setTimeout(() => window.location.href = 'userprofile.html', 800);
+        } else {
+            const err = await res.json();
+            MR_Cart.showToast(err.message || 'Google login failed', 'error');
         }
-
-        // Save to localStorage (works with or without backend)
-        localStorage.setItem('mr_shop_user', JSON.stringify(userData));
-        MR_Cart.showToast('Google login successful!', 'success');
-        setTimeout(() => window.location.href = 'userprofile.html', 800);
-
     } catch (err) {
-        console.error('Google login error:', err);
-        MR_Cart.showToast('Google login failed. Please try again.', 'error');
+        MR_Cart.showToast('Cannot connect to server. Google login failed.', 'error');
     }
 }
 
 function loginWithFacebook() {
-    MR_Cart.showToast('Facebook login coming soon! Use email/password to sign in.', 'info');
+    MR_Cart.showToast('Facebook login coming soon!', 'info');
 }
 
 function loginWithApple() {
-    MR_Cart.showToast('Apple login coming soon! Use email/password to sign in.', 'info');
+    MR_Cart.showToast('Apple login coming soon!', 'info');
 }
 
 function signupWithGoogle() { loginWithGoogle(); }

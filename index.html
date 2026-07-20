@@ -290,7 +290,7 @@
       <a href="blog.html" class="nav-item"><i class="fas fa-newspaper"></i> Blog</a>
       <a href="compare.html" class="nav-item"><i class="fas fa-balance-scale"></i> Compare</a>
       <a href="order-tracking.html" class="nav-item"><i class="fas fa-truck"></i> Track Order</a>
-      <a href="admin.html" class="nav-item"><i class="fas fa-cog"></i> Admin</a>
+      <a href="admin.html" class="nav-item" id="adminNavLink" style="display:none"><i class="fas fa-cog"></i> Admin</a>
       <div class="nav-divider"></div>
       <a href="becomeseller.html" class="nav-item">Sell</a>
       <a href="chat.html" class="nav-item"><i class="fas fa-headset"></i> Help</a>
@@ -515,7 +515,7 @@
       <a href="compare.html">Compare</a>
       <a href="order-tracking.html">Track Order</a>
       <a href="review.html">Reviews</a>
-      <a href="admin.html">Admin</a>
+      <a href="admin.html" id="adminFooterLink" style="display:none">Admin</a>
       <a href="seller.html">Sell</a>
       <a href="chat.html">Help</a>
     </div>
@@ -721,6 +721,16 @@
         .then(reg => console.log('Service Worker registered'))
         .catch(err => console.log('SW registration failed'));
     }
+    // Show admin link only for admin users
+    (function(){
+      try {
+        var u = JSON.parse(localStorage.getItem('mr_shop_user'));
+        if (u && u.loggedIn && (u.isAdmin || u.role === 'admin')) {
+          var al = document.getElementById('adminNavLink'); if(al) al.style.display = '';
+          var af = document.getElementById('adminFooterLink'); if(af) af.style.display = '';
+        }
+      } catch(e){}
+    })();
   </script>
 </body>
 </html>

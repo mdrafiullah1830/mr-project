@@ -168,12 +168,12 @@
 <script src="assets/js/cart.js"></script>
 <script src="assets/js/auth-shared.js"></script>
 <script>
-  function handleRegister(e) {
+  async function handleRegister(e) {
     e.preventDefault();
     const username = document.getElementById('username').value;
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    if (MR_Auth.register(username, email, password)) {
+    if (await MR_Auth.register(username, email, password)) {
       setTimeout(() => window.location.href = 'userprofile.html', 1000);
     }
   }
