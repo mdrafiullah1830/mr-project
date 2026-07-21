@@ -24,6 +24,30 @@ public class SellerApplication
     [BsonElement("businessType")]
     public string? BusinessType { get; set; }
 
+    [BsonElement("paymentMethod")]
+    public string? PaymentMethod { get; set; }
+
+    [BsonElement("bankName")]
+    public string? BankName { get; set; }
+
+    [BsonElement("accountNumber")]
+    public string? AccountNumber { get; set; }
+
+    [BsonElement("latitude")]
+    public string? Latitude { get; set; }
+
+    [BsonElement("longitude")]
+    public string? Longitude { get; set; }
+
+    [BsonElement("categories")]
+    public string? Categories { get; set; }
+
+    [BsonElement("additionalInfo")]
+    public string? AdditionalInfo { get; set; }
+
+    [BsonElement("docType")]
+    public string? DocType { get; set; }
+
     [BsonElement("status")]
     public string Status { get; set; } = "pending"; // pending, approved, rejected
 

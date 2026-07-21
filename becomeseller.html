@@ -731,33 +731,34 @@
 			}
 			loadingOverlay.classList.add('show');
 
-			const sellerData = {
-				fullName: document.getElementById('fullName').value,
-				phone: document.getElementById('phone').value,
-				email: document.getElementById('email').value,
-				shopName: document.getElementById('shopName').value,
-				paymentMethod: document.querySelector('input[name="paymentMethod"]:checked')?.value || '',
-				bankName: document.getElementById('bankName')?.value || '',
-				accountNumber: document.getElementById('accountNumber').value,
-				latitude: document.getElementById('latitude')?.value || '',
-				longitude: document.getElementById('longitude')?.value || '',
-				categories: Array.from(cats).map(function(c){return c.value;}).join(','),
-				additionalInfo: document.getElementById('additionalInfo').value
-			};
+		const sellerData = {
+			name: document.getElementById('fullName').value,
+			phone: document.getElementById('phone').value,
+			email: document.getElementById('email').value,
+			shopName: document.getElementById('shopName').value,
+			paymentMethod: document.querySelector('input[name="paymentMethod"]:checked')?.value || '',
+			bankName: document.getElementById('bankName')?.value || '',
+			accountNumber: document.getElementById('accountNumber').value,
+			latitude: document.getElementById('latitude')?.value || '',
+			longitude: document.getElementById('longitude')?.value || '',
+			categories: Array.from(cats).map(function(c){return c.value;}).join(','),
+			additionalInfo: document.getElementById('additionalInfo').value,
+			docType: document.querySelector('input[name="docType"]:checked')?.value || 'nid'
+		};
 
-			try {
-				const res = await fetch(`${SELLER_API}/sellerauth/register`, {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify(sellerData)
-				});
+		try {
+			const res = await fetch(`${SELLER_API}/sellers/applications`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(sellerData)
+			});
 
-				if (res.ok) {
-					loadingOverlay.classList.remove('show');
-					alert('Application submitted successfully! Admin will review and approve your account. You will receive your seller login credentials after approval.');
-					sellerForm.reset();
-					locationDisplay.classList.remove('show');
-					mapPreview.classList.remove('show');
+			if (res.ok) {
+				loadingOverlay.classList.remove('show');
+				alert('Application submitted successfully! Admin will review your application. You can login as a seller once approved.');
+				sellerForm.reset();
+				locationDisplay.classList.remove('show');
+				mapPreview.classList.remove('show');
 				} else {
 					const err = await res.json();
 					loadingOverlay.classList.remove('show');

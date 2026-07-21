@@ -646,34 +646,170 @@
         renderSellerProducts();
       }
 
-      // Load seller stats
+      // Load seller stats from dashboard API
       async function loadSellerStats() {
-        const stats = await sellerApiCall('/sellerproducts/stats');
+        const stats = await sellerApiCall('/seller/dashboard');
         if (stats) {
           document.getElementById('statOrders').textContent = stats.totalOrders;
-          document.getElementById('statSales').textContent = '৳' + stats.totalRevenue.toLocaleString();
-          document.getElementById('statRevenue').textContent = '৳' + stats.totalRevenue.toLocaleString();
-          document.getElementById('statPayouts').textContent = stats.totalProducts;
+          document.getElementById('statSales').textContent = '৳' + (stats.totalRevenue || 0).toLocaleString();
+          document.getElementById('statRevenue').textContent = '৳' + (stats.totalRevenue || 0).toLocaleString();
+          document.getElementById('statPayouts').textContent = stats.pendingOrders;
         }
       }
 
-      // Load seller orders
+      // Load seller orders from dashboard API
       async function loadSellerOrders() {
-        const orders = await sellerApiCall('/sellerproducts/orders');
-        if (orders) {
+        const orders = await sellerApiCall('/seller/orders');
+        if (orders && Array.isArray(orders)) {
           const tbody = document.querySelector('#orders table tbody');
           if (tbody && orders.length > 0) {
             tbody.innerHTML = orders.map(o => `
               <tr>
-                <td>#${o.orderNumber || o.id}</td>
-                <td>${o.customerName}</td>
-                <td>৳${o.totalAmount.toLocaleString()}</td>
-                <td>${new Date(o.orderDate).toLocaleDateString()}</td>
-                <td><span class="badge ${o.status === 'delivered' ? 'badge-success' : o.status === 'shipped' ? 'badge-info' : 'badge-warning'}">${o.status}</span></td>
+                <td>#${o.id ? o.id.slice(-6).toUpperCase() : 'N/A'}</td>
+                <td>${escapeHtml(o.customerName || 'Customer')}</td>
+                <td>৳${(o.totalAmount || 0).toLocaleString()}</td>
+                <td>${new Date(o.createdAt).toLocaleDateString()}</td>
+                <td><span class="badge ${o.status === 'delivered' ? 'badge-success' : o.status === 'shipped' ? 'badge-info' : o.status === 'cancelled' ? 'badge-danger' : 'badge-warning'}">${o.status}</span></td>
                 <td><button class="seller-btn seller-btn-secondary">View</button></td>
               </tr>
             `).join('');
+          } else if (tbody) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#565959;padding:20px">No orders yet.</td></tr>';
           }
+        }
+      }
+
+      // Load seller profile
+      async function loadSellerProfile() {
+        const profile = await sellerApiCall('/seller/profile');
+        if (profile) {
+          // Update settings section with profile data
+          const settingsSection = document.getElementById('settings');
+          if (settingsSection) {
+            settingsSection.innerHTML = `
+              <div class="seller-section">
+                <h3>Settings</h3>
+                <div style="display:flex;flex-direction:column;gap:12px">
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px solid var(--amazon-border);border-radius:6px">
+                    <div><strong>Shop Profile</strong><div style="font-size:13px;color:#565959">${escapeHtml(profile.shopName)} — ${escapeHtml(profile.shopDescription || 'No description')}</div></div>
+                    <button class="seller-btn seller-btn-secondary" onclick="editSellerProfile()">Edit</button>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px solid var(--amazon-border);border-radius:6px">
+                    <div><strong>Payment Methods</strong><div style="font-size:13px;color:#565959">${escapeHtml(profile.paymentMethod || 'Not set')} — ${escapeHtml(profile.accountNumber || 'No account')}</div></div>
+                    <button class="seller-btn seller-btn-secondary" onclick="editSellerProfile()">Edit</button>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px solid var(--amazon-border);border-radius:6px">
+                    <div><strong>Phone</strong><div style="font-size:13px;color:#565959">${escapeHtml(profile.phone || 'Not set')}</div></div>
+                    <button class="seller-btn seller-btn-secondary" onclick="editSellerProfile()">Edit</button>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px solid var(--amazon-border);border-radius:6px">
+                    <div><strong>Categories</strong><div style="font-size:13px;color:#565959">${(profile.categories || []).join(', ') || 'None'}</div></div>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+
+          // Update notification section with real data
+          const overviewSection = document.getElementById('overview');
+          if (overviewSection) {
+            // Load dashboard for notifications
+            const dashboard = await sellerApiCall('/seller/dashboard');
+            if (dashboard) {
+              const notificationsDiv = overviewSection.querySelector('.seller-section:last-child');
+              if (notificationsDiv) {
+                let notificationsHtml = '<h3>Notifications</h3><div style="display:flex;flex-direction:column;gap:12px">';
+
+                if (dashboard.pendingOrders > 0) {
+                  notificationsHtml += `
+                    <div style="display:flex;align-items:center;gap:12px;padding:12px;background:#fef3e0;border-radius:6px">
+                      <i class="fas fa-exclamation-triangle" style="color:#b87300"></i>
+                      <div><strong>Pending Orders</strong><div style="font-size:13px;color:#565959">${dashboard.pendingOrders} orders need attention</div></div>
+                    </div>`;
+                }
+
+                const lowStockProducts = (await sellerApiCall('/sellerproducts')) || [];
+                const lowStock = lowStockProducts.filter(p => p.stock > 0 && p.stock <= 5);
+                if (lowStock.length > 0) {
+                  notificationsHtml += `
+                    <div style="display:flex;align-items:center;gap:12px;padding:12px;background:#fef3e0;border-radius:6px">
+                      <i class="fas fa-exclamation-triangle" style="color:#b87300"></i>
+                      <div><strong>Low Stock Alert</strong><div style="font-size:13px;color:#565959">${lowStock.length} products need restocking</div></div>
+                    </div>`;
+                }
+
+                if (dashboard.deliveredOrders > 0) {
+                  notificationsHtml += `
+                    <div style="display:flex;align-items:center;gap:12px;padding:12px;background:#e6f4e6;border-radius:6px">
+                      <i class="fas fa-check-circle" style="color:var(--amazon-green)"></i>
+                      <div><strong>Sales Milestone</strong><div style="font-size:13px;color:#565959">${dashboard.deliveredOrders} orders delivered successfully</div></div>
+                    </div>`;
+                }
+
+                if (notificationsHtml === '<h3>Notifications</h3><div style="display:flex;flex-direction:column;gap:12px">') {
+                  notificationsHtml += `
+                    <div style="display:flex;align-items:center;gap:12px;padding:12px;background:#e6f0f8;border-radius:6px">
+                      <i class="fas fa-info-circle" style="color:var(--amazon-blue)"></i>
+                      <div><strong>All Clear</strong><div style="font-size:13px;color:#565959">No pending notifications</div></div>
+                    </div>`;
+                }
+
+                notificationsHtml += '</div>';
+                notificationsDiv.innerHTML = notificationsHtml;
+              }
+            }
+          }
+        }
+      }
+
+      function editSellerProfile() {
+        const modal = document.createElement('div');
+        modal.id = 'sellerProfileModal';
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center';
+        modal.innerHTML = `
+          <div style="background:#fff;border-radius:12px;padding:24px;width:500px;max-height:80vh;overflow-y:auto">
+            <h3 style="margin-bottom:16px">Edit Shop Profile</h3>
+            <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Shop Name</label><input type="text" id="epShopName" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
+            <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Description</label><textarea id="epDescription" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px;min-height:80px"></textarea></div>
+            <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Phone</label><input type="tel" id="epPhone" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
+            <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Payment Method</label><select id="epPayment" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"><option value="bkash">bKash</option><option value="nagad">Nagad</option><option value="rocket">Rocket</option><option value="bank">Bank Transfer</option></select></div>
+            <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Account Number</label><input type="text" id="epAccount" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
+            <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">
+              <button onclick="document.getElementById('sellerProfileModal').remove()" style="padding:8px 20px;border:1px solid #d5d9d9;border-radius:6px;background:#fff;cursor:pointer">Cancel</button>
+              <button onclick="saveSellerProfile()" style="padding:8px 20px;background:#ffd814;border:1px solid #fcd200;border-radius:6px;cursor:pointer;font-weight:600">Save Changes</button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(modal);
+
+        // Load current profile data
+        sellerApiCall('/seller/profile').then(profile => {
+          if (profile) {
+            document.getElementById('epShopName').value = profile.shopName || '';
+            document.getElementById('epDescription').value = profile.shopDescription || '';
+            document.getElementById('epPhone').value = profile.phone || '';
+            document.getElementById('epPayment').value = profile.paymentMethod || 'bkash';
+            document.getElementById('epAccount').value = profile.accountNumber || '';
+          }
+        });
+      }
+
+      async function saveSellerProfile() {
+        const payload = {
+          shopName: document.getElementById('epShopName').value.trim(),
+          shopDescription: document.getElementById('epDescription').value.trim(),
+          phone: document.getElementById('epPhone').value.trim(),
+          paymentMethod: document.getElementById('epPayment').value,
+          accountNumber: document.getElementById('epAccount').value.trim()
+        };
+
+        const result = await sellerApiCall('/seller/profile', 'PUT', payload);
+        if (result) {
+          alert('Profile updated successfully!');
+          document.getElementById('sellerProfileModal')?.remove();
+          loadSellerProfile();
+        } else {
+          alert('Failed to update profile. Please try again.');
         }
       }
 
@@ -682,6 +818,7 @@
         renderSellerProducts();
         loadSellerStats();
         loadSellerOrders();
+        loadSellerProfile();
       });
     }
   </script>

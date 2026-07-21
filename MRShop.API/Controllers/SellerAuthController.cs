@@ -25,67 +25,6 @@ public class SellerAuthController : ControllerBase
         _jwt = jwt;
     }
 
-    [HttpPost("register")]
-    [EnableRateLimiting("auth")]
-    public async Task<IActionResult> Register([FromBody] SellerRegisterRequest request)
-    {
-        if (string.IsNullOrWhiteSpace(request.Name) ||
-            string.IsNullOrWhiteSpace(request.Email) ||
-            string.IsNullOrWhiteSpace(request.Password))
-        {
-            return BadRequest(new { message = "Name, email, and password are required." });
-        }
-
-        if (request.Password.Length < 8)
-            return BadRequest(new { message = "Password must be at least 8 characters long." });
-
-        if (!System.Text.RegularExpressions.Regex.IsMatch(request.Password, @"[A-Z]"))
-            return BadRequest(new { message = "Password must contain at least one uppercase letter." });
-
-        if (!System.Text.RegularExpressions.Regex.IsMatch(request.Password, @"[a-z]"))
-            return BadRequest(new { message = "Password must contain at least one lowercase letter." });
-
-        if (!System.Text.RegularExpressions.Regex.IsMatch(request.Password, @"[0-9]"))
-            return BadRequest(new { message = "Password must contain at least one digit." });
-
-        var existingUser = await _mongoDb.Users
-            .Find(u => u.Email == request.Email.ToLower().Trim())
-            .FirstOrDefaultAsync();
-
-        if (existingUser != null)
-        {
-            return Conflict(new { message = "Email already registered." });
-        }
-
-        var user = new User
-        {
-            Name = request.Name.Trim(),
-            Email = request.Email.ToLower().Trim(),
-            PasswordHash = HashPassword(request.Password),
-            Phone = request.Phone,
-            Role = "seller",
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
-
-        await _mongoDb.Users.InsertOneAsync(user);
-
-        var token = _jwt.GenerateToken(user);
-
-        return Ok(new AuthResponse
-        {
-            Token = token,
-            User = new UserResponse
-            {
-                Id = user.Id,
-                Name = user.Name,
-                Email = user.Email,
-                Phone = user.Phone,
-                Role = user.Role
-            }
-        });
-    }
-
     [HttpPost("login")]
     [EnableRateLimiting("auth")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
@@ -175,12 +114,4 @@ public class SellerAuthController : ControllerBase
             outputLength: 32);
         return CryptographicOperations.FixedTimeEquals(computed, hash);
     }
-}
-
-public class SellerRegisterRequest
-{
-    public string Name { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
-    public string? Phone { get; set; }
 }
