@@ -39,4 +39,6 @@ public class MongoDbService
     public IMongoCollection<SellerApplication> SellerApplications => _database.GetCollection<SellerApplication>("sellerApplications");
     public IMongoCollection<SellerProfile> SellerProfiles => _database.GetCollection<SellerProfile>("sellerProfiles");
     public IMongoCollection<Coupon> Coupons => _database.GetCollection<Coupon>("coupons");
+    public IMongoCollection<Category> Categories => _database.GetCollection<Category>("categories");
+    public IMongoCollection<Review> Reviews => _database.GetCollection<Review>("reviews");
 }
