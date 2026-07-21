@@ -514,6 +514,22 @@ public class AdminController : ControllerBase
         return Ok(new { message = "Category deleted." });
     }
 
+    [HttpPut("categories/{id}/toggle-visibility")]
+    public async Task<IActionResult> ToggleCategoryVisibility(string id)
+    {
+        var category = await _mongoDb.Categories.Find(c => c.Id == id).FirstOrDefaultAsync();
+        if (category == null) return NotFound(new { message = "Category not found." });
+
+        await _mongoDb.Categories.UpdateOneAsync(
+            c => c.Id == id,
+            Builders<Category>.Update
+                .Set(c => c.IsActive, !category.IsActive)
+                .Set(c => c.UpdatedAt, DateTime.UtcNow)
+        );
+
+        return Ok(new { message = $"Category {(!category.IsActive ? "enabled" : "disabled")}.", isActive = !category.IsActive });
+    }
+
     // ==================== REVIEW MANAGEMENT ====================
 
     [HttpGet("reviews")]
