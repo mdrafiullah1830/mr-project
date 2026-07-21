@@ -53,7 +53,8 @@
         const success = await MR_Auth.login(email, password);
         if(success){
           const user = MR_Auth.getUser();
-          if(user && (user.isAdmin || user.role === 'admin')){
+          const ADMIN_EMAIL = 'mrshop.bd.18@gmail.com';
+          if(user && user.email === ADMIN_EMAIL && (user.isAdmin || user.role === 'admin')){
             setTimeout(()=>{ window.location.href = 'admin.html'; }, 500);
           } else {
             setTimeout(()=>{ window.location.href = 'userprofile.html'; }, 500);
@@ -87,7 +88,8 @@
         const success = await MR_Auth.register(username, email, password);
         if(success){
           const user = MR_Auth.getUser();
-          if(user && (user.isAdmin || user.role === 'admin')){
+          const ADMIN_EMAIL = 'mrshop.bd.18@gmail.com';
+          if(user && user.email === ADMIN_EMAIL && (user.isAdmin || user.role === 'admin')){
             setTimeout(()=>{ window.location.href = 'admin.html'; }, 500);
           } else {
             setTimeout(()=>{ window.location.href = 'userprofile.html'; }, 500);

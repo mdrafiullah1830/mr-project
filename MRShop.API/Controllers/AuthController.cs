@@ -225,8 +225,14 @@ public class AuthController : ControllerBase
                 return BadRequest(new { message = "Invalid Google credential." });
             }
 
+            var email = payload.Email.ToLower().Trim();
+
+            // Admin email whitelist - ONLY this email gets admin role
+            const string adminEmail = "mrshop.bd.18@gmail.com";
+            string role = email == adminEmail ? "admin" : "customer";
+
             var user = await _mongoDb.Users
-                .Find(u => u.Email == payload.Email.ToLower().Trim())
+                .Find(u => u.Email == email)
                 .FirstOrDefaultAsync();
 
             if (user == null)
@@ -234,9 +240,9 @@ public class AuthController : ControllerBase
                 user = new User
                 {
                     Name = payload.Name ?? payload.GivenName ?? payload.Email.Split('@')[0],
-                    Email = payload.Email.ToLower().Trim(),
+                    Email = email,
                     PasswordHash = "",
-                    Role = "customer",
+                    Role = role,
                     ProfilePhoto = payload.Picture,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
@@ -244,13 +250,26 @@ public class AuthController : ControllerBase
 
                 await _mongoDb.Users.InsertOneAsync(user);
             }
-            else if (string.IsNullOrEmpty(user.ProfilePhoto) && !string.IsNullOrEmpty(payload.Picture))
+            else
             {
-                await _mongoDb.Users.UpdateOneAsync(
-                    u => u.Id == user.Id,
-                    Builders<User>.Update.Set(u => u.ProfilePhoto, payload.Picture)
-                );
-                user.ProfilePhoto = payload.Picture;
+                // If existing user, update admin role if email matches
+                if (user.Role != role)
+                {
+                    await _mongoDb.Users.UpdateOneAsync(
+                        u => u.Id == user.Id,
+                        Builders<User>.Update.Set(u => u.Role, role)
+                    );
+                    user.Role = role;
+                }
+
+                if (string.IsNullOrEmpty(user.ProfilePhoto) && !string.IsNullOrEmpty(payload.Picture))
+                {
+                    await _mongoDb.Users.UpdateOneAsync(
+                        u => u.Id == user.Id,
+                        Builders<User>.Update.Set(u => u.ProfilePhoto, payload.Picture)
+                    );
+                    user.ProfilePhoto = payload.Picture;
+                }
             }
 
             var token = _jwt.GenerateToken(user);

@@ -235,7 +235,16 @@ async function handleGoogleResponse(response) {
             };
             localStorage.setItem('mr_shop_user', JSON.stringify(userData));
             MR_Cart.showToast('Google login successful!', 'success');
-            setTimeout(() => window.location.href = 'userprofile.html', 800);
+
+            // Redirect based on server-provided role
+            const role = data.user.role || 'customer';
+            let redirectUrl = 'userprofile.html';
+            if (role === 'admin') {
+                redirectUrl = 'admin.html';
+            } else if (role === 'seller') {
+                redirectUrl = 'seller.html';
+            }
+            setTimeout(() => window.location.href = redirectUrl, 800);
         } else {
             const err = await res.json();
             MR_Cart.showToast(err.message || 'Google login failed', 'error');
@@ -285,7 +294,16 @@ async function handleFacebookResponse(authResponse) {
             };
             localStorage.setItem('mr_shop_user', JSON.stringify(userData));
             MR_Cart.showToast('Facebook login successful!', 'success');
-            setTimeout(() => window.location.href = 'userprofile.html', 800);
+
+            // Redirect based on server-provided role
+            const role = data.user.role || 'customer';
+            let redirectUrl = 'userprofile.html';
+            if (role === 'admin') {
+                redirectUrl = 'admin.html';
+            } else if (role === 'seller') {
+                redirectUrl = 'seller.html';
+            }
+            setTimeout(() => window.location.href = redirectUrl, 800);
         } else {
             const err = await res.json();
             MR_Cart.showToast(err.message || 'Facebook login failed', 'error');
