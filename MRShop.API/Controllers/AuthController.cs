@@ -271,6 +271,96 @@ public class AuthController : ControllerBase
         }
     }
 
+    [HttpPost("facebook")]
+    public async Task<IActionResult> FacebookLogin([FromBody] FacebookLoginRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.AccessToken))
+        {
+            return BadRequest(new { message = "Facebook access token is required." });
+        }
+
+        try
+        {
+            using var httpClient = new HttpClient();
+            var appTokenResponse = await httpClient.GetAsync(
+                $"https://graph.facebook.com/v21.0/oauth/access_token?client_id=1687875558936104&client_secret=b01738d366b986a06302f2a91c391b83&grant_type=client_credentials");
+
+            if (!appTokenResponse.IsSuccessStatusCode)
+            {
+                return StatusCode(500, new { message = "Failed to verify Facebook token." });
+            }
+
+            var appTokenData = await appTokenResponse.Content.ReadFromJsonAsync<FacebookTokenResponse>();
+            var debugResponse = await httpClient.GetAsync(
+                $"https://graph.facebook.com/v21.0/debug_token?input_token={request.AccessToken}&access_token={appTokenData?.AccessToken}");
+
+            if (!debugResponse.IsSuccessStatusCode)
+            {
+                return Unauthorized(new { message = "Invalid Facebook token." });
+            }
+
+            var debugData = await debugResponse.Content.ReadFromJsonAsync<FacebookDebugResponse>();
+            if (debugData?.Data == null || !debugData.Data.IsValid)
+            {
+                return Unauthorized(new { message = "Invalid or expired Facebook token." });
+            }
+
+            var userInfoResponse = await httpClient.GetAsync(
+                $"https://graph.facebook.com/v21.0/me?fields=id,email,first_name,last_name,picture.type(large)&access_token={request.AccessToken}");
+
+            if (!userInfoResponse.IsSuccessStatusCode)
+            {
+                return BadRequest(new { message = "Failed to get Facebook user info." });
+            }
+
+            var fbUser = await userInfoResponse.Content.ReadFromJsonAsync<FacebookUserInfo>();
+            if (fbUser == null || string.IsNullOrEmpty(fbUser.Email))
+            {
+                return BadRequest(new { message = "Facebook account does not have an email associated." });
+            }
+
+            var user = await _mongoDb.Users
+                .Find(u => u.Email == fbUser.Email.ToLower().Trim())
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                user = new User
+                {
+                    Name = $"{fbUser.FirstName} {fbUser.LastName}".Trim(),
+                    Email = fbUser.Email.ToLower().Trim(),
+                    PasswordHash = "",
+                    Role = "customer",
+                    ProfilePhoto = fbUser.Picture?.Data?.Url,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
+
+                await _mongoDb.Users.InsertOneAsync(user);
+            }
+            else if (string.IsNullOrEmpty(user.ProfilePhoto) && fbUser.Picture?.Data?.Url != null)
+            {
+                await _mongoDb.Users.UpdateOneAsync(
+                    u => u.Id == user.Id,
+                    Builders<User>.Update.Set(u => u.ProfilePhoto, fbUser.Picture.Data.Url)
+                );
+                user.ProfilePhoto = fbUser.Picture.Data.Url;
+            }
+
+            var token = _jwt.GenerateToken(user);
+
+            return Ok(new AuthResponse
+            {
+                Token = token,
+                User = MapToUserResponse(user)
+            });
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, new { message = "Facebook authentication failed." });
+        }
+    }
+
     private static string HashPassword(string password)
     {
         byte[] salt = RandomNumberGenerator.GetBytes(16);
@@ -310,5 +400,47 @@ public class AuthController : ControllerBase
             Role = user.Role,
             ProfilePhoto = user.ProfilePhoto
         };
+    }
+
+    private class FacebookTokenResponse
+    {
+        public string? AccessToken { get; set; }
+        public string? TokenType { get; set; }
+        public int ExpiresIn { get; set; }
+    }
+
+    private class FacebookDebugResponse
+    {
+        public FacebookDebugData? Data { get; set; }
+    }
+
+    private class FacebookDebugData
+    {
+        public string? AppId { get; set; }
+        public bool IsValid { get; set; }
+        public long ExpiresAt { get; set; }
+    }
+
+    private class FacebookUserInfo
+    {
+        public string? Id { get; set; }
+        public string? Email { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("first_name")]
+        public string? FirstName { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("last_name")]
+        public string? LastName { get; set; }
+        public FacebookPicture? Picture { get; set; }
+    }
+
+    private class FacebookPicture
+    {
+        public FacebookPictureData? Data { get; set; }
+    }
+
+    private class FacebookPictureData
+    {
+        public string? Url { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
     }
 }

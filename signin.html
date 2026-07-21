@@ -13,6 +13,23 @@
   <meta name="description" content="Sign in to your MR Shop account. Access your orders, wishlist, and enjoy personalized shopping experience.">
   <title>Sign In — MR Shop</title>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '1687875558936104',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v21.0'
+      });
+    };
+    (function(d, s, id){
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {return;}
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
   <script src="assets/js/loader.js"></script>
   <link rel="stylesheet" href="assets/css/amazon-style.css">
 </head>
@@ -151,6 +168,12 @@
       <a href="order-tracking.html">Shipping Rates & Policies</a>
       <a href="order-tracking.html">Returns & Replacements</a>
       <a href="chat.html">Help</a>
+    </div>
+    <div class="amz-footer-col">
+      <h4>Legal</h4>
+      <a href="privacy-policy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="data-deletion.html">Data Deletion</a>
     </div>
   </div>
 </footer>

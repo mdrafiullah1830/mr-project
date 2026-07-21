@@ -246,7 +246,53 @@ async function handleGoogleResponse(response) {
 }
 
 function loginWithFacebook() {
-    MR_Cart.showToast('Facebook login coming soon!', 'info');
+    if (typeof FB === 'undefined') {
+        MR_Cart.showToast('Facebook SDK is loading. Please try again.', 'info');
+        return;
+    }
+
+    FB.login(function(response) {
+        if (response.authResponse) {
+            handleFacebookResponse(response.authResponse);
+        } else {
+            MR_Cart.showToast('Facebook login cancelled.', 'info');
+        }
+    }, { scope: 'email,public_profile' });
+}
+
+async function handleFacebookResponse(authResponse) {
+    try {
+        const res = await fetch(`${MR_Auth.API_BASE}/customerauth/facebook`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                accessToken: authResponse.accessToken,
+                userID: authResponse.userID
+            })
+        });
+
+        if (res.ok) {
+            const data = await res.json();
+            localStorage.setItem('mr_shop_token', data.token);
+            const userData = {
+                id: data.user.id,
+                username: data.user.name,
+                email: data.user.email,
+                role: data.user.role || 'customer',
+                isAdmin: data.user.role === 'admin',
+                loggedIn: true,
+                loginTime: new Date().toISOString()
+            };
+            localStorage.setItem('mr_shop_user', JSON.stringify(userData));
+            MR_Cart.showToast('Facebook login successful!', 'success');
+            setTimeout(() => window.location.href = 'userprofile.html', 800);
+        } else {
+            const err = await res.json();
+            MR_Cart.showToast(err.message || 'Facebook login failed', 'error');
+        }
+    } catch (err) {
+        MR_Cart.showToast('Cannot connect to server. Facebook login failed.', 'error');
+    }
 }
 
 function loginWithApple() {
