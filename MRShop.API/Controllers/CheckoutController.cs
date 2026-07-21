@@ -190,13 +190,16 @@ public class CheckoutController : ControllerBase
                 SellerId = product.SellerId
             });
 
-            // Reserve stock: decrease available, increase reserved
-            await _mongoDb.Products.UpdateOneAsync(
-                p => p.Id == ci.ProductId,
+            // Reserve stock atomically: only decrement if sufficient stock
+            var stockUpdate = await _mongoDb.Products.FindOneAndUpdateAsync<Product, Product>(
+                p => p.Id == ci.ProductId && p.StockQuantity >= ci.Quantity,
                 Builders<Product>.Update
                     .Inc(p => p.StockQuantity, -ci.Quantity)
-                    .Inc(p => p.ReservedStock, ci.Quantity)
+                    .Inc(p => p.ReservedStock, ci.Quantity),
+                new FindOneAndUpdateOptions<Product, Product> { ReturnDocument = ReturnDocument.After }
             );
+            if (stockUpdate == null)
+                return BadRequest(new { message = $"Insufficient stock for '{product.Name}'. Only {product.StockQuantity} available." });
 
             // Log inventory
             await _mongoDb.InventoryLogs.InsertOneAsync(new InventoryLog
@@ -206,8 +209,8 @@ public class CheckoutController : ControllerBase
                 SellerId = product.SellerId,
                 Action = "reserved",
                 Quantity = ci.Quantity,
-                PreviousStock = product.StockQuantity,
-                NewStock = product.StockQuantity - ci.Quantity,
+                PreviousStock = stockUpdate.StockQuantity + ci.Quantity,
+                NewStock = stockUpdate.StockQuantity,
                 Reason = "Order placed - stock reserved",
                 PerformedBy = userId,
                 CreatedAt = DateTime.UtcNow
@@ -237,20 +240,28 @@ public class CheckoutController : ControllerBase
                 if (coupon.DiscountType != "shipping")
                     couponDiscount = Math.Min(couponDiscount, subtotal);
 
-                // Increment usage
-                await _mongoDb.Coupons.UpdateOneAsync(
-                    c => c.Id == coupon.Id,
-                    Builders<Coupon>.Update.Inc(c => c.UsageCount, 1)
+                // Enforce MaxDiscount cap
+                if (coupon.MaxDiscount > 0 && coupon.DiscountType == "percent")
+                    couponDiscount = Math.Min(couponDiscount, coupon.MaxDiscount);
+
+                // Increment usage atomically
+                var couponUpdate = await _mongoDb.Coupons.FindOneAndUpdateAsync<Coupon, Coupon>(
+                    c => c.Id == coupon.Id && c.UsageCount < c.MaxUsage,
+                    Builders<Coupon>.Update.Inc(c => c.UsageCount, 1),
+                    new FindOneAndUpdateOptions<Coupon, Coupon> { ReturnDocument = ReturnDocument.After }
                 );
+                if (couponUpdate == null)
+                    return BadRequest(new { message = "Coupon usage limit reached." });
             }
         }
 
         var tax = Math.Round(subtotal * TAX_RATE);
         var grandTotal = subtotal - discount - couponDiscount + shippingCharge + tax;
 
-        // Generate order number
+        // Generate unique order number
         var orderCount = await _mongoDb.Orders.CountDocumentsAsync(_ => true);
-        var orderNumber = $"MR-{DateTime.UtcNow:yyyyMMdd}-{(orderCount + 1).ToString("D5")}";
+        var randomSuffix = new Random().Next(1000, 9999);
+        var orderNumber = $"MR-{DateTime.UtcNow:yyyyMMdd}-{(orderCount + 1).ToString("D5")}-{randomSuffix}";
 
         var user = await _mongoDb.Users.Find(u => u.Id == userId).FirstOrDefaultAsync();
 
@@ -308,8 +319,10 @@ public class CheckoutController : ControllerBase
         // Clear purchased cart items
         await _mongoDb.CartItems.DeleteManyAsync(c => c.UserId == userId && !c.SavedForLater);
 
-        // Generate invoice
-        var invoiceNumber = $"INV-{DateTime.UtcNow:yyyyMMdd}-{(orderCount + 1).ToString("D5")}";
+        // Generate unique invoice number
+        var invoiceCount = await _mongoDb.Invoices.CountDocumentsAsync(_ => true);
+        var invoiceRandomSuffix = new Random().Next(1000, 9999);
+        var invoiceNumber = $"INV-{DateTime.UtcNow:yyyyMMdd}-{(invoiceCount + 1).ToString("D5")}-{invoiceRandomSuffix}";
         var invoice = new Invoice
         {
             OrderId = order.Id,

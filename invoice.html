@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(y,t);
+    })(window, document, "clarity", "script", "xkbf74mr8r");
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice - MR Shop</title>
+  <script src="assets/js/loader.js"></script>
+  <link rel="stylesheet" href="assets/css/amazon-style.css">
+  <style>
+    .invoice-container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
+
+    .invoice-card {
+      background: var(--amazon-white);
+      border: 1px solid var(--amazon-border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .invoice-header-bar {
+      background: var(--amazon-dark);
+      padding: 30px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .invoice-brand .invoice-logo {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--amazon-white);
+      letter-spacing: -1px;
+    }
+
+    .invoice-brand .invoice-subtitle {
+      color: var(--amazon-yellow);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .invoice-title-section {
+      text-align: right;
+    }
+
+    .invoice-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--amazon-white);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .invoice-number {
+      color: var(--amazon-orange);
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .invoice-body { padding: 36px 40px; }
+
+    .invoice-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-bottom: 36px;
+    }
+
+    .meta-box h4 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #565959;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .meta-box p {
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--amazon-text);
+    }
+
+    .meta-box .highlight {
+      font-weight: 700;
+      color: var(--amazon-dark);
+    }
+
+    .invoice-status {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-paid {
+      background: #e7f4e4;
+      color: var(--amazon-green);
+      border: 1px solid var(--amazon-green);
+    }
+
+    .status-pending {
+      background: #fef3e2;
+      color: #b45309;
+      border: 1px solid #f59e0b;
+    }
+
+    .status-cancelled {
+      background: #fde8e8;
+      color: #dc2626;
+      border: 1px solid #dc2626;
+    }
+
+    .invoice-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 32px;
+    }
+
+    .invoice-table thead th {
+      background: #f0f2f2;
+      padding: 12px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #565959;
+      text-align: left;
+      border-bottom: 2px solid var(--amazon-border);
+    }
+
+    .invoice-table thead th:last-child,
+    .invoice-table tbody td:last-child {
+      text-align: right;
+    }
+
+    .invoice-table tbody td {
+      padding: 14px 16px;
+      font-size: 14px;
+      border-bottom: 1px solid #eee;
+      vertical-align: middle;
+    }
+
+    .invoice-table .product-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .invoice-table .product-img {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid #eee;
+      flex-shrink: 0;
+    }
+
+    .invoice-table .product-name {
+      font-weight: 600;
+      color: var(--amazon-text);
+    }
+
+    .invoice-table .product-sku {
+      font-size: 12px;
+      color: #999;
+      margin-top: 2px;
+    }
+
+    .invoice-totals {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 36px;
+    }
+
+    .totals-box {
+      width: 340px;
+      background: #fafafa;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .totals-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 14px;
+    }
+
+    .totals-row.discount {
+      color: var(--amazon-green);
+    }
+
+    .totals-row.coupon {
+      color: var(--amazon-green);
+    }
+
+    .totals-row.grand {
+      font-size: 18px;
+      font-weight: 800;
+      border-top: 2px solid var(--amazon-border);
+      margin-top: 8px;
+      padding-top: 12px;
+      color: var(--amazon-dark);
+    }
+
+    .invoice-footer {
+      border-top: 1px solid #eee;
+      padding-top: 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .footer-box h4 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #565959;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .footer-box p {
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--amazon-text);
+    }
+
+    .payment-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #e8f4fd;
+      color: var(--amazon-blue);
+    }
+
+    .invoice-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 28px;
+      margin-bottom: 40px;
+    }
+
+    .btn-print {
+      padding: 12px 32px;
+      background: linear-gradient(to bottom, #ffd814, #f7ca00);
+      border: 1px solid #f2c200;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--amazon-text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+
+    .btn-print:hover {
+      background: linear-gradient(to bottom, #f7ca00, #e6b800);
+    }
+
+    .btn-back {
+      padding: 12px 32px;
+      background: var(--amazon-white);
+      border: 1px solid var(--amazon-border);
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--amazon-text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: border-color 0.2s;
+    }
+
+    .btn-back:hover {
+      border-color: #999;
+    }
+
+    .loading-state {
+      text-align: center;
+      padding: 80px 20px;
+      color: #565959;
+    }
+
+    .loading-state i {
+      font-size: 48px;
+      color: #ddd;
+      margin-bottom: 16px;
+      display: block;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .error-state {
+      text-align: center;
+      padding: 80px 20px;
+    }
+
+    .error-state i {
+      font-size: 64px;
+      color: #ddd;
+      margin-bottom: 16px;
+    }
+
+    .error-state h2 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .error-state p {
+      color: #565959;
+      margin-bottom: 24px;
+    }
+
+    .error-state a {
+      display: inline-block;
+      padding: 10px 24px;
+      background: linear-gradient(to bottom, #ffd814, #f7ca00);
+      border: 1px solid #f2c200;
+      border-radius: 8px;
+      font-weight: 600;
+      color: var(--amazon-text);
+      text-decoration: none;
+    }
+
+    /* ==================== PRINT STYLES ==================== */
+    @media print {
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+
+      body {
+        background: white !important;
+        margin: 0;
+        padding: 0;
+      }
+
+      .amz-header,
+      .amz-nav-bar,
+      .invoice-actions,
+      footer,
+      .amz-footer {
+        display: none !important;
+      }
+
+      .invoice-container {
+        margin: 0;
+        padding: 0;
+        max-width: 100%;
+      }
+
+      .invoice-card {
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      .invoice-header-bar {
+        background: var(--amazon-dark) !important;
+        padding: 24px 32px;
+        -webkit-print-color-adjust: exact;
+      }
+
+      .invoice-body {
+        padding: 28px 32px;
+      }
+
+      .invoice-table thead th {
+        background: #f0f2f2 !important;
+        -webkit-print-color-adjust: exact;
+      }
+
+      .totals-box {
+        background: #fafafa !important;
+        -webkit-print-color-adjust: exact;
+      }
+
+      .invoice-actions {
+        display: none !important;
+      }
+
+      .invoice-card {
+        page-break-inside: avoid;
+      }
+
+      .invoice-table tbody tr {
+        page-break-inside: avoid;
+      }
+    }
+
+    @page {
+      margin: 1cm;
+      size: A4;
+    }
+
+    @media(max-width: 700px) {
+      .invoice-meta { grid-template-columns: 1fr; gap: 20px; }
+      .invoice-footer { grid-template-columns: 1fr; gap: 20px; }
+      .invoice-header-bar { flex-direction: column; gap: 16px; padding: 24px; }
+      .invoice-title-section { text-align: left; }
+      .invoice-body { padding: 24px; }
+      .totals-box { width: 100%; }
+      .invoice-actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="amz-header">
+    <div class="amz-header-top">
+      <a href="index.html" class="logo">
+        <div>
+          <span class="logo-text">MR shop</span>
+          <span class="logo-sub">Bangladesh</span>
+        </div>
+      </a>
+      <div class="amz-deliver-to"><span class="label">Deliver to</span><span class="location"><i class="fas fa-map-marker-alt"></i> Bangladesh</span></div>
+      <div class="amz-header-right">
+        <a href="signin.html" class="amz-header-link" id="authLink"><span class="line1">Hello, Sign in</span><span class="line2">Account & Lists</span></a>
+        <a href="wishlist.html" class="amz-header-link"><span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span><span class="line2">Wishlist</span></a>
+        <a href="cart.html" class="amz-cart"><span class="amz-cart-icon"><i class="fas fa-shopping-cart"></i><span class="amz-cart-count" id="cartCount">0</span></span><span class="amz-cart-text">Cart</span></a>
+      </div>
+    </div>
+    <nav class="amz-nav-bar">
+      <a href="index.html" class="amz-nav-item"><i class="fas fa-bars"></i> All</a>
+      <a href="food&natural.html" class="amz-nav-item">Food & Natural</a>
+      <a href="sweets&dairy.html" class="amz-nav-item">Sweets & Dairy</a>
+      <a href="handricrafts.html" class="amz-nav-item">Handicrafts</a>
+      <a href="clothing.html" class="amz-nav-item">Clothing</a>
+      <a href="book.html" class="amz-nav-item">Books</a>
+      <a href="antique.html" class="amz-nav-item">Antique</a>
+      <div class="amz-nav-divider"></div>
+      <a href="becomeseller.html" class="amz-nav-item">Sell</a>
+      <a href="chat.html" class="amz-nav-item"><i class="fas fa-headset"></i> Help</a>
+    </nav>
+  </header>
+
+  <!-- Invoice Content -->
+  <div class="invoice-container">
+    <div class="invoice-card" id="invoiceCard">
+      <div class="loading-state" id="loadingState">
+        <i class="fas fa-spinner"></i>
+        <p>Loading invoice...</p>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="invoice-actions" id="invoiceActions" style="display:none">
+      <button class="btn-print" onclick="window.print()">
+        <i class="fas fa-print"></i> Print Invoice
+      </button>
+      <a href="javascript:history.back()" class="btn-back">
+        <i class="fas fa-arrow-left"></i> Go Back
+      </a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="amz-footer">
+    <div class="amz-footer-top" onclick="window.scrollTo(0,0)">
+      <span>Back to top</span>
+    </div>
+    <div class="amz-footer-mid">
+      <div class="amz-footer-col">
+        <h4>Get to Know Us</h4>
+        <a href="about.html">About MR Shop</a>
+        <a href="blog.html">Blog</a>
+        <a href="work-for-people.html">Careers</a>
+      </div>
+      <div class="amz-footer-col">
+        <h4>Let Us Help You</h4>
+        <a href="userprofile.html">Your Account</a>
+        <a href="order-tracking.html">Track Your Order</a>
+        <a href="faq.html">Help</a>
+      </div>
+      <div class="amz-footer-col">
+        <h4>Make Money with Us</h4>
+        <a href="becomeseller.html">Sell on MR Shop</a>
+        <a href="seller.html">Seller Resources</a>
+      </div>
+    </div>
+    <div class="amz-footer-bottom">
+      <div class="logo"><div><span class="logo-text">MR shop</span><span class="logo-sub">Bangladesh</span></div></div>
+      <p>&copy; 2026 MR Shop Bangladesh. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/auth-shared.js"></script>
+  <script>
+    (async function() {
+      const orderId = new URLSearchParams(window.location.search).get('id');
+      const card = document.getElementById('invoiceCard');
+      const actions = document.getElementById('invoiceActions');
+
+      if (!orderId) {
+        card.innerHTML = `
+          <div class="error-state">
+            <i class="fas fa-file-invoice"></i>
+            <h2>No Order Specified</h2>
+            <p>Please provide an order ID to view the invoice.</p>
+            <a href="order-tracking.html"><i class="fas fa-search"></i> Track an Order</a>
+          </div>`;
+        return;
+      }
+
+      const result = await MR_API.get(`/invoices/order/${orderId}`);
+
+      if (!result || !result.ok) {
+        card.innerHTML = `
+          <div class="error-state">
+            <i class="fas fa-exclamation-circle"></i>
+            <h2>Invoice Not Found</h2>
+            <p>We couldn't find an invoice for order <strong>${orderId}</strong>. It may not exist or you may not have access.</p>
+            <a href="order-tracking.html"><i class="fas fa-search"></i> Track Your Order</a>
+          </div>`;
+        return;
+      }
+
+      const inv = result.data;
+      const items = inv.items || inv.orderItems || [];
+      const date = new Date(inv.invoiceDate || inv.createdAt || Date.now()).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      const statusClass = (inv.paymentStatus || '').toLowerCase() === 'paid' ? 'status-paid'
+        : (inv.paymentStatus || '').toLowerCase() === 'cancelled' ? 'status-cancelled'
+        : 'status-pending';
+
+      let itemsHtml = '';
+      items.forEach((item, i) => {
+        const name = item.productName || item.name || 'Product';
+        const sku = item.sku || item.productSku || '-';
+        const price = parseFloat(item.price || item.unitPrice || 0).toFixed(2);
+        const qty = item.quantity || item.qty || 1;
+        const total = parseFloat(item.total || item.lineTotal || (price * qty)).toFixed(2);
+        const img = item.imageUrl || item.image || item.productImage || '';
+        const imgTag = img
+          ? `<img class="product-img" src="${img}" alt="${name}" onerror="this.style.display='none'">`
+          : `<div class="product-img" style="background:#f0f2f2;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:18px"><i class="fas fa-box"></i></div>`;
+
+        itemsHtml += `
+          <tr>
+            <td>
+              <div class="product-cell">
+                ${imgTag}
+                <div>
+                  <div class="product-name">${name}</div>
+                  <div class="product-sku">SKU: ${sku}</div>
+                </div>
+              </div>
+            </td>
+            <td style="text-align:center">${i + 1}</td>
+            <td style="text-align:right">৳${price}</td>
+            <td style="text-align:center">${qty}</td>
+            <td>৳${total}</td>
+          </tr>`;
+      });
+
+      const subtotal = parseFloat(inv.subtotal || inv.totalAmount || 0).toFixed(2);
+      const discount = parseFloat(inv.discount || inv.discountAmount || 0).toFixed(2);
+      const couponDiscount = parseFloat(inv.couponDiscount || inv.coupon || 0).toFixed(2);
+      const shipping = parseFloat(inv.shippingCost || inv.shipping || 0).toFixed(2);
+      const tax = parseFloat(inv.tax || inv.taxAmount || 0).toFixed(2);
+      const grandTotal = parseFloat(inv.grandTotal || inv.total || inv.totalAmount || 0).toFixed(2);
+
+      const customerName = inv.customerName || inv.userName || inv.buyerName || 'Customer';
+      const customerEmail = inv.customerEmail || inv.userEmail || inv.buyerEmail || '';
+      const sellerName = inv.sellerName || 'MR Shop Seller';
+      const sellerEmail = inv.sellerEmail || '';
+
+      const shippingAddr = inv.shippingAddress || inv.address || {};
+      const addrLine = typeof shippingAddr === 'string'
+        ? shippingAddr
+        : [shippingAddr.street || shippingAddr.address, shippingAddr.city, shippingAddr.state || shippingAddr.district, shippingAddr.postalCode || shippingAddr.zip, shippingAddr.country || 'Bangladesh'].filter(Boolean).join(', ');
+
+      const paymentMethod = inv.paymentMethod || inv.paymentType || 'Cash on Delivery';
+      const paymentStatus = inv.paymentStatus || 'Pending';
+
+      card.innerHTML = `
+        <div class="invoice-header-bar">
+          <div class="invoice-brand">
+            <div class="invoice-logo">MR shop</div>
+            <div class="invoice-subtitle">Bangladesh</div>
+          </div>
+          <div class="invoice-title-section">
+            <div class="invoice-title">Invoice</div>
+            <div class="invoice-number">#${inv.invoiceNumber || inv.id || orderId}</div>
+          </div>
+        </div>
+
+        <div class="invoice-body">
+          <div class="invoice-meta">
+            <div class="meta-box">
+              <h4>Customer</h4>
+              <p>
+                <span class="highlight">${customerName}</span><br>
+                ${customerEmail ? customerEmail + '<br>' : ''}
+                Order: <strong>${orderId}</strong>
+              </p>
+            </div>
+            <div class="meta-box">
+              <h4>Invoice Details</h4>
+              <p>
+                Date: <strong>${date}</strong><br>
+                Payment: <span class="payment-badge">${paymentMethod}</span><br>
+                Status: <span class="invoice-status ${statusClass}">${paymentStatus}</span>
+              </p>
+            </div>
+          </div>
+
+          <table class="invoice-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th style="text-align:center">#</th>
+                <th style="text-align:right">Price</th>
+                <th style="text-align:center">Qty</th>
+                <th style="text-align:right">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemsHtml}
+            </tbody>
+          </table>
+
+          <div class="invoice-totals">
+            <div class="totals-box">
+              <div class="totals-row">
+                <span>Subtotal</span>
+                <span>৳${subtotal}</span>
+              </div>
+              ${discount > 0 ? `<div class="totals-row discount"><span>Discount</span><span>- ৳${discount}</span></div>` : ''}
+              ${couponDiscount > 0 ? `<div class="totals-row coupon"><span>Coupon</span><span>- ৳${couponDiscount}</span></div>` : ''}
+              <div class="totals-row">
+                <span>Shipping</span>
+                <span>${parseFloat(shipping) === 0 ? 'Free' : '৳' + shipping}</span>
+              </div>
+              ${tax > 0 ? `<div class="totals-row"><span>Tax</span><span>৳${tax}</span></div>` : ''}
+              <div class="totals-row grand">
+                <span>Grand Total</span>
+                <span>৳${grandTotal}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="invoice-footer">
+            <div class="footer-box">
+              <h4>Shipping Address</h4>
+              <p>${addrLine || 'No address provided'}</p>
+            </div>
+            <div class="footer-box">
+              <h4>Seller Information</h4>
+              <p>
+                <span class="highlight">${sellerName}</span>
+                ${sellerEmail ? '<br>' + sellerEmail : ''}
+              </p>
+            </div>
+          </div>
+        </div>`;
+
+      actions.style.display = 'flex';
+    })();
+  </script>
+</body>
+</html>

@@ -10,358 +10,220 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Review your shopping cart at MR Shop. Proceed to checkout with secure payment options including bKash, Nagad, and Cash on Delivery.">
   <title>Shopping Cart - MR Shop</title>
   <script src="assets/js/loader.js"></script>
   <link rel="stylesheet" href="assets/css/amazon-style.css">
+  <style>
+    .cart-layout{display:grid;grid-template-columns:1fr 360px;gap:24px;max-width:1400px;margin:20px auto;padding:0 16px}
+    .cart-items{background:var(--amazon-white);border-radius:8px;border:1px solid var(--amazon-border);padding:20px}
+    .cart-item{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid #eee}
+    .cart-item:last-child{border-bottom:none}
+    .cart-item-img{width:140px;height:140px;object-fit:contain;background:#f7f7f7;border-radius:8px;padding:8px;flex-shrink:0}
+    .cart-item-info{flex:1;min-width:0}
+    .cart-item-title{font-size:15px;font-weight:600;line-height:1.4;margin-bottom:6px;color:var(--amazon-text)}
+    .cart-item-stock{font-size:13px;margin-bottom:4px}
+    .cart-item-price{font-size:18px;font-weight:700;margin-bottom:8px}
+    .cart-item-orig{font-size:13px;color:#565959;text-decoration:line-through;margin-left:8px}
+    .cart-item-qty{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+    .cart-item-qty select{padding:6px 10px;border:1px solid var(--amazon-border);border-radius:8px;background:#f0f2f2;font-size:13px}
+    .cart-item-actions{display:flex;gap:12px;font-size:13px}
+    .cart-item-actions a{color:var(--amazon-link);cursor:pointer}
+    .cart-item-actions a:hover{text-decoration:underline;color:#c7511f}
+    .cart-summary{background:var(--amazon-white);border-radius:8px;border:1px solid var(--amazon-border);padding:20px;height:fit-content;position:sticky;top:80px}
+    .summary-row{display:flex;justify-content:space-between;padding:6px 0;font-size:14px}
+    .summary-total{display:flex;justify-content:space-between;padding:12px 0;font-size:18px;font-weight:700;border-top:1px solid #ddd;margin-top:8px}
+    .coupon-box{background:#f0f2f2;border-radius:8px;padding:14px;margin-bottom:16px}
+    .coupon-input{display:flex;gap:6px}
+    .coupon-input input{flex:1;padding:8px 12px;border:1px solid #cdcdcd;border-radius:8px;font-size:13px}
+    .checkout-btn{width:100%;padding:12px;background:linear-gradient(to bottom,#ffd814,#f7ca00);border:1px solid #f2c200;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;margin-top:16px;color:var(--amazon-text)}
+    .checkout-btn:hover{background:linear-gradient(to bottom,#f7ca00,#ebb617)}
+    .saved-section{margin-top:20px;background:var(--amazon-white);border-radius:8px;border:1px solid var(--amazon-border);padding:20px}
+    .empty-cart{text-align:center;padding:60px 20px}
+    .empty-cart i{font-size:64px;color:#ddd;margin-bottom:16px}
+    @media(max-width:900px){.cart-layout{grid-template-columns:1fr}}
+  </style>
 </head>
 <body>
-
-  <!-- Header -->
   <header class="amz-header">
     <div class="amz-header-top">
-      <a href="index.html" class="logo">
-        <div>
-          <span class="logo-text">MR shop</span>
-          <span class="logo-sub">Bangladesh</span>
-        </div>
-      </a>
-      <div class="amz-deliver-to">
-        <span class="label">Deliver to</span>
-        <span class="location"><i class="fas fa-map-marker-alt"></i> Bangladesh</span>
-      </div>
+      <a href="index.html" class="logo"><div><span class="logo-text">MR shop</span><span class="logo-sub">Bangladesh</span></div></a>
+      <div class="amz-deliver-to"><span class="label">Deliver to</span><span class="location"><i class="fas fa-map-marker-alt"></i> Bangladesh</span></div>
       <div class="amz-search-bar">
-        <select class="amz-search-category">
-          <option value="all">All Categories</option>
-          <option value="food">Food & Natural</option>
-          <option value="sweets">Sweets & Dairy</option>
-          <option value="handicrafts">Handicrafts</option>
-          <option value="clothing">Clothing</option>
-          <option value="books">Books</option>
-          <option value="antique">Antique</option>
-        </select>
         <input type="text" class="amz-search-input" placeholder="Search MR Shop" id="searchInput">
-        <button class="amz-search-btn" aria-label="Search"><i class="fas fa-search"></i></button>
+        <button class="amz-search-btn" onclick="doSearch()"><i class="fas fa-search"></i></button>
       </div>
       <div class="amz-header-right">
-        <a href="signin.html" class="amz-header-link">
-          <span class="line1">Hello, Sign in</span>
-          <span class="line2">Account & Lists <i class="fas fa-caret-down"></i></span>
-        </a>
-        <a href="wishlist.html" class="amz-header-link">
-          <span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span>
-          <span class="line2">Wishlist</span>
-        </a>
-        <a href="cart.html" class="amz-cart">
-          <span class="amz-cart-icon">
-            <i class="fas fa-shopping-cart"></i>
-            <span class="amz-cart-count">0</span>
-          </span>
-          <span class="amz-cart-text">Cart</span>
-        </a>
+        <a href="signin.html" class="amz-header-link" id="authLink"><span class="line1">Hello, Sign in</span><span class="line2">Account & Lists</span></a>
+        <a href="wishlist.html" class="amz-header-link"><span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span><span class="line2">Wishlist</span></a>
+        <a href="cart.html" class="amz-cart"><span class="amz-cart-icon"><i class="fas fa-shopping-cart"></i><span class="amz-cart-count" id="cartCount">0</span></span><span class="amz-cart-text">Cart</span></a>
       </div>
     </div>
-    <nav class="amz-nav-bar">
-      <a href="index.html" class="amz-nav-item"><i class="fas fa-bars"></i> All</a>
-      <a href="food&natural.html" class="amz-nav-item">Food & Natural</a>
-      <a href="sweets&dairy.html" class="amz-nav-item">Sweets & Dairy</a>
-      <a href="handricrafts.html" class="amz-nav-item">Handicrafts</a>
-      <a href="clothing.html" class="amz-nav-item">Clothing</a>
-      <a href="book.html" class="amz-nav-item">Books</a>
-      <a href="antique.html" class="amz-nav-item">Antique</a>
-      <div class="amz-nav-divider"></div>
-      <a href="becomeseller.html" class="amz-nav-item">Sell</a>
-      <a href="chat.html" class="amz-nav-item"><i class="fas fa-headset"></i> Help</a>
-    </nav>
   </header>
 
-  <!-- Features Bar -->
-  <div class="amz-features-bar">
-    <div class="amz-features-grid">
-      <div class="amz-feature-item">
-        <div class="amz-feature-icon green"><i class="fas fa-truck"></i></div>
-        <div class="amz-feature-text"><h4>Free Delivery</h4><p>On orders over ৳5,000</p></div>
+  <div class="cart-layout">
+    <div>
+      <div class="cart-items">
+        <h2 style="font-size:24px;margin-bottom:16px">Shopping Cart</h2>
+        <div id="cartContent"><p style="text-align:center;padding:40px;color:#565959">Loading cart...</p></div>
       </div>
-      <div class="amz-feature-item">
-        <div class="amz-feature-icon blue"><i class="fas fa-undo"></i></div>
-        <div class="amz-feature-text"><h4>Easy Returns</h4><p>7-day return policy</p></div>
+      <div class="saved-section" id="savedSection" style="display:none">
+        <h3 style="font-size:18px;margin-bottom:12px">Saved for Later</h3>
+        <div id="savedContent"></div>
       </div>
-      <div class="amz-feature-item">
-        <div class="amz-feature-icon orange"><i class="fas fa-shield-alt"></i></div>
-        <div class="amz-feature-text"><h4>Secure Payment</h4><p>bKash, Nagad, COD</p></div>
+    </div>
+    <div class="cart-summary">
+      <div class="coupon-box">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><i class="fas fa-tag" style="color:var(--amazon-orange)"></i><span style="font-size:14px;font-weight:600">Apply coupon</span></div>
+        <div class="coupon-input">
+          <input type="text" id="couponInput" placeholder="Enter code">
+          <button onclick="applyCoupon()" style="padding:8px 16px;background:#ffd814;border:1px solid #f2c200;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px">Apply</button>
+        </div>
+        <div id="couponMsg" style="font-size:12px;margin-top:6px"></div>
       </div>
-      <div class="amz-feature-item">
-        <div class="amz-feature-icon red"><i class="fas fa-headset"></i></div>
-        <div class="amz-feature-text"><h4>24/7 Support</h4><p>Dedicated help center</p></div>
-      </div>
+      <div class="summary-row"><span>Subtotal (<span id="itemCount">0</span> items):</span><span id="subtotal">৳0</span></div>
+      <div class="summary-row" id="discountRow" style="display:none"><span>Discount:</span><span id="discount" style="color:var(--amazon-green)">-৳0</span></div>
+      <div class="summary-row" id="couponRow" style="display:none"><span>Coupon (<span id="couponCode"></span>):</span><span id="couponDiscount" style="color:var(--amazon-green)">-৳0</span></div>
+      <div class="summary-row"><span>Shipping:</span><span id="shipping">৳60</span></div>
+      <div class="summary-total"><span>Order Total:</span><span id="total">৳0</span></div>
+      <button class="checkout-btn" onclick="proceedToCheckout()">Proceed to checkout</button>
+      <div style="text-align:center;margin-top:12px;font-size:12px;color:#767676"><i class="fas fa-lock"></i> Secure checkout</div>
     </div>
   </div>
 
-  <!-- Cart Content -->
-  <div class="amz-cart-container">
-    <h1 style="font-size:28px;font-weight:700;margin-bottom:16px;color:var(--amazon-text);">Shopping Cart</h1>
-    <div style="color:#767676;font-size:13px;margin-bottom:20px;text-align:right;">Price</div>
-
-    <div class="amz-cart-layout">
-      <!-- Cart Items -->
-      <div class="amz-cart-items" id="cartItems"></div>
-
-      <!-- Cart Summary -->
-      <div class="amz-cart-summary">
-        <div class="amz-cart-summary-title">
-          <input type="checkbox" id="selectAll" checked style="margin-right:8px;cursor:pointer;">
-          <label for="selectAll" style="cursor:pointer;font-size:14px;">Select all items</label>
-        </div>
-
-        <div style="background:#f0f2f2;border-radius:8px;padding:14px;margin-bottom:16px;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <i class="fas fa-tag" style="color:var(--amazon-orange);"></i>
-            <span style="font-size:14px;font-weight:600;">Apply coupon code</span>
-          </div>
-          <div style="display:flex;gap:6px;">
-            <input type="text" id="couponInput" placeholder="Enter code" style="flex:1;padding:8px 12px;font-size:13px;border:1px solid #cdcdcd;border-radius:8px;">
-            <button class="amz-cart-checkout-btn" onclick="applyCoupon()" style="width:auto;padding:8px 16px;font-size:13px;">Apply</button>
-          </div>
-          <div id="couponMsg" style="font-size:12px;margin-top:6px;"></div>
-        </div>
-
-        <div class="amz-cart-summary-row">
-          <span>Subtotal (<span id="itemCount">0</span> items):</span>
-          <span id="subtotal" style="font-weight:700;">&#2547; 0</span>
-        </div>
-        <div class="amz-cart-summary-row">
-          <span>Tax (5%):</span>
-          <span id="tax">&#2547; 0</span>
-        </div>
-        <div class="amz-cart-summary-row">
-          <span>Shipping:</span>
-          <span id="shipping">&#2547; 0</span>
-        </div>
-        <div class="amz-cart-summary-row" id="discountRow" style="display:none;">
-          <span>Discount:</span>
-          <span id="discount" style="color:var(--amazon-green);">-&#2547; 0</span>
-        </div>
-        <div class="amz-cart-summary-total">
-          <span>Order total:</span>
-          <span id="total">&#2547; 0</span>
-        </div>
-
-        <button class="amz-cart-checkout-btn" onclick="proceedToCheckout()" style="margin-top:16px;">
-          Proceed to checkout
-        </button>
-        <div class="amz-cart-secure">
-          <i class="fas fa-lock"></i> Secure checkout
-        </div>
-
-        <div style="background:#f0f2f2;border-radius:8px;padding:14px;margin-top:16px;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <i class="fas fa-truck" style="color:var(--amazon-blue);"></i>
-            <span style="font-size:14px;font-weight:600;">Delivery Information</span>
-          </div>
-          <p style="font-size:13px;color:#565959;margin:0;">Estimated delivery: <strong id="deliveryDate" style="color:var(--amazon-text);">5-7 business days</strong></p>
-          <p style="font-size:12px;color:var(--amazon-green);margin:4px 0 0;">Free shipping on orders over &#2547; 5,000</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Footer -->
   <div class="amz-back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</div>
-  <footer class="amz-footer">
-    <div class="amz-footer-grid">
-      <div class="amz-footer-col">
-        <h4>Get to Know Us</h4>
-        <a href="workfor.html">Careers</a>
-        <a href="work-for-people.html">About Us</a>
-        <a href="seller.html">Sell on MR Shop</a>
-      </div>
-      <div class="amz-footer-col">
-        <h4>Help & Support</h4>
-        <a href="chat.html">Customer Service</a>
-        <a href="workforchild.html">Children's Privacy</a>
-      </div>
-      <div class="amz-footer-col">
-        <h4>Payment & Delivery</h4>
-        <a href="checkout.html">Cash on Delivery</a>
-        <a href="index.html">Free Shipping</a>
-        <a href="userprofile.html">Easy Returns</a>
-      </div>
-    </div>
-    <div class="amz-footer-divider"></div>
-    <div class="amz-footer-bottom">
-      <div class="amz-footer-logo">MR Shop</div>
-      <div class="amz-footer-copyright">&copy; 2026 MR Shop. All Rights Reserved.</div>
-    </div>
-  </footer>
+  <footer class="amz-footer"><div class="amz-footer-bottom"><div class="amz-footer-logo">MR Shop</div><div class="amz-footer-copyright">&copy; 2026 MR Shop. All Rights Reserved.</div></div></footer>
 
   <script src="assets/js/api.js"></script>
-  <script src="assets/js/products.js"></script>
   <script src="assets/js/cart.js"></script>
-  <script src="assets/js/wishlist.js"></script>
+  <script src="assets/js/auth-shared.js"></script>
   <script>
+    const API = window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : 'https://mrshop-bd.azurewebsites.net/api';
+    let cartData = { items: [], savedForLater: [], subtotal: 0, discount: 0, couponDiscount: 0, couponCode: null, shippingCharge: 60, grandTotal: 0 };
     let appliedCoupon = null;
 
-    async function applyCouponCode() {
-      const input = document.getElementById('couponInput');
-      const msg = document.getElementById('couponMsg');
-      if (!input || !msg) return;
-      const code = input.value.trim().toUpperCase();
-      if (!code) { msg.textContent = 'Please enter a coupon code'; msg.style.color = '#cc0c39'; return; }
-
-      try {
-        const subtotal = MR_Cart.getSubtotal();
-        const res = await fetch(MR_API.BASE_URL + '/coupons/validate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ code, subtotal })
-        });
-        if (res.ok) {
-          const data = await res.json();
-          appliedCoupon = data;
-          msg.textContent = 'Coupon applied! ' + data.message;
-          msg.style.color = '#007600';
-          updateCalculations();
-        } else {
-          const err = await res.json();
-          msg.textContent = err.message || 'Invalid coupon';
-          msg.style.color = '#cc0c39';
-        }
-      } catch(e) {
-        msg.textContent = 'Cannot validate coupon. Server offline.';
-        msg.style.color = '#cc0c39';
+    async function loadCart() {
+      if (!MR_API.isLoggedIn()) {
+        document.getElementById('cartContent').innerHTML = '<div class="empty-cart"><i class="fas fa-shopping-cart"></i><h2>Your cart is empty</h2><p><a href="signin.html" style="color:var(--amazon-link)">Sign in</a> to see your cart</p></div>';
+        return;
       }
+      try {
+        const res = await MR_API.get('/cart');
+        if (res && res.ok) {
+          cartData = res.data;
+          renderCart();
+          renderSaved();
+          updateSummary();
+        }
+      } catch(e) { console.error('Failed to load cart:', e); }
     }
 
     function renderCart() {
-      const container = document.getElementById('cartItems');
-      const cart = MR_Cart.getCart();
-
-      if (cart.length === 0) {
-        container.innerHTML = `
-          <div class="amz-cart-empty">
-            <i class="fas fa-shopping-cart"></i>
-            <h2>Your Shopping Cart is empty</h2>
-            <p>Your Shopping Cart lives to serve. Give it purpose — fill it with groceries, clothing, electronics, and more.</p>
-            <a href="index.html" style="color:var(--amazon-link);font-size:14px;">Continue shopping on MR Shop</a>
-          </div>
-        `;
+      const el = document.getElementById('cartContent');
+      if (!cartData.items || cartData.items.length === 0) {
+        el.innerHTML = '<div class="empty-cart"><i class="fas fa-shopping-cart"></i><h2>Your Shopping Cart is empty</h2><p>Fill it with products from MR Shop.</p><a href="index.html" style="color:var(--amazon-link)">Continue shopping</a></div>';
         return;
       }
-
-      container.innerHTML = cart.map(item => {
-        const product = MR_getProductById(item.id);
-        const stock = product ? product.stock : 10;
-        const stockColor = stock === 0 ? '#cc0c39' : stock < 5 ? '#e77600' : 'var(--amazon-green)';
-        const stockText = stock === 0 ? 'Out of Stock' : stock < 5 ? `Only ${stock} left in stock` : 'In Stock';
-        const total = item.price * item.quantity;
-
+      el.innerHTML = cartData.items.map(item => {
+        const stock = item.stockQuantity || 0;
+        const stockColor = stock === 0 ? '#cc0c39' : stock <= 5 ? '#e77600' : 'var(--amazon-green)';
+        const stockText = stock === 0 ? 'Out of Stock' : stock <= 5 ? `Only ${stock} left` : 'In Stock';
+        const displayPrice = item.discountPrice || item.price;
         return `
-          <div class="amz-cart-item">
-            <img src="${item.image}" alt="${item.name}" class="amz-cart-item-img" onerror="this.src='https://via.placeholder.com/180x180?text=No+Image'">
-            <div>
-              <div class="amz-cart-item-title">${item.name}</div>
-              <div class="amz-cart-item-stock" style="color:${stockColor};">${stockText}</div>
-              <div class="amz-cart-item-price">&#2547; ${item.price.toLocaleString()}</div>
-              <div class="amz-cart-qty">
-                <label style="font-size:13px;color:#565959;">Qty:</label>
-                <select onchange="changeQty(${item.id}, this.value)" ${stock === 0 ? 'disabled' : ''} style="padding:6px 10px;border:1px solid var(--amazon-border);border-radius:8px;background:#f0f2f2;font-size:13px;cursor:pointer;">
-                  ${Array.from({length: Math.min(10, Math.max(1, stock))}, (_, i) => i + 1).map(n =>
-                    `<option value="${n}" ${n === item.quantity ? 'selected' : ''}>${n}</option>`
-                  ).join('')}
-                </select>
-              </div>
-              <div class="amz-cart-item-actions">
-                <a onclick="removeItem(${item.id})" style="cursor:pointer;">Delete</a>
-                <span style="color:#d5d9d9;">|</span>
-                <a onclick="saveForLater(${item.id})" style="cursor:pointer;">Save for later</a>
-                <span style="color:#d5d9d9;">|</span>
-                <a onclick="moveToWishlist(${item.id})" style="cursor:pointer;">Add to wishlist</a>
-              </div>
+        <div class="cart-item">
+          <img src="${item.image || 'https://via.placeholder.com/140x140?text=No+Image'}" alt="${item.productName}" class="cart-item-img" onerror="this.src='https://via.placeholder.com/140x140?text=No+Image'">
+          <div class="cart-item-info">
+            <a href="product-details.html?id=${item.productId}" class="cart-item-title">${item.productName}</a>
+            <div class="cart-item-stock" style="color:${stockColor}">${stockText}</div>
+            <div class="cart-item-price">৳${displayPrice.toLocaleString()}${item.discountPrice ? `<span class="cart-item-orig">৳${item.price.toLocaleString()}</span>` : ''}</div>
+            <div class="cart-item-qty">
+              <label>Qty:</label>
+              <select onchange="updateQty('${item.id}', this.value)" ${stock === 0 ? 'disabled' : ''}>
+                ${Array.from({length: Math.min(10, Math.max(1, stock))}, (_, i) => i + 1).map(n => `<option value="${n}" ${n === item.quantity ? 'selected' : ''}>${n}</option>`).join('')}
+              </select>
+            </div>
+            <div class="cart-item-actions">
+              <a onclick="removeItem('${item.id}')">Delete</a>
+              <a onclick="saveForLater('${item.id}')">Save for later</a>
+              <a onclick="moveToWishlist('${item.id}')">Add to wishlist</a>
             </div>
           </div>
-        `;
+        </div>`;
       }).join('');
     }
 
-    function changeQty(id, value) {
-      MR_Cart.updateQuantity(id, parseInt(value));
-      renderCart();
-      updateCalculations();
+    function renderSaved() {
+      const section = document.getElementById('savedSection');
+      const el = document.getElementById('savedContent');
+      if (!cartData.savedForLater || cartData.savedForLater.length === 0) { section.style.display = 'none'; return; }
+      section.style.display = 'block';
+      el.innerHTML = cartData.savedForLater.map(item => `
+        <div class="cart-item">
+          <img src="${item.image || 'https://via.placeholder.com/80x80?text=No+Image'}" class="cart-item-img" style="width:80px;height:80px" onerror="this.src='https://via.placeholder.com/80x80?text=No+Image'">
+          <div class="cart-item-info">
+            <div class="cart-item-title" style="font-size:14px">${item.productName}</div>
+            <div class="cart-item-price" style="font-size:16px">৳${(item.discountPrice||item.price).toLocaleString()}</div>
+            <div class="cart-item-actions">
+              <a onclick="moveToCart('${item.id}')">Move to cart</a>
+              <a onclick="removeItem('${item.id}')">Delete</a>
+            </div>
+          </div>
+        </div>`).join('');
     }
 
-    function removeItem(id) {
-      MR_Cart.removeItem(id);
-      renderCart();
-      updateCalculations();
+    function updateSummary() {
+      document.getElementById('itemCount').textContent = cartData.itemCount || 0;
+      document.getElementById('subtotal').textContent = '৳' + (cartData.subtotal || 0).toLocaleString();
+      document.getElementById('shipping').textContent = cartData.shippingCharge === 0 ? 'FREE' : '৳' + (cartData.shippingCharge || 0).toLocaleString();
+      document.getElementById('total').textContent = '৳' + (cartData.grandTotal || 0).toLocaleString();
+      if (cartData.discount > 0) { document.getElementById('discountRow').style.display = 'flex'; document.getElementById('discount').textContent = '-৳' + cartData.discount.toLocaleString(); }
+      if (cartData.couponDiscount > 0) { document.getElementById('couponRow').style.display = 'flex'; document.getElementById('couponCode').textContent = cartData.couponCode || ''; document.getElementById('couponDiscount').textContent = '-৳' + cartData.couponDiscount.toLocaleString(); }
     }
 
-    function saveForLater(id) {
-      MR_Wishlist.toggle(id);
-      MR_Cart.removeItem(id);
-      renderCart();
-      updateCalculations();
+    async function updateQty(cartItemId, qty) {
+      const res = await MR_API.put(`/cart/${cartItemId}`, { quantity: parseInt(qty) });
+      if (res && res.ok) loadCart();
     }
 
-    function moveToWishlist(id) {
-      MR_Wishlist.toggle(id);
-      MR_Cart.removeItem(id);
-      renderCart();
-      updateCalculations();
+    async function removeItem(cartItemId) {
+      const res = await MR_API.delete(`/cart/${cartItemId}`);
+      if (res && res.ok) loadCart();
     }
 
-    function updateCalculations() {
-      const subtotal = MR_Cart.getSubtotal();
-      const tax = MR_Cart.getTax();
-      const shipping = MR_Cart.getShipping();
-      let discount = 0;
-      if (appliedCoupon) {
-        if (appliedCoupon.type === 'percent') {
-          discount = Math.round(subtotal * appliedCoupon.discount / 100);
-        } else if (appliedCoupon.type === 'fixed') {
-          discount = appliedCoupon.discount;
-        } else if (appliedCoupon.type === 'shipping') {
-          // Free shipping - handled in shipping calculation
-        }
-      }
-      const total = subtotal + tax + shipping - discount;
-
-      document.getElementById('itemCount').textContent = MR_Cart.getTotalItems();
-      document.getElementById('subtotal').innerHTML = '&#2547; ' + subtotal.toLocaleString();
-      document.getElementById('tax').innerHTML = '&#2547; ' + tax.toLocaleString();
-      document.getElementById('shipping').textContent = shipping === 0 ? 'FREE' : '\u09F3 ' + shipping.toLocaleString();
-      document.getElementById('total').innerHTML = '&#2547; ' + total.toLocaleString();
-
-      if (discount > 0) {
-        document.getElementById('discountRow').style.display = 'flex';
-        document.getElementById('discount').innerHTML = '-&#2547; ' + discount.toLocaleString();
-      } else {
-        document.getElementById('discountRow').style.display = 'none';
-      }
+    async function saveForLater(cartItemId) {
+      await MR_API.post(`/cart/${cartItemId}/save-for-later`);
+      loadCart();
     }
 
-    function applyCoupon() {
-      applyCouponCode();
+    async function moveToCart(cartItemId) {
+      await MR_API.post(`/cart/${cartItemId}/move-to-cart`);
+      loadCart();
+    }
+
+    async function moveToWishlist(cartItemId) {
+      await MR_API.post(`/cart/${cartItemId}/move-to-wishlist`);
+      loadCart();
+    }
+
+    async function applyCoupon() {
+      const code = document.getElementById('couponInput').value.trim();
+      const msg = document.getElementById('couponMsg');
+      if (!code) { msg.textContent = 'Enter a code'; msg.style.color = '#cc0c39'; return; }
+      try {
+        const res = await fetch(API + '/coupons/validate', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + MR_API.getToken() }, body: JSON.stringify({ code, subtotal: cartData.subtotal }) });
+        if (res.ok) { const d = await res.json(); appliedCoupon = d; msg.textContent = d.message; msg.style.color = '#007600'; cartData.couponDiscount = d.discount; cartData.couponCode = d.code; cartData.grandTotal = cartData.subtotal - cartData.discount - cartData.couponDiscount + cartData.shippingCharge; updateSummary(); }
+        else { const e = await res.json(); msg.textContent = e.message; msg.style.color = '#cc0c39'; }
+      } catch(e) { msg.textContent = 'Server offline'; msg.style.color = '#cc0c39'; }
     }
 
     function proceedToCheckout() {
-      const cart = MR_Cart.getCart();
-      if (cart.length === 0) {
-        MR_Cart.showToast('Your cart is empty!', 'error');
-        return;
-      }
+      if (!cartData.items || cartData.items.length === 0) { MR_Cart.showToast('Cart is empty!', 'error'); return; }
       window.location.href = 'checkout.html';
     }
 
-    function setDeliveryDate() {
-      const d = new Date();
-      d.setDate(d.getDate() + 6);
-      document.getElementById('deliveryDate').textContent = d.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
-    }
+    function doSearch() { const q = document.getElementById('searchInput').value.trim(); if (q) { sessionStorage.setItem('mr_search_query', q); window.location.href = 'search-results.html'; } }
+    document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
 
-    // Initialize
-    renderCart();
-    updateCalculations();
-    setDeliveryDate();
+    loadCart();
   </script>
 </body>
 </html>

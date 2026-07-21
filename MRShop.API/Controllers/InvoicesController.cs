@@ -27,19 +27,12 @@ public class InvoicesController : ControllerBase
         var role = User.FindFirst(ClaimTypes.Role)?.Value;
         if (userId == null) return Unauthorized();
 
-        var invoice = await _mongoDb.Invoices
-            .Find(i => i.OrderId == orderId)
-            .FirstOrDefaultAsync();
+        // Filter invoice by user ownership upfront
+        var invoice = role == "admin"
+            ? await _mongoDb.Invoices.Find(i => i.OrderId == orderId).FirstOrDefaultAsync()
+            : await _mongoDb.Invoices.Find(i => i.OrderId == orderId && (i.CustomerId == userId || i.SellerId == userId)).FirstOrDefaultAsync();
 
         if (invoice == null) return NotFound(new { message = "Invoice not found." });
-
-        // Ownership check
-        if (role != "admin" && invoice.CustomerId != userId)
-        {
-            var isSeller = await _mongoDb.Products.Find(p => p.SellerId == userId).AnyAsync();
-            if (!isSeller || invoice.SellerId != userId)
-                return Forbid();
-        }
 
         var order = await _mongoDb.Orders.Find(o => o.Id == orderId).FirstOrDefaultAsync();
 
@@ -79,6 +72,8 @@ public class InvoicesController : ControllerBase
     {
         var userId = GetUserId();
         if (userId == null) return Unauthorized();
+        page = Math.Max(1, page);
+        limit = Math.Clamp(limit, 1, 50);
 
         var filter = Builders<Invoice>.Filter.Eq(i => i.CustomerId, userId);
         var total = await _mongoDb.Invoices.CountDocumentsAsync(filter);

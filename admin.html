@@ -183,11 +183,28 @@
         <!-- Orders Tab -->
         <div class="tab-content" id="tab-orders">
           <div class="admin-card">
-            <h3>All Orders (<span id="orderCount">0</span>)</h3>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+              <h3 style="margin:0;border:0;padding:0">All Orders (<span id="orderCount">0</span>)</h3>
+              <div style="display:flex;gap:8px;align-items:center">
+                <input type="text" id="adminOrderSearch" placeholder="Search order #, name..." style="padding:6px 10px;border:1px solid #d5d9d9;border-radius:4px;font-size:13px;width:180px" onkeyup="if(event.key==='Enter')loadOrders()">
+                <select id="adminOrderStatus" onchange="loadOrders()" style="padding:6px;border:1px solid #d5d9d9;border-radius:4px;font-size:13px">
+                  <option value="">All Status</option>
+                  <option value="pending">Pending</option>
+                  <option value="confirmed">Confirmed</option>
+                  <option value="processing">Processing</option>
+                  <option value="shipped">Shipped</option>
+                  <option value="delivered">Delivered</option>
+                  <option value="cancelled">Cancelled</option>
+                  <option value="refunded">Refunded</option>
+                </select>
+                <button class="action-btn" onclick="loadOrders()" style="font-size:12px">Search</button>
+              </div>
+            </div>
             <table class="admin-table">
-              <tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th><th>Actions</th></tr>
+              <tr><th>Order #</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th><th>Actions</th></tr>
               <tbody id="ordersTableBody"></tbody>
             </table>
+            <div id="adminOrdersPagination" style="display:flex;justify-content:center;gap:8px;margin-top:12px"></div>
           </div>
         </div>
 
@@ -337,6 +354,13 @@
 
     function getAdminToken() { return localStorage.getItem('mr_shop_token'); }
 
+    function escapeHtml(text) {
+      if (!text) return '';
+      const d = document.createElement('div');
+      d.textContent = String(text);
+      return d.innerHTML;
+    }
+
     async function adminApiCall(endpoint, method = 'GET', body = null) {
       const token = getAdminToken();
       const opts = { method, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` } };
@@ -387,7 +411,7 @@
       } else {
         recentBody.innerHTML = recent.map(o => {
           const badge = o.status === 'delivered' ? 'badge-green' : o.status === 'shipped' ? 'badge-blue' : o.status === 'cancelled' ? 'badge-red' : 'badge-yellow';
-          return `<tr><td>#MR-${String(o.id).slice(-4)}</td><td>Customer</td><td>৳${(o.totalAmount || 0).toLocaleString()}</td><td><span class="badge ${badge}">${(o.status || 'pending').charAt(0).toUpperCase() + (o.status || 'pending').slice(1)}</span></td></tr>`;
+          return `<tr><td>${o.orderNumber || 'N/A'}</td><td>${escapeHtml(o.customerName || 'Customer')}</td><td>৳${(o.grandTotal || 0).toLocaleString()}</td><td><span class="badge ${badge}">${(o.status || 'pending').charAt(0).toUpperCase() + (o.status || 'pending').slice(1)}</span></td></tr>`;
         }).join('');
       }
 
@@ -577,44 +601,73 @@
     }
 
     // ==================== ORDERS ====================
-    async function loadOrders() {
-      const data = await adminApiCall('/admin/orders');
+    let adminOrdersPage = 1;
+    async function loadOrders(page = 1) {
+      adminOrdersPage = page;
+      const status = document.getElementById('adminOrderStatus')?.value || '';
+      const search = document.getElementById('adminOrderSearch')?.value || '';
+      const params = new URLSearchParams({ page, limit: 20 });
+      if (status) params.set('status', status);
+      if (search) params.set('search', search);
+      const data = await adminApiCall(`/orders/admin/all?${params}`);
       if (data) renderOrders(data);
     }
 
-    function renderOrders(orders) {
+    function renderOrders(data) {
       const tbody = document.getElementById('ordersTableBody');
-      document.getElementById('orderCount').textContent = orders.length;
+      const orders = data.orders || [];
+      document.getElementById('orderCount').textContent = data.totalCount || 0;
       if (orders.length === 0) {
         tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#999;padding:20px">No orders found</td></tr>';
         return;
       }
+      const statusBadge = (s) => {
+        const c = { pending:'badge-yellow', confirmed:'badge-blue', processing:'badge-blue', packed:'badge-blue', shipped:'badge-blue', out_for_delivery:'badge-blue', delivered:'badge-green', cancelled:'badge-red', returned:'badge-red', refunded:'badge-yellow' };
+        return `<span class="badge ${c[s] || 'badge-yellow'}">${s}</span>`;
+      };
       tbody.innerHTML = orders.map(o => {
-        const badge = o.status === 'delivered' ? 'badge-green' : o.status === 'shipped' ? 'badge-blue' : o.status === 'cancelled' ? 'badge-red' : 'badge-yellow';
         const date = o.createdAt ? new Date(o.createdAt).toLocaleDateString() : 'N/A';
         return `<tr>
-          <td>#MR-${String(o.id).slice(-4)}</td>
-          <td>${o.customerName || 'Customer'}</td>
-          <td>${o.itemCount || 0}</td>
-          <td>৳${(o.totalAmount || 0).toLocaleString()}</td>
-          <td>${o.paymentMethod || 'N/A'}</td>
-          <td><span class="badge ${badge}">${(o.status || 'pending').charAt(0).toUpperCase() + (o.status || 'pending').slice(1)}</span></td>
+          <td style="font-weight:600;font-size:12px">${o.orderNumber}</td>
+          <td>${escapeHtml(o.customerName)}<br><span style="font-size:11px;color:#767676">${o.customerPhone || ''}</span></td>
+          <td>${o.items?.length || 0}</td>
+          <td style="font-weight:600">৳${o.grandTotal.toLocaleString()}</td>
+          <td>${o.paymentMethod.toUpperCase()}<br><span style="font-size:11px">${o.paymentStatus}</span></td>
+          <td>${statusBadge(o.status)}</td>
           <td>${date}</td>
           <td>
-            <select onchange="updateOrderStatus('${o.id}', this.value)" style="padding:4px;border:1px solid #d5d9d9;border-radius:4px;font-size:12px">
-              <option value="pending" ${o.status==='pending'?'selected':''}>Pending</option>
-              <option value="confirmed" ${o.status==='confirmed'?'selected':''}>Confirmed</option>
-              <option value="shipped" ${o.status==='shipped'?'selected':''}>Shipped</option>
-              <option value="delivered" ${o.status==='delivered'?'selected':''}>Delivered</option>
-              <option value="cancelled" ${o.status==='cancelled'?'selected':''}>Cancelled</option>
+            <a href="order-details.html?id=${o.id}" target="_blank" style="color:var(--amazon-link);font-size:12px">View</a>
+            <select onchange="updateOrderStatus('${o.id}', this.value)" style="padding:4px;border:1px solid #d5d9d9;border-radius:4px;font-size:11px;margin-left:4px">
+              <option value="">Change...</option>
+              <option value="pending">Pending</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="processing">Processing</option>
+              <option value="packed">Packed</option>
+              <option value="shipped">Shipped</option>
+              <option value="delivered">Delivered</option>
+              <option value="cancelled">Cancelled</option>
+              <option value="refunded">Refunded</option>
             </select>
           </td>
         </tr>`;
       }).join('');
+      // Pagination
+      const pag = document.getElementById('adminOrdersPagination');
+      if (pag && (data.totalPages || 0) > 1) {
+        let html = '';
+        if (adminOrdersPage > 1) html += `<button class="action-btn" onclick="loadOrders(${adminOrdersPage-1})">Prev</button>`;
+        for (let i = 1; i <= Math.min(data.totalPages, 8); i++) html += `<button class="action-btn" style="${i===adminOrdersPage?'background:var(--amazon-orange);color:#000':''}" onclick="loadOrders(${i})">${i}</button>`;
+        if (adminOrdersPage < data.totalPages) html += `<button class="action-btn" onclick="loadOrders(${adminOrdersPage+1})">Next</button>`;
+        pag.innerHTML = html;
+      }
     }
 
     async function updateOrderStatus(id, status) {
-      await adminApiCall(`/admin/orders/${id}/status`, 'PUT', { status });
+      if (!status) return;
+      const tracking = (status === 'shipped') ? prompt('Tracking number (optional):') : null;
+      const payload = { status };
+      if (tracking) payload.trackingNumber = tracking;
+      await adminApiCall(`/orders/admin/${id}/status`, 'PUT', payload);
       loadOrders();
     }
 

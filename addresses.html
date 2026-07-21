@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xkbf74mr8r");
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Manage your saved shipping addresses at MR Shop. Add, edit, or delete delivery addresses for faster checkout.">
+  <title>My Addresses - MR Shop</title>
+  <script src="assets/js/loader.js"></script>
+  <link rel="stylesheet" href="assets/css/amazon-style.css">
+  <style>
+    .addr-container{max-width:1200px;margin:0 auto;padding:20px}
+    .addr-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid #eee}
+    .addr-header h2{font-size:24px;font-weight:700}
+    .addr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+    .addr-card{background:white;border:2px solid #d5d9d9;border-radius:12px;padding:20px;position:relative;transition:all 0.2s}
+    .addr-card:hover{border-color:#ff9900;box-shadow:0 4px 14px rgba(0,0,0,0.08)}
+    .addr-card.is-default{border-color:#ff9900;background:#fffdf5}
+    .addr-badge{display:inline-flex;align-items:center;gap:4px;background:#ff9900;color:white;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;margin-bottom:10px}
+    .addr-type-badge{display:inline-block;background:#f0f2f2;color:#555;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-bottom:10px;text-transform:capitalize}
+    .addr-card.is-default .addr-type-badge{background:#fff3d9;color:#8a6d00}
+    .addr-name{font-size:16px;font-weight:700;margin-bottom:6px}
+    .addr-phone{font-size:13px;color:#565959;margin-bottom:2px}
+    .addr-email{font-size:13px;color:#565959;margin-bottom:10px}
+    .addr-line{font-size:14px;color:#333;line-height:1.5;margin-bottom:4px}
+    .addr-actions{display:flex;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid #eee}
+    .addr-btn{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid #d5d9d9;background:#f0f2f2;transition:all 0.2s}
+    .addr-btn:hover{background:#e3e6e6}
+    .addr-btn.default{background:#fff3d9;border-color:#e8b812;color:#8a6d00}
+    .addr-btn.default:hover{background:#ffe9a0}
+    .addr-btn.edit{color:var(--amazon-link);border-color:#a6c9e3;background:#f0f8ff}
+    .addr-btn.edit:hover{background:#e0f0fa}
+    .addr-btn.delete{color:#cc0c39;border-color:#f5c6cb;background:#fef1f2}
+    .addr-btn.delete:hover{background:#fce4ec}
+    .addr-empty{text-align:center;padding:80px 20px}
+    .addr-empty i{font-size:64px;color:#ddd;margin-bottom:16px}
+    .addr-empty h3{font-size:20px;color:#555;margin-bottom:8px}
+    .addr-empty p{color:#999;margin-bottom:20px}
+    .addr-add-card{background:white;border:2px dashed #d5d9d9;border-radius:12px;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;cursor:pointer;transition:all 0.2s}
+    .addr-add-card:hover{border-color:#ff9900;background:#fffdf5}
+    .addr-add-card i{font-size:40px;color:#ccc;margin-bottom:10px}
+    .addr-add-card span{font-size:14px;font-weight:600;color:#767676}
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px}
+    .modal-overlay.active{display:flex}
+    .modal{background:white;border-radius:14px;width:100%;max-width:620px;max-height:90vh;overflow-y:auto;box-shadow:0 10px 40px rgba(0,0,0,0.2)}
+    .modal-header{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid #eee;position:sticky;top:0;background:white;z-index:1}
+    .modal-header h3{font-size:20px;font-weight:700}
+    .modal-close{width:32px;height:32px;border:none;background:none;font-size:22px;cursor:pointer;color:#999;border-radius:50%;display:flex;align-items:center;justify-content:center}
+    .modal-close:hover{background:#f0f2f2}
+    .modal-body{padding:24px}
+    .modal-footer{padding:16px 24px;border-top:1px solid #eee;display:flex;gap:10px;justify-content:flex-end;position:sticky;bottom:0;background:white}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .form-group{margin-bottom:14px}
+    .form-group label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:#333}
+    .form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 14px;border:1px solid #a6a6a6;border-radius:8px;font-size:14px;transition:border-color 0.2s}
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:#e77600;outline:none;box-shadow:0 0 3px 2px rgba(228,121,17,0.4)}
+    .form-group textarea{resize:vertical;min-height:60px}
+    .form-group input:disabled,.form-group select:disabled{background:#f7f8f8;color:#999}
+    .form-check{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+    .form-check input[type="checkbox"]{width:16px;height:16px;accent-color:#ff9900}
+    .form-check label{font-size:13px;font-weight:600;color:#333}
+    .type-select{display:flex;gap:8px;margin-bottom:14px}
+    .type-option{flex:1;padding:10px;border:2px solid #d5d9d9;border-radius:8px;text-align:center;cursor:pointer;font-size:13px;font-weight:600;transition:all 0.2s}
+    .type-option:hover{border-color:#ccc}
+    .type-option.selected{border-color:#ff9900;background:#fff8e7;color:#8a6d00}
+    .btn-primary{padding:10px 24px;background:linear-gradient(to bottom,#f7dfa5,#f0c14b);border:1px solid #a88734;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;color:#111;transition:background 0.2s}
+    .btn-primary:hover{background:linear-gradient(to bottom,#f5d78e,#eeb933)}
+    .btn-primary:disabled{background:#eee;border-color:#ccc;color:#999;cursor:not-allowed}
+    .btn-secondary{padding:10px 24px;background:#f0f2f2;border:1px solid #d5d9d9;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;color:#333;transition:background 0.2s}
+    .btn-secondary:hover{background:#e3e6e6}
+    .toast{position:fixed;top:20px;right:20px;padding:14px 22px;border-radius:10px;color:white;font-size:14px;font-weight:600;z-index:99999;animation:slideIn 0.3s ease;display:none}
+    .toast.success{background:#007600}
+    .toast.error{background:#cc0c39}
+    @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+    .loading-spinner{text-align:center;padding:60px 20px;color:#999}
+    .loading-spinner i{font-size:36px;animation:spin 1s linear infinite}
+    @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    @media(max-width:768px){
+      .addr-grid{grid-template-columns:1fr}
+      .form-row{grid-template-columns:1fr}
+      .modal{max-width:100%}
+      .type-select{flex-wrap:wrap}
+      .type-option{min-width:calc(33% - 6px)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="amz-header">
+    <div class="amz-header-top">
+      <a href="index.html" class="logo">
+        <div>
+          <span class="logo-text">MR shop</span>
+          <span class="logo-sub">Bangladesh</span>
+        </div>
+      </a>
+      <div class="amz-deliver-to"><span class="label">Deliver to</span><span class="location"><i class="fas fa-map-marker-alt"></i> Bangladesh</span></div>
+      <div class="amz-search-bar">
+        <select class="amz-search-category"><option>All</option></select>
+        <input type="text" class="amz-search-input" placeholder="Search MR Shop" id="searchInput">
+        <button class="amz-search-btn" onclick="doSearch()"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="amz-header-right">
+        <a href="userprofile.html" class="amz-header-link"><span class="line1">Hello, <span id="headerName">User</span></span><span class="line2">Account <i class="fas fa-caret-down"></i></span></a>
+        <a href="wishlist.html" class="amz-header-link"><span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span><span class="line2">Wishlist</span></a>
+        <a href="cart.html" class="amz-cart"><span class="amz-cart-icon"><i class="fas fa-shopping-cart"></i><span class="amz-cart-count" id="cartCount">0</span></span><span class="amz-cart-text">Cart</span></a>
+      </div>
+    </div>
+    <nav class="amz-nav-bar">
+      <a href="index.html" class="amz-nav-item"><i class="fas fa-bars"></i> All</a>
+      <a href="food&natural.html" class="amz-nav-item">Food</a>
+      <a href="sweets&dairy.html" class="amz-nav-item">Sweets</a>
+      <a href="handricrafts.html" class="amz-nav-item">Handicrafts</a>
+      <a href="clothing.html" class="amz-nav-item">Clothing</a>
+      <a href="book.html" class="amz-nav-item">Books</a>
+      <a href="antique.html" class="amz-nav-item">Antique</a>
+      <div class="amz-nav-divider"></div>
+      <a href="becomeseller.html" class="amz-nav-item">Sell</a>
+      <a href="chat.html" class="amz-nav-item"><i class="fas fa-headset"></i> Help</a>
+    </nav>
+  </header>
+
+  <!-- Features Bar -->
+  <div class="amz-features-bar">
+    <div class="amz-features-grid">
+      <div class="amz-feature-item">
+        <div class="amz-feature-icon green"><i class="fas fa-truck"></i></div>
+        <div class="amz-feature-text"><h4>Free Delivery</h4><p>On orders over ৳5,000</p></div>
+      </div>
+      <div class="amz-feature-item">
+        <div class="amz-feature-icon blue"><i class="fas fa-undo"></i></div>
+        <div class="amz-feature-text"><h4>Easy Returns</h4><p>7-day return policy</p></div>
+      </div>
+      <div class="amz-feature-item">
+        <div class="amz-feature-icon orange"><i class="fas fa-shield-alt"></i></div>
+        <div class="amz-feature-text"><h4>Secure Payment</h4><p>bKash, Nagad, COD</p></div>
+      </div>
+      <div class="amz-feature-item">
+        <div class="amz-feature-icon red"><i class="fas fa-headset"></i></div>
+        <div class="amz-feature-text"><h4>24/7 Support</h4><p>Dedicated help center</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="addr-container">
+    <div class="addr-header">
+      <h2><i class="fas fa-map-marker-alt" style="color:#ff9900;margin-right:8px"></i> My Addresses</h2>
+      <button class="btn-primary" onclick="openAddModal()" style="display:flex;align-items:center;gap:6px">
+        <i class="fas fa-plus"></i> Add Address
+      </button>
+    </div>
+    <div id="addressList">
+      <div class="loading-spinner"><i class="fas fa-spinner"></i><p style="margin-top:12px">Loading addresses...</p></div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Address Modal -->
+  <div class="modal-overlay" id="addressModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">Add New Address</h3>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="addressId">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="addrFullName" placeholder="e.g. Md Rafi Ullah" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Phone *</label>
+            <input type="tel" id="addrPhone" placeholder="01XXXXXXXXX" required>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="addrEmail" placeholder="you@email.com">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Country *</label>
+          <select id="addrCountry">
+            <option value="Bangladesh" selected>Bangladesh</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Division *</label>
+            <select id="addrDivision">
+              <option value="">Select Division</option>
+              <option>Dhaka</option>
+              <option>Chattogram</option>
+              <option>Sylhet</option>
+              <option>Rajshahi</option>
+              <option>Khulna</option>
+              <option>Rangpur</option>
+              <option>Barishal</option>
+              <option>Mymensingh</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>District *</label>
+            <input type="text" id="addrDistrict" placeholder="e.g. Dhaka">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>City</label>
+            <input type="text" id="addrCity" placeholder="e.g. Dhanmondi">
+          </div>
+          <div class="form-group">
+            <label>Area</label>
+            <input type="text" id="addrArea" placeholder="e.g. Road 5, House 12">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Postal Code</label>
+            <input type="text" id="addrPostalCode" placeholder="e.g. 1205">
+          </div>
+          <div class="form-group">
+            <label>Address Type</label>
+          </div>
+        </div>
+        <div class="type-select" id="addrTypeSelect">
+          <div class="type-option selected" data-type="home" onclick="selectType('home')"><i class="fas fa-home"></i> Home</div>
+          <div class="type-option" data-type="work" onclick="selectType('work')"><i class="fas fa-building"></i> Work</div>
+          <div class="type-option" data-type="other" onclick="selectType('other')"><i class="fas fa-map-pin"></i> Other</div>
+        </div>
+        <div class="form-group">
+          <label>Address Line *</label>
+          <textarea id="addrAddressLine" rows="3" placeholder="Full address: House #, Road #, Landmark..." required></textarea>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" id="addrIsDefault">
+          <label for="addrIsDefault">Set as default address</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+        <button class="btn-primary" id="saveAddressBtn" onclick="saveAddress()">Save Address</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal" style="max-width:420px">
+      <div class="modal-header">
+        <h3>Delete Address</h3>
+        <button class="modal-close" onclick="closeDeleteModal()">&times;</button>
+      </div>
+      <div class="modal-body" style="text-align:center">
+        <i class="fas fa-exclamation-triangle" style="font-size:48px;color:#cc0c39;margin-bottom:16px"></i>
+        <p style="font-size:15px;color:#333;margin-bottom:4px">Are you sure you want to delete this address?</p>
+        <p style="font-size:13px;color:#999">This action cannot be undone.</p>
+        <input type="hidden" id="deleteAddressId">
+      </div>
+      <div class="modal-footer" style="justify-content:center">
+        <button class="btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+        <button class="btn-primary" style="background:#cc0c39;border-color:#a8001f" onclick="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Footer -->
+  <div class="amz-back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</div>
+  <footer class="amz-footer">
+    <div class="amz-footer-grid">
+      <div class="amz-footer-col"><h4>Get to Know Us</h4><a href="work-for-people.html">About MR Shop</a><a href="workfor.html">Careers</a><a href="seller.html">Sell on MR Shop</a></div>
+      <div class="amz-footer-col"><h4>Help & Support</h4><a href="chat.html">Customer Service</a><a href="userprofile.html">Your Account</a><a href="workforchild.html">Children's Privacy</a></div>
+      <div class="amz-footer-col"><h4>Shop by Category</h4><a href="food&natural.html">Food & Natural</a><a href="sweets&dairy.html">Sweets & Dairy</a><a href="handricrafts.html">Handicrafts</a><a href="clothing.html">Clothing</a></div>
+      <div class="amz-footer-col"><h4>Connect with Us</h4><a href="https://www.facebook.com/profile.php?id=61583616496782" target="_blank"><i class="fab fa-facebook"></i> Facebook</a><a href="https://www.instagram.com/mrshopbd18/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a><a href="https://www.youtube.com/@mrshop18" target="_blank"><i class="fab fa-youtube"></i> YouTube</a></div>
+    </div>
+    <div class="amz-footer-divider"></div>
+    <div class="amz-footer-bottom"><div class="amz-footer-logo">MR shop</div><div class="amz-footer-copyright">&copy; 2026 MR Shop. All Rights Reserved. | Powered by <strong>MR IT Company</strong></div></div>
+  </footer>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/auth-shared.js"></script>
+  <script>
+    let addresses = [];
+    let selectedAddressType = 'home';
+    let editingId = null;
+
+    const user = JSON.parse(localStorage.getItem('mr_shop_user') || '{}');
+    if (user.username) document.getElementById('headerName').textContent = user.username;
+
+    function showToast(msg, type) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast ' + type;
+      t.style.display = 'block';
+      setTimeout(() => t.style.display = 'none', 3000);
+    }
+
+    function doSearch() {
+      const q = document.getElementById('searchInput').value.trim();
+      if (q) { sessionStorage.setItem('mr_search_query', q); window.location.href = 'search-results.html'; }
+    }
+    document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+
+    // Load addresses
+    async function loadAddresses() {
+      if (!MR_API.isLoggedIn()) {
+        document.getElementById('addressList').innerHTML = '<div class="addr-empty"><i class="fas fa-map-marker-alt"></i><h3>Please sign in</h3><p>You need to sign in to manage your addresses.</p><a href="signin.html" style="color:var(--amazon-link);font-weight:600">Sign In</a></div>';
+        return;
+      }
+      try {
+        const res = await MR_API.get('/addresses');
+        if (res && res.ok) {
+          addresses = Array.isArray(res.data) ? res.data : (res.data.addresses || []);
+          renderAddresses();
+        } else {
+          renderAddresses();
+        }
+      } catch(e) {
+        console.error('Failed to load addresses:', e);
+        document.getElementById('addressList').innerHTML = '<div class="addr-empty"><i class="fas fa-exclamation-circle"></i><h3>Could not load addresses</h3><p>Please check your connection and try again.</p></div>';
+      }
+    }
+
+    function renderAddresses() {
+      const el = document.getElementById('addressList');
+      if (!addresses.length) {
+        el.innerHTML = '<div class="addr-empty"><i class="fas fa-map-marker-alt"></i><h3>No saved addresses</h3><p>Add a delivery address to make checkout faster.</p></div>';
+        return;
+      }
+      el.innerHTML = '<div class="addr-grid">' + addresses.map(a => {
+        const isDefault = a.isDefault;
+        const typeLabel = a.addressType || 'home';
+        const typeIcons = { home: 'fas fa-home', work: 'fas fa-building', other: 'fas fa-map-pin' };
+        const fullAddr = [a.area, a.city, a.district, a.division].filter(Boolean).join(', ');
+        return `
+          <div class="addr-card${isDefault ? ' is-default' : ''}">
+            ${isDefault ? '<div class="addr-badge"><i class="fas fa-check-circle"></i> Default</div>' : `<div class="addr-type-badge"><i class="${typeIcons[typeLabel] || 'fas fa-map-pin'}"></i> ${typeLabel}</div>`}
+            <div class="addr-name">${escHtml(a.fullName || '')}</div>
+            <div class="addr-phone"><i class="fas fa-phone" style="margin-right:4px"></i> ${escHtml(a.phone || '')}</div>
+            ${a.email ? `<div class="addr-email"><i class="fas fa-envelope" style="margin-right:4px"></i> ${escHtml(a.email)}</div>` : ''}
+            <div class="addr-line">${escHtml(a.addressLine || '')}</div>
+            ${fullAddr ? `<div class="addr-line" style="color:#565959;font-size:13px"><i class="fas fa-map-marker-alt" style="margin-right:4px"></i> ${escHtml(fullAddr)}${a.postalCode ? ' - ' + escHtml(a.postalCode) : ''}</div>` : ''}
+            <div class="addr-line" style="font-size:12px;color:#767676;margin-top:2px">${escHtml(a.country || 'Bangladesh')}</div>
+            <div class="addr-actions">
+              ${!isDefault ? `<button class="addr-btn default" onclick="setDefault('${a.id}')"><i class="fas fa-star"></i> Default</button>` : ''}
+              <button class="addr-btn edit" onclick="openEditModal('${a.id}')"><i class="fas fa-pen"></i> Edit</button>
+              <button class="addr-btn delete" onclick="openDeleteModal('${a.id}')"><i class="fas fa-trash"></i> Delete</button>
+            </div>
+          </div>`;
+      }).join('') + '</div>';
+    }
+
+    function escHtml(str) {
+      const d = document.createElement('div');
+      d.textContent = str;
+      return d.innerHTML;
+    }
+
+    // Modal helpers
+    function openAddModal() {
+      editingId = null;
+      document.getElementById('modalTitle').textContent = 'Add New Address';
+      document.getElementById('saveAddressBtn').textContent = 'Save Address';
+      clearForm();
+      document.getElementById('addressModal').classList.add('active');
+    }
+
+    function openEditModal(id) {
+      const addr = addresses.find(a => a.id === id);
+      if (!addr) return;
+      editingId = id;
+      document.getElementById('modalTitle').textContent = 'Edit Address';
+      document.getElementById('saveAddressBtn').textContent = 'Update Address';
+      document.getElementById('addressId').value = id;
+      document.getElementById('addrFullName').value = addr.fullName || '';
+      document.getElementById('addrPhone').value = addr.phone || '';
+      document.getElementById('addrEmail').value = addr.email || '';
+      document.getElementById('addrCountry').value = addr.country || 'Bangladesh';
+      document.getElementById('addrDivision').value = addr.division || '';
+      document.getElementById('addrDistrict').value = addr.district || '';
+      document.getElementById('addrCity').value = addr.city || '';
+      document.getElementById('addrArea').value = addr.area || '';
+      document.getElementById('addrPostalCode').value = addr.postalCode || '';
+      document.getElementById('addrAddressLine').value = addr.addressLine || '';
+      document.getElementById('addrIsDefault').checked = !!addr.isDefault;
+      selectType(addr.addressType || 'home');
+      document.getElementById('addressModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('addressModal').classList.remove('active');
+      editingId = null;
+    }
+
+    function clearForm() {
+      ['addrFullName','addrPhone','addrEmail','addrDistrict','addrCity','addrArea','addrPostalCode','addrAddressLine'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('addrDivision').value = '';
+      document.getElementById('addrCountry').value = 'Bangladesh';
+      document.getElementById('addrIsDefault').checked = false;
+      selectType('home');
+    }
+
+    function selectType(type) {
+      selectedAddressType = type;
+      document.querySelectorAll('.type-option').forEach(el => {
+        el.classList.toggle('selected', el.dataset.type === type);
+      });
+    }
+
+    // Save address
+    async function saveAddress() {
+      const fullName = document.getElementById('addrFullName').value.trim();
+      const phone = document.getElementById('addrPhone').value.trim();
+      const division = document.getElementById('addrDivision').value;
+      const district = document.getElementById('addrDistrict').value.trim();
+      const addressLine = document.getElementById('addrAddressLine').value.trim();
+
+      if (!fullName) { showToast('Full name is required', 'error'); document.getElementById('addrFullName').focus(); return; }
+      if (!phone) { showToast('Phone number is required', 'error'); document.getElementById('addrPhone').focus(); return; }
+      if (!division) { showToast('Please select a division', 'error'); document.getElementById('addrDivision').focus(); return; }
+      if (!district) { showToast('District is required', 'error'); document.getElementById('addrDistrict').focus(); return; }
+      if (!addressLine) { showToast('Address line is required', 'error'); document.getElementById('addrAddressLine').focus(); return; }
+
+      const payload = {
+        fullName,
+        phone,
+        email: document.getElementById('addrEmail').value.trim(),
+        country: document.getElementById('addrCountry').value,
+        division,
+        district,
+        city: document.getElementById('addrCity').value.trim(),
+        area: document.getElementById('addrArea').value.trim(),
+        postalCode: document.getElementById('addrPostalCode').value.trim(),
+        addressLine,
+        addressType: selectedAddressType,
+        isDefault: document.getElementById('addrIsDefault').checked
+      };
+
+      const btn = document.getElementById('saveAddressBtn');
+      btn.disabled = true;
+      btn.textContent = editingId ? 'Updating...' : 'Saving...';
+
+      try {
+        let res;
+        if (editingId) {
+          res = await MR_API.put('/addresses/' + editingId, payload);
+        } else {
+          res = await MR_API.post('/addresses', payload);
+        }
+
+        if (res && res.ok) {
+          showToast(editingId ? 'Address updated successfully' : 'Address added successfully', 'success');
+          closeModal();
+          loadAddresses();
+        } else {
+          const errMsg = (res && res.data && res.data.message) ? res.data.message : 'Failed to save address';
+          showToast(errMsg, 'error');
+        }
+      } catch(e) {
+        console.error('Save address error:', e);
+        showToast('Network error. Please try again.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = editingId ? 'Update Address' : 'Save Address';
+      }
+    }
+
+    // Delete address
+    function openDeleteModal(id) {
+      document.getElementById('deleteAddressId').value = id;
+      document.getElementById('deleteModal').classList.add('active');
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('deleteModal').classList.remove('active');
+    }
+
+    async function confirmDelete() {
+      const id = document.getElementById('deleteAddressId').value;
+      if (!id) return;
+      try {
+        const res = await MR_API.delete('/addresses/' + id);
+        if (res && res.ok) {
+          showToast('Address deleted', 'success');
+          closeDeleteModal();
+          loadAddresses();
+        } else {
+          showToast('Failed to delete address', 'error');
+        }
+      } catch(e) {
+        showToast('Network error. Please try again.', 'error');
+      }
+    }
+
+    // Set default
+    async function setDefault(id) {
+      try {
+        const res = await MR_API.put('/addresses/' + id + '/default');
+        if (res && res.ok) {
+          showToast('Default address updated', 'success');
+          loadAddresses();
+        } else {
+          showToast('Failed to set default address', 'error');
+        }
+      } catch(e) {
+        showToast('Network error. Please try again.', 'error');
+      }
+    }
+
+    // Close modal on overlay click
+    document.getElementById('addressModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+    document.getElementById('deleteModal').addEventListener('click', function(e) {
+      if (e.target === this) closeDeleteModal();
+    });
+
+    // Init
+    loadAddresses();
+  </script>
+</body>
+</html>

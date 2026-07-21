@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xkbf74mr8r");
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Order — MR Shop</title>
+  <script src="assets/js/loader.js"></script>
+  <link rel="stylesheet" href="assets/css/amazon-style.css">
+  <style>
+    .track-page { max-width: 860px; margin: 30px auto; padding: 0 20px; }
+
+    /* Progress Bar */
+    .progress-bar-wrap { background: var(--amazon-white); border: 1px solid var(--amazon-border); border-radius: 12px; padding: 28px 30px; margin-bottom: 24px; }
+    .progress-bar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 8px; }
+    .progress-bar-header h2 { font-size: 20px; font-weight: 700; }
+    .progress-order-num { font-size: 14px; color: var(--amazon-orange); font-weight: 700; }
+    .progress-status-badge { font-size: 13px; font-weight: 700; padding: 5px 14px; border-radius: 20px; }
+    .progress-status-badge.delivered { background: #e6f4e6; color: var(--amazon-green); }
+    .progress-status-badge.shipped { background: #fff3e0; color: #e65100; }
+    .progress-status-badge.processing { background: #e6f0fa; color: var(--amazon-blue); }
+    .progress-status-badge.cancelled { background: #fce4ec; color: #cc0c39; }
+    .progress-status-badge.pending { background: #f0f0f0; color: #666; }
+    .progress-bar-track { position: relative; height: 6px; background: #e3e6e6; border-radius: 3px; margin: 24px 0 16px; }
+    .progress-bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--amazon-green), #2e7d32); transition: width 0.6s ease; }
+    .progress-bar-fill.error { background: #cc0c39; }
+    .progress-bar-steps { display: flex; justify-content: space-between; margin-top: 8px; }
+    .progress-step-label { font-size: 12px; color: #999; text-align: center; flex: 1; }
+    .progress-step-label.active { color: var(--amazon-orange); font-weight: 700; }
+    .progress-step-label.completed { color: var(--amazon-green); font-weight: 600; }
+
+    /* Delivery ETA */
+    .delivery-eta { display: flex; align-items: center; gap: 14px; background: #f7f8f8; border-radius: 10px; padding: 16px 20px; margin-bottom: 24px; border: 1px solid #eee; }
+    .delivery-eta-icon { font-size: 28px; color: var(--amazon-orange); flex-shrink: 0; }
+    .delivery-eta-text h4 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+    .delivery-eta-text p { font-size: 13px; color: #565959; }
+
+    /* Timeline */
+    .timeline-card { background: var(--amazon-white); border: 1px solid var(--amazon-border); border-radius: 12px; padding: 28px 30px; margin-bottom: 24px; }
+    .timeline-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+    .timeline { position: relative; padding-left: 36px; }
+    .timeline::before { content: ''; position: absolute; left: 13px; top: 8px; bottom: 8px; width: 3px; background: #e3e6e6; border-radius: 2px; }
+    .timeline-item { position: relative; margin-bottom: 28px; }
+    .timeline-item:last-child { margin-bottom: 0; }
+    .timeline-dot { position: absolute; left: -29px; top: 4px; width: 18px; height: 18px; border-radius: 50%; background: #e3e6e6; border: 3px solid var(--amazon-white); box-shadow: 0 0 0 2px #e3e6e6; z-index: 1; }
+    .timeline-item.completed .timeline-dot { background: var(--amazon-green); box-shadow: 0 0 0 2px var(--amazon-green); }
+    .timeline-item.active .timeline-dot { background: var(--amazon-orange); box-shadow: 0 0 0 2px var(--amazon-orange); animation: tpulse 1.5s infinite; }
+    .timeline-item.cancelled .timeline-dot { background: #cc0c39; box-shadow: 0 0 0 2px #cc0c39; }
+    @keyframes tpulse { 0%, 100% { box-shadow: 0 0 0 2px var(--amazon-orange); } 50% { box-shadow: 0 0 0 6px rgba(255,153,0,0.3); } }
+    .timeline-content h4 { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+    .timeline-content p { font-size: 13px; color: #565959; line-height: 1.4; }
+    .timeline-content .time { font-size: 12px; color: #999; margin-top: 4px; }
+
+    /* Order Details Grid */
+    .details-card { background: var(--amazon-white); border: 1px solid var(--amazon-border); border-radius: 12px; padding: 24px 28px; margin-bottom: 24px; }
+    .details-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+    .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; font-size: 14px; }
+    .details-grid .label { color: #565959; font-weight: 500; }
+    .details-grid .value { font-weight: 700; }
+    .details-grid .value a { color: var(--amazon-link); font-weight: 500; }
+    .details-grid .value a:hover { text-decoration: underline; color: #c7511f; }
+
+    /* Back Link */
+    .back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--amazon-link); font-size: 14px; margin-bottom: 20px; cursor: pointer; }
+    .back-link:hover { text-decoration: underline; color: #c7511f; }
+
+    /* Loading */
+    .loading-state { text-align: center; padding: 60px 20px; }
+    .loading-state i { font-size: 40px; color: var(--amazon-orange); margin-bottom: 16px; animation: spin 1s linear infinite; display: inline-block; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    .loading-state p { color: #565959; font-size: 15px; }
+
+    /* Error */
+    .error-state { text-align: center; padding: 60px 20px; }
+    .error-state i { font-size: 48px; color: #ddd; margin-bottom: 16px; }
+    .error-state h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .error-state p { color: #565959; margin-bottom: 20px; }
+    .error-state .track-btn { display: inline-block; background: linear-gradient(to bottom, #ffd814, #f7ca00); border: 1px solid #f2c200; border-radius: 8px; padding: 12px 24px; font-size: 14px; font-weight: 700; cursor: pointer; color: #0f1111; }
+    .error-state .track-btn:hover { background: linear-gradient(to bottom, #f7ca00, #e6b800); }
+  </style>
+</head>
+<body>
+  <header class="amz-header">
+    <div class="amz-header-top">
+      <a href="index.html" class="logo">
+        <div>
+          <span class="logo-text">MR shop</span>
+          <span class="logo-sub">Bangladesh</span>
+        </div>
+      </a>
+      <div class="amz-deliver-to"><span class="label">Deliver to</span><span class="location"><i class="fas fa-map-marker-alt"></i> Bangladesh</span></div>
+      <div class="amz-search-bar">
+        <select class="amz-search-category"><option>All</option><option>Food & Natural</option><option>Sweets & Dairy</option><option>Handicrafts</option><option>Clothing</option><option>Books</option><option>Antique</option></select>
+        <input type="text" class="amz-search-input" id="searchInput" placeholder="Search MR Shop">
+        <button class="amz-search-btn" onclick="doSearch()"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="amz-header-right">
+        <a href="signin.html" class="amz-header-link"><span class="line1">Hello, Sign in</span><span class="line2">Account & Lists <i class="fas fa-caret-down"></i></span></a>
+        <a href="userprofile.html" class="amz-header-link"><span class="line1">Returns</span><span class="line2">& Orders</span></a>
+        <a href="wishlist.html" class="amz-header-link"><span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span><span class="line2">Wishlist</span></a>
+        <a href="cart.html" class="amz-cart"><span class="amz-cart-icon"><i class="fas fa-shopping-cart"></i><span class="amz-cart-count" id="cartCount">0</span></span><span class="amz-cart-text">Cart</span></a>
+      </div>
+    </div>
+    <nav class="amz-nav-bar">
+      <a href="index.html" class="amz-nav-item"><i class="fas fa-bars"></i> All</a>
+      <a href="food&natural.html" class="amz-nav-item">Food & Natural</a>
+      <a href="sweets&dairy.html" class="amz-nav-item">Sweets & Dairy</a>
+      <a href="handricrafts.html" class="amz-nav-item">Handicrafts</a>
+      <a href="clothing.html" class="amz-nav-item">Clothing</a>
+      <a href="book.html" class="amz-nav-item">Books</a>
+      <a href="antique.html" class="amz-nav-item">Antique</a>
+      <div class="amz-nav-divider"></div>
+      <a href="becomeseller.html" class="amz-nav-item">Sell</a>
+      <a href="chat.html" class="amz-nav-item"><i class="fas fa-headset"></i> Help</a>
+    </nav>
+  </header>
+
+  <div class="track-page" id="trackPage">
+    <a href="userprofile.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to My Orders</a>
+
+    <!-- Loading -->
+    <div class="loading-state" id="loadingState">
+      <i class="fas fa-spinner"></i>
+      <p>Loading tracking information...</p>
+    </div>
+
+    <!-- Error -->
+    <div class="error-state" id="errorState" style="display:none">
+      <i class="fas fa-exclamation-circle"></i>
+      <h3 id="errorTitle">Order not found</h3>
+      <p id="errorMsg">We couldn't find an order with that ID. Please check and try again.</p>
+      <a href="userprofile.html" class="track-btn">View My Orders</a>
+    </div>
+
+    <!-- Content -->
+    <div id="trackContent" style="display:none">
+
+      <!-- Progress Bar -->
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-header">
+          <div>
+            <h2>Order Tracking</h2>
+            <span class="progress-order-num" id="orderNum"></span>
+          </div>
+          <span class="progress-status-badge" id="statusBadge"></span>
+        </div>
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+        </div>
+        <div class="progress-bar-steps">
+          <span class="progress-step-label" data-step="0">Confirmed</span>
+          <span class="progress-step-label" data-step="1">Processing</span>
+          <span class="progress-step-label" data-step="2">Shipped</span>
+          <span class="progress-step-label" data-step="3">Out for Delivery</span>
+          <span class="progress-step-label" data-step="4">Delivered</span>
+        </div>
+      </div>
+
+      <!-- Estimated Delivery -->
+      <div class="delivery-eta" id="deliveryEta" style="display:none">
+        <div class="delivery-eta-icon"><i class="fas fa-box"></i></div>
+        <div class="delivery-eta-text">
+          <h4>Estimated Delivery</h4>
+          <p id="etaDate"></p>
+        </div>
+      </div>
+
+      <!-- Timeline -->
+      <div class="timeline-card">
+        <h3><i class="fas fa-history"></i> Tracking Timeline</h3>
+        <div class="timeline" id="timeline"></div>
+      </div>
+
+      <!-- Order Details -->
+      <div class="details-card">
+        <h3><i class="fas fa-info-circle"></i> Order Details</h3>
+        <div class="details-grid">
+          <div><span class="label">Order Number:</span></div>
+          <div class="value" id="detailOrderNum">—</div>
+          <div><span class="label">Order Date:</span></div>
+          <div class="value" id="detailOrderDate">—</div>
+          <div><span class="label">Carrier:</span></div>
+          <div class="value" id="detailCarrier">—</div>
+          <div><span class="label">Tracking Number:</span></div>
+          <div class="value" id="detailTrackingNum">—</div>
+          <div><span class="label">Delivery Method:</span></div>
+          <div class="value" id="detailDeliveryMethod">—</div>
+          <div><span class="label">Payment:</span></div>
+          <div class="value" id="detailPayment">—</div>
+        </div>
+        <div style="margin-top:18px;text-align:center">
+          <a id="orderDetailsLink" href="#" style="color:var(--amazon-link);font-size:14px">View Full Order Details <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="amz-footer">
+    <div class="amz-back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to Top</div>
+    <div class="amz-footer-grid">
+      <div class="amz-footer-col">
+        <h4>Get to Know Us</h4>
+        <a href="workfor.html">Careers</a>
+        <a href="work-for-people.html">About Us</a>
+        <a href="seller.html">Sell on MR Shop</a>
+      </div>
+      <div class="amz-footer-col">
+        <h4>Help & Support</h4>
+        <a href="chat.html">Customer Service</a>
+        <a href="faq.html">FAQ</a>
+      </div>
+      <div class="amz-footer-col">
+        <h4>Payment & Delivery</h4>
+        <a href="checkout.html">Cash on Delivery</a>
+        <a href="order-tracking.html">Track Your Order</a>
+      </div>
+      <div class="amz-footer-col">
+        <h4>Legal</h4>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+      </div>
+    </div>
+    <div class="amz-footer-divider"></div>
+    <div class="amz-footer-bottom">
+      <div class="amz-footer-logo">MR shop</div>
+      <div class="amz-footer-copyright">&copy; 2026 MR Shop Bangladesh. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/auth-shared.js"></script>
+  <script>
+    const orderIds = ['order_placed','confirmed','processing','shipped','out_for_delivery','delivered','cancelled'];
+    const STATUS_PROGRESS = {
+      pending: 0,
+      order_placed: 0,
+      confirmed: 10,
+      processing: 30,
+      shipped: 55,
+      out_for_delivery: 80,
+      delivered: 100,
+      cancelled: 0
+    };
+    const STATUS_STEP_INDEX = {
+      order_placed: 0, confirmed: 0, processing: 1, shipped: 2, out_for_delivery: 3, delivered: 4
+    };
+    const STATUS_LABEL = {
+      pending: 'Pending', order_placed: 'Order Confirmed', confirmed: 'Confirmed',
+      processing: 'Processing', shipped: 'Shipped', out_for_delivery: 'Out for Delivery',
+      delivered: 'Delivered', cancelled: 'Cancelled'
+    };
+
+    function getOrderId() {
+      return new URLSearchParams(window.location.search).get('id');
+    }
+
+    function showError(title, msg) {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('errorState').style.display = 'block';
+      document.getElementById('errorTitle').textContent = title || 'Order not found';
+      document.getElementById('errorMsg').textContent = msg || "We couldn't find an order with that ID.";
+    }
+
+    function showContent() {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('trackContent').style.display = 'block';
+    }
+
+    function formatDate(d) {
+      if (!d) return '—';
+      const dt = new Date(d);
+      if (isNaN(dt)) return d;
+      return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function formatDateTime(d) {
+      if (!d) return '';
+      const dt = new Date(d);
+      if (isNaN(dt)) return d;
+      return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' — ' +
+             dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    }
+
+    function renderProgress(status) {
+      const pct = STATUS_PROGRESS[status] ?? 0;
+      const fill = document.getElementById('progressFill');
+      fill.style.width = pct + '%';
+      if (status === 'cancelled') {
+        fill.classList.add('error');
+        fill.style.width = '100%';
+      }
+
+      const badge = document.getElementById('statusBadge');
+      badge.textContent = STATUS_LABEL[status] || status;
+      badge.className = 'progress-status-badge ' + status;
+
+      const stepIdx = STATUS_STEP_INDEX[status] ?? -1;
+      document.querySelectorAll('.progress-step-label').forEach(el => {
+        const s = parseInt(el.dataset.step);
+        el.classList.remove('active', 'completed');
+        if (s < stepIdx) el.classList.add('completed');
+        else if (s === stepIdx && status !== 'cancelled') el.classList.add('active');
+      });
+    }
+
+    function renderTimeline(events) {
+      const el = document.getElementById('timeline');
+      if (!events || events.length === 0) {
+        el.innerHTML = '<p style="color:#999;font-size:14px">No tracking events available.</p>';
+        return;
+      }
+
+      const sorted = [...events].sort((a, b) => new Date(b.timestamp || b.date) - new Date(a.timestamp || a.date));
+      const latestStatus = sorted[0]?.status;
+
+      el.innerHTML = sorted.map((evt, i) => {
+        const isCancelled = (evt.status === 'cancelled');
+        let cls = 'timeline-item';
+        if (i === 0 && !isCancelled) cls += ' active';
+        else if (i > 0) cls += ' completed';
+        if (isCancelled) cls += ' cancelled';
+
+        return `
+          <div class="${cls}">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h4>${evt.title || evt.status || 'Update'}</h4>
+              <p>${evt.description || evt.note || ''}</p>
+              <div class="time">${formatDateTime(evt.timestamp || evt.date)}</div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    async function loadTracking() {
+      const orderId = getOrderId();
+      if (!orderId) {
+        showError('No Order ID', 'Please provide an order ID in the URL using ?id=YOUR_ORDER_ID');
+        return;
+      }
+
+      document.getElementById('orderNum').textContent = 'Order #' + orderId;
+
+      try {
+        const res = await MR_API.get('/orders/' + encodeURIComponent(orderId) + '/track');
+
+        if (!res) {
+          showError('Server Error', 'Could not connect to the server. Please try again later.');
+          return;
+        }
+
+        if (!res.ok) {
+          showError('Order Not Found', res.data?.message || 'No tracking information available for this order.');
+          return;
+        }
+
+        const data = res.data;
+        showContent();
+
+        // Order details
+        document.getElementById('detailOrderNum').textContent = data.orderNumber || orderId;
+        document.getElementById('detailOrderDate').textContent = formatDate(data.orderDate || data.createdAt);
+        document.getElementById('detailCarrier').textContent = data.carrier || data.shippingMethod || '—';
+        document.getElementById('detailTrackingNum').textContent = data.trackingNumber || '—';
+        document.getElementById('detailDeliveryMethod').textContent = data.deliveryMethod || data.shippingMethod || 'Standard Delivery';
+        document.getElementById('detailPayment').textContent = data.paymentMethod || data.payment || '—';
+
+        // Order details link
+        const detailsLink = document.getElementById('orderDetailsLink');
+        detailsLink.href = 'userprofile.html?order=' + orderId;
+
+        // Status & progress
+        const status = data.status || data.currentStatus || 'pending';
+        renderProgress(status);
+
+        // Estimated delivery
+        if (data.estimatedDelivery || data.eta) {
+          document.getElementById('deliveryEta').style.display = 'flex';
+          document.getElementById('etaDate').textContent = formatDate(data.estimatedDelivery || data.eta);
+        }
+
+        // Timeline events
+        const events = data.timeline || data.events || data.history || [];
+        renderTimeline(events);
+
+      } catch (err) {
+        console.error('Tracking error:', err);
+        showError('Something went wrong', 'An unexpected error occurred. Please try again later.');
+      }
+    }
+
+    function doSearch() {
+      const q = document.getElementById('searchInput').value.trim();
+      if (q) { sessionStorage.setItem('mr_search_query', q); window.location.href = 'search-results.html'; }
+    }
+    document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+
+    loadTracking();
+  </script>
+</body>
+</html>

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xkbf74mr8r");
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View and manage your orders at MR Shop. Track shipments, cancel orders, and reorder your favorites.">
+  <title>My Orders — MR Shop</title>
+  <script src="assets/js/loader.js"></script>
+  <link rel="stylesheet" href="assets/css/amazon-style.css">
+  <style>
+    .orders-page{max-width:1200px;margin:0 auto;padding:20px}
+    .orders-header{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-bottom:1px solid #ddd;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+    .orders-header h1{font-size:28px;font-weight:700}
+    .orders-search{display:flex;gap:8px}
+    .orders-search input{padding:10px 16px;border:1px solid #d5d9d9;border-radius:8px;font-size:14px;width:260px}
+    .orders-search input:focus{border-color:var(--amazon-orange);outline:none;box-shadow:0 0 0 3px rgba(255,153,0,0.1)}
+    .orders-search button{padding:10px 20px;background:linear-gradient(to bottom,#ffd814,#f7ca00);border:1px solid #f2c200;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;color:#0f1111}
+    .orders-search button:hover{background:linear-gradient(to bottom,#f7ca00,#e6b800)}
+    .orders-filter-tabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+    .filter-tab{padding:8px 18px;border:1px solid #d5d9d9;border-radius:20px;background:#f0f2f2;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;color:#333}
+    .filter-tab:hover{background:#e3e6e6}
+    .filter-tab.active{background:linear-gradient(to bottom,#ffd814,#f7ca00);border-color:#f2c200;color:#0f1111}
+    .filter-tab .count{background:rgba(0,0,0,0.08);padding:2px 8px;border-radius:10px;margin-left:4px;font-size:11px}
+    .order-card{background:var(--amazon-white);border:1px solid var(--amazon-border);border-radius:12px;margin-bottom:16px;overflow:hidden;transition:box-shadow 0.2s}
+    .order-card:hover{box-shadow:0 4px 12px rgba(0,0,0,0.08)}
+    .order-card-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:#f7f8f8;border-bottom:1px solid #eee;flex-wrap:wrap;gap:8px}
+    .order-number{font-size:16px;font-weight:700;color:var(--amazon-orange);cursor:pointer}
+    .order-number:hover{text-decoration:underline}
+    .order-date{font-size:13px;color:#565959}
+    .order-status-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:600;text-transform:capitalize}
+    .status-pending{background:#fff3e0;color:#e67700}
+    .status-confirmed{background:#e3f2fd;color:#1565c0}
+    .status-processing{background:#e3f2fd;color:#1565c0}
+    .status-packed{background:#e3f2fd;color:#1565c0}
+    .status-shipped{background:#e3f2fd;color:#1565c0}
+    .status-delivered{background:#e8f5e9;color:#007600}
+    .status-cancelled{background:#fce4ec;color:#cc0c39}
+    .status-returned{background:#fce4ec;color:#cc0c39}
+    .status-refunded{background:#fff3e0;color:#e67700}
+    .order-card-body{padding:20px}
+    .order-items-preview{display:flex;gap:12px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px}
+    .order-item-thumb{width:70px;height:70px;object-fit:contain;background:#f7f8f8;border-radius:8px;padding:4px;flex-shrink:0;border:1px solid #eee}
+    .order-item-more{width:70px;height:70px;display:flex;align-items:center;justify-content:center;background:#f0f2f2;border-radius:8px;font-size:13px;font-weight:600;color:#555;flex-shrink:0}
+    .order-card-footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    .order-total{font-size:18px;font-weight:700}
+    .order-total-label{font-size:13px;color:#565959;margin-right:6px}
+    .order-total .currency{font-size:14px;color:#555;font-weight:500}
+    .order-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .order-btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;border:1px solid transparent}
+    .order-btn-details{background:#f0f2f2;border-color:#d5d9d9;color:#0f1111}
+    .order-btn-details:hover{background:#e3e6e6}
+    .order-btn-track{background:#e3f2fd;border-color:#90caf9;color:#1565c0}
+    .order-btn-track:hover{background:#bbdefb}
+    .order-btn-reorder{background:linear-gradient(to bottom,#f7dfa5,#f0c14b);border-color:#a88734;color:#111}
+    .order-btn-reorder:hover{background:linear-gradient(to bottom,#f5d78e,#eeb933)}
+    .order-btn-cancel{background:#fce4ec;border-color:#f48fb1;color:#cc0c39}
+    .order-btn-cancel:hover{background:#f8bbd0}
+    .orders-empty{text-align:center;padding:80px 20px}
+    .orders-empty i{font-size:64px;color:#ddd;margin-bottom:16px}
+    .orders-empty h2{font-size:24px;margin-bottom:10px;color:#333}
+    .orders-empty p{color:#565959;font-size:16px;margin-bottom:24px}
+    .orders-empty .btn-continue{display:inline-block;background:linear-gradient(to bottom,#ffd814,#f7ca00);border:1px solid #f2c200;color:#0f1111;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;text-decoration:none}
+    .orders-empty .btn-continue:hover{background:linear-gradient(to bottom,#f7ca00,#e6b800)}
+    .pagination{display:flex;justify-content:center;align-items:center;gap:8px;margin-top:30px;flex-wrap:wrap}
+    .pagination-btn{padding:8px 14px;border:1px solid #d5d9d9;border-radius:8px;background:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;color:#333}
+    .pagination-btn:hover:not(:disabled){background:#f0f2f2;border-color:#bbb}
+    .pagination-btn.active{background:linear-gradient(to bottom,#ffd814,#f7ca00);border-color:#f2c200;color:#0f1111}
+    .pagination-btn:disabled{opacity:0.4;cursor:not-allowed}
+    .pagination-info{font-size:13px;color:#565959}
+    .orders-loading{text-align:center;padding:60px 20px}
+    .orders-loading .spinner{width:40px;height:40px;border:4px solid #e3e6e6;border-top:4px solid var(--amazon-orange);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px}
+    @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+    .cancel-modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:10000;display:none;align-items:center;justify-content:center}
+    .cancel-modal-overlay.show{display:flex}
+    .cancel-modal{background:#fff;border-radius:12px;padding:28px;max-width:440px;width:90%;box-shadow:0 8px 30px rgba(0,0,0,0.2)}
+    .cancel-modal h3{font-size:18px;margin-bottom:12px;color:#0f1111}
+    .cancel-modal p{font-size:14px;color:#565959;margin-bottom:20px;line-height:1.5}
+    .cancel-modal-actions{display:flex;gap:10px;justify-content:flex-end}
+    .cancel-modal-actions button{padding:10px 22px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid #d5d9d9}
+    .cancel-modal-actions .btn-confirm-cancel{background:#cc0c39;color:#fff;border-color:#a8001f}
+    .cancel-modal-actions .btn-confirm-cancel:hover{background:#a8001f}
+    .cancel-modal-actions .btn-close-modal{background:#f0f2f2;color:#333}
+    .cancel-modal-actions .btn-close-modal:hover{background:#e3e6e6}
+    @media(max-width:768px){
+      .orders-header{flex-direction:column;align-items:flex-start}
+      .orders-search{width:100%}
+      .orders-search input{width:100%;flex:1}
+      .order-card-header{flex-direction:column;align-items:flex-start}
+      .order-card-footer{flex-direction:column;align-items:flex-start}
+      .order-actions{width:100%}
+      .order-btn{flex:1;text-align:center}
+    }
+  </style>
+</head>
+<body>
+  <header class="amz-header">
+    <div class="amz-header-top">
+      <a href="index.html" class="logo">
+        <div>
+          <span class="logo-text">MR shop</span>
+          <span class="logo-sub">Bangladesh</span>
+        </div>
+      </a>
+      <div class="amz-deliver-to">
+        <span class="label">Deliver to</span>
+        <span class="location"><i class="fas fa-map-marker-alt"></i> Bangladesh</span>
+      </div>
+      <div class="amz-search-bar">
+        <input type="text" class="amz-search-input" placeholder="Search MR Shop" id="searchInput">
+        <button class="amz-search-btn" onclick="doSearch()"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="amz-header-right">
+        <a href="signin.html" class="amz-header-link" id="authLink"><span class="line1">Hello, Sign in</span><span class="line2">Account & Lists</span></a>
+        <a href="wishlist.html" class="amz-header-link"><span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span><span class="line2">Wishlist</span></a>
+        <a href="cart.html" class="amz-cart"><span class="amz-cart-icon"><i class="fas fa-shopping-cart"></i><span class="amz-cart-count" id="cartCount">0</span></span><span class="amz-cart-text">Cart</span></a>
+      </div>
+    </div>
+    <nav class="amz-nav-bar">
+      <a href="index.html" class="amz-nav-item"><i class="fas fa-bars"></i> All</a>
+      <a href="food&natural.html" class="amz-nav-item">Food & Natural</a>
+      <a href="sweets&dairy.html" class="amz-nav-item">Sweets & Dairy</a>
+      <a href="handricrafts.html" class="amz-nav-item">Handicrafts</a>
+      <a href="clothing.html" class="amz-nav-item">Clothing</a>
+      <a href="book.html" class="amz-nav-item">Books</a>
+      <a href="antique.html" class="amz-nav-item">Antique</a>
+      <div class="amz-nav-divider"></div>
+      <a href="becomeseller.html" class="amz-nav-item">Sell</a>
+      <a href="chat.html" class="amz-nav-item"><i class="fas fa-headset"></i> Help</a>
+    </nav>
+  </header>
+
+  <div class="orders-page">
+    <div class="orders-header">
+      <h1><i class="fas fa-box"></i> My Orders</h1>
+      <div class="orders-search">
+        <input type="text" id="orderSearch" placeholder="Search by order number..." onkeydown="if(event.key==='Enter')searchOrders()">
+        <button onclick="searchOrders()"><i class="fas fa-search"></i> Search</button>
+      </div>
+    </div>
+
+    <div class="orders-filter-tabs" id="filterTabs">
+      <button class="filter-tab active" data-status="all" onclick="filterOrders('all',this)">All <span class="count" id="countAll">0</span></button>
+      <button class="filter-tab" data-status="pending" onclick="filterOrders('pending',this)">Pending <span class="count" id="countPending">0</span></button>
+      <button class="filter-tab" data-status="confirmed" onclick="filterOrders('confirmed',this)">Confirmed <span class="count" id="countConfirmed">0</span></button>
+      <button class="filter-tab" data-status="processing" onclick="filterOrders('processing',this)">Processing <span class="count" id="countProcessing">0</span></button>
+      <button class="filter-tab" data-status="shipped" onclick="filterOrders('shipped',this)">Shipped <span class="count" id="countShipped">0</span></button>
+      <button class="filter-tab" data-status="delivered" onclick="filterOrders('delivered',this)">Delivered <span class="count" id="countDelivered">0</span></button>
+      <button class="filter-tab" data-status="cancelled" onclick="filterOrders('cancelled',this)">Cancelled <span class="count" id="countCancelled">0</span></button>
+    </div>
+
+    <div id="ordersContent">
+      <div class="orders-loading">
+        <div class="spinner"></div>
+        <p style="color:#565959">Loading your orders...</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cancel-modal-overlay" id="cancelModal">
+    <div class="cancel-modal">
+      <h3><i class="fas fa-exclamation-triangle" style="color:#cc0c39;margin-right:6px"></i> Cancel Order</h3>
+      <p>Are you sure you want to cancel this order? This action cannot be undone.</p>
+      <div class="cancel-modal-actions">
+        <button class="btn-close-modal" onclick="closeCancelModal()">No, keep it</button>
+        <button class="btn-confirm-cancel" onclick="confirmCancel()">Yes, cancel order</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</div>
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Get to Know Us</h4>
+        <a href="about.html">About MR Shop</a>
+        <a href="workfor.html">Careers</a>
+        <a href="workforpeople.html">Our Story</a>
+        <a href="blog.html">Blog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Make Money with Us</h4>
+        <a href="becomeseller.html">Sell on MR Shop</a>
+        <a href="seller.html">Seller Dashboard</a>
+        <a href="becomeseller.html">Become an Affiliate</a>
+      </div>
+      <div class="footer-col">
+        <h4>Help & Support</h4>
+        <a href="faq.html">FAQ</a>
+        <a href="chat.html">Customer Service</a>
+        <a href="userprofile.html">Your Account</a>
+        <a href="notification.html">Notifications</a>
+      </div>
+      <div class="footer-col">
+        <h4>Payment & Delivery</h4>
+        <a href="cart.html">Shopping Cart</a>
+        <a href="checkout.html">Checkout</a>
+        <a href="payment.html">Payment Methods</a>
+        <a href="order-tracking.html">Track Order</a>
+      </div>
+      <div class="footer-col">
+        <h4>Shop by Category</h4>
+        <a href="food&natural.html">Food & Natural</a>
+        <a href="sweets&dairy.html">Sweets & Dairy</a>
+        <a href="handricrafts.html">Handicrafts</a>
+        <a href="clothing.html">Clothing</a>
+      </div>
+    </div>
+    <div class="footer-quick-links">
+      <a href="index.html">Home</a>
+      <a href="search-results.html">All Products</a>
+      <a href="food&natural.html">Food</a>
+      <a href="sweets&dairy.html">Sweets</a>
+      <a href="handricrafts.html">Handicrafts</a>
+      <a href="clothing.html">Clothing</a>
+      <a href="book.html">Books</a>
+      <a href="antique.html">Antique</a>
+      <a href="blog.html">Blog</a>
+      <a href="compare.html">Compare</a>
+      <a href="about.html">About</a>
+      <a href="faq.html">FAQ</a>
+      <a href="order-tracking.html">Track Order</a>
+      <a href="orders.html">My Orders</a>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <div class="footer-logo">MR shop</div>
+      <div class="footer-copyright">&copy; 2026 MR Shop. All Rights Reserved. | Powered by <strong>MR IT Company</strong></div>
+      <div class="footer-payment">
+        <span>We Accept:</span>
+        <i class="fas fa-money-bill-wave" title="Cash on Delivery"></i>
+        <i class="fas fa-mobile-alt" title="bKash" style="color:#e2136e;"></i>
+        <i class="fas fa-wallet" title="Nagad" style="color:#f6921e;"></i>
+        <i class="fas fa-rocket" title="Rocket" style="color:#8b2393;"></i>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/auth-shared.js"></script>
+  <script>
+    let currentPage = 1;
+    const pageSize = 10;
+    let totalPages = 1;
+    let allOrders = [];
+    let currentFilter = 'all';
+    let searchQuery = '';
+    let cancelOrderId = null;
+
+    const statusColors = {
+      pending: 'status-pending',
+      confirmed: 'status-confirmed',
+      processing: 'status-processing',
+      packed: 'status-packed',
+      shipped: 'status-shipped',
+      delivered: 'status-delivered',
+      cancelled: 'status-cancelled',
+      returned: 'status-returned',
+      refunded: 'status-refunded'
+    };
+
+    async function loadOrders(page = 1) {
+      if (!MR_API.isLoggedIn()) {
+        document.getElementById('ordersContent').innerHTML = `
+          <div class="orders-empty">
+            <i class="fas fa-lock"></i>
+            <h2>Sign in to view your orders</h2>
+            <p>You need to be logged in to access your order history.</p>
+            <a href="signin.html" class="btn-continue">Sign In</a>
+          </div>`;
+        return;
+      }
+
+      document.getElementById('ordersContent').innerHTML = `
+        <div class="orders-loading">
+          <div class="spinner"></div>
+          <p style="color:#565959">Loading your orders...</p>
+        </div>`;
+
+      try {
+        const result = await MR_API.get(`/orders?page=${page}&limit=${pageSize}`);
+        if (result && result.ok) {
+          const data = result.data;
+          allOrders = data.orders || data.items || data.data || data || [];
+          totalPages = data.totalPages || data.pages || Math.ceil((data.total || data.totalCount || allOrders.length) / pageSize) || 1;
+          currentPage = data.currentPage || data.page || page;
+          updateCounts();
+          renderOrders();
+        } else if (result && result.status === 401) {
+          MR_Auth.logout();
+        } else {
+          showEmpty('Failed to load orders. Please try again.', 'fas fa-exclamation-circle');
+        }
+      } catch (err) {
+        showEmpty('Unable to connect to server. Please try again later.', 'fas fa-wifi');
+      }
+    }
+
+    function updateCounts() {
+      const counts = { all: 0, pending: 0, confirmed: 0, processing: 0, shipped: 0, delivered: 0, cancelled: 0 };
+      allOrders.forEach(o => {
+        const s = (o.status || '').toLowerCase();
+        counts.all++;
+        if (counts.hasOwnProperty(s)) counts[s]++;
+        else if (s === 'packed') counts.processing++;
+        else if (s === 'returned' || s === 'refunded') counts.cancelled++;
+      });
+      Object.keys(counts).forEach(key => {
+        const el = document.getElementById('count' + key.charAt(0).toUpperCase() + key.slice(1));
+        if (el) el.textContent = counts[key];
+      });
+    }
+
+    function renderOrders() {
+      let filtered = allOrders;
+      if (currentFilter !== 'all') {
+        filtered = allOrders.filter(o => {
+          const s = (o.status || '').toLowerCase();
+          if (currentFilter === 'cancelled') return s === 'cancelled' || s === 'returned' || s === 'refunded';
+          if (currentFilter === 'processing') return s === 'processing' || s === 'packed' || s === 'confirmed';
+          return s === currentFilter;
+        });
+      }
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        filtered = filtered.filter(o =>
+          (o.orderNumber || o.id || '').toString().toLowerCase().includes(q)
+        );
+      }
+
+      if (filtered.length === 0) {
+        const msg = searchQuery
+          ? 'No orders found matching your search.'
+          : (currentFilter === 'all' ? 'You haven\'t placed any orders yet.' : 'No orders with this status.');
+        const icon = searchQuery ? 'fas fa-search' : 'fas fa-box-open';
+        showEmpty(msg, icon, !searchQuery);
+        return;
+      }
+
+      const html = filtered.map(order => {
+        const items = order.items || order.orderItems || [];
+        const displayItems = items.slice(0, 5);
+        const moreCount = items.length - 5;
+        const status = (order.status || 'pending').toLowerCase();
+        const statusClass = statusColors[status] || 'status-pending';
+        const canCancel = status === 'pending' || status === 'confirmed';
+        const date = new Date(order.createdAt || order.createdDate || order.orderDate).toLocaleDateString('en-US', {
+          year: 'numeric', month: 'short', day: 'numeric'
+        });
+        const orderNum = order.orderNumber || `#${order.id}`;
+        const orderId = order.id || order.orderId;
+        const total = order.grandTotal || order.totalAmount || order.total || 0;
+
+        return `
+          <div class="order-card">
+            <div class="order-card-header">
+              <div>
+                <a class="order-number" href="order-details.html?id=${orderId}">Order ${orderNum}</a>
+                <div class="order-date"><i class="far fa-calendar-alt"></i> ${date}</div>
+              </div>
+              <span class="order-status-badge ${statusClass}">${status}</span>
+            </div>
+            <div class="order-card-body">
+              <div class="order-items-preview">
+                ${displayItems.map(item => `
+                  <img class="order-item-thumb" src="${item.image || item.productImage || 'https://via.placeholder.com/70x70?text=Item'}"
+                    alt="${item.productName || item.name || 'Item'}"
+                    onerror="this.src='https://via.placeholder.com/70x70?text=No+Image'" title="${item.productName || item.name || ''}">
+                `).join('')}
+                ${moreCount > 0 ? `<div class="order-item-more">+${moreCount} more</div>` : ''}
+              </div>
+              <div class="order-card-footer">
+                <div class="order-total">
+                  <span class="order-total-label">Grand Total:</span>
+                  <span class="currency">&#2547;</span>${Number(total).toLocaleString('en-BD', {minimumFractionDigits: 0})}
+                </div>
+                <div class="order-actions">
+                  <button class="order-btn order-btn-details" onclick="window.location.href='order-details.html?id=${orderId}'">
+                    <i class="fas fa-info-circle"></i> View Details
+                  </button>
+                  <button class="order-btn order-btn-track" onclick="window.location.href='track-order.html?id=${orderId}'">
+                    <i class="fas fa-truck"></i> Track
+                  </button>
+                  <button class="order-btn order-btn-reorder" onclick="reorder(${orderId})">
+                    <i class="fas fa-redo"></i> Reorder
+                  </button>
+                  ${canCancel ? `<button class="order-btn order-btn-cancel" onclick="openCancelModal('${orderId}')">
+                    <i class="fas fa-times-circle"></i> Cancel
+                  </button>` : ''}
+                </div>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+
+      const paginationHtml = totalPages > 1 ? `
+        <div class="pagination">
+          <button class="pagination-btn" onclick="changePage(${currentPage - 1})" ${currentPage <= 1 ? 'disabled' : ''}>
+            <i class="fas fa-chevron-left"></i> Prev
+          </button>
+          ${generatePageButtons()}
+          <button class="pagination-btn" onclick="changePage(${currentPage + 1})" ${currentPage >= totalPages ? 'disabled' : ''}>
+            Next <i class="fas fa-chevron-right"></i>
+          </button>
+          <span class="pagination-info">Page ${currentPage} of ${totalPages}</span>
+        </div>` : '';
+
+      document.getElementById('ordersContent').innerHTML = html + paginationHtml;
+    }
+
+    function generatePageButtons() {
+      let buttons = '';
+      let start = Math.max(1, currentPage - 2);
+      let end = Math.min(totalPages, currentPage + 2);
+      if (start > 1) buttons += `<button class="pagination-btn" onclick="changePage(1)">1</button>`;
+      if (start > 2) buttons += `<span class="pagination-info">...</span>`;
+      for (let i = start; i <= end; i++) {
+        buttons += `<button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+      }
+      if (end < totalPages - 1) buttons += `<span class="pagination-info">...</span>`;
+      if (end < totalPages) buttons += `<button class="pagination-btn" onclick="changePage(${totalPages})">${totalPages}</button>`;
+      return buttons;
+    }
+
+    function changePage(page) {
+      if (page < 1 || page > totalPages) return;
+      currentPage = page;
+      loadOrders(page);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function filterOrders(status, btn) {
+      currentFilter = status;
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      renderOrders();
+    }
+
+    function searchOrders() {
+      searchQuery = document.getElementById('orderSearch').value.trim();
+      renderOrders();
+    }
+
+    function showEmpty(msg, icon, showContinue) {
+      document.getElementById('ordersContent').innerHTML = `
+        <div class="orders-empty">
+          <i class="${icon || 'fas fa-box-open'}"></i>
+          <h2>${searchQuery ? 'No Results' : 'No Orders Yet'}</h2>
+          <p>${msg}</p>
+          ${showContinue !== false ? '<a href="index.html" class="btn-continue">Continue Shopping</a>' : ''}
+        </div>`;
+    }
+
+    function openCancelModal(orderId) {
+      cancelOrderId = orderId;
+      document.getElementById('cancelModal').classList.add('show');
+    }
+
+    function closeCancelModal() {
+      cancelOrderId = null;
+      document.getElementById('cancelModal').classList.remove('show');
+    }
+
+    async function confirmCancel() {
+      if (!cancelOrderId) return;
+      const btn = document.querySelector('.btn-confirm-cancel');
+      btn.textContent = 'Cancelling...';
+      btn.disabled = true;
+      try {
+        const result = await MR_API.post(`/orders/${cancelOrderId}/cancel`);
+        if (result && result.ok) {
+          MR_Cart.showToast('Order cancelled successfully.', 'success');
+          closeCancelModal();
+          loadOrders(currentPage);
+        } else {
+          MR_Cart.showToast(result?.data?.message || 'Failed to cancel order.', 'error');
+        }
+      } catch (err) {
+        MR_Cart.showToast('Unable to connect to server.', 'error');
+      }
+      btn.textContent = 'Yes, cancel order';
+      btn.disabled = false;
+    }
+
+    async function reorder(orderId) {
+      if (!MR_API.isLoggedIn()) {
+        window.location.href = 'signin.html';
+        return;
+      }
+      MR_Cart.showToast('Adding items to cart...', 'info');
+      try {
+        const result = await MR_API.get(`/orders/${orderId}`);
+        if (result && result.ok) {
+          const order = result.data;
+          const items = order.items || order.orderItems || [];
+          let added = 0;
+          for (const item of items) {
+            const pid = item.productId || item.id;
+            if (pid) {
+              await MR_Cart.addItem(pid, item.quantity || 1);
+              added++;
+            }
+          }
+          if (added > 0) {
+            MR_Cart.showToast(`Added ${added} item(s) to cart!`, 'success');
+            setTimeout(() => { window.location.href = 'cart.html'; }, 1200);
+          } else {
+            MR_Cart.showToast('Could not add items to cart.', 'error');
+          }
+        } else {
+          MR_Cart.showToast('Failed to fetch order details.', 'error');
+        }
+      } catch (err) {
+        MR_Cart.showToast('Unable to connect to server.', 'error');
+      }
+    }
+
+    function doSearch() {
+      const q = document.getElementById('searchInput').value.trim();
+      if (q) {
+        sessionStorage.setItem('mr_search_query', q);
+        window.location.href = 'search-results.html';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      MR_Auth.updateAuthUI();
+      MR_Cart.updateCartCount();
+      loadOrders();
+    });
+  </script>
+</body>
+</html>

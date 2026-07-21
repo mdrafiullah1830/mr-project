@@ -226,9 +226,15 @@ public class CartController : ControllerBase
 
             if (existing != null)
             {
+                // Validate stock before incrementing
+                var product = await _mongoDb.Products.Find(p => p.Id == gi.ProductId && p.Status == "published").FirstOrDefaultAsync();
+                var newQuantity = existing.Quantity + gi.Quantity;
+                if (product != null && newQuantity > product.StockQuantity)
+                    newQuantity = product.StockQuantity;
+
                 await _mongoDb.CartItems.UpdateOneAsync(
                     c => c.Id == existing.Id,
-                    Builders<CartItem>.Update.Inc(c => c.Quantity, gi.Quantity)
+                    Builders<CartItem>.Update.Set(c => c.Quantity, newQuantity)
                 );
             }
             else

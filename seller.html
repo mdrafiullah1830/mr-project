@@ -249,17 +249,26 @@
       <section id="orders" style="display:none">
         <div class="seller-section">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-            <h3 style="margin-bottom:0;padding-bottom:0;border-bottom:none">Recent Orders</h3>
-            <button class="seller-btn seller-btn-secondary">Export Orders</button>
+            <h3 style="margin-bottom:0;padding-bottom:0;border-bottom:none">Orders</h3>
+            <div style="display:flex;gap:8px">
+              <select id="orderStatusFilter" onchange="loadSellerOrders()" style="padding:8px;border:1px solid var(--amazon-border);border-radius:6px;font-size:13px">
+                <option value="">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="processing">Processing</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
           </div>
           <table class="seller-table">
-            <thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
-            <tbody>
-              <tr><td>#5001</td><td>Rashed</td><td>৳1,200</td><td>Jul 4, 2026</td><td><span class="badge badge-warning">Pending</span></td><td><button class="seller-btn seller-btn-secondary">View</button></td></tr>
-              <tr><td>#5000</td><td>Tania</td><td>৳520</td><td>Jul 3, 2026</td><td><span class="badge badge-info">Shipped</span></td><td><button class="seller-btn seller-btn-secondary">View</button></td></tr>
-              <tr><td>#4999</td><td>Sam</td><td>৳2,340</td><td>Jul 2, 2026</td><td><span class="badge badge-success">Delivered</span></td><td><button class="seller-btn seller-btn-secondary">View</button></td></tr>
+            <thead><tr><th>Order #</th><th>Customer</th><th>Total</th><th>Date</th><th>Status</th><th>Payment</th><th>Actions</th></tr></thead>
+            <tbody id="sellerOrdersBody">
+              <tr><td colspan="7" style="text-align:center;color:#565959;padding:20px">Loading orders...</td></tr>
             </tbody>
           </table>
+          <div id="sellerOrdersPagination" style="display:flex;justify-content:center;gap:8px;margin-top:16px"></div>
         </div>
       </section>
 
@@ -635,26 +644,59 @@
         }
       }
 
-      // Load seller orders from dashboard API
-      async function loadSellerOrders() {
-        const orders = await sellerApiCall('/seller/orders');
-        if (orders && Array.isArray(orders)) {
-          const tbody = document.querySelector('#orders table tbody');
-          if (tbody && orders.length > 0) {
-            tbody.innerHTML = orders.map(o => `
-              <tr>
-                <td>#${o.id ? o.id.slice(-6).toUpperCase() : 'N/A'}</td>
-                <td>${escapeHtml(o.customerName || 'Customer')}</td>
-                <td>৳${(o.totalAmount || 0).toLocaleString()}</td>
-                <td>${new Date(o.createdAt).toLocaleDateString()}</td>
-                <td><span class="badge ${o.status === 'delivered' ? 'badge-success' : o.status === 'shipped' ? 'badge-info' : o.status === 'cancelled' ? 'badge-danger' : 'badge-warning'}">${o.status}</span></td>
-                <td><button class="seller-btn seller-btn-secondary">View</button></td>
-              </tr>
-            `).join('');
-          } else if (tbody) {
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#565959;padding:20px">No orders yet.</td></tr>';
+      // Load seller orders from API
+      let sellerOrdersPage = 1;
+      async function loadSellerOrders(page = 1) {
+        sellerOrdersPage = page;
+        const status = document.getElementById('orderStatusFilter')?.value || '';
+        const params = new URLSearchParams({ page, limit: 15 });
+        if (status) params.set('status', status);
+        const data = await sellerApiCall(`/orders/seller?${params}`);
+        const tbody = document.getElementById('sellerOrdersBody');
+        if (!tbody) return;
+        if (data && data.orders && data.orders.length > 0) {
+          const statusBadge = (s) => {
+            const colors = { pending:'badge-warning', confirmed:'badge-info', processing:'badge-info', packed:'badge-info', shipped:'badge-info', out_for_delivery:'badge-info', delivered:'badge-success', cancelled:'badge-danger', returned:'badge-danger', refunded:'badge-warning' };
+            return `<span class="badge ${colors[s] || 'badge-warning'}">${s}</span>`;
+          };
+          const payBadge = (s) => s === 'paid' ? '<span class="badge badge-success">Paid</span>' : s === 'refunded' ? '<span class="badge badge-warning">Refunded</span>' : '<span class="badge badge-warning">Pending</span>';
+          tbody.innerHTML = data.orders.map(o => `
+            <tr>
+              <td style="font-weight:600">${o.orderNumber}</td>
+              <td>${escapeHtml(o.customerName)}<br><span style="font-size:11px;color:#767676">${o.customerPhone || ''}</span></td>
+              <td style="font-weight:600">৳${o.grandTotal.toLocaleString()}</td>
+              <td>${new Date(o.createdAt).toLocaleDateString()}</td>
+              <td>${statusBadge(o.status)}</td>
+              <td>${payBadge(o.paymentStatus)}</td>
+              <td>
+                <a href="order-details.html?id=${o.id}" class="seller-btn seller-btn-secondary" style="text-decoration:none;display:inline-block;margin-bottom:4px">View</a>
+                ${['pending','confirmed'].includes(o.status) ? `<button class="seller-btn seller-btn-primary" onclick="updateSellerOrderStatus('${o.id}','processing')" style="font-size:11px">Accept</button>` : ''}
+                ${o.status === 'processing' ? `<button class="seller-btn seller-btn-primary" onclick="updateSellerOrderStatus('${o.id}','packed')" style="font-size:11px">Pack</button>` : ''}
+                ${o.status === 'packed' ? `<button class="seller-btn seller-btn-primary" onclick="updateSellerOrderStatus('${o.id}','shipped')" style="font-size:11px">Ship</button>` : ''}
+              </td>
+            </tr>
+          `).join('');
+          // Pagination
+          const pag = document.getElementById('sellerOrdersPagination');
+          if (pag && data.totalPages > 1) {
+            let html = '';
+            if (sellerOrdersPage > 1) html += `<button class="seller-btn seller-btn-secondary" onclick="loadSellerOrders(${sellerOrdersPage-1})">Prev</button>`;
+            for (let i = 1; i <= Math.min(data.totalPages, 5); i++) html += `<button class="seller-btn ${i === sellerOrdersPage ? 'seller-btn-primary' : 'seller-btn-secondary'}" onclick="loadSellerOrders(${i})">${i}</button>`;
+            if (sellerOrdersPage < data.totalPages) html += `<button class="seller-btn seller-btn-secondary" onclick="loadSellerOrders(${sellerOrdersPage+1})">Next</button>`;
+            pag.innerHTML = html;
           }
+        } else {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#565959;padding:20px">No orders found.</td></tr>';
         }
+      }
+
+      async function updateSellerOrderStatus(orderId, status) {
+        const tracking = status === 'shipped' ? prompt('Enter tracking number (optional):') : null;
+        const payload = { status };
+        if (tracking) payload.trackingNumber = tracking;
+        const result = await sellerApiCall(`/orders/${orderId}/status`, 'PUT', payload);
+        if (result) { alert('Order status updated!'); loadSellerOrders(); loadSellerStats(); }
+        else alert('Failed to update order.');
       }
 
       // Load seller profile

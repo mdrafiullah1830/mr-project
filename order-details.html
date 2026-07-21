@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xkbf74mr8r");
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View your MR Shop order details, tracking information, and order timeline.">
+  <title>Order Details - MR Shop</title>
+  <script src="assets/js/loader.js"></script>
+  <link rel="stylesheet" href="assets/css/amazon-style.css">
+  <style>
+    .od-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    .od-breadcrumb { font-size: 13px; color: #565959; margin-bottom: 20px; }
+    .od-breadcrumb a { color: var(--amazon-link); text-decoration: none; }
+    .od-breadcrumb a:hover { text-decoration: underline; color: #c7511f; }
+    .od-breadcrumb span { margin: 0 6px; }
+
+    .od-header { background: var(--amazon-white); border: 1px solid var(--amazon-border); border-radius: 12px; padding: 24px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; }
+    .od-header-left h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    .od-header-meta { display: flex; gap: 20px; font-size: 13px; color: #565959; flex-wrap: wrap; }
+    .od-header-meta span { display: flex; align-items: center; gap: 5px; }
+    .od-status-badge { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; text-transform: capitalize; }
+    .od-status-badge.pending { background: #fff3e0; color: #e67700; }
+    .od-status-badge.confirmed { background: #e3f2fd; color: #1565c0; }
+    .od-status-badge.processing { background: #f3e5f5; color: #7b1fa2; }
+    .od-status-badge.packed { background: #fff8e1; color: #f9a825; }
+    .od-status-badge.shipped { background: #e1f5fe; color: #0277bd; }
+    .od-status-badge.out_for_delivery { background: #e8f5e9; color: #2e7d32; }
+    .od-status-badge.delivered { background: #e6f4e6; color: #007600; }
+    .od-status-badge.cancelled { background: #fce4ec; color: #cc0c39; }
+
+    .od-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .od-action-btn { padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; border: 1px solid #d5d9d9; background: #f0f2f2; color: #0f1111; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
+    .od-action-btn:hover { background: #e3e6e6; }
+    .od-action-btn.primary { background: linear-gradient(to bottom, #ffd814, #f7ca00); border-color: #f2c200; }
+    .od-action-btn.primary:hover { background: linear-gradient(to bottom, #f7ca00, #e6b800); }
+    .od-action-btn.danger { background: #cc0c39; color: #fff; border-color: #a8001f; }
+    .od-action-btn.danger:hover { background: #a8001f; }
+    .od-action-btn.green { background: linear-gradient(to bottom, #ffd814, #f7ca00); border-color: #f2c200; }
+
+    .od-grid { display: grid; grid-template-columns: 1fr 360px; gap: 20px; }
+    .od-card { background: var(--amazon-white); border: 1px solid var(--amazon-border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+    .od-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 8px; }
+    .od-card h3 i { color: var(--amazon-orange); }
+
+    /* Timeline */
+    .od-timeline { position: relative; padding-left: 0; }
+    .od-timeline-step { display: flex; gap: 16px; position: relative; padding-bottom: 28px; }
+    .od-timeline-step:last-child { padding-bottom: 0; }
+    .od-timeline-step:not(:last-child)::after { content: ''; position: absolute; left: 15px; top: 32px; bottom: 0; width: 2px; background: #e3e6e6; }
+    .od-timeline-step.completed:not(:last-child)::after { background: var(--amazon-green); }
+    .od-timeline-step.active:not(:last-child)::after { background: linear-gradient(to bottom, var(--amazon-orange), #e3e6e6); }
+    .od-timeline-dot { width: 32px; height: 32px; border-radius: 50%; background: #e3e6e6; display: flex; align-items: center; justify-content: center; flex-shrink: 0; z-index: 1; transition: all 0.3s; }
+    .od-timeline-step.completed .od-timeline-dot { background: var(--amazon-green); color: #fff; }
+    .od-timeline-step.active .od-timeline-dot { background: var(--amazon-orange); color: #fff; animation: odPulse 1.5s infinite; }
+    .od-timeline-step.pending .od-timeline-dot { color: #999; }
+    @keyframes odPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,153,0,0.4); } 50% { box-shadow: 0 0 0 8px rgba(255,153,0,0); } }
+    .od-timeline-info { flex: 1; min-width: 0; }
+    .od-timeline-label { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .od-timeline-step.pending .od-timeline-label { color: #999; }
+    .od-timeline-desc { font-size: 12px; color: #565959; }
+    .od-timeline-step.pending .od-timeline-desc { color: #bbb; }
+    .od-timeline-time { font-size: 11px; color: #999; margin-top: 3px; }
+
+    /* Items */
+    .od-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid #eee; }
+    .od-item:last-child { border-bottom: none; }
+    .od-item-img { width: 100px; height: 100px; border-radius: 8px; object-fit: contain; background: #f7f7f7; padding: 6px; border: 1px solid #eee; flex-shrink: 0; }
+    .od-item-info { flex: 1; min-width: 0; }
+    .od-item-name { font-size: 14px; font-weight: 600; color: var(--amazon-text); text-decoration: none; line-height: 1.4; display: block; margin-bottom: 4px; }
+    .od-item-name:hover { color: var(--amazon-link); text-decoration: underline; }
+    .od-item-seller { font-size: 12px; color: #565959; margin-bottom: 6px; }
+    .od-item-price { font-size: 16px; font-weight: 700; color: #b12704; }
+    .od-item-qty { font-size: 13px; color: #565959; margin-top: 4px; }
+
+    /* Price Breakdown */
+    .od-price-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; }
+    .od-price-row.discount { color: #007600; }
+    .od-price-row.total { font-size: 18px; font-weight: 700; border-top: 2px solid #ddd; padding-top: 12px; margin-top: 8px; color: #b12704; }
+
+    /* Shipping & Payment */
+    .od-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .od-info-block { background: #f7f8f8; border-radius: 10px; padding: 16px; border: 1px solid #eee; }
+    .od-info-block h4 { font-size: 14px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+    .od-info-block h4 i { color: var(--amazon-orange); font-size: 16px; }
+    .od-info-block p { font-size: 13px; color: #333; line-height: 1.6; margin: 0; }
+    .od-info-block .label { color: #565959; }
+
+    /* Tracking */
+    .od-tracking { background: linear-gradient(135deg, #131921, #1a2332); border-radius: 10px; padding: 20px; color: #fff; margin-top: 16px; }
+    .od-tracking h4 { color: #ff9900; font-size: 14px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+    .od-tracking-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px; }
+    .od-tracking-grid .label { color: #999; }
+    .od-tracking-grid .value { font-weight: 700; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .od-grid { grid-template-columns: 1fr; }
+      .od-header { flex-direction: column; }
+      .od-info-grid { grid-template-columns: 1fr; }
+      .od-tracking-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .od-header-meta { flex-direction: column; gap: 6px; }
+      .od-actions { width: 100%; }
+      .od-action-btn { flex: 1; justify-content: center; }
+      .od-item { flex-direction: column; }
+      .od-item-img { width: 100%; height: 160px; }
+    }
+
+    /* Loading & Error States */
+    .od-loading { text-align: center; padding: 80px 20px; color: #565959; }
+    .od-loading i { font-size: 48px; color: #ddd; margin-bottom: 16px; animation: spin 1s linear infinite; display: block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .od-error { text-align: center; padding: 80px 20px; }
+    .od-error i { font-size: 64px; color: #cc0c39; margin-bottom: 16px; }
+    .od-error h2 { font-size: 22px; margin-bottom: 8px; }
+    .od-error p { color: #565959; margin-bottom: 20px; }
+    .od-error a { color: var(--amazon-link); text-decoration: none; font-weight: 600; }
+    .od-error a:hover { text-decoration: underline; color: #c7511f; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="amz-header">
+    <div class="amz-header-top">
+      <a href="index.html" class="logo">
+        <div>
+          <span class="logo-text">MR shop</span>
+          <span class="logo-sub">Bangladesh</span>
+        </div>
+      </a>
+      <div class="amz-deliver-to"><span class="label">Deliver to</span><span class="location"><i class="fas fa-map-marker-alt"></i> Bangladesh</span></div>
+      <div class="amz-search-bar">
+        <input type="text" class="amz-search-input" placeholder="Search MR Shop" id="searchInput">
+        <button class="amz-search-btn" onclick="doSearch()"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="amz-header-right">
+        <a href="signin.html" class="amz-header-link" id="authLink"><span class="line1">Hello, Sign in</span><span class="line2">Account & Lists</span></a>
+        <a href="wishlist.html" class="amz-header-link"><span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span><span class="line2">Wishlist</span></a>
+        <a href="cart.html" class="amz-cart"><span class="amz-cart-icon"><i class="fas fa-shopping-cart"></i><span class="amz-cart-count" id="cartCount">0</span></span><span class="amz-cart-text">Cart</span></a>
+      </div>
+    </div>
+    <nav class="amz-nav-bar">
+      <a href="index.html" class="amz-nav-item"><i class="fas fa-bars"></i> All</a>
+      <a href="food&natural.html" class="amz-nav-item">Food & Natural</a>
+      <a href="sweets&dairy.html" class="amz-nav-item">Sweets & Dairy</a>
+      <a href="handricrafts.html" class="amz-nav-item">Handicrafts</a>
+      <a href="clothing.html" class="amz-nav-item">Clothing</a>
+      <a href="book.html" class="amz-nav-item">Books</a>
+      <a href="antique.html" class="amz-nav-item">Antique</a>
+      <div class="amz-nav-divider"></div>
+      <a href="becomeseller.html" class="amz-nav-item">Sell</a>
+      <a href="chat.html" class="amz-nav-item"><i class="fas fa-headset"></i> Help</a>
+    </nav>
+  </header>
+
+  <main class="od-container">
+    <!-- Loading -->
+    <div class="od-loading" id="loadingState">
+      <i class="fas fa-spinner"></i>
+      <h2>Loading order details...</h2>
+      <p>Please wait while we fetch your order information.</p>
+    </div>
+
+    <!-- Error -->
+    <div class="od-error" id="errorState" style="display:none">
+      <i class="fas fa-exclamation-circle"></i>
+      <h2>Order Not Found</h2>
+      <p id="errorMessage">We couldn't find the order you're looking for.</p>
+      <a href="userprofile.html">View My Orders</a>
+    </div>
+
+    <!-- Order Content -->
+    <div id="orderContent" style="display:none">
+      <!-- Breadcrumb -->
+      <div class="od-breadcrumb">
+        <a href="index.html">Home</a><span>&#8250;</span>
+        <a href="userprofile.html">My Orders</a><span>&#8250;</span>
+        <span id="breadcrumbId">Order</span>
+      </div>
+
+      <!-- Header -->
+      <div class="od-header">
+        <div class="od-header-left">
+          <h1>Order Details</h1>
+          <div class="od-header-meta">
+            <span><i class="fas fa-hashtag"></i> <strong id="orderNumber"></strong></span>
+            <span><i class="fas fa-calendar-alt"></i> <span id="orderDate"></span></span>
+            <span id="statusBadgeWrap"><span class="od-status-badge" id="orderStatus"></span></span>
+          </div>
+        </div>
+        <div class="od-actions" id="orderActions"></div>
+      </div>
+
+      <div class="od-grid">
+        <!-- Left Column -->
+        <div>
+          <!-- Timeline -->
+          <div class="od-card">
+            <h3><i class="fas fa-stream"></i> Order Timeline</h3>
+            <div class="od-timeline" id="timeline"></div>
+          </div>
+
+          <!-- Items -->
+          <div class="od-card">
+            <h3><i class="fas fa-box-open"></i> Order Items (<span id="itemCount">0</span>)</h3>
+            <div id="itemsList"></div>
+          </div>
+
+          <!-- Shipping & Payment -->
+          <div class="od-card">
+            <h3><i class="fas fa-info-circle"></i> Shipping & Payment</h3>
+            <div class="od-info-grid">
+              <div class="od-info-block">
+                <h4><i class="fas fa-truck"></i> Shipping Address</h4>
+                <p id="shippingAddress">-</p>
+              </div>
+              <div class="od-info-block">
+                <h4><i class="fas fa-credit-card"></i> Payment Info</h4>
+                <p id="paymentInfo">-</p>
+              </div>
+            </div>
+            <!-- Tracking -->
+            <div class="od-tracking" id="trackingSection" style="display:none">
+              <h4><i class="fas fa-truck"></i> Tracking Information</h4>
+              <div class="od-tracking-grid">
+                <div><span class="label">Carrier:</span></div><div class="value" id="trackCarrier">-</div>
+                <div><span class="label">Tracking Number:</span></div><div class="value" id="trackNumber">-</div>
+                <div><span class="label">Estimated Delivery:</span></div><div class="value" id="trackEta">-</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div>
+          <!-- Price Summary -->
+          <div class="od-card" style="position:sticky;top:80px">
+            <h3><i class="fas fa-receipt"></i> Price Summary</h3>
+            <div id="priceBreakdown"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <div class="amz-back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</div>
+  <footer class="amz-footer">
+    <div class="amz-footer-grid">
+      <div class="amz-footer-col"><h4>Get to Know Us</h4><a href="work-for-people.html">About MR Shop</a><a href="workfor.html">Careers</a><a href="seller.html">Sell on MR Shop</a></div>
+      <div class="amz-footer-col"><h4>Help & Support</h4><a href="chat.html">Customer Service</a><a href="userprofile.html">Your Account</a><a href="workforchild.html">Children's Privacy</a></div>
+      <div class="amz-footer-col"><h4>Shop by Category</h4><a href="food&natural.html">Food & Natural</a><a href="sweets&dairy.html">Sweets & Dairy</a><a href="handricrafts.html">Handicrafts</a><a href="clothing.html">Clothing</a></div>
+      <div class="amz-footer-col"><h4>Connect with Us</h4><a href="https://www.facebook.com/profile.php?id=61583616496782" target="_blank"><i class="fab fa-facebook"></i> Facebook</a><a href="https://www.instagram.com/mrshopbd18/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a><a href="https://www.youtube.com/@mrshop18" target="_blank"><i class="fab fa-youtube"></i> YouTube</a></div>
+    </div>
+    <div class="amz-footer-divider"></div>
+    <div class="amz-footer-bottom"><div class="amz-footer-logo">MR shop</div><div class="amz-footer-copyright">&copy; 2026 MR Shop. All Rights Reserved. | Powered by <strong>MR IT Company</strong></div></div>
+  </footer>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/auth-shared.js"></script>
+  <script>
+    const ORDER_ID = new URLSearchParams(window.location.search).get('id');
+
+    const TIMELINE_STEPS = [
+      { key: 'pending', label: 'Order Placed', icon: 'fas fa-check', desc: 'Your order has been placed successfully' },
+      { key: 'confirmed', label: 'Order Confirmed', icon: 'fas fa-clipboard-check', desc: 'Seller has confirmed your order' },
+      { key: 'processing', label: 'Processing', icon: 'fas fa-cog', desc: 'Your order is being prepared' },
+      { key: 'packed', label: 'Packed', icon: 'fas fa-box', desc: 'Items have been packed securely' },
+      { key: 'shipped', label: 'Shipped', icon: 'fas fa-shipping-fast', desc: 'Your package is on the way' },
+      { key: 'out_for_delivery', label: 'Out for Delivery', icon: 'fas fa-truck', desc: 'Package is out for delivery today' },
+      { key: 'delivered', label: 'Delivered', icon: 'fas fa-home', desc: 'Package delivered successfully' }
+    ];
+
+    const STATUS_ORDER = { pending: 0, confirmed: 1, processing: 2, packed: 3, shipped: 4, out_for_delivery: 5, delivered: 6, cancelled: -1 };
+
+    const PAYMENT_ICONS = {
+      cod: '<i class="fas fa-money-bill-wave" style="color:#007600"></i>',
+      bkash: '<i class="fas fa-mobile-alt" style="color:#e2136e"></i>',
+      nagad: '<i class="fas fa-wallet" style="color:#f6921e"></i>',
+      rocket: '<i class="fas fa-rocket" style="color:#8b2393"></i>'
+    };
+
+    const PAYMENT_NAMES = { cod: 'Cash on Delivery', bkash: 'bKash', nagad: 'Nagad', rocket: 'Rocket' };
+
+    function showLoading() {
+      document.getElementById('loadingState').style.display = 'block';
+      document.getElementById('errorState').style.display = 'none';
+      document.getElementById('orderContent').style.display = 'none';
+    }
+
+    function showError(msg) {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('errorState').style.display = 'block';
+      document.getElementById('orderContent').style.display = 'none';
+      if (msg) document.getElementById('errorMessage').textContent = msg;
+    }
+
+    function showContent() {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('errorState').style.display = 'none';
+      document.getElementById('orderContent').style.display = 'block';
+    }
+
+    function renderTimeline(status) {
+      const el = document.getElementById('timeline');
+      const currentIdx = STATUS_ORDER[status] !== undefined ? STATUS_ORDER[status] : 0;
+
+      if (status === 'cancelled') {
+        el.innerHTML = `
+          <div class="od-timeline-step completed">
+            <div class="od-timeline-dot"><i class="fas fa-check"></i></div>
+            <div class="od-timeline-info">
+              <div class="od-timeline-label">Order Placed</div>
+              <div class="od-timeline-desc">Your order was placed successfully</div>
+            </div>
+          </div>
+          <div class="od-timeline-step active">
+            <div class="od-timeline-dot"><i class="fas fa-times"></i></div>
+            <div class="od-timeline-info">
+              <div class="od-timeline-label" style="color:#cc0c39">Order Cancelled</div>
+              <div class="od-timeline-desc">This order has been cancelled</div>
+            </div>
+          </div>`;
+        return;
+      }
+
+      el.innerHTML = TIMELINE_STEPS.map((step, i) => {
+        let cls = 'pending';
+        if (i < currentIdx) cls = 'completed';
+        else if (i === currentIdx) cls = 'active';
+        return `
+          <div class="od-timeline-step ${cls}">
+            <div class="od-timeline-dot"><i class="${step.icon}"></i></div>
+            <div class="od-timeline-info">
+              <div class="od-timeline-label">${step.label}</div>
+              <div class="od-timeline-desc">${step.desc}</div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function renderItems(items) {
+      const el = document.getElementById('itemsList');
+      document.getElementById('itemCount').textContent = items ? items.length : 0;
+
+      if (!items || items.length === 0) {
+        el.innerHTML = '<p style="color:#565959;text-align:center;padding:20px">No items found.</p>';
+        return;
+      }
+
+      el.innerHTML = items.map(item => {
+        const price = item.discountPrice || item.unitPrice || item.price || 0;
+        const qty = item.quantity || 1;
+        return `
+          <div class="od-item">
+            <img src="${item.image || item.imageUrl || 'https://via.placeholder.com/100x100?text=No+Image'}" alt="${item.productName || item.name || ''}" class="od-item-img" onerror="this.src='https://via.placeholder.com/100x100?text=No+Image'">
+            <div class="od-item-info">
+              <a href="product-details.html?id=${item.productId || ''}" class="od-item-name">${item.productName || item.name || 'Product'}</a>
+              <div class="od-item-seller">${item.sellerName ? 'Seller: ' + item.sellerName : ''}</div>
+              <div class="od-item-price">৳${price.toLocaleString()}</div>
+              <div class="od-item-qty">Qty: ${qty} | Subtotal: ৳${(price * qty).toLocaleString()}</div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function renderShippingAddress(order) {
+      const el = document.getElementById('shippingAddress');
+      const addr = order.shippingAddress || order.address || {};
+      if (typeof addr === 'string') {
+        el.innerHTML = addr.replace(/\n/g, '<br>');
+        return;
+      }
+      const parts = [
+        addr.fullName || addr.name || order.customerName || '',
+        addr.phone || addr.mobile || order.phone || '',
+        addr.address || addr.street || '',
+        [addr.city, addr.postalCode].filter(Boolean).join(' - '),
+        addr.country || 'Bangladesh'
+      ].filter(Boolean);
+      el.innerHTML = parts.map(p => `<strong>${p}</strong>`).join('<br>') || '<span class="label">No address provided</span>';
+    }
+
+    function renderPaymentInfo(order) {
+      const el = document.getElementById('paymentInfo');
+      const method = order.paymentMethod || order.payment || 'cod';
+      const status = order.paymentStatus || 'pending';
+      const statusColor = status === 'paid' ? '#007600' : status === 'failed' ? '#cc0c39' : '#e67700';
+      const icon = PAYMENT_ICONS[method] || '<i class="fas fa-credit-card"></i>';
+      const name = PAYMENT_NAMES[method] || method;
+      el.innerHTML = `
+        <p>${icon} <strong>${name}</strong></p>
+        <p><span class="label">Status: </span><span style="color:${statusColor};font-weight:700">${status.charAt(0).toUpperCase() + status.slice(1)}</span></p>
+        ${order.transactionId ? `<p><span class="label">Transaction: </span>${order.transactionId}</p>` : ''}`;
+    }
+
+    function renderTracking(order) {
+      const section = document.getElementById('trackingSection');
+      const trackingNumber = order.trackingNumber || order.tracking?.number || '';
+      const carrier = order.carrier || order.tracking?.carrier || order.shippingMethod || '';
+      const eta = order.estimatedDelivery || order.estimatedDeliveryDate || '';
+
+      if (!trackingNumber && !carrier && !['shipped', 'out_for_delivery', 'delivered'].includes(order.status)) {
+        section.style.display = 'none';
+        return;
+      }
+
+      section.style.display = 'block';
+      document.getElementById('trackCarrier').textContent = carrier || '-';
+      document.getElementById('trackNumber').textContent = trackingNumber || 'Will be updated when shipped';
+      document.getElementById('trackEta').textContent = eta ? new Date(eta).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : '-';
+    }
+
+    function renderPriceBreakdown(order) {
+      const el = document.getElementById('priceBreakdown');
+      const subtotal = order.subtotal || order.itemsTotal || 0;
+      const discount = order.discount || order.discountAmount || 0;
+      const couponDiscount = order.couponDiscount || 0;
+      const couponCode = order.couponCode || '';
+      const shipping = order.shippingCharge || order.shipping || 0;
+      const tax = order.tax || order.vat || 0;
+      const grandTotal = order.grandTotal || order.totalAmount || order.total || 0;
+
+      let rows = `
+        <div class="od-price-row"><span>Subtotal</span><span>৳${subtotal.toLocaleString()}</span></div>`;
+
+      if (discount > 0) {
+        rows += `<div class="od-price-row discount"><span>Discount</span><span>-৳${discount.toLocaleString()}</span></div>`;
+      }
+      if (couponDiscount > 0) {
+        rows += `<div class="od-price-row discount"><span>Coupon (${couponCode})</span><span>-৳${couponDiscount.toLocaleString()}</span></div>`;
+      }
+      rows += `<div class="od-price-row"><span>Shipping</span><span>${shipping === 0 ? '<span style="color:#007600">FREE</span>' : '৳' + shipping.toLocaleString()}</span></div>`;
+      if (tax > 0) {
+        rows += `<div class="od-price-row"><span>Tax (VAT)</span><span>৳${tax.toLocaleString()}</span></div>`;
+      }
+      rows += `<div class="od-price-row total"><span>Grand Total</span><span>৳${grandTotal.toLocaleString()}</span></div>`;
+
+      el.innerHTML = rows;
+    }
+
+    function renderActions(order) {
+      const el = document.getElementById('orderActions');
+      const status = order.status;
+      let html = '';
+
+      if (['pending', 'confirmed'].includes(status)) {
+        html += `<button class="od-action-btn danger" onclick="cancelOrder('${order.id || order._id}')"><i class="fas fa-times-circle"></i> Cancel Order</button>`;
+      }
+
+      if (['shipped', 'out_for_delivery'].includes(status)) {
+        html += `<a href="order-tracking.html?id=${order.id || order._id}" class="od-action-btn green"><i class="fas fa-truck"></i> Track Order</a>`;
+      }
+
+      html += `<a href="invoice.html?id=${order.id || order._id}" class="od-action-btn primary"><i class="fas fa-file-invoice"></i> Download Invoice</a>`;
+
+      if (status === 'delivered') {
+        html += `<button class="od-action-btn primary" onclick="reorder('${order.id || order._id}')"><i class="fas fa-redo"></i> Reorder</button>`;
+      }
+
+      el.innerHTML = html;
+    }
+
+    async function cancelOrder(orderId) {
+      if (!confirm('Are you sure you want to cancel this order? This action cannot be undone.')) return;
+
+      try {
+        const res = await MR_API.put(`/orders/${orderId}/cancel`, { reason: 'Cancelled by customer' });
+        if (res && res.ok) {
+          showToast('Order cancelled successfully', 'success');
+          loadOrder();
+        } else {
+          showToast(res?.data?.message || 'Failed to cancel order', 'error');
+        }
+      } catch (e) {
+        showToast('Failed to cancel order. Please try again.', 'error');
+      }
+    }
+
+    async function reorder(orderId) {
+      try {
+        const order = window._currentOrder;
+        if (!order || !order.items || order.items.length === 0) {
+          showToast('No items to reorder', 'error');
+          return;
+        }
+
+        for (const item of order.items) {
+          await MR_API.post('/cart', {
+            productId: item.productId || item.id,
+            quantity: item.quantity || 1
+          });
+        }
+
+        showToast('Items added to cart!', 'success');
+        setTimeout(() => { window.location.href = 'cart.html'; }, 1500);
+      } catch (e) {
+        showToast('Failed to add items to cart', 'error');
+      }
+    }
+
+    function showToast(message, type) {
+      let toast = document.getElementById('odToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'odToast';
+        toast.style.cssText = 'position:fixed;bottom:24px;right:24px;padding:14px 24px;border-radius:10px;color:#fff;font-size:14px;font-weight:600;z-index:9999;transition:all 0.3s;opacity:0;transform:translateY(10px);box-shadow:0 4px 16px rgba(0,0,0,0.2)';
+        document.body.appendChild(toast);
+      }
+      toast.style.background = type === 'success' ? '#007600' : '#cc0c39';
+      toast.textContent = message;
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+      }, 3000);
+    }
+
+    function doSearch() {
+      const q = document.getElementById('searchInput').value.trim();
+      if (q) {
+        sessionStorage.setItem('mr_search_query', q);
+        window.location.href = 'search-results.html';
+      }
+    }
+    document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+
+    async function loadOrder() {
+      if (!ORDER_ID) {
+        showError('No order ID provided. Please select an order from your order history.');
+        return;
+      }
+
+      if (!MR_API.isLoggedIn()) {
+        showError('Please sign in to view order details.');
+        return;
+      }
+
+      showLoading();
+
+      try {
+        const res = await MR_API.get(`/orders/${ORDER_ID}`);
+        if (res && res.ok && res.data) {
+          const order = res.data;
+          window._currentOrder = order;
+
+          document.getElementById('breadcrumbId').textContent = order.orderNumber || `#${ORDER_ID}`;
+          document.getElementById('orderNumber').textContent = order.orderNumber || `MR-${String(ORDER_ID).slice(-6).toUpperCase()}`;
+
+          const date = order.createdAt || order.orderDate || new Date().toISOString();
+          document.getElementById('orderDate').textContent = new Date(date).toLocaleDateString('en-GB', {
+            day: 'numeric', month: 'long', year: 'numeric'
+          });
+
+          const status = (order.status || 'pending').toLowerCase().replace(/\s+/g, '_');
+          const badge = document.getElementById('orderStatus');
+          badge.textContent = status.replace(/_/g, ' ');
+          badge.className = 'od-status-badge ' + status;
+
+          document.title = `Order ${order.orderNumber || ORDER_ID} - MR Shop`;
+
+          renderTimeline(status);
+          renderItems(order.items || []);
+          renderShippingAddress(order);
+          renderPaymentInfo(order);
+          renderTracking(order);
+          renderPriceBreakdown(order);
+          renderActions(order);
+          showContent();
+        } else {
+          showError(res?.data?.message || 'Order not found. It may have been removed or the ID is incorrect.');
+        }
+      } catch (e) {
+        console.error('Failed to load order:', e);
+        showError('Unable to load order details. Please check your connection and try again.');
+      }
+    }
+
+    // Initialize auth link
+    function updateAuthLink() {
+      if (MR_API.isLoggedIn()) {
+        const user = JSON.parse(localStorage.getItem('mr_shop_user') || '{}');
+        const name = user.username || user.name || 'Account';
+        document.getElementById('authLink').innerHTML = `<span class="line1">Hello, ${name}</span><span class="line2">Account & Lists</span>`;
+        document.getElementById('authLink').href = 'userprofile.html';
+      }
+    }
+
+    updateAuthLink();
+    loadOrder();
+  </script>
+</body>
+</html>

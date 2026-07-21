@@ -20,6 +20,20 @@ public class OrdersController : ControllerBase
     private static readonly string[] ValidStatuses = { "pending", "confirmed", "processing", "packed", "shipped", "out_for_delivery", "delivered", "cancelled", "returned", "refunded" };
     private static readonly string[] SellerTransitions = { "confirmed", "processing", "packed", "shipped", "out_for_delivery", "delivered" };
     private static readonly string[] CustomerCancellable = { "pending", "confirmed" };
+    // Valid from->to status transitions
+    private static readonly Dictionary<string, string[]> AllowedTransitions = new()
+    {
+        ["pending"] = new[] { "confirmed", "cancelled" },
+        ["confirmed"] = new[] { "processing", "cancelled" },
+        ["processing"] = new[] { "packed", "cancelled" },
+        ["packed"] = new[] { "shipped", "cancelled" },
+        ["shipped"] = new[] { "out_for_delivery", "delivered" },
+        ["out_for_delivery"] = new[] { "delivered" },
+        ["delivered"] = new[] { "returned" },
+        ["returned"] = new[] { "refunded" },
+        ["cancelled"] = Array.Empty<string>(),
+        ["refunded"] = Array.Empty<string>()
+    };
 
     public OrdersController(MongoDbService mongoDb)
     {
@@ -36,6 +50,8 @@ public class OrdersController : ControllerBase
     {
         var userId = GetUserId();
         if (userId == null) return Unauthorized();
+        page = Math.Max(1, page);
+        limit = Math.Clamp(limit, 1, 50);
 
         var filter = Builders<Order>.Filter.Eq(o => o.CustomerId, userId);
         if (!string.IsNullOrWhiteSpace(status))
@@ -208,6 +224,8 @@ public class OrdersController : ControllerBase
     {
         var userId = GetUserId();
         if (userId == null) return Unauthorized();
+        page = Math.Max(1, page);
+        limit = Math.Clamp(limit, 1, 50);
 
         var filter = Builders<Order>.Filter.Eq(o => o.SellerId, userId);
 
@@ -254,6 +272,10 @@ public class OrdersController : ControllerBase
 
         var order = await _mongoDb.Orders.Find(o => o.Id == id).FirstOrDefaultAsync();
         if (order == null) return NotFound(new { message = "Order not found." });
+
+        // Validate status transition
+        if (!AllowedTransitions.TryGetValue(order.Status, out var allowedFrom) || !allowedFrom.Contains(request.Status))
+            return BadRequest(new { message = $"Cannot transition from '{order.Status}' to '{request.Status}'." });
 
         // Seller can only update own orders and only to allowed transitions
         if (role == "seller")
@@ -358,6 +380,10 @@ public class OrdersController : ControllerBase
 
         if (role == "seller" && order.SellerId != userId) return Forbid();
 
+        // Don't allow tracking updates on cancelled/delivered/refunded orders
+        if (new[] { "cancelled", "delivered", "refunded" }.Contains(order.Status))
+            return BadRequest(new { message = $"Cannot update tracking for '{order.Status}' orders." });
+
         var update = Builders<Order>.Update.Set(o => o.UpdatedAt, DateTime.UtcNow);
         if (request.TrackingNumber != null) update = update.Set(o => o.TrackingNumber, request.TrackingNumber);
         if (request.Carrier != null) update = update.Set(o => o.Carrier, request.Carrier);
@@ -372,6 +398,8 @@ public class OrdersController : ControllerBase
     [Authorize(Roles = "admin")]
     public async Task<IActionResult> GetAllOrders([FromQuery] OrderSearchRequest request)
     {
+        request.Page = Math.Max(1, request.Page);
+        request.Limit = Math.Clamp(request.Limit, 1, 50);
         var filter = Builders<Order>.Filter.Empty;
 
         if (!string.IsNullOrWhiteSpace(request.Search))

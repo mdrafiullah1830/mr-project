@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xkbf74mr8r");
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Your MR Shop order has been placed successfully. View order details, tracking, and invoice.">
+  <title>Order Confirmed - MR Shop</title>
+  <script src="assets/js/loader.js"></script>
+  <link rel="stylesheet" href="assets/css/amazon-style.css">
+  <style>
+    .oc-wrapper { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+    /* Success Hero */
+    .oc-hero { text-align: center; padding: 48px 24px 40px; background: linear-gradient(180deg, #f6faf6 0%, #fff 100%); border-radius: 16px; border: 1px solid #e8f5e9; margin-bottom: 24px; }
+    .oc-checkmark { width: 88px; height: 88px; border-radius: 50%; background: var(--amazon-green); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; animation: ocPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; position: relative; }
+    .oc-checkmark::after { content: ''; position: absolute; inset: -8px; border-radius: 50%; border: 3px solid var(--amazon-green); opacity: 0; animation: ocRing 0.6s 0.4s ease-out forwards; }
+    .oc-checkmark i { font-size: 36px; color: #fff; animation: ocCheckDraw 0.4s 0.2s ease-out both; }
+    @keyframes ocPop { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    @keyframes ocRing { 0% { opacity: 0.6; transform: scale(0.8); } 100% { opacity: 0; transform: scale(1.3); } }
+    @keyframes ocCheckDraw { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
+
+    .oc-hero h1 { font-size: 28px; font-weight: 800; color: var(--amazon-green); margin-bottom: 8px; animation: ocFadeUp 0.5s 0.3s ease-out both; }
+    .oc-hero p { font-size: 16px; color: #565959; margin-bottom: 4px; animation: ocFadeUp 0.5s 0.4s ease-out both; }
+    .oc-order-number { font-size: 20px; font-weight: 700; color: var(--amazon-text); margin-top: 16px; animation: ocFadeUp 0.5s 0.5s ease-out both; }
+    .oc-order-number span { color: var(--amazon-orange); }
+    @keyframes ocFadeUp { 0% { opacity: 0; transform: translateY(12px); } 100% { opacity: 1; transform: translateY(0); } }
+
+    /* Confetti particles */
+    .oc-confetti { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+    .oc-particle { position: absolute; width: 8px; height: 8px; border-radius: 2px; animation: ocFall linear forwards; opacity: 0; }
+    @keyframes ocFall {
+      0% { opacity: 1; transform: translateY(-20px) rotate(0deg); }
+      100% { opacity: 0; transform: translateY(300px) rotate(720deg); }
+    }
+
+    /* Delivery Estimate */
+    .oc-delivery { background: var(--amazon-white); border: 1px solid var(--amazon-border); border-radius: 12px; padding: 20px 24px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; animation: ocFadeUp 0.5s 0.6s ease-out both; }
+    .oc-delivery-icon { width: 48px; height: 48px; border-radius: 10px; background: #fff3e0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .oc-delivery-icon i { font-size: 22px; color: var(--amazon-orange); }
+    .oc-delivery-text h3 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+    .oc-delivery-text p { font-size: 14px; color: #565959; margin: 0; }
+
+    /* Order Summary Card */
+    .oc-card { background: var(--amazon-white); border: 1px solid var(--amazon-border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+    .oc-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 8px; }
+    .oc-card h3 i { color: var(--amazon-orange); }
+
+    .oc-item { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid #f5f5f5; }
+    .oc-item:last-child { border-bottom: none; }
+    .oc-item-img { width: 72px; height: 72px; border-radius: 8px; object-fit: contain; background: #f7f7f7; padding: 6px; border: 1px solid #eee; flex-shrink: 0; }
+    .oc-item-info { flex: 1; min-width: 0; }
+    .oc-item-name { font-size: 14px; font-weight: 600; color: var(--amazon-text); text-decoration: none; line-height: 1.4; display: block; margin-bottom: 4px; }
+    .oc-item-name:hover { color: var(--amazon-link); text-decoration: underline; }
+    .oc-item-meta { font-size: 13px; color: #565959; }
+    .oc-item-price { font-size: 15px; font-weight: 700; color: #b12704; margin-top: 4px; }
+
+    /* Price Summary */
+    .oc-price-row { display: flex; justify-content: space-between; padding: 7px 0; font-size: 14px; }
+    .oc-price-row.discount { color: var(--amazon-green); }
+    .oc-price-row.total { font-size: 18px; font-weight: 800; border-top: 2px solid #ddd; padding-top: 12px; margin-top: 8px; color: #b12704; }
+
+    /* Action Buttons */
+    .oc-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; animation: ocFadeUp 0.5s 0.7s ease-out both; }
+    .oc-btn { padding: 12px 28px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; border: 1px solid #d5d9d9; background: #f0f2f2; color: #0f1111; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
+    .oc-btn:hover { background: #e3e6e6; }
+    .oc-btn.primary { background: linear-gradient(to bottom, #ffd814, #f7ca00); border-color: #f2c200; }
+    .oc-btn.primary:hover { background: linear-gradient(to bottom, #f7ca00, #e6b800); }
+    .oc-btn.green { background: linear-gradient(to bottom, #ffd814, #f7ca00); border-color: #f2c200; }
+
+    /* Help note */
+    .oc-help { text-align: center; font-size: 13px; color: #565959; padding: 8px 0 0; animation: ocFadeUp 0.5s 0.8s ease-out both; }
+    .oc-help a { color: var(--amazon-link); text-decoration: none; font-weight: 600; }
+    .oc-help a:hover { text-decoration: underline; color: #c7511f; }
+
+    /* Loading & Error */
+    .oc-loading { text-align: center; padding: 80px 20px; color: #565959; }
+    .oc-loading i { font-size: 48px; color: #ddd; margin-bottom: 16px; animation: spin 1s linear infinite; display: block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .oc-error { text-align: center; padding: 80px 20px; }
+    .oc-error i { font-size: 64px; color: #ddd; margin-bottom: 16px; }
+    .oc-error h2 { font-size: 22px; margin-bottom: 8px; }
+    .oc-error p { color: #565959; margin-bottom: 20px; }
+    .oc-error a { color: var(--amazon-link); text-decoration: none; font-weight: 600; }
+    .oc-error a:hover { text-decoration: underline; color: #c7511f; }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .oc-hero { padding: 32px 16px; }
+      .oc-hero h1 { font-size: 22px; }
+      .oc-order-number { font-size: 17px; }
+      .oc-delivery { flex-direction: column; text-align: center; }
+      .oc-actions { flex-direction: column; }
+      .oc-btn { justify-content: center; }
+      .oc-item { flex-direction: column; }
+      .oc-item-img { width: 100%; height: 140px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="amz-header">
+    <div class="amz-header-top">
+      <a href="index.html" class="logo"><div><span class="logo-text">MR shop</span><span class="logo-sub">Bangladesh</span></div></a>
+      <div class="amz-deliver-to"><span class="label">Deliver to</span><span class="location"><i class="fas fa-map-marker-alt"></i> Bangladesh</span></div>
+      <div class="amz-search-bar">
+        <input type="text" class="amz-search-input" placeholder="Search MR Shop" id="searchInput">
+        <button class="amz-search-btn" onclick="doSearch()"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="amz-header-right">
+        <a href="signin.html" class="amz-header-link" id="authLink"><span class="line1">Hello, Sign in</span><span class="line2">Account & Lists</span></a>
+        <a href="wishlist.html" class="amz-header-link"><span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span><span class="line2">Wishlist</span></a>
+        <a href="cart.html" class="amz-cart"><span class="amz-cart-icon"><i class="fas fa-shopping-cart"></i><span class="amz-cart-count" id="cartCount">0</span></span><span class="amz-cart-text">Cart</span></a>
+      </div>
+    </div>
+    <nav class="amz-nav-bar">
+      <a href="index.html" class="amz-nav-item"><i class="fas fa-bars"></i> All</a>
+      <a href="food&natural.html" class="amz-nav-item">Food & Natural</a>
+      <a href="sweets&dairy.html" class="amz-nav-item">Sweets & Dairy</a>
+      <a href="handricrafts.html" class="amz-nav-item">Handicrafts</a>
+      <a href="clothing.html" class="amz-nav-item">Clothing</a>
+      <a href="book.html" class="amz-nav-item">Books</a>
+      <a href="antique.html" class="amz-nav-item">Antique</a>
+      <div class="amz-nav-divider"></div>
+      <a href="becomeseller.html" class="amz-nav-item">Sell</a>
+      <a href="chat.html" class="amz-nav-item"><i class="fas fa-headset"></i> Help</a>
+    </nav>
+  </header>
+
+  <main class="oc-wrapper">
+    <!-- Loading -->
+    <div class="oc-loading" id="loadingState">
+      <i class="fas fa-spinner"></i>
+      <h2>Loading your order...</h2>
+      <p>Please wait while we confirm your order details.</p>
+    </div>
+
+    <!-- Error -->
+    <div class="oc-error" id="errorState" style="display:none">
+      <i class="fas fa-exclamation-circle"></i>
+      <h2>Order Not Found</h2>
+      <p id="errorMessage">We couldn't find this order. It may have been removed or the link is invalid.</p>
+      <a href="orders.html"><i class="fas fa-list"></i> View My Orders</a>
+    </div>
+
+    <!-- Confirmation Content -->
+    <div id="confirmContent" style="display:none">
+      <!-- Success Hero -->
+      <div class="oc-hero" id="heroSection" style="position:relative;overflow:hidden">
+        <div class="oc-confetti" id="confetti"></div>
+        <div class="oc-checkmark"><i class="fas fa-check"></i></div>
+        <h1>Thank you for your order!</h1>
+        <p>Your order has been placed successfully. We'll send you a confirmation shortly.</p>
+        <div class="oc-order-number">Order <span id="orderNumber"></span></div>
+      </div>
+
+      <!-- Delivery Estimate -->
+      <div class="oc-delivery">
+        <div class="oc-delivery-icon"><i class="fas fa-truck"></i></div>
+        <div class="oc-delivery-text">
+          <h3>Estimated Delivery</h3>
+          <p id="deliveryDate">Calculating...</p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="oc-actions">
+        <a href="#" class="oc-btn primary" id="trackBtn"><i class="fas fa-map-marker-alt"></i> Track Order</a>
+        <a href="#" class="oc-btn" id="invoiceBtn"><i class="fas fa-file-invoice"></i> View Invoice</a>
+        <a href="index.html" class="oc-btn"><i class="fas fa-shopping-bag"></i> Continue Shopping</a>
+      </div>
+
+      <!-- Order Items -->
+      <div class="oc-card">
+        <h3><i class="fas fa-box-open"></i> Order Items (<span id="itemCount">0</span>)</h3>
+        <div id="itemsList"></div>
+      </div>
+
+      <!-- Price Summary -->
+      <div class="oc-card">
+        <h3><i class="fas fa-receipt"></i> Price Summary</h3>
+        <div id="priceBreakdown"></div>
+      </div>
+
+      <!-- Help -->
+      <div class="oc-help">
+        Need help? <a href="chat.html">Contact Customer Service</a> or <a href="faq.html">visit our Help Center</a>.
+      </div>
+    </div>
+  </main>
+
+  <div class="amz-back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</div>
+  <footer class="amz-footer">
+    <div class="amz-footer-grid">
+      <div class="amz-footer-col"><h4>Get to Know Us</h4><a href="work-for-people.html">About MR Shop</a><a href="workfor.html">Careers</a><a href="seller.html">Sell on MR Shop</a></div>
+      <div class="amz-footer-col"><h4>Help & Support</h4><a href="chat.html">Customer Service</a><a href="userprofile.html">Your Account</a><a href="workforchild.html">Children's Privacy</a></div>
+      <div class="amz-footer-col"><h4>Shop by Category</h4><a href="food&natural.html">Food & Natural</a><a href="sweets&dairy.html">Sweets & Dairy</a><a href="handricrafts.html">Handicrafts</a><a href="clothing.html">Clothing</a></div>
+      <div class="amz-footer-col"><h4>Connect with Us</h4><a href="https://www.facebook.com/profile.php?id=61583616496782" target="_blank"><i class="fab fa-facebook"></i> Facebook</a><a href="https://www.instagram.com/mrshopbd18/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a><a href="https://www.youtube.com/@mrshop18" target="_blank"><i class="fab fa-youtube"></i> YouTube</a></div>
+    </div>
+    <div class="amz-footer-divider"></div>
+    <div class="amz-footer-bottom"><div class="amz-footer-logo">MR shop</div><div class="amz-footer-copyright">&copy; 2026 MR Shop. All Rights Reserved. | Powered by <strong>MR IT Company</strong></div></div>
+  </footer>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/auth-shared.js"></script>
+  <script>
+    const ORDER_ID = new URLSearchParams(window.location.search).get('orderId');
+    const ORDER_NUMBER = new URLSearchParams(window.location.search).get('orderNumber');
+
+    function showLoading() {
+      document.getElementById('loadingState').style.display = 'block';
+      document.getElementById('errorState').style.display = 'none';
+      document.getElementById('confirmContent').style.display = 'none';
+    }
+
+    function showError(msg) {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('errorState').style.display = 'block';
+      document.getElementById('confirmContent').style.display = 'none';
+      if (msg) document.getElementById('errorMessage').textContent = msg;
+    }
+
+    function showContent() {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('errorState').style.display = 'none';
+      document.getElementById('confirmContent').style.display = 'block';
+    }
+
+    function spawnConfetti() {
+      const container = document.getElementById('confetti');
+      if (!container) return;
+      const colors = ['#ffd814', '#007600', '#ff9900', '#cc0c39', '#131921', '#00a8e1'];
+      for (let i = 0; i < 30; i++) {
+        const p = document.createElement('div');
+        p.className = 'oc-particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        p.style.width = (4 + Math.random() * 6) + 'px';
+        p.style.height = (4 + Math.random() * 6) + 'px';
+        p.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+        p.style.animationDelay = (Math.random() * 0.8) + 's';
+        container.appendChild(p);
+      }
+    }
+
+    function renderItems(items) {
+      const el = document.getElementById('itemsList');
+      document.getElementById('itemCount').textContent = items ? items.length : 0;
+
+      if (!items || items.length === 0) {
+        el.innerHTML = '<p style="color:#565959;text-align:center;padding:20px">No items found.</p>';
+        return;
+      }
+
+      el.innerHTML = items.map(item => {
+        const price = item.discountPrice || item.unitPrice || item.price || 0;
+        const qty = item.quantity || 1;
+        return `
+          <div class="oc-item">
+            <img src="${item.image || item.imageUrl || 'https://via.placeholder.com/72x72?text=No+Image'}" alt="${item.productName || item.name || ''}" class="oc-item-img" onerror="this.src='https://via.placeholder.com/72x72?text=No+Image'">
+            <div class="oc-item-info">
+              <a href="product-details.html?id=${item.productId || ''}" class="oc-item-name">${item.productName || item.name || 'Product'}</a>
+              <div class="oc-item-meta">Qty: ${qty}</div>
+              <div class="oc-item-price">৳${(price * qty).toLocaleString()}</div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function renderPriceBreakdown(order) {
+      const el = document.getElementById('priceBreakdown');
+      const subtotal = order.subtotal || order.itemsTotal || 0;
+      const discount = order.discount || order.discountAmount || 0;
+      const couponDiscount = order.couponDiscount || 0;
+      const couponCode = order.couponCode || '';
+      const shipping = order.shippingCharge || order.shipping || 0;
+      const tax = order.tax || order.vat || 0;
+      const grandTotal = order.grandTotal || order.totalAmount || order.total || 0;
+
+      let rows = `<div class="oc-price-row"><span>Subtotal</span><span>৳${subtotal.toLocaleString()}</span></div>`;
+
+      if (discount > 0) {
+        rows += `<div class="oc-price-row discount"><span>Discount</span><span>-৳${discount.toLocaleString()}</span></div>`;
+      }
+      if (couponDiscount > 0) {
+        rows += `<div class="oc-price-row discount"><span>Coupon (${couponCode})</span><span>-৳${couponDiscount.toLocaleString()}</span></div>`;
+      }
+      rows += `<div class="oc-price-row"><span>Shipping</span><span>${shipping === 0 ? '<span style="color:var(--amazon-green)">FREE</span>' : '৳' + shipping.toLocaleString()}</span></div>`;
+      if (tax > 0) {
+        rows += `<div class="oc-price-row"><span>Tax (VAT)</span><span>৳${tax.toLocaleString()}</span></div>`;
+      }
+      rows += `<div class="oc-price-row total"><span>Grand Total</span><span>৳${grandTotal.toLocaleString()}</span></div>`;
+
+      el.innerHTML = rows;
+    }
+
+    function setDeliveryDate(order) {
+      const el = document.getElementById('deliveryDate');
+      let eta = order.estimatedDelivery || order.estimatedDeliveryDate || order.deliveryDate;
+
+      if (eta) {
+        el.textContent = new Date(eta).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+        return;
+      }
+
+      const created = order.createdAt || order.orderDate || new Date().toISOString();
+      const d = new Date(created);
+      d.setDate(d.getDate() + 7);
+      el.textContent = 'By ' + d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    function setActionLinks(orderId) {
+      document.getElementById('trackBtn').href = 'order-tracking.html?id=' + orderId;
+      document.getElementById('invoiceBtn').href = 'invoice.html?id=' + orderId;
+    }
+
+    function updateAuthLink() {
+      if (MR_API.isLoggedIn()) {
+        const user = JSON.parse(localStorage.getItem('mr_shop_user') || '{}');
+        const name = user.username || user.name || 'Account';
+        document.getElementById('authLink').innerHTML = `<span class="line1">Hello, ${name}</span><span class="line2">Account & Lists</span>`;
+        document.getElementById('authLink').href = 'userprofile.html';
+      }
+    }
+
+    function doSearch() {
+      const q = document.getElementById('searchInput').value.trim();
+      if (q) {
+        sessionStorage.setItem('mr_search_query', q);
+        window.location.href = 'search-results.html';
+      }
+    }
+    document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+
+    async function loadOrder() {
+      if (!ORDER_ID) {
+        showError('No order ID provided. Please check your order confirmation email.');
+        return;
+      }
+
+      if (!MR_API.isLoggedIn()) {
+        showError('Please sign in to view your order confirmation.');
+        return;
+      }
+
+      showLoading();
+
+      try {
+        const res = await MR_API.get(`/orders/${ORDER_ID}`);
+        if (res && res.ok && res.data) {
+          const order = res.data;
+
+          const displayNumber = ORDER_NUMBER || order.orderNumber || 'MR-' + String(ORDER_ID).slice(-6).toUpperCase();
+          document.getElementById('orderNumber').textContent = displayNumber;
+          document.title = 'Order ' + displayNumber + ' Confirmed - MR Shop';
+
+          renderItems(order.items || []);
+          renderPriceBreakdown(order);
+          setDeliveryDate(order);
+          setActionLinks(ORDER_ID);
+          showContent();
+          spawnConfetti();
+        } else {
+          showError(res?.data?.message || 'Order not found. It may have been removed or the ID is incorrect.');
+        }
+      } catch (e) {
+        console.error('Failed to load order:', e);
+        showError('Unable to load order details. Please check your connection and try again.');
+      }
+    }
+
+    updateAuthLink();
+    loadOrder();
+  </script>
+</body>
+</html>
