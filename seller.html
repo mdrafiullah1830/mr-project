@@ -268,16 +268,10 @@
         <div class="seller-section">
           <h3>Inventory Management</h3>
           <p style="color:#565959;margin-bottom:16px">Real-time stock counts and low-stock alerts.</p>
-          <div style="display:flex;gap:8px;margin-bottom:16px">
-            <button class="seller-btn seller-btn-primary">Show Low Stock (<=5)</button>
-            <button class="seller-btn seller-btn-secondary">Export Inventory</button>
-          </div>
-          <table class="seller-table">
+          <table class="seller-table" id="inventoryTable">
             <thead><tr><th>Product</th><th>SKU</th><th>In Stock</th><th>Reserved</th><th>Available</th><th>Status</th></tr></thead>
-            <tbody>
-              <tr><td>Herbal Honey</td><td>HH-001</td><td>12</td><td>2</td><td>10</td><td><span class="badge badge-success">In Stock</span></td></tr>
-              <tr><td>Antique Coin A</td><td>AC-002</td><td>4</td><td>1</td><td>3</td><td><span class="badge badge-warning">Low Stock</span></td></tr>
-              <tr><td>Vintage Pot</td><td>VP-003</td><td>0</td><td>0</td><td>0</td><td><span class="badge badge-danger">Out of Stock</span></td></tr>
+            <tbody id="inventoryBody">
+              <tr><td colspan="6" style="text-align:center;color:#565959;padding:20px">Loading inventory...</td></tr>
             </tbody>
           </table>
         </div>
@@ -511,19 +505,24 @@
         const products = await loadSellerProducts();
         const tbody = document.querySelector('#products table tbody');
         if (!tbody) return;
-        tbody.innerHTML = products.length > 0 ? products.map(p => `
+        tbody.innerHTML = products.length > 0 ? products.map(p => {
+          const stock = p.stockQuantity || 0;
+          const stockClass = stock === 0 ? 'badge-danger' : stock <= (p.minimumStockLevel || 5) ? 'badge-warning' : 'badge-success';
+          const stockLabel = stock === 0 ? 'Out of Stock' : stock <= 5 ? 'Low Stock' : p.status === 'published' ? 'Active' : p.status || 'Draft';
+          const approvalBadge = p.approvalStatus === 'pending' ? ' <span class="badge badge-info" style="font-size:10px">Pending Approval</span>' : p.approvalStatus === 'rejected' ? ' <span class="badge badge-danger" style="font-size:10px">Rejected</span>' : '';
+          return `
           <tr>
-            <td>P${String(p.id).slice(-3).padStart(3,'0')}</td>
-            <td>${escapeHtml(p.name)}</td>
-            <td>৳${p.price.toLocaleString()}</td>
-            <td>${p.stock}</td>
-            <td><span class="badge ${p.stock > 0 ? 'badge-success' : 'badge-danger'}">${p.stock > 0 ? 'Active' : 'Out of Stock'}</span></td>
+            <td>${p.id.slice(-6)}</td>
+            <td>${escapeHtml(p.name)}${approvalBadge}</td>
+            <td>৳${p.price.toLocaleString()}${p.discountPrice ? ` <span style="color:#cc0c39;font-size:12px">(Disc: ৳${p.discountPrice.toLocaleString()})</span>` : ''}</td>
+            <td>${stock}${p.reservedStock ? ` (${p.reservedStock} reserved)` : ''}</td>
+            <td><span class="badge ${stockClass}">${stockLabel}</span></td>
             <td>
-              <button class="seller-btn seller-btn-secondary" onclick="editSellerProduct(${p.id})">Edit</button>
-              <button class="seller-btn seller-btn-danger" onclick="deleteSellerProduct(${p.id})">Delete</button>
+              <button class="seller-btn seller-btn-secondary" onclick="editSellerProduct('${p.id}')">Edit</button>
+              <button class="seller-btn seller-btn-danger" onclick="deleteSellerProduct('${p.id}')">Delete</button>
             </td>
-          </tr>
-        `).join('') : '<tr><td colspan="6" style="text-align:center;color:#565959;padding:20px">No products yet. Add your first product!</td></tr>';
+          </tr>`;
+        }).join('') : '<tr><td colspan="6" style="text-align:center;color:#565959;padding:20px">No products yet. Add your first product!</td></tr>';
       }
 
       // Add product modal
@@ -542,18 +541,24 @@
         modal.id = 'sellerProductModal';
         modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center';
         modal.innerHTML = `
-          <div style="background:#fff;border-radius:12px;padding:24px;width:500px;max-height:80vh;overflow-y:auto">
+          <div style="background:#fff;border-radius:12px;padding:24px;width:560px;max-height:85vh;overflow-y:auto">
             <h3 style="margin-bottom:16px">${isEdit ? 'Edit Product' : 'Add New Product'}</h3>
-            <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Product Name</label><input type="text" id="spName" value="${isEdit ? escapeHtml(product.name) : ''}" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
-            <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Category</label><select id="spCategory" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"><option value="food">Food & Natural</option><option value="sweets">Sweets & Dairy</option><option value="handicrafts">Handicrafts</option><option value="clothing">Clothing</option><option value="books">Books</option><option value="antique">Antique</option></select></div>
-            <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Price (৳)</label><input type="number" id="spPrice" value="${isEdit ? product.price : ''}" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
-            <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Original Price (৳)</label><input type="number" id="spOrigPrice" value="${isEdit ? product.originalPrice : ''}" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
-            <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Stock</label><input type="number" id="spStock" value="${isEdit ? product.stock : ''}" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
-            <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Description</label><textarea id="spDesc" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px;min-height:80px">${isEdit ? escapeHtml(product.description) : ''}</textarea></div>
-            <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Product Image</label><input type="file" id="spImage" accept="image/*" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
+            <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Product Name *</label><input type="text" id="spName" value="${isEdit ? escapeHtml(product.name) : ''}" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+              <div><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Price (৳) *</label><input type="number" id="spPrice" value="${isEdit ? product.price : ''}" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
+              <div><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Discount Price (৳)</label><input type="number" id="spDiscountPrice" value="${isEdit && product.discountPrice ? product.discountPrice : ''}" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+              <div><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Stock Qty *</label><input type="number" id="spStock" value="${isEdit ? product.stockQuantity : ''}" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
+              <div><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">SKU</label><input type="text" id="spSku" value="${isEdit && product.sku ? product.sku : ''}" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
+            </div>
+            <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Short Description</label><input type="text" id="spShortDesc" value="${isEdit && product.shortDescription ? escapeHtml(product.shortDescription) : ''}" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
+            <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Full Description</label><textarea id="spDesc" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px;min-height:80px">${isEdit ? escapeHtml(product.description || '') : ''}</textarea></div>
+            <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Thumbnail Image URL</label><input type="text" id="spImage" value="${isEdit && product.thumbnailImage ? product.thumbnailImage : ''}" placeholder="https://..." style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
+            <div style="margin-bottom:14px"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Tags (comma separated)</label><input type="text" id="spTags" value="${isEdit && product.tags ? product.tags.join(', ') : ''}" placeholder="organic, honey, sundarbans" style="width:100%;padding:10px;border:1px solid #d5d9d9;border-radius:6px"></div>
             <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">
               <button onclick="document.getElementById('sellerProductModal').remove()" style="padding:8px 20px;border:1px solid #d5d9d9;border-radius:6px;background:#fff;cursor:pointer">Cancel</button>
-              <button onclick="saveSellerProduct(${isEdit ? product.id : 'null'})" style="padding:8px 20px;background:#ffd814;border:1px solid #fcd200;border-radius:6px;cursor:pointer;font-weight:600">${isEdit ? 'Update' : 'Add Product'}</button>
+              <button onclick="saveSellerProduct('${isEdit ? product.id : ''}')" style="padding:8px 20px;background:#ffd814;border:1px solid #fcd200;border-radius:6px;cursor:pointer;font-weight:600">${isEdit ? 'Update' : 'Add Product'}</button>
             </div>
           </div>
         `;
@@ -562,88 +567,61 @@
 
       async function saveSellerProduct(editId) {
         const name = document.getElementById('spName').value.trim();
-        const category = document.getElementById('spCategory').value;
-        const price = parseInt(document.getElementById('spPrice').value) || 0;
-        const originalPrice = parseInt(document.getElementById('spOrigPrice').value) || price;
-        const stock = parseInt(document.getElementById('spStock').value) || 0;
-        const description = document.getElementById('spDesc').value.trim();
-        const imageFile = document.getElementById('spImage').files[0];
+        const price = parseFloat(document.getElementById('spPrice').value) || 0;
+        const discountPrice = parseFloat(document.getElementById('spDiscountPrice').value) || null;
+        const stockQuantity = parseInt(document.getElementById('spStock').value) || 0;
+        const sku = document.getElementById('spSku').value.trim() || null;
+        const shortDescription = document.getElementById('spShortDesc').value.trim() || null;
+        const description = document.getElementById('spDesc').value.trim() || null;
+        const thumbnailImage = document.getElementById('spImage').value.trim() || null;
+        const tagsStr = document.getElementById('spTags').value.trim();
+        const tags = tagsStr ? tagsStr.split(',').map(t => t.trim()).filter(Boolean) : null;
 
         if (!name || price <= 0) {
-          alert('Please fill required fields!');
+          alert('Please fill required fields (Name and Price)!');
           return;
         }
 
-        const saveProduct = async (imageData) => {
-          const payload = {
-            name, category, price, originalPrice, stock, description,
-            image: imageData || 'https://via.placeholder.com/200x200?text=No+Image'
-          };
-
-          // Try API first
-          const result = editId 
-            ? await sellerApiCall(`/sellerproducts/${editId}`, 'PUT', payload)
-            : await sellerApiCall('/sellerproducts', 'POST', payload);
-
-          if (result) {
-            alert(editId ? 'Product updated!' : 'Product added!');
-          } else {
-            // Fallback to localStorage
-            let products = JSON.parse(localStorage.getItem('mr_shop_products')) || [];
-            const categoryLinks = {food:'food&natural.html',sweets:'sweets&dairy.html',handicrafts:'handricrafts.html',clothing:'clothing.html',books:'book.html',antique:'antique.html'};
-            if (editId) {
-              const idx = products.findIndex(p => p.id === editId);
-              if (idx !== -1) {
-                products[idx] = {...products[idx], name, category, price, originalPrice, stock, description, image: imageData || products[idx].image};
-              }
-            } else {
-              products.push({
-                id: Date.now(), name, price, originalPrice, category,
-                image: imageData || 'https://via.placeholder.com/200x200?text=No+Image',
-                rating: 0, reviews: 0, prime: false, description, stock,
-                sellerId: currentSeller.id, sellerShop: currentSeller.shopName,
-                link: categoryLinks[category] || 'index.html',
-                createdAt: new Date().toISOString()
-              });
-            }
-            localStorage.setItem('mr_shop_products', JSON.stringify(products));
-            alert(editId ? 'Product updated!' : 'Product added!');
-          }
-
-          document.getElementById('sellerProductModal')?.remove();
-          renderSellerProducts();
+        const payload = {
+          name, price, stockQuantity,
+          ...(discountPrice && { discountPrice }),
+          ...(sku && { sku }),
+          ...(shortDescription && { shortDescription }),
+          ...(description && { description }),
+          ...(thumbnailImage && { thumbnailImage }),
+          ...(tags && { tags }),
+          status: editId ? undefined : 'draft'
         };
 
-        if (imageFile) {
-          const reader = new FileReader();
-          reader.onload = (e) => saveProduct(e.target.result);
-          reader.readAsDataURL(imageFile);
+        const result = editId
+          ? await sellerApiCall(`/products/${editId}`, 'PUT', payload)
+          : await sellerApiCall('/products', 'POST', payload);
+
+        if (result) {
+          alert(editId ? 'Product updated! It will be reviewed by admin.' : 'Product added! It will be reviewed by admin.');
+          document.getElementById('sellerProductModal')?.remove();
+          renderSellerProducts();
         } else {
-          saveProduct(null);
+          alert('Failed to save product. Please try again.');
         }
       }
 
       async function editSellerProduct(id) {
-        // Try to find from loaded products first
-        let products = await loadSellerProducts();
-        let product = products.find(p => p.id === id);
-        // Fallback to localStorage
-        if (!product) {
-          products = JSON.parse(localStorage.getItem('mr_shop_products')) || [];
-          product = products.find(p => p.id === id);
-        }
+        const products = await loadSellerProducts();
+        const product = products.find(p => p.id === id);
         if (product) openSellerProductModal(product);
+        else alert('Product not found.');
       }
 
       async function deleteSellerProduct(id) {
-        if (!confirm('Delete this product?')) return;
-        const result = await sellerApiCall(`/sellerproducts/${id}`, 'DELETE');
-        if (!result) {
-          let products = JSON.parse(localStorage.getItem('mr_shop_products')) || [];
-          products = products.filter(p => p.id !== id);
-          localStorage.setItem('mr_shop_products', JSON.stringify(products));
+        if (!confirm('Delete this product? This cannot be undone.')) return;
+        const result = await sellerApiCall(`/products/${id}`, 'DELETE');
+        if (result) {
+          alert('Product deleted.');
+          renderSellerProducts();
+        } else {
+          alert('Failed to delete product.');
         }
-        renderSellerProducts();
       }
 
       // Load seller stats from dashboard API
@@ -729,7 +707,7 @@
                 }
 
                 const lowStockProducts = (await sellerApiCall('/sellerproducts')) || [];
-                const lowStock = lowStockProducts.filter(p => p.stock > 0 && p.stock <= 5);
+                const lowStock = lowStockProducts.filter(p => p.stockQuantity > 0 && p.stockQuantity <= (p.minimumStockLevel || 5));
                 if (lowStock.length > 0) {
                   notificationsHtml += `
                     <div style="display:flex;align-items:center;gap:12px;padding:12px;background:#fef3e0;border-radius:6px">
@@ -813,9 +791,37 @@
         }
       }
 
+      async function renderSellerInventory() {
+        const products = await loadSellerProducts();
+        const tbody = document.getElementById('inventoryBody');
+        if (!tbody) return;
+        if (products.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#565959;padding:20px">No products yet.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = products.map(p => {
+          const stock = p.stockQuantity || 0;
+          const reserved = p.reservedStock || 0;
+          const available = stock - reserved;
+          const minLevel = p.minimumStockLevel || 5;
+          const stockClass = stock === 0 ? 'badge-danger' : stock <= minLevel ? 'badge-warning' : 'badge-success';
+          const stockLabel = stock === 0 ? 'Out of Stock' : stock <= minLevel ? 'Low Stock' : 'In Stock';
+          return `
+            <tr>
+              <td>${escapeHtml(p.name)}</td>
+              <td>${p.sku || '-'}</td>
+              <td>${stock}</td>
+              <td>${reserved}</td>
+              <td>${available}</td>
+              <td><span class="badge ${stockClass}">${stockLabel}</span></td>
+            </tr>`;
+        }).join('');
+      }
+
       // Initialize - run after DOM is ready
       document.addEventListener('DOMContentLoaded', function() {
         renderSellerProducts();
+        renderSellerInventory();
         loadSellerStats();
         loadSellerOrders();
         loadSellerProfile();

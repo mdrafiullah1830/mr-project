@@ -31,24 +31,28 @@ const MR_CATEGORIES = {
 // Fetch products from API
 async function MR_fetchProducts() {
   try {
-    const response = await fetch(`${API_BASE_URL}/products`);
+    const response = await fetch(`${API_BASE_URL}/products?limit=100`);
     if (response.ok) {
-      const apiProducts = await response.json();
+      const data = await response.json();
+      const apiProducts = data.products || data;
       if (apiProducts && apiProducts.length > 0) {
-        // Map API products to frontend format
         MR_PRODUCTS = apiProducts.map(p => ({
           id: p.id,
           name: p.name,
+          slug: p.slug,
           price: p.price,
-          originalPrice: p.originalPrice || p.price,
-          category: p.category,
-          image: p.image.startsWith('./') ? p.image : `./${p.image}`,
-          rating: p.rating || 0,
-          reviews: p.reviews || 0,
-          prime: p.isPrime,
-          description: p.description || '',
-          stock: p.stock,
-          link: getCategoryLink(p.category)
+          originalPrice: p.discountPrice || p.price,
+          category: p.categoryId || 'general',
+          image: (p.thumbnailImage || '').startsWith('./') ? p.thumbnailImage : (p.thumbnailImage ? `./${p.thumbnailImage}` : './assets/images/placeholder.jpg'),
+          rating: p.averageRating || 0,
+          reviews: p.reviewCount || 0,
+          prime: false,
+          description: p.shortDescription || p.description || '',
+          stock: p.stockQuantity || 0,
+          soldCount: p.soldCount || 0,
+          viewCount: p.viewCount || 0,
+          tags: p.tags || [],
+          link: `product-details.html?id=${p.id}`
         }));
         console.log('Products loaded from API:', MR_PRODUCTS.length);
         return true;
@@ -149,8 +153,7 @@ function MR_createProductCard(product) {
 function MR_goToProduct(id) {
   const product = MR_getProductById(id);
   if (product) {
-    sessionStorage.setItem('mr_selected_product', id);
-    window.location.href = product.link;
+    window.location.href = product.link || `product-details.html?id=${id}`;
   }
 }
 

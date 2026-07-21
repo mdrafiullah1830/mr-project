@@ -92,8 +92,7 @@ const MR_Search = {
   goToProduct(id) {
     const product = MR_getProductById(id);
     if (product) {
-      sessionStorage.setItem('mr_selected_product', id);
-      window.location.href = product.link;
+      window.location.href = product.link || `product-details.html?id=${id}`;
     }
   },
 

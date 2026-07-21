@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xkbf74mr8r");
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details — MR Shop</title>
+  <script src="assets/js/loader.js"></script>
+  <link rel="stylesheet" href="assets/css/amazon-style.css">
+  <style>
+    .pd-layout{max-width:1400px;margin:20px auto;padding:0 16px}
+    .pd-breadcrumb{font-size:13px;color:#767676;margin-bottom:16px}
+    .pd-breadcrumb a{color:var(--amazon-link)}
+    .pd-grid{display:grid;grid-template-columns:450px 1fr;gap:32px;margin-bottom:32px}
+    .pd-gallery{position:sticky;top:80px}
+    .pd-main-img{width:100%;aspect-ratio:1;object-fit:contain;background:#f7f7f7;border-radius:8px;padding:20px;border:1px solid var(--amazon-border)}
+    .pd-thumbs{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+    .pd-thumb{width:64px;height:64px;object-fit:contain;background:#f7f7f7;border:2px solid var(--amazon-border);border-radius:6px;cursor:pointer;padding:4px}
+    .pd-thumb.active,.pd-thumb:hover{border-color:var(--amazon-orange)}
+    .pd-info h1{font-size:24px;font-weight:400;line-height:1.4;margin-bottom:8px}
+    .pd-brand{font-size:14px;color:var(--amazon-link);margin-bottom:8px}
+    .pd-rating{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+    .pd-rating .stars{color:var(--amazon-orange)}
+    .pd-rating .count{color:var(--amazon-link);font-size:14px}
+    .pd-price-box{background:#f0f2f2;border-radius:8px;padding:16px;margin-bottom:16px}
+    .pd-price-label{font-size:13px;color:#565959}
+    .pd-price{display:flex;align-items:baseline;gap:8px}
+    .pd-price .currency{font-size:14px;color:var(--amazon-text)}
+    .pd-price .amount{font-size:28px;font-weight:600;color:var(--amazon-text)}
+    .pd-price .original{font-size:16px;color:#565959;text-decoration:line-through}
+    .pd-price .discount{font-size:14px;color:#cc0c39;font-weight:600}
+    .pd-stock{font-size:14px;margin-bottom:16px}
+    .pd-stock.in{color:var(--amazon-green)}
+    .pd-stock.low{color:#e77600}
+    .pd-stock.out{color:#cc0c39}
+    .pd-desc{margin-bottom:16px}
+    .pd-desc h3{font-size:16px;font-weight:700;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #eee}
+    .pd-desc p{font-size:14px;line-height:1.6;color:#333}
+    .pd-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+    .pd-tag{background:#f0f2f2;padding:4px 10px;border-radius:4px;font-size:12px;color:#565959}
+    .pd-actions{display:flex;gap:12px;margin-top:16px}
+    .pd-btn{padding:12px 24px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;border:1px solid;transition:all 0.2s;flex:1;text-align:center}
+    .pd-btn-cart{background:linear-gradient(to bottom,#ffd814,#f7ca00);border-color:#f2c200;color:var(--amazon-text)}
+    .pd-btn-cart:hover{background:linear-gradient(to bottom,#f7ca00,#ebb617)}
+    .pd-btn-buy{background:linear-gradient(to bottom,#ffa41c,#ff8f00);border-color:#e77600;color:#fff}
+    .pd-btn-buy:hover{background:linear-gradient(to bottom,#ff8f00,#e77600)}
+    .pd-qty{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+    .pd-qty label{font-size:14px;font-weight:600}
+    .pd-qty select{padding:6px 12px;border:1px solid var(--amazon-border);border-radius:6px;font-size:14px}
+    .pd-seller{background:#f7fafa;border:1px solid var(--amazon-border);border-radius:8px;padding:16px;margin-bottom:16px}
+    .pd-seller h4{font-size:14px;margin-bottom:8px}
+    .pd-seller .name{color:var(--amazon-link);font-weight:600}
+    .pd-loading{text-align:center;padding:80px 20px;color:#565959}
+    .pd-loading i{font-size:32px;color:var(--amazon-orange);margin-bottom:12px;display:block;animation:spin 1s linear infinite}
+    @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    .pd-error{text-align:center;padding:80px 20px;color:#cc0c39}
+    .pd-specs{width:100%;border-collapse:collapse;margin-top:12px}
+    .pd-specs td{padding:8px 12px;border-bottom:1px solid #eee;font-size:14px}
+    .pd-specs td:first-child{font-weight:600;width:160px;color:#565959}
+    @media(max-width:900px){.pd-grid{grid-template-columns:1fr}.pd-gallery{position:static}}
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="amz-header">
+    <div class="amz-header-top">
+      <a href="index.html" class="logo">
+        <div>
+          <span class="logo-text">MR shop</span>
+          <span class="logo-sub">Bangladesh</span>
+        </div>
+      </a>
+      <div class="amz-deliver-to"><span class="label">Deliver to</span><span class="location"><i class="fas fa-map-marker-alt"></i> Bangladesh</span></div>
+      <div class="amz-search-bar">
+        <select class="amz-search-category" id="searchCategory">
+          <option value="all">All</option>
+          <option value="food">Food & Natural</option>
+          <option value="sweets">Sweets & Dairy</option>
+          <option value="handicrafts">Handicrafts</option>
+          <option value="clothing">Clothing</option>
+          <option value="books">Books</option>
+          <option value="antique">Antique</option>
+        </select>
+        <input type="text" class="amz-search-input" id="searchInput" placeholder="Search MR Shop" autocomplete="off">
+        <button class="amz-search-btn" onclick="doSearch()" aria-label="Search"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="amz-header-right">
+        <a href="signin.html" class="amz-header-link" id="authLink">
+          <span class="line1">Hello, Sign in</span>
+          <span class="line2">Account & Lists <i class="fas fa-caret-down"></i></span>
+        </a>
+        <a href="userprofile.html" class="amz-header-link"><span class="line1">Returns</span><span class="line2">& Orders</span></a>
+        <a href="wishlist.html" class="amz-header-link">
+          <span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span>
+          <span class="line2">Wishlist</span>
+        </a>
+        <a href="cart.html" class="amz-cart"><span class="amz-cart-icon"><i class="fas fa-shopping-cart"></i><span class="amz-cart-count" id="cartCount">0</span></span><span class="amz-cart-text">Cart</span></a>
+      </div>
+    </div>
+    <nav class="amz-nav-bar">
+      <a href="index.html" class="amz-nav-item"><i class="fas fa-bars"></i> All</a>
+      <a href="food&natural.html" class="amz-nav-item">Food & Natural</a>
+      <a href="sweets&dairy.html" class="amz-nav-item">Sweets & Dairy</a>
+      <a href="handricrafts.html" class="amz-nav-item">Handicrafts</a>
+      <a href="clothing.html" class="amz-nav-item">Clothing</a>
+      <a href="book.html" class="amz-nav-item">Books</a>
+      <a href="antique.html" class="amz-nav-item">Antique</a>
+      <div class="amz-nav-divider"></div>
+      <a href="becomeseller.html" class="amz-nav-item">Sell</a>
+      <a href="search-results.html" class="amz-nav-item">Best Sellers</a>
+      <a href="index.html" class="amz-nav-item">Today's Deals</a>
+      <a href="chat.html" class="amz-nav-item"><i class="fas fa-headset"></i> Help</a>
+    </nav>
+  </header>
+
+  <!-- Features Bar -->
+  <div class="amz-features-bar">
+    <div class="amz-features-grid">
+      <div class="amz-feature-item"><div class="amz-feature-icon green"><i class="fas fa-truck"></i></div><div class="amz-feature-text"><h4>Free Delivery</h4><p>On orders over ৳5,000</p></div></div>
+      <div class="amz-feature-item"><div class="amz-feature-icon blue"><i class="fas fa-undo"></i></div><div class="amz-feature-text"><h4>Easy Returns</h4><p>7-day return policy</p></div></div>
+      <div class="amz-feature-item"><div class="amz-feature-icon orange"><i class="fas fa-shield-alt"></i></div><div class="amz-feature-text"><h4>Secure Payment</h4><p>bKash, Nagad, COD</p></div></div>
+      <div class="amz-feature-item"><div class="amz-feature-icon red"><i class="fas fa-headset"></i></div><div class="amz-feature-text"><h4>24/7 Support</h4><p>Dedicated help center</p></div></div>
+    </div>
+  </div>
+
+  <!-- Product Content -->
+  <div class="pd-layout">
+    <div id="productContent">
+      <div class="pd-loading"><i class="fas fa-spinner"></i><p>Loading product...</p></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="amz-back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</div>
+  <footer class="amz-footer">
+    <div class="amz-footer-grid">
+      <div class="amz-footer-col"><h4>Get to Know Us</h4><a href="#">About MR Shop</a><a href="#">Careers</a><a href="#">Press Releases</a></div>
+      <div class="amz-footer-col"><h4>Make Money with Us</h4><a href="becomeseller.html">Sell on MR Shop</a><a href="#">Become an Affiliate</a></div>
+      <div class="amz-footer-col"><h4>Let Us Help You</h4><a href="userprofile.html">Your Account</a><a href="chat.html">Customer Service</a></div>
+      <div class="amz-footer-col"><h4>Connect with Us</h4><a href="https://www.facebook.com/profile.php?id=61583616496782" target="_blank"><i class="fab fa-facebook"></i> Facebook</a><a href="https://www.instagram.com/mrshopbd18/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></div>
+    </div>
+    <div class="amz-footer-divider"></div>
+  </footer>
+  <div class="amz-footer-bottom">
+    <div class="amz-footer-logo">MR Shop</div>
+    <div class="amz-footer-copyright">&copy; 2026 MR Shop. All Rights Reserved.</div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/products.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/auth-shared.js"></script>
+  <script>
+    const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : 'https://mrshop-bd.azurewebsites.net/api';
+    let currentProduct = null;
+    let selectedImage = 0;
+
+    function generateStars(rating) {
+      const full = Math.floor(rating);
+      const half = rating % 1 >= 0.5;
+      let html = '';
+      for (let i = 0; i < full; i++) html += '<i class="fas fa-star"></i>';
+      if (half) html += '<i class="fas fa-star-half-alt"></i>';
+      const empty = 5 - full - (half ? 1 : 0);
+      for (let i = 0; i < empty; i++) html += '<i class="far fa-star"></i>';
+      return html;
+    }
+
+    function getDiscount(original, current) {
+      return Math.round(((original - current) / original) * 100);
+    }
+
+    function getDeliveryDate() {
+      const d = new Date();
+      d.setDate(d.getDate() + 3 + Math.floor(Math.random() * 3));
+      return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    }
+
+    function selectImage(index) {
+      selectedImage = index;
+      const imgs = currentProduct.imageGallery && currentProduct.imageGallery.length > 0 ? currentProduct.imageGallery : [];
+      const mainImg = document.getElementById('mainImage');
+      if (imgs[index]) mainImg.src = imgs[index];
+      document.querySelectorAll('.pd-thumb').forEach((t, i) => {
+        t.classList.toggle('active', i === index);
+      });
+    }
+
+    function addToCartFromProduct() {
+      if (!currentProduct) return;
+      const qty = parseInt(document.getElementById('qtySelect').value) || 1;
+      MR_addToCart(currentProduct.id, qty);
+    }
+
+    async function loadProduct() {
+      const params = new URLSearchParams(window.location.search);
+      const idOrSlug = params.get('id') || params.get('slug');
+      if (!idOrSlug) {
+        document.getElementById('productContent').innerHTML = '<div class="pd-error"><i class="fas fa-exclamation-triangle" style="font-size:32px;margin-bottom:12px;display:block"></i><p>No product specified.</p><a href="index.html" style="color:var(--amazon-link);margin-top:12px;display:inline-block">← Back to Home</a></div>';
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/products/${idOrSlug}`);
+        if (!response.ok) throw new Error('Product not found');
+        const data = await response.json();
+        currentProduct = data.product;
+        const seller = data.seller;
+        const category = data.category;
+        const brand = data.brand;
+
+        document.title = `${currentProduct.name} — MR Shop`;
+
+        const discount = currentProduct.discountPrice ? getDiscount(currentProduct.price, currentProduct.discountPrice) : 0;
+        const displayPrice = currentProduct.discountPrice || currentProduct.price;
+        const originalPrice = currentProduct.discountPrice ? currentProduct.price : null;
+        const stock = currentProduct.stockQuantity;
+        const stockClass = stock === 0 ? 'out' : stock <= (currentProduct.minimumStockLevel || 5) ? 'low' : 'in';
+        const stockText = stock === 0 ? 'Out of Stock' : stock <= 5 ? `Only ${stock} left in stock - order soon.` : `In Stock`;
+        const images = currentProduct.imageGallery && currentProduct.imageGallery.length > 0 ? currentProduct.imageGallery : [currentProduct.thumbnailImage].filter(Boolean);
+        if (images.length === 0) images.push('https://via.placeholder.com/450x450?text=No+Image');
+
+        const breadcrumb = category ? `Home <span style="margin:0 6px;">›</span> ${category.name} <span style="margin:0 6px;">›</span> ${currentProduct.name}` : `Home <span style="margin:0 6px;">›</span> ${currentProduct.name}`;
+
+        let specsHtml = '';
+        if (currentProduct.sku) specsHtml += `<tr><td>SKU</td><td>${currentProduct.sku}</td></tr>`;
+        if (currentProduct.weight) specsHtml += `<tr><td>Weight</td><td>${currentProduct.weight} kg</td></tr>`;
+        if (currentProduct.dimensions) specsHtml += `<tr><td>Dimensions</td><td>${currentProduct.dimensions}</td></tr>`;
+        if (currentProduct.variants && currentProduct.variants.length > 0) {
+          currentProduct.variants.forEach(v => {
+            specsHtml += `<tr><td>${v.name}</td><td>${v.value}</td></tr>`;
+          });
+        }
+
+        let tagsHtml = '';
+        if (currentProduct.tags && currentProduct.tags.length > 0) {
+          tagsHtml = `<div class="pd-tags">${currentProduct.tags.map(t => `<span class="pd-tag">${t}</span>`).join('')}</div>`;
+        }
+
+        const html = `
+          <div class="pd-breadcrumb"><a href="index.html" style="color:var(--amazon-link)">Home</a> ${breadcrumb}</div>
+
+          <div class="pd-grid">
+            <div class="pd-gallery">
+              <img id="mainImage" src="${images[0]}" alt="${currentProduct.name}" class="pd-main-img" onerror="this.src='https://via.placeholder.com/450x450?text=No+Image'">
+              ${images.length > 1 ? `<div class="pd-thumbs">${images.map((img, i) => `<img src="${img}" class="pd-thumb ${i === 0 ? 'active' : ''}" onclick="selectImage(${i})" onerror="this.style.display='none'">`).join('')}</div>` : ''}
+            </div>
+
+            <div class="pd-info">
+              <h1>${currentProduct.name}</h1>
+              ${brand ? `<div class="pd-brand">Brand: <a href="#" style="color:var(--amazon-link)">${brand.name}</a></div>` : ''}
+
+              <div class="pd-rating">
+                <span class="stars">${generateStars(currentProduct.averageRating || 0)}</span>
+                <span class="count">${(currentProduct.averageRating || 0).toFixed(1)} (${(currentProduct.reviewCount || 0).toLocaleString()} reviews)</span>
+                <span style="color:#565959;font-size:13px;margin-left:8px">${(currentProduct.soldCount || 0).toLocaleString()} sold</span>
+              </div>
+
+              <div class="pd-price-box">
+                <div class="pd-price-label">Price:</div>
+                <div class="pd-price">
+                  <span class="currency">৳</span>
+                  <span class="amount">${displayPrice.toLocaleString()}</span>
+                  ${originalPrice ? `<span class="original">৳${originalPrice.toLocaleString()}</span><span class="discount">-${discount}%</span>` : ''}
+                </div>
+              </div>
+
+              <div class="pd-stock ${stockClass}"><i class="fas ${stock === 0 ? 'fa-times-circle' : 'fa-check-circle'}"></i> ${stockText}</div>
+
+              ${stock > 0 ? `
+              <div class="pd-qty">
+                <label>Qty:</label>
+                <select id="qtySelect">
+                  ${Array.from({length: Math.min(stock, 10)}, (_, i) => `<option value="${i + 1}">${i + 1}</option>`).join('')}
+                </select>
+              </div>
+              ` : ''}
+
+              <div class="pd-actions">
+                <button class="pd-btn pd-btn-cart" onclick="addToCartFromProduct()" ${stock === 0 ? 'disabled style="opacity:0.5;cursor:not-allowed"' : ''}>
+                  <i class="fas fa-shopping-cart"></i> Add to Cart
+                </button>
+                <button class="pd-btn pd-btn-buy" onclick="addToCartFromProduct();window.location.href='cart.html'" ${stock === 0 ? 'disabled style="opacity:0.5;cursor:not-allowed"' : ''}>
+                  Buy Now
+                </button>
+              </div>
+
+              ${currentProduct.shortDescription ? `<div class="pd-desc"><h3>About this item</h3><p>${currentProduct.shortDescription}</p></div>` : ''}
+
+              ${tagsHtml}
+
+              ${seller ? `
+              <div class="pd-seller">
+                <h4>Sold by</h4>
+                <span class="name">${seller.shopName || seller.name || 'MR Shop Seller'}</span>
+              </div>
+              ` : ''}
+
+              ${specsHtml ? `
+              <div class="pd-desc" style="margin-top:20px">
+                <h3>Product Details</h3>
+                <table class="pd-specs">${specsHtml}</table>
+              </div>
+              ` : ''}
+            </div>
+          </div>
+
+          ${currentProduct.description ? `
+          <div class="pd-desc" style="margin-top:16px">
+            <h3>Full Description</h3>
+            <p>${currentProduct.description}</p>
+          </div>
+          ` : ''}
+        `;
+
+        document.getElementById('productContent').innerHTML = html;
+      } catch (err) {
+        console.error('Failed to load product:', err);
+        document.getElementById('productContent').innerHTML = '<div class="pd-error"><i class="fas fa-exclamation-triangle" style="font-size:32px;margin-bottom:12px;display:block"></i><p>Product not found or failed to load.</p><a href="index.html" style="color:var(--amazon-link);margin-top:12px;display:inline-block">← Back to Home</a></div>';
+      }
+    }
+
+    function doSearch() {
+      const q = document.getElementById('searchInput').value.trim();
+      if (q) {
+        sessionStorage.setItem('mr_search_query', q);
+        window.location.href = 'search-results.html';
+      }
+    }
+
+    document.getElementById('searchInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') doSearch();
+    });
+
+    document.addEventListener('DOMContentLoaded', loadProduct);
+  </script>
+</body>
+</html>
