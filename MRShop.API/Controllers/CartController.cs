@@ -52,14 +52,14 @@ public class CartController : ControllerBase
 
         // Validate product exists and get server-side data
         var product = await _mongoDb.Products
-            .Find(p => p.Id == request.ProductId && p.IsActive)
+            .Find(p => p.Id == request.ProductId && p.Status == "published")
             .FirstOrDefaultAsync();
 
         if (product == null)
             return BadRequest(new { message = "Product not found." });
 
-        if (product.Stock < request.Quantity)
-            return BadRequest(new { message = $"Insufficient stock. Only {product.Stock} available." });
+        if (product.StockQuantity < request.Quantity)
+            return BadRequest(new { message = $"Insufficient stock. Only {product.StockQuantity} available." });
 
         var existingItem = await _mongoDb.CartItems
             .Find(c => c.UserId == userId && c.ProductId == request.ProductId)
@@ -68,8 +68,8 @@ public class CartController : ControllerBase
         if (existingItem != null)
         {
             var newQty = existingItem.Quantity + request.Quantity;
-            if (newQty > product.Stock)
-                return BadRequest(new { message = $"Cannot add more. Only {product.Stock} in stock." });
+            if (newQty > product.StockQuantity)
+                return BadRequest(new { message = $"Cannot add more. Only {product.StockQuantity} in stock." });
             existingItem.Quantity = newQty;
             await _mongoDb.CartItems.ReplaceOneAsync(
                 c => c.Id == existingItem.Id,
@@ -84,7 +84,7 @@ public class CartController : ControllerBase
                 ProductId = request.ProductId,
                 ProductName = product.Name,
                 Price = product.Price,
-                Image = product.Image,
+                Image = product.ThumbnailImage,
                 Quantity = request.Quantity,
                 CreatedAt = DateTime.UtcNow
             };

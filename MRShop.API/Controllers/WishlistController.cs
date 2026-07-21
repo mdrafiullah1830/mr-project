@@ -45,7 +45,7 @@ public class WishlistController : ControllerBase
         if (userId == null) return Unauthorized();
 
         var product = await _mongoDb.Products
-            .Find(p => p.Id == request.ProductId && p.IsActive)
+            .Find(p => p.Id == request.ProductId && p.Status == "published")
             .FirstOrDefaultAsync();
 
         if (product == null)
@@ -66,7 +66,7 @@ public class WishlistController : ControllerBase
             ProductId = request.ProductId,
             ProductName = product.Name,
             Price = product.Price,
-            Image = product.Image,
+            Image = product.ThumbnailImage,
             CreatedAt = DateTime.UtcNow
         };
 

@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace MRShop.API.Models;
 
-public class Category
+public class Brand
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
@@ -15,23 +15,14 @@ public class Category
     [BsonElement("slug")]
     public string Slug { get; set; } = string.Empty;
 
+    [BsonElement("logo")]
+    public string? Logo { get; set; }
+
     [BsonElement("description")]
     public string? Description { get; set; }
 
-    [BsonElement("parentId")]
-    public string? ParentId { get; set; } // null = main category, has value = subcategory
-
-    [BsonElement("image")]
-    public string? Image { get; set; }
-
-    [BsonElement("icon")]
-    public string? Icon { get; set; } // FontAwesome icon class
-
     [BsonElement("isActive")]
     public bool IsActive { get; set; } = true;
-
-    [BsonElement("sortOrder")]
-    public int SortOrder { get; set; }
 
     [BsonElement("productCount")]
     public int ProductCount { get; set; }

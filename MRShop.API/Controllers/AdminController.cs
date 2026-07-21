@@ -111,8 +111,8 @@ public class AdminController : ControllerBase
 
             // Product stats
             totalProducts = products.Count,
-            activeProducts = products.Count(p => p.IsActive && p.Stock > 0),
-            outOfStockProducts = products.Count(p => p.Stock <= 0),
+            activeProducts = products.Count(p => p.Status == "published" && p.StockQuantity > 0),
+            outOfStockProducts = products.Count(p => p.StockQuantity == 0 && p.Status == "published"),
 
             // Order stats
             totalOrders = orders.Count,
@@ -313,15 +313,14 @@ public class AdminController : ControllerBase
     public async Task<IActionResult> GetProducts(
         [FromQuery] string? category,
         [FromQuery] string? search,
+        [FromQuery] string? status,
+        [FromQuery] string? approvalStatus,
         [FromQuery] bool? inStock)
     {
         var filter = Builders<Product>.Filter.Empty;
 
         if (!string.IsNullOrWhiteSpace(category))
-        {
-            filter = Builders<Product>.Filter.And(filter,
-                Builders<Product>.Filter.Eq(p => p.Category, category));
-        }
+            filter = Builders<Product>.Filter.And(filter, Builders<Product>.Filter.Eq(p => p.CategoryId, category));
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -330,12 +329,18 @@ public class AdminController : ControllerBase
                 Builders<Product>.Filter.Regex(p => p.Name, new MongoDB.Bson.BsonRegularExpression(escaped, "i")));
         }
 
+        if (!string.IsNullOrWhiteSpace(status))
+            filter = Builders<Product>.Filter.And(filter, Builders<Product>.Filter.Eq(p => p.Status, status));
+
+        if (!string.IsNullOrWhiteSpace(approvalStatus))
+            filter = Builders<Product>.Filter.And(filter, Builders<Product>.Filter.Eq(p => p.ApprovalStatus, approvalStatus));
+
         if (inStock.HasValue)
         {
             if (inStock.Value)
-                filter = Builders<Product>.Filter.And(filter, Builders<Product>.Filter.Gt(p => p.Stock, 0));
+                filter = Builders<Product>.Filter.And(filter, Builders<Product>.Filter.Gt(p => p.StockQuantity, 0));
             else
-                filter = Builders<Product>.Filter.And(filter, Builders<Product>.Filter.Lte(p => p.Stock, 0));
+                filter = Builders<Product>.Filter.And(filter, Builders<Product>.Filter.Eq(p => p.StockQuantity, 0));
         }
 
         var products = await _mongoDb.Products
@@ -347,23 +352,25 @@ public class AdminController : ControllerBase
         {
             id = p.Id,
             name = p.Name,
-            description = p.Description,
+            slug = p.Slug,
             price = p.Price,
-            originalPrice = p.OriginalPrice,
-            category = p.Category,
-            stock = p.Stock,
-            image = p.Image,
-            images = p.Images,
-            rating = p.Rating,
-            reviewCount = p.ReviewCount,
+            discountPrice = p.DiscountPrice,
+            categoryId = p.CategoryId,
+            brandId = p.BrandId,
+            stockQuantity = p.StockQuantity,
+            status = p.Status,
+            approvalStatus = p.ApprovalStatus,
+            thumbnailImage = p.ThumbnailImage,
             sellerId = p.SellerId,
-            isActive = p.IsActive,
+            averageRating = p.AverageRating,
+            soldCount = p.SoldCount,
+            viewCount = p.ViewCount,
             createdAt = p.CreatedAt
         }));
     }
 
-    [HttpPut("products/{id}/toggle-visibility")]
-    public async Task<IActionResult> ToggleProductVisibility(string id)
+    [HttpPut("products/{id}/approve")]
+    public async Task<IActionResult> ApproveProduct(string id)
     {
         var product = await _mongoDb.Products.Find(p => p.Id == id).FirstOrDefaultAsync();
         if (product == null) return NotFound(new { message = "Product not found." });
@@ -371,11 +378,138 @@ public class AdminController : ControllerBase
         await _mongoDb.Products.UpdateOneAsync(
             p => p.Id == id,
             Builders<Product>.Update
-                .Set(p => p.IsActive, !product.IsActive)
+                .Set(p => p.ApprovalStatus, "approved")
+                .Set(p => p.Status, "published")
                 .Set(p => p.UpdatedAt, DateTime.UtcNow)
         );
 
-        return Ok(new { message = $"Product {(!product.IsActive ? "activated" : "hidden")}.", isActive = !product.IsActive });
+        return Ok(new { message = "Product approved and published." });
+    }
+
+    [HttpPut("products/{id}/reject")]
+    public async Task<IActionResult> RejectProduct(string id)
+    {
+        var product = await _mongoDb.Products.Find(p => p.Id == id).FirstOrDefaultAsync();
+        if (product == null) return NotFound(new { message = "Product not found." });
+
+        await _mongoDb.Products.UpdateOneAsync(
+            p => p.Id == id,
+            Builders<Product>.Update
+                .Set(p => p.ApprovalStatus, "rejected")
+                .Set(p => p.UpdatedAt, DateTime.UtcNow)
+        );
+
+        return Ok(new { message = "Product rejected." });
+    }
+
+    [HttpPut("products/{id}/archive")]
+    public async Task<IActionResult> ArchiveProduct(string id)
+    {
+        var product = await _mongoDb.Products.Find(p => p.Id == id).FirstOrDefaultAsync();
+        if (product == null) return NotFound(new { message = "Product not found." });
+
+        await _mongoDb.Products.UpdateOneAsync(
+            p => p.Id == id,
+            Builders<Product>.Update
+                .Set(p => p.Status, "archived")
+                .Set(p => p.UpdatedAt, DateTime.UtcNow)
+        );
+
+        return Ok(new { message = "Product archived." });
+    }
+
+    [HttpPut("products/{id}/restore")]
+    public async Task<IActionResult> RestoreProduct(string id)
+    {
+        var product = await _mongoDb.Products.Find(p => p.Id == id).FirstOrDefaultAsync();
+        if (product == null) return NotFound(new { message = "Product not found." });
+
+        await _mongoDb.Products.UpdateOneAsync(
+            p => p.Id == id,
+            Builders<Product>.Update
+                .Set(p => p.Status, "published")
+                .Set(p => p.UpdatedAt, DateTime.UtcNow)
+        );
+
+        return Ok(new { message = "Product restored." });
+    }
+
+    [HttpPut("products/{id}/hide")]
+    public async Task<IActionResult> HideProduct(string id)
+    {
+        var product = await _mongoDb.Products.Find(p => p.Id == id).FirstOrDefaultAsync();
+        if (product == null) return NotFound(new { message = "Product not found." });
+
+        await _mongoDb.Products.UpdateOneAsync(
+            p => p.Id == id,
+            Builders<Product>.Update
+                .Set(p => p.Status, "hidden")
+                .Set(p => p.UpdatedAt, DateTime.UtcNow)
+        );
+
+        return Ok(new { message = "Product hidden." });
+    }
+
+    [HttpPut("products/{id}/edit")]
+    public async Task<IActionResult> AdminEditProduct(string id, [FromBody] UpdateProductRequest request)
+    {
+        var product = await _mongoDb.Products.Find(p => p.Id == id).FirstOrDefaultAsync();
+        if (product == null) return NotFound(new { message = "Product not found." });
+
+        var update = Builders<Product>.Update.Set(p => p.UpdatedAt, DateTime.UtcNow);
+        if (request.Name != null) update = update.Set(p => p.Name, request.Name.Trim());
+        if (request.Description != null) update = update.Set(p => p.Description, request.Description);
+        if (request.Price.HasValue) update = update.Set(p => p.Price, request.Price.Value);
+        if (request.DiscountPrice.HasValue) update = update.Set(p => p.DiscountPrice, request.DiscountPrice);
+        if (request.StockQuantity.HasValue) update = update.Set(p => p.StockQuantity, request.StockQuantity.Value);
+        if (request.CategoryId != null) update = update.Set(p => p.CategoryId, request.CategoryId);
+        if (request.BrandId != null) update = update.Set(p => p.BrandId, request.BrandId);
+        if (request.Status != null) update = update.Set(p => p.Status, request.Status);
+
+        await _mongoDb.Products.UpdateOneAsync(p => p.Id == id, update);
+        return Ok(new { message = "Product updated." });
+    }
+
+    // ==================== INVENTORY ====================
+
+    [HttpGet("inventory")]
+    public async Task<IActionResult> GetInventoryLogs(
+        [FromQuery] string? productId,
+        [FromQuery] string? sellerId)
+    {
+        var filter = Builders<InventoryLog>.Filter.Empty;
+        if (!string.IsNullOrWhiteSpace(productId))
+            filter = Builders<InventoryLog>.Filter.And(filter, Builders<InventoryLog>.Filter.Eq(l => l.ProductId, productId));
+        if (!string.IsNullOrWhiteSpace(sellerId))
+            filter = Builders<InventoryLog>.Filter.And(filter, Builders<InventoryLog>.Filter.Eq(l => l.SellerId, sellerId));
+
+        var logs = await _mongoDb.InventoryLogs
+            .Find(filter)
+            .SortByDescending(l => l.CreatedAt)
+            .Limit(200)
+            .ToListAsync();
+
+        return Ok(logs);
+    }
+
+    [HttpGet("inventory/alerts")]
+    public async Task<IActionResult> GetInventoryAlerts()
+    {
+        var lowStock = await _mongoDb.Products
+            .Find(p => p.Status == "published" && p.StockQuantity > 0 && p.StockQuantity <= p.MinimumStockLevel)
+            .ToListAsync();
+
+        var outOfStock = await _mongoDb.Products
+            .Find(p => p.Status == "published" && p.StockQuantity == 0)
+            .ToListAsync();
+
+        return Ok(new
+        {
+            lowStock = lowStock.Select(p => new { id = p.Id, name = p.Name, stock = p.StockQuantity, minimumLevel = p.MinimumStockLevel, sellerId = p.SellerId }),
+            outOfStock = outOfStock.Select(p => new { id = p.Id, name = p.Name, sellerId = p.SellerId }),
+            lowStockCount = lowStock.Count,
+            outOfStockCount = outOfStock.Count
+        });
     }
 
     // ==================== ORDER MANAGEMENT ====================
@@ -616,8 +750,8 @@ public class AdminController : ControllerBase
 
         // Top categories by product count
         var categoryStats = products
-            .GroupBy(p => p.Category)
-            .Select(g => new { category = g.Key, count = g.Count(), revenue = orders.Where(o => o.Items.Any(i => products.Any(p => p.Id == i.ProductId && p.Category == g.Key) && o.Status == "delivered")).Sum(o => o.TotalAmount) })
+            .GroupBy(p => p.CategoryId)
+            .Select(g => new { category = g.Key, count = g.Count(), revenue = orders.Where(o => o.Items.Any(i => products.Any(p => p.Id == i.ProductId && p.CategoryId == g.Key) && o.Status == "delivered")).Sum(o => o.TotalAmount) })
             .OrderByDescending(c => c.count)
             .Take(6)
             .ToList();

@@ -83,7 +83,7 @@ public class SellerDashboardController : ControllerBase
         if (userId == null) return Unauthorized();
 
         var products = await _mongoDb.Products
-            .Find(p => p.SellerId == userId || p.CreatedBy == userId)
+            .Find(p => p.SellerId == userId)
             .ToListAsync();
 
         var productIds = products.Select(p => p.Id).ToList();
@@ -111,7 +111,7 @@ public class SellerDashboardController : ControllerBase
             totalSales = totalSalesCount,
             totalRevenue = totalRevenue,
             totalProducts = products.Count,
-            activeProducts = products.Count(p => p.IsActive && p.Stock > 0),
+            activeProducts = products.Count(p => p.Status == "published" && p.StockQuantity > 0),
             pendingOrders = sellerOrders.Count(o => o.Status == "pending"),
             confirmedOrders = sellerOrders.Count(o => o.Status == "confirmed"),
             shippedOrders = sellerOrders.Count(o => o.Status == "shipped"),
@@ -139,7 +139,7 @@ public class SellerDashboardController : ControllerBase
         if (userId == null) return Unauthorized();
 
         var products = await _mongoDb.Products
-            .Find(p => p.SellerId == userId || p.CreatedBy == userId)
+            .Find(p => p.SellerId == userId)
             .ToListAsync();
 
         var productIds = products.Select(p => p.Id).ToList();
@@ -186,7 +186,7 @@ public class SellerDashboardController : ControllerBase
 
         // Verify seller owns products in this order
         var products = await _mongoDb.Products
-            .Find(p => p.SellerId == userId || p.CreatedBy == userId)
+            .Find(p => p.SellerId == userId)
             .ToListAsync();
 
         var productIds = products.Select(p => p.Id).ToList();
@@ -220,7 +220,7 @@ public class SellerDashboardController : ControllerBase
         if (userId == null) return Unauthorized();
 
         var products = await _mongoDb.Products
-            .Find(p => p.SellerId == userId || p.CreatedBy == userId)
+            .Find(p => p.SellerId == userId)
             .ToListAsync();
 
         var productIds = products.Select(p => p.Id).ToList();

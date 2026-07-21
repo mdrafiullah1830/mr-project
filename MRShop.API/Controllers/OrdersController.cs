@@ -79,14 +79,14 @@ public class OrdersController : ControllerBase
         foreach (var ci in cartItems)
         {
             var product = await _mongoDb.Products
-                .Find(p => p.Id == ci.ProductId && p.IsActive)
+                .Find(p => p.Id == ci.ProductId && p.Status == "published")
                 .FirstOrDefaultAsync();
 
             if (product == null)
                 return BadRequest(new { message = $"Product '{ci.ProductName}' is no longer available." });
 
-            if (product.Stock < ci.Quantity)
-                return BadRequest(new { message = $"Insufficient stock for '{product.Name}'. Only {product.Stock} available." });
+            if (product.StockQuantity < ci.Quantity)
+                return BadRequest(new { message = $"Insufficient stock for '{product.Name}'. Only {product.StockQuantity} available." });
 
             orderItems.Add(new OrderItem
             {
@@ -94,13 +94,13 @@ public class OrdersController : ControllerBase
                 ProductName = product.Name,
                 Price = product.Price,
                 Quantity = ci.Quantity,
-                Image = product.Image
+                Image = product.ThumbnailImage
             });
 
             // Decrease stock
             await _mongoDb.Products.UpdateOneAsync(
                 p => p.Id == ci.ProductId,
-                Builders<Product>.Update.Inc(p => p.Stock, -ci.Quantity)
+                Builders<Product>.Update.Inc(p => p.StockQuantity, -ci.Quantity)
             );
         }
 
@@ -148,7 +148,7 @@ public class OrdersController : ControllerBase
         {
             var userId = GetUserId();
             var sellerProducts = await _mongoDb.Products
-                .Find(p => p.SellerId == userId || p.CreatedBy == userId)
+                .Find(p => p.SellerId == userId)
                 .ToListAsync();
             var sellerProductIds = sellerProducts.Select(p => p.Id).ToHashSet();
             var hasSellerProduct = order.Items.Any(i => sellerProductIds.Contains(i.ProductId));
