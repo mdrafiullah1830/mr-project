@@ -30,7 +30,6 @@ public class MongoDbService
         var client = new MongoClient(settings);
         _database = client.GetDatabase(databaseName);
 
-        // Create indexes on startup
         CreateIndexes();
     }
 
@@ -39,6 +38,9 @@ public class MongoDbService
     public IMongoCollection<CartItem> CartItems => _database.GetCollection<CartItem>("cartItems");
     public IMongoCollection<WishlistItem> WishlistItems => _database.GetCollection<WishlistItem>("wishlistItems");
     public IMongoCollection<Order> Orders => _database.GetCollection<Order>("orders");
+    public IMongoCollection<OrderTimeline> OrderTimelines => _database.GetCollection<OrderTimeline>("orderTimelines");
+    public IMongoCollection<Address> Addresses => _database.GetCollection<Address>("addresses");
+    public IMongoCollection<Invoice> Invoices => _database.GetCollection<Invoice>("invoices");
     public IMongoCollection<SellerApplication> SellerApplications => _database.GetCollection<SellerApplication>("sellerApplications");
     public IMongoCollection<SellerProfile> SellerProfiles => _database.GetCollection<SellerProfile>("sellerProfiles");
     public IMongoCollection<Coupon> Coupons => _database.GetCollection<Coupon>("coupons");
@@ -93,12 +95,70 @@ public class MongoDbService
 
         // Order indexes
         Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
-            Builders<Order>.IndexKeys.Ascending(o => o.UserId),
-            new CreateIndexOptions { Name = "order_user" }
+            Builders<Order>.IndexKeys.Ascending(o => o.CustomerId),
+            new CreateIndexOptions { Name = "order_customer" }
+        ));
+        Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
+            Builders<Order>.IndexKeys.Ascending(o => o.SellerId),
+            new CreateIndexOptions { Name = "order_seller" }
         ));
         Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
             Builders<Order>.IndexKeys.Ascending(o => o.Status),
             new CreateIndexOptions { Name = "order_status" }
+        ));
+        Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
+            Builders<Order>.IndexKeys.Ascending(o => o.OrderNumber),
+            new CreateIndexOptions { Name = "order_number", Unique = true }
+        ));
+        Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
+            Builders<Order>.IndexKeys.Descending(o => o.CreatedAt),
+            new CreateIndexOptions { Name = "order_created" }
+        ));
+        Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
+            Builders<Order>.IndexKeys.Combine(
+                Builders<Order>.IndexKeys.Ascending(o => o.CustomerId),
+                Builders<Order>.IndexKeys.Descending(o => o.CreatedAt)
+            ),
+            new CreateIndexOptions { Name = "order_customer_date" }
+        ));
+        Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
+            Builders<Order>.IndexKeys.Combine(
+                Builders<Order>.IndexKeys.Ascending(o => o.SellerId),
+                Builders<Order>.IndexKeys.Descending(o => o.CreatedAt)
+            ),
+            new CreateIndexOptions { Name = "order_seller_date" }
+        ));
+
+        // OrderTimeline indexes
+        OrderTimelines.Indexes.CreateOne(new CreateIndexModel<OrderTimeline>(
+            Builders<OrderTimeline>.IndexKeys.Ascending(t => t.OrderId),
+            new CreateIndexOptions { Name = "timeline_order" }
+        ));
+
+        // Address indexes
+        Addresses.Indexes.CreateOne(new CreateIndexModel<Address>(
+            Builders<Address>.IndexKeys.Ascending(a => a.UserId),
+            new CreateIndexOptions { Name = "address_user" }
+        ));
+
+        // Invoice indexes
+        Invoices.Indexes.CreateOne(new CreateIndexModel<Invoice>(
+            Builders<Invoice>.IndexKeys.Ascending(i => i.OrderId),
+            new CreateIndexOptions { Name = "invoice_order" }
+        ));
+        Invoices.Indexes.CreateOne(new CreateIndexModel<Invoice>(
+            Builders<Invoice>.IndexKeys.Ascending(i => i.CustomerId),
+            new CreateIndexOptions { Name = "invoice_customer" }
+        ));
+        Invoices.Indexes.CreateOne(new CreateIndexModel<Invoice>(
+            Builders<Invoice>.IndexKeys.Ascending(i => i.InvoiceNumber),
+            new CreateIndexOptions { Name = "invoice_number", Unique = true }
+        ));
+
+        // CartItem indexes
+        CartItems.Indexes.CreateOne(new CreateIndexModel<CartItem>(
+            Builders<CartItem>.IndexKeys.Ascending(c => c.UserId),
+            new CreateIndexOptions { Name = "cart_user" }
         ));
 
         // Review indexes

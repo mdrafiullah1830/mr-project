@@ -62,7 +62,7 @@ public class SellerProductsController : ControllerBase
             .Find(o => o.Items.Any(i => products.Any(p => p.Id == i.ProductId)))
             .ToListAsync();
 
-        var totalRevenue = orders.Where(o => o.Status == "delivered").Sum(o => o.TotalAmount);
+        var totalRevenue = orders.Where(o => o.Status == "delivered").Sum(o => o.GrandTotal);
         var totalProducts = products.Count;
         var totalOrders = orders.Count;
         var activeProducts = products.Count(p => p.Status == "published" && p.StockQuantity > 0);

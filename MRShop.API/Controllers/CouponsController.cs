@@ -142,7 +142,7 @@ public class CouponsController : ControllerBase
         var users = await _mongoDb.Users.Find(u => u.Role == "customer").ToListAsync();
         var products = await _mongoDb.Products.Find(_ => true).ToListAsync();
 
-        var totalRevenue = orders.Sum(o => o.TotalAmount);
+        var totalRevenue = orders.Sum(o => o.GrandTotal);
         var totalOrders = orders.Count;
         var totalUsers = users.Count;
         var pendingOrders = orders.Count(o => o.Status == "pending");
@@ -150,7 +150,7 @@ public class CouponsController : ControllerBase
         var recentOrders = orders.OrderByDescending(o => o.CreatedAt).Take(5).Select(o => new
         {
             id = o.Id,
-            totalAmount = o.TotalAmount,
+            totalAmount = o.GrandTotal,
             status = o.Status,
             createdAt = o.CreatedAt,
             items = o.Items.Count

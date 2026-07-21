@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using MRShop.API.Models;
+using MRShop.API.DTOs;
 using MRShop.API.Services;
 
 namespace MRShop.API.Controllers;
@@ -123,11 +124,11 @@ public class SellerDashboardController : ControllerBase
                 .Select(o => new
                 {
                     id = o.Id,
-                    totalAmount = o.TotalAmount,
+                    totalAmount = o.GrandTotal,
                     status = o.Status,
                     createdAt = o.CreatedAt,
                     items = o.Items.Count,
-                    customerName = o.ShippingAddress?.Split(',').FirstOrDefault()?.Trim() ?? "Customer"
+                    customerName = o.ShippingAddress?.FullName ?? "Customer"
                 })
         });
     }
@@ -152,8 +153,8 @@ public class SellerDashboardController : ControllerBase
         return Ok(orders.Select(o => new
         {
             id = o.Id,
-            userId = o.UserId,
-            totalAmount = o.TotalAmount,
+            userId = o.CustomerId,
+            totalAmount = o.GrandTotal,
             shippingAddress = o.ShippingAddress,
             paymentMethod = o.PaymentMethod,
             status = o.Status,
@@ -287,9 +288,4 @@ public class UpdateSellerProfileRequest
     public string? BankName { get; set; }
     public string? AccountNumber { get; set; }
     public List<string>? Categories { get; set; }
-}
-
-public class UpdateOrderStatusRequest
-{
-    public string Status { get; set; } = string.Empty;
 }

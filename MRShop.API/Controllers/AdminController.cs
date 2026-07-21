@@ -34,15 +34,15 @@ public class AdminController : ControllerBase
         var monthStart = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
         var todayStart = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0, DateTimeKind.Utc);
 
-        var totalRevenue = orders.Where(o => o.Status == "delivered").Sum(o => o.TotalAmount);
-        var monthlyRevenue = orders.Where(o => o.Status == "delivered" && o.CreatedAt >= monthStart).Sum(o => o.TotalAmount);
-        var todayRevenue = orders.Where(o => o.Status == "delivered" && o.CreatedAt >= todayStart).Sum(o => o.TotalAmount);
+        var totalRevenue = orders.Where(o => o.Status == "delivered").Sum(o => o.GrandTotal);
+        var monthlyRevenue = orders.Where(o => o.Status == "delivered" && o.CreatedAt >= monthStart).Sum(o => o.GrandTotal);
+        var todayRevenue = orders.Where(o => o.Status == "delivered" && o.CreatedAt >= todayStart).Sum(o => o.GrandTotal);
 
         var recentOrders = orders.OrderByDescending(o => o.CreatedAt).Take(10).Select(o => new
         {
             id = o.Id,
-            userId = o.UserId,
-            totalAmount = o.TotalAmount,
+            userId = o.CustomerId,
+            totalAmount = o.GrandTotal,
             status = o.Status,
             createdAt = o.CreatedAt,
             items = o.Items.Count,
@@ -158,7 +158,7 @@ public class AdminController : ControllerBase
 
         // Get order counts for each user
         var orders = await _mongoDb.Orders.Find(_ => true).ToListAsync();
-        var userOrderCounts = orders.GroupBy(o => o.UserId).ToDictionary(g => g.Key, g => g.Count());
+        var userOrderCounts = orders.GroupBy(o => o.CustomerId).ToDictionary(g => g.Key, g => g.Count());
 
         return Ok(users.Select(u => new
         {
@@ -180,7 +180,7 @@ public class AdminController : ControllerBase
         if (user == null) return NotFound(new { message = "User not found." });
 
         var orders = await _mongoDb.Orders
-            .Find(o => o.UserId == id)
+            .Find(o => o.CustomerId == id)
             .SortByDescending(o => o.CreatedAt)
             .ToListAsync();
 
@@ -196,7 +196,7 @@ public class AdminController : ControllerBase
             orders = orders.Select(o => new
             {
                 id = o.Id,
-                totalAmount = o.TotalAmount,
+                totalAmount = o.GrandTotal,
                 status = o.Status,
                 createdAt = o.CreatedAt,
                 items = o.Items.Count
@@ -543,18 +543,18 @@ public class AdminController : ControllerBase
             .ToListAsync();
 
         // Get user names
-        var userIds = orders.Select(o => o.UserId).Distinct().ToList();
+        var userIds = orders.Select(o => o.CustomerId).Distinct().ToList();
         var users = await _mongoDb.Users.Find(u => userIds.Contains(u.Id)).ToListAsync();
         var userMap = users.ToDictionary(u => u.Id, u => u.Name);
 
         return Ok(orders.Select(o => new
         {
             id = o.Id,
-            userId = o.UserId,
-            customerName = userMap.GetValueOrDefault(o.UserId, "Customer"),
+            userId = o.CustomerId,
+            customerName = userMap.GetValueOrDefault(o.CustomerId, "Customer"),
             items = o.Items.Select(i => new { i.ProductId, i.ProductName, i.Price, i.Quantity, i.Image }),
             itemCount = o.Items.Count,
-            totalAmount = o.TotalAmount,
+            totalAmount = o.GrandTotal,
             shippingAddress = o.ShippingAddress,
             paymentMethod = o.PaymentMethod,
             status = o.Status,
@@ -724,7 +724,7 @@ public class AdminController : ControllerBase
             var monthEnd = monthStart.AddMonths(1);
             var revenue = orders
                 .Where(o => o.Status == "delivered" && o.CreatedAt >= monthStart && o.CreatedAt < monthEnd)
-                .Sum(o => o.TotalAmount);
+                .Sum(o => o.GrandTotal);
             monthlyRevenue.Add(new { month = monthStart.ToString("MMM yyyy"), revenue });
         }
 
@@ -751,7 +751,7 @@ public class AdminController : ControllerBase
         // Top categories by product count
         var categoryStats = products
             .GroupBy(p => p.CategoryId)
-            .Select(g => new { category = g.Key, count = g.Count(), revenue = orders.Where(o => o.Items.Any(i => products.Any(p => p.Id == i.ProductId && p.CategoryId == g.Key) && o.Status == "delivered")).Sum(o => o.TotalAmount) })
+            .Select(g => new { category = g.Key, count = g.Count(), revenue = orders.Where(o => o.Items.Any(i => products.Any(p => p.Id == i.ProductId && p.CategoryId == g.Key) && o.Status == "delivered")).Sum(o => o.GrandTotal) })
             .OrderByDescending(c => c.count)
             .Take(6)
             .ToList();

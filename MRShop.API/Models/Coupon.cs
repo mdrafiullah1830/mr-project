@@ -30,6 +30,9 @@ public class Coupon
     [BsonElement("expiresAt")]
     public DateTime? ExpiresAt { get; set; }
 
+    [BsonElement("maxDiscount")]
+    public decimal MaxDiscount { get; set; }
+
     [BsonElement("isActive")]
     public bool IsActive { get; set; } = true;
 
