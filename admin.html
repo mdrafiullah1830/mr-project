@@ -833,15 +833,20 @@
   <script src="assets/js/cart.js"></script>
   <script src="assets/js/auth-shared.js"></script>
   <script>
-    // Admin authentication check
+    // Admin authentication check - only mrshop.bd.18@gmail.com allowed
     (function() {
+      const ADMIN_EMAIL = 'mrshop.bd.18@gmail.com';
       const user = MR_Auth.getUser();
       if (!user || !user.loggedIn) {
         alert('Access denied. Please log in as admin.');
         window.location.href = 'signin.html';
         return;
       }
-      // Check for admin role (customize based on your auth system)
+      if (user.email !== ADMIN_EMAIL) {
+        alert('Access denied. Admin privileges required.');
+        window.location.href = 'index.html';
+        return;
+      }
       if (!user.isAdmin && !user.role?.includes('admin')) {
         alert('Access denied. Admin privileges required.');
         window.location.href = 'index.html';
