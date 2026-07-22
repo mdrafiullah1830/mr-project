@@ -51,47 +51,54 @@ public class MongoDbService
 
     private void CreateIndexes()
     {
-        // Product indexes
-        var productIndexes = Products.Indexes;
-        productIndexes.CreateOne(new CreateIndexModel<Product>(
-            Builders<Product>.IndexKeys.Combine(
-                Builders<Product>.IndexKeys.Text(p => p.Name),
-                Builders<Product>.IndexKeys.Text(p => p.Description),
-                Builders<Product>.IndexKeys.Text(p => p.Sku)
-            ),
-            new CreateIndexOptions { Name = "product_text_search" }
-        ));
-        productIndexes.CreateOne(new CreateIndexModel<Product>(
-            Builders<Product>.IndexKeys.Combine(
-                Builders<Product>.IndexKeys.Ascending(p => p.SellerId),
-                Builders<Product>.IndexKeys.Ascending(p => p.Status)
-            ),
-            new CreateIndexOptions { Name = "product_seller_status" }
-        ));
-        productIndexes.CreateOne(new CreateIndexModel<Product>(
-            Builders<Product>.IndexKeys.Ascending(p => p.CategoryId),
-            new CreateIndexOptions { Name = "product_category" }
-        ));
-        productIndexes.CreateOne(new CreateIndexModel<Product>(
-            Builders<Product>.IndexKeys.Ascending(p => p.BrandId),
-            new CreateIndexOptions { Name = "product_brand" }
-        ));
-        productIndexes.CreateOne(new CreateIndexModel<Product>(
-            Builders<Product>.IndexKeys.Descending(p => p.CreatedAt),
-            new CreateIndexOptions { Name = "product_created" }
-        ));
-        productIndexes.CreateOne(new CreateIndexModel<Product>(
-            Builders<Product>.IndexKeys.Descending(p => p.SoldCount),
-            new CreateIndexOptions { Name = "product_sold" }
-        ));
-        productIndexes.CreateOne(new CreateIndexModel<Product>(
-            Builders<Product>.IndexKeys.Descending(p => p.ViewCount),
-            new CreateIndexOptions { Name = "product_views" }
-        ));
-        productIndexes.CreateOne(new CreateIndexModel<Product>(
-            Builders<Product>.IndexKeys.Ascending(p => p.Slug),
-            new CreateIndexOptions { Name = "product_slug", Unique = true }
-        ));
+        try
+        {
+            // Product indexes
+            var productIndexes = Products.Indexes;
+            productIndexes.CreateOne(new CreateIndexModel<Product>(
+                Builders<Product>.IndexKeys.Combine(
+                    Builders<Product>.IndexKeys.Text(p => p.Name),
+                    Builders<Product>.IndexKeys.Text(p => p.Description),
+                    Builders<Product>.IndexKeys.Text(p => p.Sku)
+                ),
+                new CreateIndexOptions { Name = "product_text_search" }
+            ));
+            productIndexes.CreateOne(new CreateIndexModel<Product>(
+                Builders<Product>.IndexKeys.Combine(
+                    Builders<Product>.IndexKeys.Ascending(p => p.SellerId),
+                    Builders<Product>.IndexKeys.Ascending(p => p.Status)
+                ),
+                new CreateIndexOptions { Name = "product_seller_status" }
+            ));
+            productIndexes.CreateOne(new CreateIndexModel<Product>(
+                Builders<Product>.IndexKeys.Ascending(p => p.CategoryId),
+                new CreateIndexOptions { Name = "product_category" }
+            ));
+            productIndexes.CreateOne(new CreateIndexModel<Product>(
+                Builders<Product>.IndexKeys.Ascending(p => p.BrandId),
+                new CreateIndexOptions { Name = "product_brand" }
+            ));
+            productIndexes.CreateOne(new CreateIndexModel<Product>(
+                Builders<Product>.IndexKeys.Descending(p => p.CreatedAt),
+                new CreateIndexOptions { Name = "product_created" }
+            ));
+            productIndexes.CreateOne(new CreateIndexModel<Product>(
+                Builders<Product>.IndexKeys.Descending(p => p.SoldCount),
+                new CreateIndexOptions { Name = "product_sold" }
+            ));
+            productIndexes.CreateOne(new CreateIndexModel<Product>(
+                Builders<Product>.IndexKeys.Descending(p => p.ViewCount),
+                new CreateIndexOptions { Name = "product_views" }
+            ));
+            productIndexes.CreateOne(new CreateIndexModel<Product>(
+                Builders<Product>.IndexKeys.Ascending(p => p.Slug),
+                new CreateIndexOptions
+                {
+                    Name = "product_slug",
+                    Unique = true,
+                    PartialFilterExpression = Builders<Product>.Filter.Exists(p => p.Slug)
+                }
+            ));
 
         // Order indexes
         Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
@@ -175,5 +182,10 @@ public class MongoDbService
             ),
             new CreateIndexOptions { Name = "inventory_product_date" }
         ));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[MongoDbService] Index creation warning: {ex.Message}");
+        }
     }
 }
