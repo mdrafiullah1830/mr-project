@@ -90,6 +90,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy.WithOrigins(
+                "https://mrshopbangladesh.com",
+                "https://www.mrshopbangladesh.com",
                 "https://mrshopbangladesh.tech",
                 "https://www.mrshopbangladesh.tech",
                 "https://mrshop-bd.azurewebsites.net",
@@ -175,6 +177,26 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
+
+// Request logging middleware
+app.Use(async (context, next) =>
+{
+    var method = context.Request.Method;
+    var path = context.Request.Path;
+    var origin = context.Request.Headers.Origin.ToString();
+    var clientIp = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
+    Console.WriteLine($"[Request] {method} {path} | Origin: {origin} | IP: {clientIp}");
+
+    await next();
+
+    var statusCode = context.Response.StatusCode;
+    if (statusCode >= 400)
+    {
+        Console.WriteLine($"[Response] {method} {path} -> {statusCode}");
+    }
+});
+
 app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();

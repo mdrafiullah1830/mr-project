@@ -19,11 +19,13 @@ public class AuthController : ControllerBase
 {
     private readonly MongoDbService _mongoDb;
     private readonly JwtService _jwt;
+    private readonly ILogger<AuthController> _logger;
 
-    public AuthController(MongoDbService mongoDb, JwtService jwt)
+    public AuthController(MongoDbService mongoDb, JwtService jwt, ILogger<AuthController> logger)
     {
         _mongoDb = mongoDb;
         _jwt = jwt;
+        _logger = logger;
     }
 
     [HttpPost("register")]
@@ -206,8 +208,11 @@ public class AuthController : ControllerBase
     [HttpPost("google")]
     public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginRequest request)
     {
+        _logger.LogInformation("[GoogleAuth] Google login request received. Credential present: {HasCredential}", !string.IsNullOrWhiteSpace(request.Credential));
+
         if (string.IsNullOrWhiteSpace(request.Credential))
         {
+            _logger.LogWarning("[GoogleAuth] Google credential is empty or null.");
             return BadRequest(new { message = "Google credential is required." });
         }
 
@@ -218,14 +223,18 @@ public class AuthController : ControllerBase
                 Audience = new[] { "407138009600-5qc9upb4bec6iss4n1ujhef5g92mbvso.apps.googleusercontent.com" }
             };
 
+            _logger.LogInformation("[GoogleAuth] Validating Google token with client ID: {ClientId}", settings.Audience.First());
+
             var payload = await GoogleJsonWebSignature.ValidateAsync(request.Credential, settings);
 
             if (payload == null || string.IsNullOrEmpty(payload.Email))
             {
+                _logger.LogWarning("[GoogleAuth] Invalid Google credential - payload is null or email is empty.");
                 return BadRequest(new { message = "Invalid Google credential." });
             }
 
             var email = payload.Email.ToLower().Trim();
+            _logger.LogInformation("[GoogleAuth] Google token valid. Email: {Email}, Name: {Name}", email, payload.Name);
 
             // Admin email whitelist - ONLY this email gets admin role
             const string adminEmail = "mrshop.bd.18@gmail.com";
@@ -237,6 +246,7 @@ public class AuthController : ControllerBase
 
             if (user == null)
             {
+                _logger.LogInformation("[GoogleAuth] Creating new user for email: {Email}", email);
                 user = new User
                 {
                     Name = payload.Name ?? payload.GivenName ?? payload.Email.Split('@')[0],
@@ -249,9 +259,11 @@ public class AuthController : ControllerBase
                 };
 
                 await _mongoDb.Users.InsertOneAsync(user);
+                _logger.LogInformation("[GoogleAuth] New user created. ID: {UserId}", user.Id);
             }
             else
             {
+                _logger.LogInformation("[GoogleAuth] Existing user found. ID: {UserId}, Email: {Email}", user.Id, user.Email);
                 // If existing user, update admin role if email matches
                 if (user.Role != role)
                 {
@@ -273,6 +285,7 @@ public class AuthController : ControllerBase
             }
 
             var token = _jwt.GenerateToken(user);
+            _logger.LogInformation("[GoogleAuth] JWT token generated for user {UserId}. Token length: {TokenLength}", user.Id, token.Length);
 
             return Ok(new AuthResponse
             {
@@ -280,12 +293,14 @@ public class AuthController : ControllerBase
                 User = MapToUserResponse(user)
             });
         }
-        catch (InvalidJwtException)
+        catch (InvalidJwtException ex)
         {
+            _logger.LogError(ex, "[GoogleAuth] Invalid JWT token from Google. Detail: {Detail}", ex.Message);
             return Unauthorized(new { message = "Invalid Google token." });
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            _logger.LogError(ex, "[GoogleAuth] Google authentication failed. Type: {ExceptionType}, Message: {Message}", ex.GetType().Name, ex.Message);
             return StatusCode(500, new { message = "Google authentication failed." });
         }
     }

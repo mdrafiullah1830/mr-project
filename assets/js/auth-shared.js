@@ -214,15 +214,20 @@ function loginWithGoogle() {
 }
 
 async function handleGoogleResponse(response) {
+    console.log('[GoogleAuth] Credential received from Google:', !!response.credential);
     try {
+        console.log('[GoogleAuth] Calling backend:', MR_Auth.API_BASE + '/customerauth/google');
         const res = await fetch(`${MR_Auth.API_BASE}/customerauth/google`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ credential: response.credential })
         });
 
+        console.log('[GoogleAuth] Backend response status:', res.status);
+
         if (res.ok) {
             const data = await res.json();
+            console.log('[GoogleAuth] Backend response:', { hasToken: !!data.token, hasUser: !!data.user, role: data.user?.role });
             localStorage.setItem('mr_shop_token', data.token);
             const userData = {
                 id: data.user.id,
@@ -244,12 +249,15 @@ async function handleGoogleResponse(response) {
             } else if (role === 'seller') {
                 redirectUrl = 'seller.html';
             }
+            console.log('[GoogleAuth] Redirecting to:', redirectUrl);
             setTimeout(() => window.location.href = redirectUrl, 800);
         } else {
-            const err = await res.json();
+            const err = await res.json().catch(() => ({}));
+            console.error('[GoogleAuth] Backend error:', res.status, err);
             MR_Cart.showToast(err.message || 'Google login failed', 'error');
         }
     } catch (err) {
+        console.error('[GoogleAuth] Login error:', err);
         MR_Cart.showToast('Cannot connect to server. Google login failed.', 'error');
     }
 }
