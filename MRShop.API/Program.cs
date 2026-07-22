@@ -90,8 +90,6 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy.WithOrigins(
-                "https://mrshopbangladesh.com",
-                "https://www.mrshopbangladesh.com",
                 "https://mrshopbangladesh.tech",
                 "https://www.mrshopbangladesh.tech",
                 "https://mrshop-bd.azurewebsites.net",
