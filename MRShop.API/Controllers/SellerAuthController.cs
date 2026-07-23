@@ -59,6 +59,60 @@ public class SellerAuthController : ControllerBase
         });
     }
 
+    [HttpPost("login-by-username")]
+    [EnableRateLimiting("auth")]
+    public async Task<IActionResult> LoginByUsername([FromBody] SellerUsernameLoginRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
+        {
+            return BadRequest(new { message = "Username and password are required." });
+        }
+
+        var application = await _mongoDb.SellerApplications
+            .Find(a => a.SellerUsername == request.Username.Trim() && a.Status == "approved")
+            .FirstOrDefaultAsync();
+
+        if (application == null)
+        {
+            return Unauthorized(new { message = "Invalid username or account not approved yet." });
+        }
+
+        if (application.SellerPasswordHash == null || !VerifyPassword(request.Password, application.SellerPasswordHash))
+        {
+            return Unauthorized(new { message = "Invalid password." });
+        }
+
+        var user = await _mongoDb.Users
+            .Find(u => u.Email == application.Email.ToLower().Trim() && u.Role == "seller")
+            .FirstOrDefaultAsync();
+
+        if (user == null)
+        {
+            return Unauthorized(new { message = "Seller account not found." });
+        }
+
+        var token = _jwt.GenerateToken(user);
+
+        var profile = await _mongoDb.SellerProfiles
+            .Find(p => p.UserId == user.Id)
+            .FirstOrDefaultAsync();
+
+        return Ok(new
+        {
+            token,
+            seller = new
+            {
+                id = user.Id,
+                name = user.Name,
+                email = user.Email,
+                phone = user.Phone,
+                role = user.Role,
+                shopName = profile?.ShopName ?? application.ShopName,
+                sellerUsername = application.SellerUsername
+            }
+        });
+    }
+
     [Authorize(Roles = "seller")]
     [HttpGet("me")]
     public async Task<IActionResult> GetCurrentUser()

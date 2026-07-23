@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
@@ -104,11 +106,22 @@ public class SellersController : ControllerBase
             return NotFound(new { message = "Application not found." });
         }
 
-        // Update application status
+        // Generate seller username and password
+        var shopSlug = System.Text.RegularExpressions.Regex.Replace(
+            application.ShopName.ToLower().Replace(" ", ""),
+            @"[^a-z0-9]", "");
+        var sellerUsername = $"{shopSlug}{new Random().Next(100, 999)}";
+        var sellerPassword = $"Seller@{new Random().Next(1000, 9999)}";
+        var sellerPasswordHash = HashPassword(sellerPassword);
+
+        // Update application status with credentials
         await _mongoDb.SellerApplications.UpdateOneAsync(
             a => a.Id == id,
             Builders<SellerApplication>.Update
                 .Set(a => a.Status, "approved")
+                .Set(a => a.SellerUsername, sellerUsername)
+                .Set(a => a.SellerPasswordHash, sellerPasswordHash)
+                .Set(a => a.SellerPasswordPlain, sellerPassword)
                 .Set(a => a.UpdatedAt, DateTime.UtcNow)
         );
 
@@ -124,7 +137,7 @@ public class SellersController : ControllerBase
             {
                 Name = application.Name,
                 Email = application.Email.ToLower().Trim(),
-                PasswordHash = "",
+                PasswordHash = sellerPasswordHash,
                 Phone = application.Phone,
                 Role = "seller",
                 CreatedAt = DateTime.UtcNow,
@@ -138,7 +151,9 @@ public class SellersController : ControllerBase
             userId = existingUser.Id;
             await _mongoDb.Users.UpdateOneAsync(
                 u => u.Id == userId,
-                Builders<User>.Update.Set(u => u.Role, "seller")
+                Builders<User>.Update
+                    .Set(u => u.Role, "seller")
+                    .Set(u => u.PasswordHash, sellerPasswordHash)
             );
         }
 
@@ -160,6 +175,8 @@ public class SellersController : ControllerBase
             BankName = application.BankName,
             AccountNumber = application.AccountNumber,
             Categories = categories,
+            SellerUsername = sellerUsername,
+            SellerPasswordHash = sellerPasswordHash,
             IsVerified = true,
             IsActive = true,
             CreatedAt = DateTime.UtcNow,
@@ -168,7 +185,13 @@ public class SellersController : ControllerBase
 
         await _mongoDb.SellerProfiles.InsertOneAsync(sellerProfile);
 
-        return Ok(new { message = "Seller application approved.", sellerId = userId });
+        return Ok(new
+        {
+            message = "Seller application approved.",
+            sellerId = userId,
+            sellerUsername,
+            sellerPassword
+        });
     }
 
     [Authorize(Roles = "admin")]
@@ -229,6 +252,18 @@ public class SellersController : ControllerBase
         );
 
         return Ok(new { message = "Seller role removed." });
+    }
+
+    private static string HashPassword(string password)
+    {
+        byte[] salt = RandomNumberGenerator.GetBytes(16);
+        byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
+            Encoding.UTF8.GetBytes(password),
+            salt,
+            iterations: 100_000,
+            HashAlgorithmName.SHA256,
+            outputLength: 32);
+        return $"{Convert.ToBase64String(salt)}.{Convert.ToBase64String(hash)}";
     }
 }
 

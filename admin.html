@@ -602,6 +602,7 @@
       tbody.innerHTML = filtered.map(s => {
         const cats = s.categories ? s.categories.split(',').map(c => categoryNames[c.trim()] || c.trim()).join(', ') : '';
         const status = s.status || 'pending';
+        const creds = (status === 'approved' && s.sellerUsername) ? `<br><small style="color:#007185;font-weight:600">User: ${s.sellerUsername}</small>` : '';
         return `
           <tr>
             <td>S${String(s.id).slice(-4).padStart(4,'0')}</td>
@@ -609,13 +610,13 @@
             <td>${s.shopName}</td>
             <td>${s.phone || ''}</td>
             <td>${s.email}</td>
-            <td>${cats}</td>
+            <td>${cats}${creds}</td>
             <td><span class="badge ${status === 'approved' ? 'badge-green' : status === 'rejected' ? 'badge-red' : 'badge-yellow'}">${status.charAt(0).toUpperCase() + status.slice(1)}</span></td>
             <td>
               ${status === 'pending' ? `
                 <button class="action-btn" style="background:#007600;color:#fff;border-color:#007600" onclick="approveSeller('${s.id}')">Approve</button>
                 <button class="action-btn danger" onclick="rejectSeller('${s.id}')">Reject</button>
-              ` : ''}
+              ` : status === 'approved' ? `<button class="action-btn" onclick="copySellerCreds('${s.sellerUsername || ''}')">Copy Creds</button>` : ''}
             </td>
           </tr>
         `;
@@ -631,13 +632,26 @@
 
     async function approveSeller(id) {
       const result = await adminApiCall(`/sellers/applications/${id}/approve`, 'PUT');
-      if (result) { alert('Seller approved!'); loadSellers(); }
+      if (result) {
+        alert(`Seller approved!\n\nUsername: ${result.sellerUsername}\nPassword: ${result.sellerPassword}\n\nSave these credentials - seller needs them to login!`);
+        loadSellers();
+      }
     }
 
     async function rejectSeller(id) {
       if (!confirm('Reject this seller?')) return;
       const result = await adminApiCall(`/sellers/applications/${id}/reject`, 'PUT');
       if (result) { alert('Seller rejected.'); loadSellers(); }
+    }
+
+    function copySellerCreds(username) {
+      const seller = allSellerApps.find(s => s.sellerUsername === username);
+      if (seller && seller.sellerPasswordPlain) {
+        const text = `Username: ${seller.sellerUsername}\nPassword: ${seller.sellerPasswordPlain}`;
+        navigator.clipboard.writeText(text).then(() => alert('Credentials copied!'));
+      } else {
+        alert('Password not available. Check the approval alert for credentials.');
+      }
     }
 
     // ==================== ORDERS ====================

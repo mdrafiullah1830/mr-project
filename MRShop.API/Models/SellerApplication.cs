@@ -51,6 +51,15 @@ public class SellerApplication
     [BsonElement("status")]
     public string Status { get; set; } = "pending"; // pending, approved, rejected
 
+    [BsonElement("sellerUsername")]
+    public string? SellerUsername { get; set; }
+
+    [BsonElement("sellerPasswordHash")]
+    public string? SellerPasswordHash { get; set; }
+
+    [BsonElement("sellerPasswordPlain")]
+    public string? SellerPasswordPlain { get; set; }
+
     [BsonElement("createdAt")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

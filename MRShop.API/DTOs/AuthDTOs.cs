@@ -56,3 +56,9 @@ public class FacebookLoginRequest
     public string AccessToken { get; set; } = string.Empty;
     public string UserID { get; set; } = string.Empty;
 }
+
+public class SellerUsernameLoginRequest
+{
+    public string Username { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+}
