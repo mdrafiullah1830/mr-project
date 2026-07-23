@@ -363,16 +363,18 @@
 
     async function adminApiCall(endpoint, method = 'GET', body = null) {
       const token = getAdminToken();
-      const opts = { method, headers: { 'Content-Type': 'application/json' } };
-      if (token) opts.headers['Authorization'] = `Bearer ${token}`;
+      if (!token) {
+        alert('Session expired. Please login again.');
+        adminLogout();
+        return null;
+      }
+      const opts = { method, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` } };
       if (body) opts.body = JSON.stringify(body);
       try {
         const res = await fetch(`${ADMIN_API}${endpoint}`, opts);
         if (res.status === 401 || res.status === 403) {
-          if (!sessionStorage.getItem('admin_redirected')) {
-            sessionStorage.setItem('admin_redirected', '1');
-            adminLogout();
-          }
+          alert('Session expired. Please login again.');
+          adminLogout();
           return null;
         }
         if (!res.ok) {
