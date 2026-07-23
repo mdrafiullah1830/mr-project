@@ -849,10 +849,10 @@
 				const data = await res.json();
 
 				if (res.ok && data.token) {
-					localStorage.setItem('mr_shop_token', data.token);
-					localStorage.setItem('mr_shop_user', JSON.stringify({
+					localStorage.setItem('mr_shop_seller_token', data.token);
+					localStorage.setItem('mr_shop_seller', JSON.stringify({
 						id: data.seller.id,
-						username: data.seller.name,
+						name: data.seller.name,
 						email: data.seller.email,
 						role: 'seller',
 						isSeller: true,
@@ -861,7 +861,7 @@
 						shopName: data.seller.shopName,
 						loginTime: new Date().toISOString()
 					}));
-					window.location.href = 'seller-profile.html';
+					window.location.href = 'seller.html';
 				} else {
 					errorDiv.style.display = 'block';
 					errorDiv.textContent = data.message || 'Login failed. Please check your credentials.';
