@@ -865,6 +865,39 @@
 <body>
 
   <!-- ============================================================
+       SELLER LOGIN OVERLAY (shown when not logged in)
+       ============================================================ -->
+  <div id="sellerLoginOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#0f1111 0%,#1a2332 50%,#0f1111 100%);display:flex;align-items:center;justify-content:center">
+    <div style="width:100%;max-width:420px;padding:20px">
+      <div style="text-align:center;margin-bottom:32px">
+        <a href="index.html" style="text-decoration:none">
+          <span style="font-family:'Inter',sans-serif;font-size:28px;font-weight:800;color:#ff9900">MR shop</span>
+          <span style="font-family:'Inter',sans-serif;font-size:14px;color:#999;display:block;margin-top:-2px">Bangladesh</span>
+        </a>
+      </div>
+      <div style="background:#fff;border-radius:12px;padding:32px 28px;box-shadow:0 8px 32px rgba(0,0,0,0.3)">
+        <h2 style="margin:0 0 6px;font-size:22px;color:#0f1111"><i class="fas fa-store" style="color:#ff9900"></i> Seller Login</h2>
+        <p style="margin:0 0 24px;color:#565959;font-size:14px">Login with your seller credentials to manage your shop</p>
+        <form id="sellerProfileLoginForm" onsubmit="handleSellerProfileLogin(event)">
+          <div style="margin-bottom:16px">
+            <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:#0f1111">Username</label>
+            <input type="text" id="spLoginUsername" placeholder="e.g. artisanbd123" required style="width:100%;padding:10px 12px;border:1px solid #d5d9d9;border-radius:8px;font-size:14px;box-sizing:border-box" />
+          </div>
+          <div style="margin-bottom:16px">
+            <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:#0f1111">Password</label>
+            <input type="password" id="spLoginPassword" placeholder="Enter your password" required style="width:100%;padding:10px 12px;border:1px solid #d5d9d9;border-radius:8px;font-size:14px;box-sizing:border-box" />
+          </div>
+          <div id="spLoginError" style="display:none;margin-bottom:12px;padding:10px;background:#fff1f0;border:1px solid #f5c6cb;border-radius:6px;color:#cc0000;font-size:13px"></div>
+          <button type="submit" id="spLoginBtn" style="width:100%;padding:12px;background:#ff9900;color:#0f1111;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer">Login as Seller</button>
+        </form>
+        <div style="text-align:center;margin-top:20px;padding-top:16px;border-top:1px solid #f0f0f0">
+          <a href="becomeseller.html" style="color:#007185;font-size:14px;text-decoration:none">New seller? Apply here</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
        HEADER — Exact Match with MR Shop
        ============================================================ -->
   <header class="header">
@@ -1824,6 +1857,69 @@
        JAVASCRIPT — Interactivity
        ============================================================ -->
   <script>
+    /* ---- Seller Auth Check ---- */
+    const SELLER_API = window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : 'https://mrshop-bd.azurewebsites.net/api';
+    const sellerToken = localStorage.getItem('mr_shop_seller_token');
+    const sellerData = JSON.parse(localStorage.getItem('mr_shop_seller') || 'null');
+
+    if (!sellerToken || !sellerData || sellerData.role !== 'seller') {
+      document.getElementById('sellerLoginOverlay').style.display = 'flex';
+      document.querySelector('.header').style.display = 'none';
+      document.querySelector('main') && (document.querySelector('main').closest('.seller-content') || document.querySelector('main').parentElement).style.display = 'none';
+    }
+
+    async function handleSellerProfileLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById('spLoginUsername').value.trim();
+      const password = document.getElementById('spLoginPassword').value;
+      const errorDiv = document.getElementById('spLoginError');
+      const btn = document.getElementById('spLoginBtn');
+
+      if (!username || !password) {
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = 'Please enter both username and password.';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Logging in...';
+      errorDiv.style.display = 'none';
+
+      try {
+        const res = await fetch(`${SELLER_API}/sellerauth/login-by-username`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.token) {
+          localStorage.setItem('mr_shop_seller_token', data.token);
+          localStorage.setItem('mr_shop_seller', JSON.stringify({
+            id: data.seller.id,
+            name: data.seller.name,
+            email: data.seller.email,
+            role: 'seller',
+            isSeller: true,
+            loggedIn: true,
+            sellerUsername: data.seller.sellerUsername,
+            shopName: data.seller.shopName,
+            loginTime: new Date().toISOString()
+          }));
+          location.reload();
+        } else {
+          errorDiv.style.display = 'block';
+          errorDiv.textContent = data.message || 'Login failed. Please check your credentials.';
+        }
+      } catch (err) {
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = 'Cannot connect to server. Please try again.';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Login as Seller';
+      }
+    }
+
     /* ---- Follow Button Toggle ---- */
     let isFollowing = false;
     function toggleFollow() {
@@ -1858,6 +1954,8 @@
         localStorage.removeItem('mr_shop_token');
         localStorage.removeItem('mr_shop_cart');
         localStorage.removeItem('mr_shop_wishlist');
+        localStorage.removeItem('mr_shop_seller_token');
+        localStorage.removeItem('mr_shop_seller');
         window.location.href = 'index.html';
       }
     }
