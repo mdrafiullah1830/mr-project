@@ -1,5 +1,5 @@
 // Service Worker for MR Shop PWA
-const CACHE_NAME = 'mrshop-v2';
+const CACHE_NAME = 'mrshop-v3';
 const urlsToCache = [
   './',
   './index.html',
