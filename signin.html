@@ -58,7 +58,7 @@
         <span class="line1">Hello, sign in</span>
         <span class="line2">Account & Lists <i class="fa-solid fa-caret-down"></i></span>
       </a>
-      <a class="amz-header-link" href="userprofile.html">
+      <a class="amz-header-link" href="user-profile.html">
         <span class="line1">Returns</span>
         <span class="line2">& Orders</span>
       </a>
@@ -163,7 +163,7 @@
     </div>
     <div class="amz-footer-col">
       <h4>Let Us Help You</h4>
-      <a href="userprofile.html">Your Account</a>
+      <a href="user-profile.html">Your Account</a>
       <a href="order-tracking.html">Your Orders</a>
       <a href="order-tracking.html">Shipping Rates & Policies</a>
       <a href="order-tracking.html">Returns & Replacements</a>
@@ -220,7 +220,7 @@
       if (user && user.email === ADMIN_EMAIL && (user.isAdmin || user.role === 'admin')) {
         setTimeout(() => window.location.href = 'admin.html', 500);
       } else {
-        setTimeout(() => window.location.href = 'userprofile.html', 500);
+        setTimeout(() => window.location.href = 'user-profile.html', 500);
       }
     }
   }

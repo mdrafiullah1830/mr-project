@@ -304,7 +304,7 @@ async function handleGoogleResponse(response) {
 
             // Redirect based on server-provided role
             const role = data.user.role || 'customer';
-            let redirectUrl = 'userprofile.html';
+            let redirectUrl = 'user-profile.html';
             if (role === 'admin') {
                 redirectUrl = 'admin.html';
             } else if (role === 'seller') {
@@ -366,7 +366,7 @@ async function handleFacebookResponse(authResponse) {
 
             // Redirect based on server-provided role
             const role = data.user.role || 'customer';
-            let redirectUrl = 'userprofile.html';
+            let redirectUrl = 'user-profile.html';
             if (role === 'admin') {
                 redirectUrl = 'admin.html';
             } else if (role === 'seller') {

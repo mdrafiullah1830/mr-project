@@ -1,0 +1,1899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xkbf74mr8r");
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MR Shop Bangladesh - Premium Seller Profile. Discover authentic Bangladeshi products from verified sellers. Shop honey, sarees, handicrafts & more.">
+  <meta name="keywords" content="MR Shop seller, Bangladesh marketplace, verified seller, premium shop, Bangladeshi products">
+  <meta name="author" content="MR IT Company">
+  <title>Artisan BD - Premium Seller | MR Shop Bangladesh</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       ROOT VARIABLES — Matches MR Shop Design Language
+       ============================================================ */
+    :root {
+      --dark: #0f1111;
+      --darker: #131921;
+      --darkest: #0a0e13;
+      --orange: #ff9900;
+      --orange-light: #febd69;
+      --yellow: #ffd814;
+      --yellow-dark: #f7ca00;
+      --blue: #146eb4;
+      --green: #007600;
+      --green-light: #e6f4e6;
+      --light: #f5f5f5;
+      --white: #ffffff;
+      --border: #d5d9d9;
+      --text: #0f1111;
+      --link: #007185;
+      --red: #cc0c39;
+      --bg-gradient: linear-gradient(135deg, #0f1111 0%, #1a2332 50%, #0f1111 100%);
+      --glass-bg: rgba(255,255,255,0.08);
+      --glass-border: rgba(255,255,255,0.12);
+      --glass-blur: blur(20px);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+      --shadow-xl: 0 12px 48px rgba(0,0,0,0.16);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ============================================================
+       BASE RESET & TYPOGRAPHY
+       ============================================================ */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--light);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; }
+
+    /* ============================================================
+       HEADER — Exact Match with MR Shop
+       ============================================================ */
+    .header { background: var(--darker); position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    .header-top { display: flex; align-items: center; padding: 10px 20px; gap: 16px; max-width: 1500px; margin: 0 auto; }
+    .logo { display: flex; align-items: center; padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; transition: var(--transition); }
+    .logo:hover { border-color: #fff; background: rgba(255,255,255,0.05); }
+    .logo-text { color: var(--white); font-size: 22px; font-weight: 800; letter-spacing: -1px; }
+    .logo-sub { color: var(--orange); font-size: 10px; font-weight: 600; display: block; letter-spacing: 2px; text-transform: uppercase; }
+    .deliver-to { color: var(--white); padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; transition: var(--transition); }
+    .deliver-to:hover { border-color: #fff; }
+    .deliver-to .label { color: #999; font-size: 11px; display: block; }
+    .deliver-to .loc { font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 4px; }
+    .search-bar { flex: 1; display: flex; height: 46px; border-radius: 8px; overflow: hidden; position: relative; }
+    .search-cat { background: #e6e6e6; border: none; padding: 0 12px; font-size: 13px; color: #555; cursor: pointer; border-right: 1px solid var(--border); }
+    .search-input { flex: 1; border: none; padding: 0 16px; font-size: 15px; outline: none; }
+    .search-btn { background: var(--orange); border: none; padding: 0 20px; cursor: pointer; font-size: 20px; color: var(--dark); transition: var(--transition); }
+    .search-btn:hover { background: var(--orange-light); }
+    .header-actions { display: flex; align-items: center; gap: 6px; }
+    .header-link { color: var(--white); padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; font-size: 13px; white-space: nowrap; transition: var(--transition); }
+    .header-link:hover { border-color: #fff; }
+    .header-link .line1 { color: #999; font-size: 11px; display: block; }
+    .header-link .line2 { font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 4px; }
+    .cart-btn { display: flex; align-items: center; gap: 4px; padding: 8px 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; color: var(--white); transition: var(--transition); }
+    .cart-btn:hover { border-color: #fff; }
+    .cart-icon { font-size: 24px; position: relative; }
+    .cart-count { position: absolute; top: -6px; right: -8px; background: var(--orange); color: var(--dark); font-size: 13px; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .cart-text { font-weight: 700; font-size: 13px; }
+
+    .nav-bar { background: #232f3e; padding: 8px 20px; display: flex; align-items: center; gap: 4px; overflow-x: auto; max-width: 1500px; margin: 0 auto; }
+    .nav-item { color: var(--white); padding: 8px 14px; font-size: 13px; font-weight: 500; border: 1px solid transparent; border-radius: 4px; cursor: pointer; white-space: nowrap; transition: var(--transition); }
+    .nav-item:hover { border-color: #fff; }
+    .nav-item.active { border-color: #fff; font-weight: 700; }
+    .nav-divider { width: 1px; height: 24px; background: #4a5568; margin: 0 6px; }
+
+    /* ============================================================
+       1. HERO BANNER — Premium Gradient with Glassmorphism
+       ============================================================ */
+    .seller-hero {
+      position: relative;
+      background: var(--bg-gradient);
+      min-height: 420px;
+      overflow: hidden;
+    }
+    .seller-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle at 30% 50%, rgba(255,153,0,0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 80%, rgba(20,110,180,0.06) 0%, transparent 40%);
+      animation: heroGlow 15s ease-in-out infinite alternate;
+    }
+    @keyframes heroGlow { 0% { transform: translate(0, 0); } 100% { transform: translate(-5%, -3%); } }
+
+    .hero-banner-img {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0.25;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(15,17,17,0.3) 0%, rgba(15,17,17,0.85) 100%);
+    }
+
+    .seller-hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 24px 40px;
+    }
+    .seller-hero-top {
+      display: flex;
+      align-items: flex-end;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+    .seller-logo-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .seller-logo {
+      width: 130px; height: 130px;
+      border-radius: 50%;
+      border: 4px solid rgba(255,255,255,0.2);
+      object-fit: cover;
+      background: var(--darker);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .seller-logo-badge {
+      position: absolute;
+      bottom: 4px; right: 4px;
+      width: 32px; height: 32px;
+      background: var(--green);
+      border-radius: 50%;
+      border: 3px solid var(--darker);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      font-size: 14px;
+    }
+    .seller-hero-info { flex: 1; min-width: 200px; }
+    .seller-hero-name {
+      font-size: 32px; font-weight: 800; color: #fff;
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .badge-verified {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(0,118,0,0.2); border: 1px solid rgba(0,118,0,0.4);
+      color: #4ade80; padding: 4px 12px; border-radius: 20px;
+      font-size: 12px; font-weight: 600; backdrop-filter: var(--glass-blur);
+    }
+    .badge-toprated {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(255,153,0,0.2); border: 1px solid rgba(255,153,0,0.4);
+      color: var(--orange); padding: 4px 12px; border-radius: 20px;
+      font-size: 12px; font-weight: 600; backdrop-filter: var(--glass-blur);
+    }
+    .seller-hero-rating {
+      display: flex; align-items: center; gap: 8px;
+      margin-top: 8px; color: #ccc; font-size: 14px;
+    }
+    .seller-hero-rating .stars { color: var(--orange); font-size: 15px; }
+    .seller-hero-rating strong { color: #fff; }
+    .seller-hero-actions {
+      display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap;
+    }
+    .hero-btn {
+      padding: 10px 22px; border-radius: 8px; font-size: 13px; font-weight: 700;
+      cursor: pointer; border: none; transition: var(--transition);
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .hero-btn-follow {
+      background: linear-gradient(135deg, var(--orange), var(--yellow));
+      color: var(--dark); box-shadow: 0 4px 15px rgba(255,153,0,0.4);
+    }
+    .hero-btn-follow:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,153,0,0.5); }
+    .hero-btn-follow.following {
+      background: rgba(255,255,255,0.1); color: #fff;
+      border: 1px solid rgba(255,255,255,0.2); box-shadow: none;
+    }
+    .hero-btn-contact {
+      background: rgba(255,255,255,0.1); color: #fff;
+      border: 1px solid rgba(255,255,255,0.2); backdrop-filter: var(--glass-blur);
+    }
+    .hero-btn-contact:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+    .hero-btn-share {
+      background: rgba(255,255,255,0.1); color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .hero-btn-share:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+    .hero-btn-products {
+      background: var(--blue); color: #fff;
+    }
+    .hero-btn-products:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(20,110,180,0.4); }
+
+    .seller-hero-stats {
+      display: flex; gap: 32px; margin-top: 24px; flex-wrap: wrap;
+    }
+    .hero-stat-item {
+      text-align: center;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      padding: 14px 24px;
+      backdrop-filter: var(--glass-blur);
+      min-width: 100px;
+    }
+    .hero-stat-num { font-size: 24px; font-weight: 800; color: #fff; }
+    .hero-stat-label { font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+
+    /* ============================================================
+       MAIN LAYOUT — Sidebar + Content
+       ============================================================ */
+    .seller-page { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    .seller-layout { display: grid; grid-template-columns: 1fr 320px; gap: 28px; align-items: start; }
+
+    /* ============================================================
+       12. SIDEBAR — Professional Dashboard Panel
+       ============================================================ */
+    .seller-sidebar {
+      position: sticky; top: 90px; height: fit-content;
+      display: flex; flex-direction: column; gap: 20px;
+    }
+
+    /* --- Profile Card --- */
+    .sidebar-profile {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+    .sidebar-profile:hover { box-shadow: var(--shadow-md); }
+    .sidebar-profile-header {
+      background: linear-gradient(135deg, var(--darker) 0%, #1a2332 60%, #0d3b66 100%);
+      padding: 28px 20px 20px;
+      text-align: center;
+      position: relative;
+    }
+    .sidebar-profile-header::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 30px;
+      background: var(--white);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+    .sidebar-avatar-wrap {
+      position: relative; display: inline-block; margin-bottom: 12px;
+    }
+    .sidebar-avatar {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      border: 4px solid rgba(255,153,0,0.5);
+      object-fit: cover;
+      display: block;
+    }
+    .sidebar-avatar-status {
+      position: absolute; bottom: 2px; right: 2px;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--green);
+      border: 3px solid var(--white);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .sidebar-name {
+      color: #fff; font-size: 17px; font-weight: 700;
+      position: relative; z-index: 1;
+    }
+    .sidebar-level-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: linear-gradient(135deg, rgba(255,153,0,0.25), rgba(255,212,20,0.15));
+      border: 1px solid rgba(255,153,0,0.4);
+      color: var(--orange); padding: 4px 14px; border-radius: 20px;
+      font-size: 11px; font-weight: 700; margin-top: 8px;
+      position: relative; z-index: 1;
+      letter-spacing: 0.3px;
+    }
+    .sidebar-profile-body { padding: 8px 20px 20px; }
+
+    /* --- Status Row --- */
+    .sidebar-status-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 0;
+      border-bottom: 1px solid #f2f2f2;
+      font-size: 13px;
+    }
+    .sidebar-status-row:last-child { border-bottom: none; }
+    .sidebar-status-row .s-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; flex-shrink: 0;
+    }
+    .sidebar-status-row .s-icon.green { background: #e6f4e6; color: var(--green); }
+    .sidebar-status-row .s-icon.blue { background: #e6f0fa; color: var(--blue); }
+    .sidebar-status-row .s-icon.orange { background: #fff3e0; color: var(--orange); }
+    .sidebar-status-row .s-icon.purple { background: #f3e5f5; color: #9c27b0; }
+    .sidebar-status-row .s-icon.teal { background: #e0f2f1; color: #009688; }
+    .sidebar-status-row .s-icon.red { background: #fce4ec; color: var(--red); }
+    .sidebar-status-row .s-label { color: #888; font-size: 12px; flex: 1; }
+    .sidebar-status-row .s-value { font-weight: 600; color: var(--text); font-size: 13px; }
+
+    .online-indicator {
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .online-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green); display: inline-block;
+      animation: pulse 2s infinite;
+    }
+    .online-text { color: var(--green); font-weight: 600; font-size: 13px; }
+
+    /* --- Follow Button --- */
+    .sidebar-follow-btn {
+      width: 100%; margin-top: 16px; padding: 13px;
+      background: linear-gradient(135deg, var(--orange), var(--yellow));
+      color: var(--dark); border: none; border-radius: var(--radius-sm);
+      font-size: 14px; font-weight: 700; cursor: pointer;
+      transition: var(--transition);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .sidebar-follow-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255,153,0,0.4); }
+    .sidebar-follow-btn.following {
+      background: #f0f0f0; color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    /* --- Quick Stats Grid --- */
+    .sidebar-stats-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+      margin-top: 16px;
+    }
+    .sidebar-mini-stat {
+      text-align: center; padding: 12px 8px;
+      background: #f8f9fa; border-radius: 10px;
+      border: 1px solid #eee;
+    }
+    .sidebar-mini-stat .ms-value { font-size: 18px; font-weight: 800; color: var(--text); }
+    .sidebar-mini-stat .ms-label { font-size: 11px; color: #888; margin-top: 2px; }
+
+    /* --- Quick Contact Card --- */
+    .sidebar-contact-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .sidebar-contact-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 14px; font-weight: 700; color: var(--text);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .sidebar-contact-header i { color: var(--orange); }
+    .sidebar-contact-body { padding: 8px 20px 16px; }
+    .contact-link-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 0; border-bottom: 1px solid #f5f5f5;
+      font-size: 13px; color: var(--text); font-weight: 500;
+      transition: var(--transition);
+    }
+    .contact-link-item:last-child { border-bottom: none; }
+    .contact-link-item:hover { color: var(--link); }
+    .contact-link-item i { width: 20px; text-align: center; font-size: 14px; }
+
+    /* --- Similar Sellers Sidebar --- */
+    .sidebar-similar-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .sidebar-similar-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 14px; font-weight: 700; color: var(--text);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .sidebar-similar-header i { color: var(--orange); }
+    .sidebar-similar-body { padding: 8px 20px 16px; }
+    .similar-seller-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0; border-bottom: 1px solid #f5f5f5;
+    }
+    .similar-seller-row:last-child { border-bottom: none; }
+    .similar-seller-row img {
+      width: 42px; height: 42px; border-radius: 50%;
+      object-fit: cover; border: 2px solid #f0f0f0;
+    }
+    .similar-seller-info { flex: 1; min-width: 0; }
+    .similar-seller-name { font-size: 13px; font-weight: 600; color: var(--text); }
+    .similar-seller-meta { font-size: 11px; color: #888; margin-top: 1px; }
+
+    /* ============================================================
+       CONTENT CARDS — Shared Style
+       ============================================================ */
+    .content-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+    .content-card:hover { box-shadow: var(--shadow-md); }
+    .card-title {
+      font-size: 18px; font-weight: 700; color: var(--text);
+      margin-bottom: 16px; padding-bottom: 12px;
+      border-bottom: 2px solid #f0f0f0;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-title i { color: var(--orange); }
+
+    /* ============================================================
+       2. SHOP INFORMATION
+       ============================================================ */
+    .shop-info-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    .info-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px; border-radius: var(--radius-sm);
+      background: #fafafa; transition: var(--transition);
+    }
+    .info-item:hover { background: #f0f6ff; }
+    .info-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .info-icon.orange { background: #fff3e0; color: var(--orange); }
+    .info-icon.blue { background: #e6f0fa; color: var(--blue); }
+    .info-icon.green { background: #e6f4e6; color: var(--green); }
+    .info-icon.red { background: #fce4ec; color: var(--red); }
+    .info-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+    .info-value { font-size: 14px; font-weight: 600; color: var(--text); margin-top: 2px; }
+    .about-section { margin-top: 16px; }
+    .about-section h4 { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+    .about-section p { font-size: 14px; color: #555; line-height: 1.7; }
+
+    /* ============================================================
+       3. TRUST & VERIFICATION
+       ============================================================ */
+    .verify-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+    }
+    .verify-card {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px; border-radius: var(--radius-md);
+      border: 1px solid #e8e8e8; transition: var(--transition);
+      background: #fafafa;
+    }
+    .verify-card.verified {
+      border-color: #bbf7d0; background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+    }
+    .verify-card.unverified {
+      border-color: #fecaca; background: linear-gradient(135deg, #fef2f2, #fff5f5);
+      opacity: 0.7;
+    }
+    .verify-icon {
+      width: 42px; height: 42px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .verify-card.verified .verify-icon { background: #dcfce7; color: var(--green); }
+    .verify-card.unverified .verify-icon { background: #fee2e2; color: var(--red); }
+    .verify-label { font-size: 13px; font-weight: 600; color: var(--text); }
+    .verify-status { font-size: 11px; margin-top: 2px; }
+    .verify-card.verified .verify-status { color: var(--green); }
+    .verify-card.unverified .verify-status { color: var(--red); }
+
+    /* ============================================================
+       4. STORE STATISTICS
+       ============================================================ */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    }
+    .stat-card {
+      text-align: center; padding: 20px 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid #f0f0f0;
+      background: linear-gradient(135deg, #fafafa, #fff);
+      transition: var(--transition);
+      position: relative; overflow: hidden;
+    }
+    .stat-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; background: linear-gradient(90deg, var(--orange), var(--yellow));
+      opacity: 0; transition: var(--transition);
+    }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .stat-card:hover::before { opacity: 1; }
+    .stat-card-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; margin: 0 auto 10px;
+    }
+    .stat-card-icon.orange { background: #fff3e0; color: var(--orange); }
+    .stat-card-icon.blue { background: #e6f0fa; color: var(--blue); }
+    .stat-card-icon.green { background: #e6f4e6; color: var(--green); }
+    .stat-card-icon.red { background: #fce4ec; color: var(--red); }
+    .stat-card-icon.purple { background: #f3e5f5; color: #9c27b0; }
+    .stat-card-icon.teal { background: #e0f2f1; color: #009688; }
+    .stat-card-value { font-size: 26px; font-weight: 800; color: var(--text); }
+    .stat-card-label { font-size: 12px; color: #888; margin-top: 2px; font-weight: 500; }
+
+    /* ============================================================
+       5. CERTIFICATES
+       ============================================================ */
+    .cert-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    }
+    .cert-card {
+      padding: 18px; border-radius: var(--radius-md);
+      border: 1px solid #e8e8e8; text-align: center;
+      transition: var(--transition); background: #fafafa;
+    }
+    .cert-card:hover { border-color: var(--orange); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .cert-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin: 0 auto 10px;
+      background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+      color: var(--orange);
+    }
+    .cert-name { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .cert-actions { display: flex; gap: 8px; justify-content: center; }
+    .cert-btn {
+      padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600;
+      cursor: pointer; border: 1px solid var(--border); transition: var(--transition);
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    .cert-btn-view { background: var(--white); color: var(--blue); }
+    .cert-btn-view:hover { background: #e6f0fa; border-color: var(--blue); }
+    .cert-btn-download { background: var(--green); color: #fff; border-color: var(--green); }
+    .cert-btn-download:hover { background: #005500; }
+
+    /* ============================================================
+       6. ACHIEVEMENTS
+       ============================================================ */
+    .achievement-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    }
+    .achievement-card {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px; border-radius: var(--radius-md);
+      border: 1px solid #e8e8e8; transition: var(--transition);
+      background: linear-gradient(135deg, #fafafa, #fff);
+    }
+    .achievement-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--orange); }
+    .achievement-badge {
+      width: 50px; height: 50px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .achievement-badge.gold { background: linear-gradient(135deg, #ffd700, #ffaa00); color: #fff; }
+    .achievement-badge.platinum { background: linear-gradient(135deg, #b0bec5, #78909c); color: #fff; }
+    .achievement-badge.diamond { background: linear-gradient(135deg, #4fc3f7, #0288d1); color: #fff; }
+    .achievement-badge.emerald { background: linear-gradient(135deg, #66bb6a, #388e3c); color: #fff; }
+    .achievement-badge.ruby { background: linear-gradient(135deg, #ef5350, #c62828); color: #fff; }
+    .achievement-badge.sapphire { background: linear-gradient(135deg, #5c6bc0, #283593); color: #fff; }
+    .achievement-name { font-size: 14px; font-weight: 700; color: var(--text); }
+    .achievement-desc { font-size: 12px; color: #888; margin-top: 2px; }
+
+    /* ============================================================
+       7. FEATURED PRODUCTS
+       ============================================================ */
+    .products-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px;
+    }
+    .product-card {
+      background: var(--white); border-radius: var(--radius-md); overflow: hidden;
+      transition: var(--transition); display: flex; flex-direction: column;
+      cursor: pointer; position: relative; border: 1px solid var(--border);
+    }
+    .product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--orange); }
+    .deal-badge {
+      position: absolute; top: 10px; left: 10px;
+      background: var(--red); color: #fff;
+      padding: 4px 10px; border-radius: 6px;
+      font-size: 12px; font-weight: 700; z-index: 1;
+    }
+    .product-img-wrap {
+      height: 180px; display: flex; align-items: center; justify-content: center;
+      padding: 16px; background: #f8f8f8; overflow: hidden; position: relative;
+    }
+    .product-img-wrap img {
+      max-height: 100%; max-width: 100%; object-fit: contain;
+      transition: transform 0.3s;
+    }
+    .product-card:hover .product-img-wrap img { transform: scale(1.08); }
+    .quick-view-btn {
+      position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: rgba(0,0,0,0.8); color: #fff; border: none;
+      padding: 8px 20px; border-radius: 6px; font-size: 12px; font-weight: 600;
+      cursor: pointer; opacity: 0; transition: var(--transition);
+      white-space: nowrap;
+    }
+    .product-card:hover .quick-view-btn { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .product-info { padding: 14px; flex: 1; display: flex; flex-direction: column; }
+    .product-title {
+      font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.3;
+      margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden; min-height: 34px;
+    }
+    .product-rating { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+    .stars { color: var(--orange); font-size: 12px; }
+    .rating-count { color: var(--link); font-size: 12px; }
+    .product-price { margin-bottom: 4px; }
+    .price-symbol { font-size: 12px; color: var(--text); vertical-align: top; }
+    .price-whole { font-size: 20px; font-weight: 700; color: var(--text); }
+    .price-original { text-decoration: line-through; color: #999; font-size: 12px; margin-left: 6px; }
+    .price-discount { color: var(--red); font-size: 12px; font-weight: 600; margin-left: 4px; }
+    .product-btn {
+      width: 100%; padding: 9px; border: 1px solid var(--yellow);
+      border-radius: 8px; background: linear-gradient(to bottom, var(--yellow), var(--yellow-dark));
+      font-size: 12px; font-weight: 700; cursor: pointer; color: var(--dark);
+      transition: var(--transition); margin-top: auto;
+    }
+    .product-btn:hover { background: linear-gradient(to bottom, var(--yellow-dark), #e6b800); }
+
+    /* ============================================================
+       8. CUSTOMER REVIEWS
+       ============================================================ */
+    .reviews-summary {
+      display: flex; align-items: center; gap: 24px; margin-bottom: 20px;
+      padding: 20px; background: linear-gradient(135deg, #fafafa, #f0f6ff);
+      border-radius: var(--radius-md); flex-wrap: wrap;
+    }
+    .reviews-avg { text-align: center; }
+    .reviews-avg-num { font-size: 48px; font-weight: 800; color: var(--text); line-height: 1; }
+    .reviews-avg-stars { color: var(--orange); font-size: 18px; margin-top: 4px; }
+    .reviews-avg-total { font-size: 13px; color: #888; margin-top: 4px; }
+    .reviews-bars { flex: 1; min-width: 200px; }
+    .review-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .review-bar-label { font-size: 12px; color: #888; width: 12px; text-align: center; }
+    .review-bar-track { flex: 1; height: 8px; background: #e8e8e8; border-radius: 4px; overflow: hidden; }
+    .review-bar-fill { height: 100%; background: var(--orange); border-radius: 4px; transition: width 1s ease; }
+    .review-bar-count { font-size: 12px; color: #888; width: 30px; }
+
+    .review-list { display: flex; flex-direction: column; gap: 16px; }
+    .review-card {
+      padding: 18px; border-radius: var(--radius-md);
+      border: 1px solid #e8e8e8; transition: var(--transition);
+    }
+    .review-card:hover { box-shadow: var(--shadow-sm); }
+    .review-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .review-avatar {
+      width: 44px; height: 44px; border-radius: 50%; object-fit: cover;
+      border: 2px solid #f0f0f0;
+    }
+    .review-author { font-size: 14px; font-weight: 600; color: var(--text); }
+    .review-date { font-size: 12px; color: #888; }
+    .review-stars { color: var(--orange); font-size: 13px; margin-bottom: 8px; }
+    .review-text { font-size: 14px; color: #555; line-height: 1.6; }
+
+    /* ============================================================
+       9. STORE POLICIES
+       ============================================================ */
+    .policy-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;
+    }
+    .policy-card {
+      padding: 18px; border-radius: var(--radius-md);
+      border: 1px solid #e8e8e8; transition: var(--transition);
+      background: #fafafa;
+    }
+    .policy-card:hover { border-color: var(--orange); box-shadow: var(--shadow-sm); }
+    .policy-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; margin-bottom: 10px;
+      background: #fff3e0; color: var(--orange);
+    }
+    .policy-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .policy-text { font-size: 13px; color: #666; line-height: 1.6; }
+
+    /* ============================================================
+       10. CONTACT INFORMATION
+       ============================================================ */
+    .contact-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+    }
+    .contact-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px; border-radius: var(--radius-sm);
+      border: 1px solid #e8e8e8; transition: var(--transition);
+    }
+    .contact-item:hover { background: #f0f6ff; border-color: var(--blue); }
+    .contact-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .contact-icon.facebook { background: #e3f2fd; color: #1877f2; }
+    .contact-icon.instagram { background: #fce4ec; color: #e4405f; }
+    .contact-icon.whatsapp { background: #e8f5e9; color: #25d366; }
+    .contact-icon.email { background: #fff3e0; color: var(--orange); }
+    .contact-icon.phone { background: #e6f0fa; color: var(--blue); }
+    .contact-icon.web { background: #f3e5f5; color: #9c27b0; }
+    .contact-icon.address { background: #e0f2f1; color: #009688; }
+    .contact-label { font-size: 11px; color: #888; text-transform: uppercase; }
+    .contact-value { font-size: 13px; font-weight: 600; color: var(--text); margin-top: 2px; }
+
+    /* ============================================================
+       11. STORE LOCATION
+       ============================================================ */
+    .map-placeholder {
+      width: 100%; height: 300px; border-radius: var(--radius-md);
+      background: linear-gradient(135deg, #e8f4f8, #e6f0fa);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: var(--blue); border: 2px dashed var(--border); margin-bottom: 16px;
+    }
+    .map-placeholder i { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
+    .map-placeholder span { font-size: 14px; font-weight: 600; }
+    .address-card-full {
+      padding: 20px; border-radius: var(--radius-md);
+      background: #fafafa; border: 1px solid #e8e8e8;
+    }
+    .address-card-full h4 { font-size: 15px; font-weight: 700; margin-bottom: 10px; color: var(--text); }
+    .address-card-full p { font-size: 14px; color: #555; line-height: 1.7; }
+
+    /* ============================================================
+       13. SIMILAR SELLERS
+       ============================================================ */
+    .similar-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    }
+    .similar-card {
+      background: var(--white); border-radius: var(--radius-md);
+      border: 1px solid var(--border); overflow: hidden;
+      transition: var(--transition); text-align: center; padding: 20px;
+    }
+    .similar-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--orange); }
+    .similar-avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      object-fit: cover; border: 3px solid #f0f0f0;
+      margin-bottom: 10px;
+    }
+    .similar-name { font-size: 14px; font-weight: 700; color: var(--text); }
+    .similar-category { font-size: 12px; color: #888; margin-top: 2px; }
+    .similar-rating { color: var(--orange); font-size: 13px; margin-top: 6px; }
+    .similar-products { font-size: 12px; color: #666; margin-top: 4px; }
+    .similar-follow-btn {
+      margin-top: 12px; padding: 8px 20px; border-radius: 6px;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      border: 1px solid var(--orange); background: transparent;
+      color: var(--orange); transition: var(--transition);
+    }
+    .similar-follow-btn:hover { background: var(--orange); color: #fff; }
+
+    /* ============================================================
+       14. FOOTER — Exact Match with MR Shop
+       ============================================================ */
+    .back-to-top { background: #37475a; text-align: center; padding: 14px; color: var(--white); font-size: 13px; cursor: pointer; transition: background 0.2s; }
+    .back-to-top:hover { background: #485769; }
+    .footer { background: var(--darker); color: var(--white); padding: 40px 20px 20px; }
+    .footer-grid { max-width: 1500px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-bottom: 30px; }
+    .footer-col h4 { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
+    .footer-col a { display: block; color: #ddd; font-size: 13px; padding: 4px 0; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--white); text-decoration: underline; }
+    .footer-divider { height: 1px; background: #3a4553; margin: 16px 0; }
+    .footer-bottom { text-align: center; padding: 20px; }
+    .footer-logo { font-size: 20px; font-weight: 800; color: var(--white); margin-bottom: 6px; }
+    .footer-copyright { color: #999; font-size: 12px; margin-bottom: 10px; }
+    .footer-copyright strong { color: var(--orange); }
+    .footer-payment { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px; color: #999; font-size: 12px; }
+    .footer-payment i { font-size: 20px; color: #ccc; transition: transform 0.2s; }
+    .footer-payment i:hover { transform: scale(1.2); color: var(--white); }
+
+    /* ============================================================
+       SCROLL ANIMATIONS
+       ============================================================ */
+    .fade-in { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ============================================================
+       RESPONSIVE — Desktop, Tablet, Mobile
+       ============================================================ */
+    @media (max-width: 1024px) {
+      .seller-layout { grid-template-columns: 1fr; }
+      .seller-sidebar { position: static; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+      .sidebar-profile, .sidebar-contact-card, .sidebar-similar-card { grid-column: span 1; }
+      .verify-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+      .cert-grid { grid-template-columns: repeat(2, 1fr); }
+      .achievement-grid { grid-template-columns: repeat(2, 1fr); }
+      .similar-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .seller-layout { grid-template-columns: 1fr; }
+      .seller-sidebar { grid-template-columns: 1fr; }
+      .seller-hero-name { font-size: 24px; }
+      .seller-hero-stats { gap: 12px; }
+      .hero-stat-item { padding: 10px 16px; min-width: 80px; }
+      .hero-stat-num { font-size: 20px; }
+      .shop-info-grid { grid-template-columns: 1fr; }
+      .verify-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .cert-grid { grid-template-columns: 1fr; }
+      .achievement-grid { grid-template-columns: 1fr; }
+      .policy-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .similar-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+      .reviews-summary { flex-direction: column; text-align: center; }
+    }
+    @media (max-width: 480px) {
+      .seller-hero-top { flex-direction: column; align-items: center; text-align: center; }
+      .seller-logo { width: 100px; height: 100px; }
+      .seller-hero-name { font-size: 20px; justify-content: center; }
+      .seller-hero-actions { justify-content: center; }
+      .seller-hero-stats { justify-content: center; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .similar-grid { grid-template-columns: 1fr; }
+      .products-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .product-img-wrap { height: 140px; padding: 10px; }
+      .price-whole { font-size: 16px; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .header-top { padding: 8px 12px; gap: 8px; }
+      .logo-text { font-size: 18px; }
+      .deliver-to, .header-link .line1 { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       HEADER — Exact Match with MR Shop
+       ============================================================ -->
+  <header class="header">
+    <div class="header-top">
+      <a href="index.html" class="logo">
+        <div>
+          <span class="logo-text">MR shop</span>
+          <span class="logo-sub">Bangladesh</span>
+        </div>
+      </a>
+      <div class="deliver-to">
+        <span class="label">Deliver to</span>
+        <span class="loc"><i class="fas fa-map-marker-alt"></i> Bangladesh</span>
+      </div>
+      <div class="search-bar">
+        <select class="search-cat">
+          <option>All</option>
+          <option>Food & Natural</option>
+          <option>Sweets & Dairy</option>
+          <option>Handicrafts</option>
+          <option>Clothing</option>
+          <option>Books</option>
+          <option>Antique</option>
+        </select>
+        <input type="text" class="search-input" placeholder="Search MR Shop">
+        <button class="search-btn" aria-label="Search"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="header-actions">
+        <a href="signin.html" class="header-link">
+          <span class="line1">Hello, Sign in</span>
+          <span class="line2">Account <i class="fas fa-caret-down"></i></span>
+        </a>
+        <a href="wishlist.html" class="header-link">
+          <span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span>
+          <span class="line2">Wishlist</span>
+        </a>
+        <a href="cart.html" class="cart-btn">
+          <span class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count amz-cart-count">0</span></span>
+          <span class="cart-text">Cart</span>
+        </a>
+      </div>
+    </div>
+    <nav class="nav-bar">
+      <a href="index.html" class="nav-item"><i class="fas fa-bars"></i> All</a>
+      <a href="food&natural.html" class="nav-item">Food & Natural</a>
+      <a href="sweets&dairy.html" class="nav-item">Sweets & Dairy</a>
+      <a href="handricrafts.html" class="nav-item">Handicrafts</a>
+      <a href="clothing.html" class="nav-item">Clothing</a>
+      <a href="book.html" class="nav-item">Books</a>
+      <a href="antique.html" class="nav-item">Antique</a>
+      <div class="nav-divider"></div>
+      <a href="blog.html" class="nav-item"><i class="fas fa-newspaper"></i> Blog</a>
+      <a href="compare.html" class="nav-item"><i class="fas fa-balance-scale"></i> Compare</a>
+      <a href="order-tracking.html" class="nav-item"><i class="fas fa-truck"></i> Track Order</a>
+      <div class="nav-divider"></div>
+      <a href="becomeseller.html" class="nav-item">Sell</a>
+      <a href="chat.html" class="nav-item"><i class="fas fa-headset"></i> Help</a>
+    </nav>
+  </header>
+
+  <!-- ============================================================
+       1. HERO BANNER
+       ============================================================ -->
+  <section class="seller-hero">
+    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1400&h=400&fit=crop" alt="Shop Banner" class="hero-banner-img">
+    <div class="hero-overlay"></div>
+    <div class="seller-hero-content">
+      <div class="seller-hero-top">
+        <!-- Circular Shop Logo -->
+        <div class="seller-logo-wrap">
+          <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200&h=200&fit=crop" alt="Artisan BD Logo" class="seller-logo">
+          <div class="seller-logo-badge"><i class="fas fa-check"></i></div>
+        </div>
+        <!-- Shop Info -->
+        <div class="seller-hero-info">
+          <h1 class="seller-hero-name">
+            Artisan BD
+            <span class="badge-verified"><i class="fas fa-check-circle"></i> Verified Seller</span>
+            <span class="badge-toprated"><i class="fas fa-award"></i> Top Rated</span>
+          </h1>
+          <div class="seller-hero-rating">
+            <span class="stars">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+            </span>
+            <strong>4.8</strong>
+            <span>(2,847 Reviews)</span>
+            <span style="color:#666">|</span>
+            <span>Followers: <strong>12.4K</strong></span>
+          </div>
+          <!-- Action Buttons -->
+          <div class="seller-hero-actions">
+            <button class="hero-btn hero-btn-follow" id="followBtn" onclick="toggleFollow()">
+              <i class="fas fa-heart"></i> Follow
+            </button>
+            <button class="hero-btn hero-btn-share" onclick="shareSeller()">
+              <i class="fas fa-share-alt"></i> Share
+            </button>
+            <a href="chat.html" class="hero-btn hero-btn-contact">
+              <i class="fas fa-envelope"></i> Contact Seller
+            </a>
+            <a href="#products" class="hero-btn hero-btn-products">
+              <i class="fas fa-store"></i> Visit Products
+            </a>
+          </div>
+        </div>
+      </div>
+      <!-- Hero Stats -->
+      <div class="seller-hero-stats">
+        <div class="hero-stat-item">
+          <div class="hero-stat-num">248</div>
+          <div class="hero-stat-label">Products</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-num">8.2K</div>
+          <div class="hero-stat-label">Orders</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-num">98%</div>
+          <div class="hero-stat-label">Positive</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-num">4.8</div>
+          <div class="hero-stat-label">Rating</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-num">3</div>
+          <div class="hero-stat-label">Years</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       MAIN CONTENT + SIDEBAR LAYOUT
+       ============================================================ -->
+  <div class="seller-page">
+    <div class="seller-layout">
+
+      <!-- ============================================================
+           MAIN CONTENT COLUMN
+           ============================================================ -->
+      <main class="seller-main">
+
+        <!-- ============================================================
+             2. SHOP INFORMATION
+             ============================================================ -->
+        <div class="content-card fade-in">
+          <h2 class="card-title"><i class="fas fa-store"></i> Shop Information</h2>
+          <div class="shop-info-grid">
+            <div class="info-item">
+              <div class="info-icon orange"><i class="fas fa-user-tie"></i></div>
+              <div>
+                <div class="info-label">Owner</div>
+                <div class="info-value">Rafiqul Islam</div>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon blue"><i class="fas fa-briefcase"></i></div>
+              <div>
+                <div class="info-label">Business Type</div>
+                <div class="info-value">Sole Proprietorship</div>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon green"><i class="fas fa-tags"></i></div>
+              <div>
+                <div class="info-label">Categories</div>
+                <div class="info-value">Food, Handicrafts, Clothing</div>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon red"><i class="fas fa-calendar-alt"></i></div>
+              <div>
+                <div class="info-label">Member Since</div>
+                <div class="info-value">January 2023</div>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon orange"><i class="fas fa-map-marker-alt"></i></div>
+              <div>
+                <div class="info-label">Location</div>
+                <div class="info-value">Dhaka, Bangladesh</div>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon blue"><i class="fas fa-clock"></i></div>
+              <div>
+                <div class="info-label">Response Time</div>
+                <div class="info-value">Within 2 Hours</div>
+              </div>
+            </div>
+          </div>
+          <div class="about-section">
+            <h4>About Our Shop</h4>
+            <p>Artisan BD is a family-run business dedicated to bringing authentic Bangladeshi products to your doorstep. We specialize in handpicked Sundarbans honey, traditional Nakshi Kantha quilts, pure dairy products, and artisan-crafted clothing. Every product is sourced directly from local farmers and artisans, ensuring fair trade and premium quality. With over 3 years on MR Shop, we have served more than 8,000 happy customers across all 64 districts of Bangladesh.</p>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             3. TRUST & VERIFICATION
+             ============================================================ -->
+        <div class="content-card fade-in">
+          <h2 class="card-title"><i class="fas fa-shield-alt"></i> Trust & Verification</h2>
+          <div class="verify-grid">
+            <div class="verify-card verified">
+              <div class="verify-icon"><i class="fas fa-envelope-check"></i></div>
+              <div>
+                <div class="verify-label">Verified Email</div>
+                <div class="verify-status"><i class="fas fa-check-circle"></i> Verified</div>
+              </div>
+            </div>
+            <div class="verify-card verified">
+              <div class="verify-icon"><i class="fas fa-phone-volume"></i></div>
+              <div>
+                <div class="verify-label">Verified Phone</div>
+                <div class="verify-status"><i class="fas fa-check-circle"></i> Verified</div>
+              </div>
+            </div>
+            <div class="verify-card verified">
+              <div class="verify-icon"><i class="fas fa-file-contract"></i></div>
+              <div>
+                <div class="verify-label">Trade License</div>
+                <div class="verify-status"><i class="fas fa-check-circle"></i> Verified</div>
+              </div>
+            </div>
+            <div class="verify-card verified">
+              <div class="verify-icon"><i class="fas fa-university"></i></div>
+              <div>
+                <div class="verify-label">Bank Account</div>
+                <div class="verify-status"><i class="fas fa-check-circle"></i> Verified</div>
+              </div>
+            </div>
+            <div class="verify-card verified">
+              <div class="verify-icon"><i class="fas fa-home"></i></div>
+              <div>
+                <div class="verify-label">Verified Address</div>
+                <div class="verify-status"><i class="fas fa-check-circle"></i> Verified</div>
+              </div>
+            </div>
+            <div class="verify-card unverified">
+              <div class="verify-icon"><i class="fas fa-id-card"></i></div>
+              <div>
+                <div class="verify-label">Identity</div>
+                <div class="verify-status"><i class="fas fa-times-circle"></i> Pending</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             4. STORE STATISTICS
+             ============================================================ -->
+        <div class="content-card fade-in">
+          <h2 class="card-title"><i class="fas fa-chart-bar"></i> Store Statistics</h2>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-card-icon orange"><i class="fas fa-box-open"></i></div>
+              <div class="stat-card-value">248</div>
+              <div class="stat-card-label">Total Products</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-icon blue"><i class="fas fa-shopping-bag"></i></div>
+              <div class="stat-card-value">8,247</div>
+              <div class="stat-card-label">Total Orders</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-icon green"><i class="fas fa-check-double"></i></div>
+              <div class="stat-card-value">8,091</div>
+              <div class="stat-card-label">Completed</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-icon red"><i class="fas fa-times-circle"></i></div>
+              <div class="stat-card-value">156</div>
+              <div class="stat-card-label">Cancelled</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-icon orange"><i class="fas fa-star"></i></div>
+              <div class="stat-card-value">4.8</div>
+              <div class="stat-card-label">Avg Rating</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-icon purple"><i class="fas fa-users"></i></div>
+              <div class="stat-card-value">12.4K</div>
+              <div class="stat-card-label">Followers</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-icon teal"><i class="fas fa-calendar-check"></i></div>
+              <div class="stat-card-value">3</div>
+              <div class="stat-card-label">Years on MR Shop</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-icon blue"><i class="fas fa-headset"></i></div>
+              <div class="stat-card-value">96%</div>
+              <div class="stat-card-label">Response Rate</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-icon green"><i class="fas fa-hourglass-half"></i></div>
+              <div class="stat-card-value">1.8h</div>
+              <div class="stat-card-label">Avg Response Time</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             5. CERTIFICATES
+             ============================================================ -->
+        <div class="content-card fade-in">
+          <h2 class="card-title"><i class="fas fa-certificate"></i> Certificates</h2>
+          <div class="cert-grid">
+            <div class="cert-card">
+              <div class="cert-icon"><i class="fas fa-file-contract"></i></div>
+              <div class="cert-name">Trade License</div>
+              <div class="cert-actions">
+                <button class="cert-btn cert-btn-view"><i class="fas fa-eye"></i> View</button>
+                <button class="cert-btn cert-btn-download"><i class="fas fa-download"></i> Download</button>
+              </div>
+            </div>
+            <div class="cert-card">
+              <div class="cert-icon"><i class="fas fa-receipt"></i></div>
+              <div class="cert-name">TIN Certificate</div>
+              <div class="cert-actions">
+                <button class="cert-btn cert-btn-view"><i class="fas fa-eye"></i> View</button>
+                <button class="cert-btn cert-btn-download"><i class="fas fa-download"></i> Download</button>
+              </div>
+            </div>
+            <div class="cert-card">
+              <div class="cert-icon"><i class="fas fa-award"></i></div>
+              <div class="cert-name">BSTI Certification</div>
+              <div class="cert-actions">
+                <button class="cert-btn cert-btn-view"><i class="fas fa-eye"></i> View</button>
+                <button class="cert-btn cert-btn-download"><i class="fas fa-download"></i> Download</button>
+              </div>
+            </div>
+            <div class="cert-card">
+              <div class="cert-icon"><i class="fas fa-utensils"></i></div>
+              <div class="cert-name">Food License</div>
+              <div class="cert-actions">
+                <button class="cert-btn cert-btn-view"><i class="fas fa-eye"></i> View</button>
+                <button class="cert-btn cert-btn-download"><i class="fas fa-download"></i> Download</button>
+              </div>
+            </div>
+            <div class="cert-card">
+              <div class="cert-icon"><i class="fas fa-hands"></i></div>
+              <div class="cert-name">Handmade Certificate</div>
+              <div class="cert-actions">
+                <button class="cert-btn cert-btn-view"><i class="fas fa-eye"></i> View</button>
+                <button class="cert-btn cert-btn-download"><i class="fas fa-download"></i> Download</button>
+              </div>
+            </div>
+            <div class="cert-card">
+              <div class="cert-icon"><i class="fas fa-building"></i></div>
+              <div class="cert-name">Business Registration</div>
+              <div class="cert-actions">
+                <button class="cert-btn cert-btn-view"><i class="fas fa-eye"></i> View</button>
+                <button class="cert-btn cert-btn-download"><i class="fas fa-download"></i> Download</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             6. ACHIEVEMENTS
+             ============================================================ -->
+        <div class="content-card fade-in">
+          <h2 class="card-title"><i class="fas fa-trophy"></i> Achievements</h2>
+          <div class="achievement-grid">
+            <div class="achievement-card">
+              <div class="achievement-badge gold"><i class="fas fa-crown"></i></div>
+              <div>
+                <div class="achievement-name">Top Seller</div>
+                <div class="achievement-desc">Consistently ranked #1 in category</div>
+              </div>
+            </div>
+            <div class="achievement-card">
+              <div class="achievement-badge platinum"><i class="fas fa-cubes"></i></div>
+              <div>
+                <div class="achievement-name">1000+ Orders</div>
+                <div class="achievement-desc">Delivered over 1,000 orders</div>
+              </div>
+            </div>
+            <div class="achievement-card">
+              <div class="achievement-badge diamond"><i class="fas fa-gem"></i></div>
+              <div>
+                <div class="achievement-name">Premium Seller</div>
+                <div class="achievement-desc">Premium seller badge earned</div>
+              </div>
+            </div>
+            <div class="achievement-card">
+              <div class="achievement-badge emerald"><i class="fas fa-shipping-fast"></i></div>
+              <div>
+                <div class="achievement-name">Fast Shipping</div>
+                <div class="achievement-desc">98% orders shipped within 24h</div>
+              </div>
+            </div>
+            <div class="achievement-card">
+              <div class="achievement-badge ruby"><i class="fas fa-heart"></i></div>
+              <div>
+                <div class="achievement-name">Customer Favorite</div>
+                <div class="achievement-desc">Loved by 12,000+ customers</div>
+              </div>
+            </div>
+            <div class="achievement-card">
+              <div class="achievement-badge sapphire"><i class="fas fa-check-double"></i></div>
+              <div>
+                <div class="achievement-name">Verified Business</div>
+                <div class="achievement-desc">All documents verified by MR Shop</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             7. FEATURED PRODUCTS
+             ============================================================ -->
+        <div class="content-card fade-in" id="products">
+          <h2 class="card-title"><i class="fas fa-star"></i> Featured Products</h2>
+          <div class="products-grid">
+            <!-- Product 1 -->
+            <div class="product-card">
+              <span class="deal-badge">29% off</span>
+              <div class="product-img-wrap">
+                <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=300&h=300&fit=crop" alt="Sundarbans Wild Honey">
+                <button class="quick-view-btn"><i class="fas fa-eye"></i> Quick View</button>
+              </div>
+              <div class="product-info">
+                <div class="product-title">Sundarbans Wild Honey 500g</div>
+                <div class="product-rating">
+                  <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></span>
+                  <span class="rating-count">(234)</span>
+                </div>
+                <div class="product-price">
+                  <span class="price-symbol">৳</span><span class="price-whole">850</span>
+                  <span class="price-original">৳1,200</span>
+                  <span class="price-discount">-29%</span>
+                </div>
+                <button class="product-btn">Add to Cart</button>
+              </div>
+            </div>
+            <!-- Product 2 -->
+            <div class="product-card">
+              <span class="deal-badge">22% off</span>
+              <div class="product-img-wrap">
+                <img src="https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=300&h=300&fit=crop" alt="Nakshi Kantha Quilt">
+                <button class="quick-view-btn"><i class="fas fa-eye"></i> Quick View</button>
+              </div>
+              <div class="product-info">
+                <div class="product-title">Nakshi Kantha Quilt - Hand Embroidered</div>
+                <div class="product-rating">
+                  <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span>
+                  <span class="rating-count">(89)</span>
+                </div>
+                <div class="product-price">
+                  <span class="price-symbol">৳</span><span class="price-whole">1,200</span>
+                  <span class="price-original">৳1,800</span>
+                  <span class="price-discount">-33%</span>
+                </div>
+                <button class="product-btn">Add to Cart</button>
+              </div>
+            </div>
+            <!-- Product 3 -->
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img src="https://images.unsplash.com/photo-1596591868231-05e731f2938e?w=300&h=300&fit=crop" alt="Jamdani Saree">
+                <button class="quick-view-btn"><i class="fas fa-eye"></i> Quick View</button>
+              </div>
+              <div class="product-info">
+                <div class="product-title">Jamdani Saree - Cotton Premium</div>
+                <div class="product-rating">
+                  <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span>
+                  <span class="rating-count">(78)</span>
+                </div>
+                <div class="product-price">
+                  <span class="price-symbol">৳</span><span class="price-whole">4,500</span>
+                  <span class="price-original">৳6,000</span>
+                  <span class="price-discount">-25%</span>
+                </div>
+                <button class="product-btn">Add to Cart</button>
+              </div>
+            </div>
+            <!-- Product 4 -->
+            <div class="product-card">
+              <span class="deal-badge">20% off</span>
+              <div class="product-img-wrap">
+                <img src="https://images.unsplash.com/photo-1631515242808-497c3b3616a2?w=300&h=300&fit=crop" alt="Pure Cow Ghee">
+                <button class="quick-view-btn"><i class="fas fa-eye"></i> Quick View</button>
+              </div>
+              <div class="product-info">
+                <div class="product-title">Pure Cow Ghee 500ml - Organic</div>
+                <div class="product-rating">
+                  <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span>
+                  <span class="rating-count">(156)</span>
+                </div>
+                <div class="product-price">
+                  <span class="price-symbol">৳</span><span class="price-whole">950</span>
+                  <span class="price-original">৳1,200</span>
+                  <span class="price-discount">-21%</span>
+                </div>
+                <button class="product-btn">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             8. CUSTOMER REVIEWS
+             ============================================================ -->
+        <div class="content-card fade-in">
+          <h2 class="card-title"><i class="fas fa-comments"></i> Customer Reviews</h2>
+          <!-- Reviews Summary -->
+          <div class="reviews-summary">
+            <div class="reviews-avg">
+              <div class="reviews-avg-num">4.8</div>
+              <div class="reviews-avg-stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+              </div>
+              <div class="reviews-avg-total">2,847 reviews</div>
+            </div>
+            <div class="reviews-bars">
+              <div class="review-bar-row">
+                <span class="review-bar-label">5</span>
+                <div class="review-bar-track"><div class="review-bar-fill" style="width:72%"></div></div>
+                <span class="review-bar-count">2,050</span>
+              </div>
+              <div class="review-bar-row">
+                <span class="review-bar-label">4</span>
+                <div class="review-bar-track"><div class="review-bar-fill" style="width:18%"></div></div>
+                <span class="review-bar-count">512</span>
+              </div>
+              <div class="review-bar-row">
+                <span class="review-bar-label">3</span>
+                <div class="review-bar-track"><div class="review-bar-fill" style="width:6%"></div></div>
+                <span class="review-bar-count">171</span>
+              </div>
+              <div class="review-bar-row">
+                <span class="review-bar-label">2</span>
+                <div class="review-bar-track"><div class="review-bar-fill" style="width:3%"></div></div>
+                <span class="review-bar-count">85</span>
+              </div>
+              <div class="review-bar-row">
+                <span class="review-bar-label">1</span>
+                <div class="review-bar-track"><div class="review-bar-fill" style="width:1%"></div></div>
+                <span class="review-bar-count">29</span>
+              </div>
+            </div>
+          </div>
+          <!-- Review List -->
+          <div class="review-list">
+            <div class="review-card">
+              <div class="review-header">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop" alt="Taslima K." class="review-avatar">
+                <div>
+                  <div class="review-author">Taslima K.</div>
+                  <div class="review-date">July 15, 2026</div>
+                </div>
+              </div>
+              <div class="review-stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              </div>
+              <div class="review-text">Absolutely love the Sundarbans honey! It arrived perfectly packaged and the taste is incredible. You can really tell it's pure and authentic. The seller was also very responsive when I had a question about delivery. Highly recommend!</div>
+            </div>
+            <div class="review-card">
+              <div class="review-header">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop" alt="Ahmed R." class="review-avatar">
+                <div>
+                  <div class="review-author">Ahmed R.</div>
+                  <div class="review-date">July 10, 2026</div>
+                </div>
+              </div>
+              <div class="review-stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+              </div>
+              <div class="review-text">Bought the Nakshi Kantha quilt as a gift for my mother. The craftsmanship is stunning and the colors are vibrant. Delivery was fast and the packaging was secure. Only minor thing is I wished it came in a larger size option.</div>
+            </div>
+            <div class="review-card">
+              <div class="review-header">
+                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop" alt="Farhana M." class="review-avatar">
+                <div>
+                  <div class="review-author">Farhana M.</div>
+                  <div class="review-date">July 5, 2026</div>
+                </div>
+              </div>
+              <div class="review-stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              </div>
+              <div class="review-text">This is my third order from Artisan BD and they never disappoint. The cow ghee is pure and aromatic. My family loves the taste. Will keep ordering from this shop. The quality is consistent every single time!</div>
+            </div>
+            <div class="review-card">
+              <div class="review-header">
+                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop" alt="Kamal H." class="review-avatar">
+                <div>
+                  <div class="review-author">Kamal H.</div>
+                  <div class="review-date">June 28, 2026</div>
+                </div>
+              </div>
+              <div class="review-stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+              </div>
+              <div class="review-text">Good quality Jamdani saree. The weaving is detailed and fabric feels premium. Shipping took a bit longer than expected (5 days instead of 3) but the product quality makes up for it. Fair price for the quality.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             9. STORE POLICIES
+             ============================================================ -->
+        <div class="content-card fade-in">
+          <h2 class="card-title"><i class="fas fa-file-alt"></i> Store Policies</h2>
+          <div class="policy-grid">
+            <div class="policy-card">
+              <div class="policy-icon"><i class="fas fa-truck"></i></div>
+              <div class="policy-title">Shipping Policy</div>
+              <div class="policy-text">Free shipping on orders over ৳5,000 within Dhaka. Standard delivery takes 2-3 business days. Outside Dhaka: 3-5 business days. Express delivery available for ৳150 extra.</div>
+            </div>
+            <div class="policy-card">
+              <div class="policy-icon"><i class="fas fa-undo"></i></div>
+              <div class="policy-title">Return Policy</div>
+              <div class="policy-text">7-day return policy for unused items in original packaging. Food items are non-returnable unless damaged. Handicrafts can be returned if defective. Contact seller within 48 hours of delivery.</div>
+            </div>
+            <div class="policy-card">
+              <div class="policy-icon"><i class="fas fa-money-bill-wave"></i></div>
+              <div class="policy-title">Refund Policy</div>
+              <div class="policy-text">Full refund within 3 business days of approved return. Refund via bKash/Nagad or original payment method. Partial refunds may apply for used or damaged items.</div>
+            </div>
+            <div class="policy-card">
+              <div class="policy-icon"><i class="fas fa-shield-alt"></i></div>
+              <div class="policy-title">Warranty</div>
+              <div class="policy-text">30-day warranty on all manufactured goods. Handicrafts come with a 90-day quality guarantee. Food products guaranteed fresh until expiry date. Free replacement for defective items.</div>
+            </div>
+            <div class="policy-card">
+              <div class="policy-icon"><i class="fas fa-credit-card"></i></div>
+              <div class="policy-title">Payment Methods</div>
+              <div class="policy-text">We accept Cash on Delivery, bKash, Nagad, Rocket, and bank transfers. All digital payments are processed through secure channels. 100% buyer protection guaranteed.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             10. CONTACT INFORMATION
+             ============================================================ -->
+        <div class="content-card fade-in">
+          <h2 class="card-title"><i class="fas fa-address-card"></i> Contact Information</h2>
+          <div class="contact-grid">
+            <div class="contact-item">
+              <div class="contact-icon address"><i class="fas fa-map-marker-alt"></i></div>
+              <div>
+                <div class="contact-label">Business Address</div>
+                <div class="contact-value">45/3, Dhanmondi Road 27, Dhaka 1205</div>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon phone"><i class="fas fa-phone"></i></div>
+              <div>
+                <div class="contact-label">Phone</div>
+                <div class="contact-value">+880 1712-345678</div>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon email"><i class="fas fa-envelope"></i></div>
+              <div>
+                <div class="contact-label">Email</div>
+                <div class="contact-value">info@artisanbd.com</div>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon web"><i class="fas fa-globe"></i></div>
+              <div>
+                <div class="contact-label">Website</div>
+                <div class="contact-value">www.artisanbd.com</div>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon facebook"><i class="fab fa-facebook-f"></i></div>
+              <div>
+                <div class="contact-label">Facebook</div>
+                <div class="contact-value">facebook.com/artisanbd</div>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon instagram"><i class="fab fa-instagram"></i></div>
+              <div>
+                <div class="contact-label">Instagram</div>
+                <div class="contact-value">@artisanbd.shop</div>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon whatsapp"><i class="fab fa-whatsapp"></i></div>
+              <div>
+                <div class="contact-label">WhatsApp</div>
+                <div class="contact-value">+880 1712-345678</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             11. STORE LOCATION
+             ============================================================ -->
+        <div class="content-card fade-in">
+          <h2 class="card-title"><i class="fas fa-map-marked-alt"></i> Store Location</h2>
+          <div class="map-placeholder">
+            <i class="fas fa-map-marked-alt"></i>
+            <span>Google Map — Dhanmondi, Dhaka, Bangladesh</span>
+            <small style="color:#888;margin-top:6px">45/3, Dhanmondi Road 27, Dhaka 1205</small>
+          </div>
+          <div class="address-card-full">
+            <h4><i class="fas fa-home" style="color:var(--orange);margin-right:6px"></i> Full Address</h4>
+            <p>Artisan BD, 45/3, Dhanmondi Road 27<br>Dhanmondi, Dhaka 1205<br>Bangladesh<br><br><strong>Landmark:</strong> Near Dhanmondi Lake, opposite to Rapa Plaza<br><strong>Working Hours:</strong> Saturday - Thursday, 9:00 AM - 8:00 PM</p>
+          </div>
+        </div>
+
+      </main>
+
+      <!-- ============================================================
+           SIDEBAR COLUMN — Professional Dashboard Panel
+           ============================================================ -->
+      <aside class="seller-sidebar">
+
+        <!-- 12. SIDEBAR — Profile Card -->
+        <div class="sidebar-profile">
+          <div class="sidebar-profile-header">
+            <div class="sidebar-avatar-wrap">
+              <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=150&h=150&fit=crop" alt="Artisan BD" class="sidebar-avatar">
+              <div class="sidebar-avatar-status"></div>
+            </div>
+            <div class="sidebar-name">Artisan BD</div>
+            <div class="sidebar-level-badge"><i class="fas fa-crown"></i> Gold Seller</div>
+          </div>
+          <div class="sidebar-profile-body">
+            <!-- Online Status -->
+            <div class="sidebar-status-row">
+              <div class="s-icon green"><i class="fas fa-signal"></i></div>
+              <span class="s-label">Status</span>
+              <span class="s-value">
+                <span class="online-indicator"><span class="online-dot"></span><span class="online-text">Online</span></span>
+              </span>
+            </div>
+            <!-- Seller Level -->
+            <div class="sidebar-status-row">
+              <div class="s-icon orange"><i class="fas fa-award"></i></div>
+              <span class="s-label">Seller Level</span>
+              <span class="s-value" style="color:var(--orange)"><i class="fas fa-crown" style="font-size:11px"></i> Gold</span>
+            </div>
+            <!-- Last Active -->
+            <div class="sidebar-status-row">
+              <div class="s-icon blue"><i class="fas fa-clock"></i></div>
+              <span class="s-label">Last Active</span>
+              <span class="s-value">2 min ago</span>
+            </div>
+            <!-- Joined -->
+            <div class="sidebar-status-row">
+              <div class="s-icon purple"><i class="fas fa-calendar-alt"></i></div>
+              <span class="s-label">Joined</span>
+              <span class="s-value">Jan 2023</span>
+            </div>
+            <!-- Followers -->
+            <div class="sidebar-status-row">
+              <div class="s-icon teal"><i class="fas fa-users"></i></div>
+              <span class="s-label">Followers</span>
+              <span class="s-value">12,432</span>
+            </div>
+            <!-- Following -->
+            <div class="sidebar-status-row">
+              <div class="s-icon blue"><i class="fas fa-user-friends"></i></div>
+              <span class="s-label">Following</span>
+              <span class="s-value">156</span>
+            </div>
+
+            <!-- Follow Button -->
+            <button class="sidebar-follow-btn" onclick="toggleFollow()">
+              <i class="fas fa-heart"></i> Follow Seller
+            </button>
+
+            <!-- Quick Stats -->
+            <div class="sidebar-stats-grid">
+              <div class="sidebar-mini-stat">
+                <div class="ms-value">248</div>
+                <div class="ms-label">Products</div>
+              </div>
+              <div class="sidebar-mini-stat">
+                <div class="ms-value">8,247</div>
+                <div class="ms-label">Orders</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Contact Card -->
+        <div class="sidebar-contact-card">
+          <div class="sidebar-contact-header">
+            <i class="fas fa-headset"></i> Quick Contact
+          </div>
+          <div class="sidebar-contact-body">
+            <a href="chat.html" class="contact-link-item">
+              <i class="fas fa-comment-dots" style="color:var(--blue)"></i> Chat with Seller
+            </a>
+            <a href="tel:+8801712345678" class="contact-link-item">
+              <i class="fas fa-phone" style="color:var(--green)"></i> +880 1712-345678
+            </a>
+            <a href="mailto:info@artisanbd.com" class="contact-link-item">
+              <i class="fas fa-envelope" style="color:var(--orange)"></i> info@artisanbd.com
+            </a>
+          </div>
+        </div>
+
+        <!-- Similar Sellers Sidebar -->
+        <div class="sidebar-similar-card">
+          <div class="sidebar-similar-header">
+            <i class="fas fa-store"></i> Similar Sellers
+          </div>
+          <div class="sidebar-similar-body">
+            <div class="similar-seller-row">
+              <img src="https://images.unsplash.com/photo-1560472355-536de3962603?w=80&h=80&fit=crop" alt="Honey House BD">
+              <div class="similar-seller-info">
+                <div class="similar-seller-name">Honey House BD</div>
+                <div class="similar-seller-meta"><i class="fas fa-star" style="color:var(--orange)"></i> 4.7 &middot; 320 products</div>
+              </div>
+            </div>
+            <div class="similar-seller-row">
+              <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=80&h=80&fit=crop" alt="Desi Crafts">
+              <div class="similar-seller-info">
+                <div class="similar-seller-name">Desi Crafts</div>
+                <div class="similar-seller-meta"><i class="fas fa-star" style="color:var(--orange)"></i> 4.9 &middot; 180 products</div>
+              </div>
+            </div>
+            <div class="similar-seller-row">
+              <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=80&h=80&fit=crop" alt="Pure Organic BD">
+              <div class="similar-seller-info">
+                <div class="similar-seller-name">Pure Organic BD</div>
+                <div class="similar-seller-meta"><i class="fas fa-star" style="color:var(--orange)"></i> 4.6 &middot; 95 products</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- ============================================================
+       13. SIMILAR SELLERS — Full Width Section
+       ============================================================ -->
+  <div class="seller-page" style="padding-top:0">
+    <div class="content-card fade-in">
+      <h2 class="card-title"><i class="fas fa-store-alt"></i> Similar Sellers You May Like</h2>
+      <div class="similar-grid">
+        <div class="similar-card">
+          <img src="https://images.unsplash.com/photo-1560472355-536de3962603?w=150&h=150&fit=crop" alt="Honey House BD" class="similar-avatar">
+          <div class="similar-name">Honey House BD</div>
+          <div class="similar-category">Food & Natural</div>
+          <div class="similar-rating">
+            <i class="fas fa-star" style="color:var(--orange)"></i> 4.7
+            <span style="color:#888;font-size:12px">(1.2K)</span>
+          </div>
+          <div class="similar-products">320 Products</div>
+          <button class="similar-follow-btn">Follow</button>
+        </div>
+        <div class="similar-card">
+          <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=150&h=150&fit=crop" alt="Desi Crafts" class="similar-avatar">
+          <div class="similar-name">Desi Crafts</div>
+          <div class="similar-category">Handicrafts</div>
+          <div class="similar-rating">
+            <i class="fas fa-star" style="color:var(--orange)"></i> 4.9
+            <span style="color:#888;font-size:12px">(890)</span>
+          </div>
+          <div class="similar-products">180 Products</div>
+          <button class="similar-follow-btn">Follow</button>
+        </div>
+        <div class="similar-card">
+          <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=150&h=150&fit=crop" alt="Pure Organic BD" class="similar-avatar">
+          <div class="similar-name">Pure Organic BD</div>
+          <div class="similar-category">Food & Natural</div>
+          <div class="similar-rating">
+            <i class="fas fa-star" style="color:var(--orange)"></i> 4.6
+            <span style="color:#888;font-size:12px">(654)</span>
+          </div>
+          <div class="similar-products">95 Products</div>
+          <button class="similar-follow-btn">Follow</button>
+        </div>
+        <div class="similar-card">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=150&h=150&fit=crop" alt="Jamdani House" class="similar-avatar">
+          <div class="similar-name">Jamdani House</div>
+          <div class="similar-category">Clothing</div>
+          <div class="similar-rating">
+            <i class="fas fa-star" style="color:var(--orange)"></i> 4.8
+            <span style="color:#888;font-size:12px">(1.5K)</span>
+          </div>
+          <div class="similar-products">210 Products</div>
+          <button class="similar-follow-btn">Follow</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       14. FOOTER — Exact Match with MR Shop
+       ============================================================ -->
+  <div class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    Back to top
+  </div>
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Get to Know Us</h4>
+        <a href="blog.html">Blog</a>
+        <a href="about.html">About MR Shop</a>
+        <a href="becomeseller.html">Sell on MR Shop</a>
+        <a href="work-for-people.html">Careers</a>
+      </div>
+      <div class="footer-col">
+        <h4>Make Money with Us</h4>
+        <a href="becomeseller.html">Become a Seller</a>
+        <a href="seller-settings.html">Seller Dashboard</a>
+        <a href="workfor.html">Affiliate Program</a>
+        <a href="workforpeople.html">Advertise Products</a>
+      </div>
+      <div class="footer-col">
+        <h4>Let Us Help You</h4>
+        <a href="user-profile.html">Your Account</a>
+        <a href="orders.html">Your Orders</a>
+        <a href="order-tracking.html">Track Order</a>
+        <a href="chat.html">Help & Support</a>
+      </div>
+      <div class="footer-col">
+        <h4>MR Shop Payment</h4>
+        <a href="payment.html">bKash</a>
+        <a href="payment.html">Nagad</a>
+        <a href="payment.html">Rocket</a>
+        <a href="payment.html">Cash on Delivery</a>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <div class="footer-logo">MR shop</div>
+      <div class="footer-copyright">&copy; 2026 MR Shop. All Rights Reserved. | Powered by <strong>MR IT Company</strong></div>
+      <div class="footer-payment">
+        <span>We Accept:</span>
+        <i class="fas fa-money-bill-wave" title="Cash on Delivery"></i>
+        <i class="fas fa-mobile-alt" title="bKash" style="color:#e2136e;"></i>
+        <i class="fas fa-wallet" title="Nagad" style="color:#f6921e;"></i>
+        <i class="fas fa-rocket" title="Rocket" style="color:#8b2393;"></i>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT — Interactivity
+       ============================================================ -->
+  <script>
+    /* ---- Follow Button Toggle ---- */
+    let isFollowing = false;
+    function toggleFollow() {
+      isFollowing = !isFollowing;
+      const heroBtn = document.querySelector('.hero-btn-follow');
+      const sidebarBtn = document.querySelector('.sidebar-follow-btn');
+      if (isFollowing) {
+        if (heroBtn) {
+          heroBtn.classList.add('following');
+          heroBtn.innerHTML = '<i class="fas fa-heart"></i> Following';
+        }
+        if (sidebarBtn) {
+          sidebarBtn.classList.add('following');
+          sidebarBtn.innerHTML = '<i class="fas fa-heart"></i> Following';
+        }
+      } else {
+        if (heroBtn) {
+          heroBtn.classList.remove('following');
+          heroBtn.innerHTML = '<i class="fas fa-heart"></i> Follow';
+        }
+        if (sidebarBtn) {
+          sidebarBtn.classList.remove('following');
+          sidebarBtn.innerHTML = '<i class="fas fa-heart"></i> Follow Seller';
+        }
+      }
+    }
+
+    /* ---- Share Seller ---- */
+    function shareSeller() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Artisan BD - MR Shop',
+          text: 'Check out this premium seller on MR Shop Bangladesh!',
+          url: window.location.href
+        });
+      } else {
+        const url = window.location.href;
+        navigator.clipboard.writeText(url).then(() => {
+          alert('Link copied to clipboard!');
+        }).catch(() => {
+          prompt('Copy this link:', url);
+        });
+      }
+    }
+
+    /* ---- Scroll Animations ---- */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    /* ---- Back to Top ---- */
+    window.addEventListener('scroll', () => {
+      const btn = document.querySelector('.back-to-top');
+      if (window.scrollY > 400) {
+        btn.style.display = 'block';
+      } else {
+        btn.style.display = 'none';
+      }
+    });
+    document.querySelector('.back-to-top').style.display = 'none';
+
+    /* ---- Smooth Scroll for Product Link ---- */
+    document.querySelector('a[href="#products"]').addEventListener('click', function(e) {
+      e.preventDefault();
+      document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    /* ---- Review Bar Animation ---- */
+    const reviewBars = document.querySelectorAll('.review-bar-fill');
+    const reviewObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.width = e.target.style.width;
+          e.target.style.transition = 'width 1s ease';
+        }
+      });
+    }, { threshold: 0.5 });
+    reviewBars.forEach(bar => reviewObserver.observe(bar));
+  </script>
+
+</body>
+</html>

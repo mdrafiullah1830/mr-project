@@ -57,7 +57,7 @@
           if(user && user.email === ADMIN_EMAIL && (user.isAdmin || user.role === 'admin')){
             setTimeout(()=>{ window.location.href = 'admin.html'; }, 500);
           } else {
-            setTimeout(()=>{ window.location.href = 'userprofile.html'; }, 500);
+            setTimeout(()=>{ window.location.href = 'user-profile.html'; }, 500);
           }
         }
       } else {
@@ -92,7 +92,7 @@
           if(user && user.email === ADMIN_EMAIL && (user.isAdmin || user.role === 'admin')){
             setTimeout(()=>{ window.location.href = 'admin.html'; }, 500);
           } else {
-            setTimeout(()=>{ window.location.href = 'userprofile.html'; }, 500);
+            setTimeout(()=>{ window.location.href = 'user-profile.html'; }, 500);
           }
         }
       } else {

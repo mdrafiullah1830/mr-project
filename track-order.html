@@ -102,7 +102,7 @@
       </div>
       <div class="amz-header-right">
         <a href="signin.html" class="amz-header-link"><span class="line1">Hello, Sign in</span><span class="line2">Account & Lists <i class="fas fa-caret-down"></i></span></a>
-        <a href="userprofile.html" class="amz-header-link"><span class="line1">Returns</span><span class="line2">& Orders</span></a>
+        <a href="user-profile.html" class="amz-header-link"><span class="line1">Returns</span><span class="line2">& Orders</span></a>
         <a href="wishlist.html" class="amz-header-link"><span class="line1"><i class="fas fa-heart"></i> <span class="amz-wishlist-count">0</span></span><span class="line2">Wishlist</span></a>
         <a href="cart.html" class="amz-cart"><span class="amz-cart-icon"><i class="fas fa-shopping-cart"></i><span class="amz-cart-count" id="cartCount">0</span></span><span class="amz-cart-text">Cart</span></a>
       </div>
@@ -122,7 +122,7 @@
   </header>
 
   <div class="track-page" id="trackPage">
-    <a href="userprofile.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to My Orders</a>
+    <a href="user-profile.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to My Orders</a>
 
     <!-- Loading -->
     <div class="loading-state" id="loadingState">
@@ -135,7 +135,7 @@
       <i class="fas fa-exclamation-circle"></i>
       <h3 id="errorTitle">Order not found</h3>
       <p id="errorMsg">We couldn't find an order with that ID. Please check and try again.</p>
-      <a href="userprofile.html" class="track-btn">View My Orders</a>
+      <a href="user-profile.html" class="track-btn">View My Orders</a>
     </div>
 
     <!-- Content -->
@@ -376,7 +376,7 @@
 
         // Order details link
         const detailsLink = document.getElementById('orderDetailsLink');
-        detailsLink.href = 'userprofile.html?order=' + orderId;
+        detailsLink.href = 'user-profile.html?order=' + orderId;
 
         // Status & progress
         const status = data.status || data.currentStatus || 'pending';

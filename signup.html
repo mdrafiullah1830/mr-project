@@ -58,7 +58,7 @@
         <span class="line1">Hello, sign in</span>
         <span class="line2">Account & Lists <i class="fa-solid fa-caret-down"></i></span>
       </a>
-      <a class="amz-header-link" href="userprofile.html">
+      <a class="amz-header-link" href="user-profile.html">
         <span class="line1">Returns</span>
         <span class="line2">& Orders</span>
       </a>
@@ -166,10 +166,10 @@
     </div>
     <div class="amz-footer-col">
       <h4>Let Us Help You</h4>
-      <a href="userprofile.html">Your Account</a>
-      <a href="userprofile.html">Your Orders</a>
+      <a href="user-profile.html">Your Account</a>
+      <a href="user-profile.html">Your Orders</a>
       <a href="#">Shipping Rates & Policies</a>
-      <a href="userprofile.html">Returns & Replacements</a>
+      <a href="user-profile.html">Returns & Replacements</a>
       <a href="#">Help</a>
     </div>
     <div class="amz-footer-col">
@@ -197,7 +197,7 @@
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     if (await MR_Auth.register(username, email, password)) {
-      setTimeout(() => window.location.href = 'userprofile.html', 1000);
+      setTimeout(() => window.location.href = 'user-profile.html', 1000);
     }
   }
 </script>
