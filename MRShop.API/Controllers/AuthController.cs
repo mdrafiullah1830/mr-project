@@ -301,7 +301,7 @@ public class AuthController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "[GoogleAuth] Google authentication failed. Type: {ExceptionType}, Message: {Message}", ex.GetType().Name, ex.Message);
-            return StatusCode(500, new { message = "Google authentication failed." });
+            return StatusCode(500, new { message = "Google authentication failed.", detail = ex.Message, type = ex.GetType().Name });
         }
     }
 

@@ -1,7 +1,6 @@
 using System.Net.Security;
 using System.Security.Authentication;
 using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using MRShop.API.Models;
 
@@ -13,9 +12,41 @@ public class MongoDbService
 
     public MongoDbService(IConfiguration configuration)
     {
-        // Register case-insensitive convention pack
-        var pack = new ConventionPack { new CamelCaseElementNameConvention() };
-        ConventionRegistry.Register("CaseInsensitive", pack, _ => true);
+        BsonClassMap.RegisterClassMap<User>(cm =>
+        {
+            cm.AutoMap();
+            cm.SetIgnoreExtraElements(true);
+        });
+
+        BsonClassMap.RegisterClassMap<Product>(cm =>
+        {
+            cm.AutoMap();
+            cm.SetIgnoreExtraElements(true);
+        });
+
+        BsonClassMap.RegisterClassMap<Order>(cm =>
+        {
+            cm.AutoMap();
+            cm.SetIgnoreExtraElements(true);
+        });
+
+        BsonClassMap.RegisterClassMap<SellerApplication>(cm =>
+        {
+            cm.AutoMap();
+            cm.SetIgnoreExtraElements(true);
+        });
+
+        BsonClassMap.RegisterClassMap<SellerProfile>(cm =>
+        {
+            cm.AutoMap();
+            cm.SetIgnoreExtraElements(true);
+        });
+
+        BsonClassMap.RegisterClassMap<Category>(cm =>
+        {
+            cm.AutoMap();
+            cm.SetIgnoreExtraElements(true);
+        });
 
         var connectionString = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING")
             ?? configuration["MongoDB:ConnectionString"]
