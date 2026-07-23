@@ -51,141 +51,97 @@ public class MongoDbService
 
     private void CreateIndexes()
     {
-        try
+        var indexes = new (string name, Action create)[]
         {
-            // Product indexes
-            var productIndexes = Products.Indexes;
-            productIndexes.CreateOne(new CreateIndexModel<Product>(
+            ("product_text_search", () => Products.Indexes.CreateOne(new CreateIndexModel<Product>(
                 Builders<Product>.IndexKeys.Combine(
                     Builders<Product>.IndexKeys.Text(p => p.Name),
                     Builders<Product>.IndexKeys.Text(p => p.Description),
                     Builders<Product>.IndexKeys.Text(p => p.Sku)
-                ),
-                new CreateIndexOptions { Name = "product_text_search" }
-            ));
-            productIndexes.CreateOne(new CreateIndexModel<Product>(
+                ), new CreateIndexOptions { Name = "product_text_search" }))),
+            ("product_seller_status", () => Products.Indexes.CreateOne(new CreateIndexModel<Product>(
                 Builders<Product>.IndexKeys.Combine(
                     Builders<Product>.IndexKeys.Ascending(p => p.SellerId),
                     Builders<Product>.IndexKeys.Ascending(p => p.Status)
-                ),
-                new CreateIndexOptions { Name = "product_seller_status" }
-            ));
-            productIndexes.CreateOne(new CreateIndexModel<Product>(
+                ), new CreateIndexOptions { Name = "product_seller_status" }))),
+            ("product_category", () => Products.Indexes.CreateOne(new CreateIndexModel<Product>(
                 Builders<Product>.IndexKeys.Ascending(p => p.CategoryId),
-                new CreateIndexOptions { Name = "product_category" }
-            ));
-            productIndexes.CreateOne(new CreateIndexModel<Product>(
+                new CreateIndexOptions { Name = "product_category" }))),
+            ("product_brand", () => Products.Indexes.CreateOne(new CreateIndexModel<Product>(
                 Builders<Product>.IndexKeys.Ascending(p => p.BrandId),
-                new CreateIndexOptions { Name = "product_brand" }
-            ));
-            productIndexes.CreateOne(new CreateIndexModel<Product>(
+                new CreateIndexOptions { Name = "product_brand" }))),
+            ("product_created", () => Products.Indexes.CreateOne(new CreateIndexModel<Product>(
                 Builders<Product>.IndexKeys.Descending(p => p.CreatedAt),
-                new CreateIndexOptions { Name = "product_created" }
-            ));
-            productIndexes.CreateOne(new CreateIndexModel<Product>(
+                new CreateIndexOptions { Name = "product_created" }))),
+            ("product_sold", () => Products.Indexes.CreateOne(new CreateIndexModel<Product>(
                 Builders<Product>.IndexKeys.Descending(p => p.SoldCount),
-                new CreateIndexOptions { Name = "product_sold" }
-            ));
-            productIndexes.CreateOne(new CreateIndexModel<Product>(
+                new CreateIndexOptions { Name = "product_sold" }))),
+            ("product_views", () => Products.Indexes.CreateOne(new CreateIndexModel<Product>(
                 Builders<Product>.IndexKeys.Descending(p => p.ViewCount),
-                new CreateIndexOptions { Name = "product_views" }
-            ));
-            productIndexes.CreateOne(new CreateIndexModel<Product>(
+                new CreateIndexOptions { Name = "product_views" }))),
+            ("product_slug", () => Products.Indexes.CreateOne(new CreateIndexModel<Product>(
                 Builders<Product>.IndexKeys.Ascending(p => p.Slug),
-                new CreateIndexOptions
-                {
-                    Name = "product_slug",
-                    Unique = true,
-                    PartialFilterExpression = Builders<Product>.Filter.Exists(p => p.Slug)
-                }
-            ));
-
-        // Order indexes
-        Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
-            Builders<Order>.IndexKeys.Ascending(o => o.CustomerId),
-            new CreateIndexOptions { Name = "order_customer" }
-        ));
-        Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
-            Builders<Order>.IndexKeys.Ascending(o => o.SellerId),
-            new CreateIndexOptions { Name = "order_seller" }
-        ));
-        Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
-            Builders<Order>.IndexKeys.Ascending(o => o.Status),
-            new CreateIndexOptions { Name = "order_status" }
-        ));
-        Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
-            Builders<Order>.IndexKeys.Ascending(o => o.OrderNumber),
-            new CreateIndexOptions { Name = "order_number", Unique = true }
-        ));
-        Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
-            Builders<Order>.IndexKeys.Descending(o => o.CreatedAt),
-            new CreateIndexOptions { Name = "order_created" }
-        ));
-        Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
-            Builders<Order>.IndexKeys.Combine(
+                new CreateIndexOptions { Name = "product_slug", Unique = true, Sparse = true }))),
+            ("order_customer", () => Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
                 Builders<Order>.IndexKeys.Ascending(o => o.CustomerId),
-                Builders<Order>.IndexKeys.Descending(o => o.CreatedAt)
-            ),
-            new CreateIndexOptions { Name = "order_customer_date" }
-        ));
-        Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
-            Builders<Order>.IndexKeys.Combine(
+                new CreateIndexOptions { Name = "order_customer" }))),
+            ("order_seller", () => Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
                 Builders<Order>.IndexKeys.Ascending(o => o.SellerId),
-                Builders<Order>.IndexKeys.Descending(o => o.CreatedAt)
-            ),
-            new CreateIndexOptions { Name = "order_seller_date" }
-        ));
+                new CreateIndexOptions { Name = "order_seller" }))),
+            ("order_status", () => Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
+                Builders<Order>.IndexKeys.Ascending(o => o.Status),
+                new CreateIndexOptions { Name = "order_status" }))),
+            ("order_number", () => Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
+                Builders<Order>.IndexKeys.Ascending(o => o.OrderNumber),
+                new CreateIndexOptions { Name = "order_number", Unique = true }))),
+            ("order_created", () => Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
+                Builders<Order>.IndexKeys.Descending(o => o.CreatedAt),
+                new CreateIndexOptions { Name = "order_created" }))),
+            ("order_customer_date", () => Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
+                Builders<Order>.IndexKeys.Combine(
+                    Builders<Order>.IndexKeys.Ascending(o => o.CustomerId),
+                    Builders<Order>.IndexKeys.Descending(o => o.CreatedAt)
+                ), new CreateIndexOptions { Name = "order_customer_date" }))),
+            ("order_seller_date", () => Orders.Indexes.CreateOne(new CreateIndexModel<Order>(
+                Builders<Order>.IndexKeys.Combine(
+                    Builders<Order>.IndexKeys.Ascending(o => o.SellerId),
+                    Builders<Order>.IndexKeys.Descending(o => o.CreatedAt)
+                ), new CreateIndexOptions { Name = "order_seller_date" }))),
+            ("timeline_order", () => OrderTimelines.Indexes.CreateOne(new CreateIndexModel<OrderTimeline>(
+                Builders<OrderTimeline>.IndexKeys.Ascending(t => t.OrderId),
+                new CreateIndexOptions { Name = "timeline_order" }))),
+            ("address_user", () => Addresses.Indexes.CreateOne(new CreateIndexModel<Address>(
+                Builders<Address>.IndexKeys.Ascending(a => a.UserId),
+                new CreateIndexOptions { Name = "address_user" }))),
+            ("invoice_order", () => Invoices.Indexes.CreateOne(new CreateIndexModel<Invoice>(
+                Builders<Invoice>.IndexKeys.Ascending(i => i.OrderId),
+                new CreateIndexOptions { Name = "invoice_order" }))),
+            ("invoice_customer", () => Invoices.Indexes.CreateOne(new CreateIndexModel<Invoice>(
+                Builders<Invoice>.IndexKeys.Ascending(i => i.CustomerId),
+                new CreateIndexOptions { Name = "invoice_customer" }))),
+            ("invoice_number", () => Invoices.Indexes.CreateOne(new CreateIndexModel<Invoice>(
+                Builders<Invoice>.IndexKeys.Ascending(i => i.InvoiceNumber),
+                new CreateIndexOptions { Name = "invoice_number", Unique = true }))),
+            ("cart_user", () => CartItems.Indexes.CreateOne(new CreateIndexModel<CartItem>(
+                Builders<CartItem>.IndexKeys.Ascending(c => c.UserId),
+                new CreateIndexOptions { Name = "cart_user" }))),
+            ("review_product", () => Reviews.Indexes.CreateOne(new CreateIndexModel<Review>(
+                Builders<Review>.IndexKeys.Ascending(r => r.ProductId),
+                new CreateIndexOptions { Name = "review_product" }))),
+            ("inventory_product_date", () => InventoryLogs.Indexes.CreateOne(new CreateIndexModel<InventoryLog>(
+                Builders<InventoryLog>.IndexKeys.Combine(
+                    Builders<InventoryLog>.IndexKeys.Ascending(l => l.ProductId),
+                    Builders<InventoryLog>.IndexKeys.Descending(l => l.CreatedAt)
+                ), new CreateIndexOptions { Name = "inventory_product_date" }))),
+        };
 
-        // OrderTimeline indexes
-        OrderTimelines.Indexes.CreateOne(new CreateIndexModel<OrderTimeline>(
-            Builders<OrderTimeline>.IndexKeys.Ascending(t => t.OrderId),
-            new CreateIndexOptions { Name = "timeline_order" }
-        ));
-
-        // Address indexes
-        Addresses.Indexes.CreateOne(new CreateIndexModel<Address>(
-            Builders<Address>.IndexKeys.Ascending(a => a.UserId),
-            new CreateIndexOptions { Name = "address_user" }
-        ));
-
-        // Invoice indexes
-        Invoices.Indexes.CreateOne(new CreateIndexModel<Invoice>(
-            Builders<Invoice>.IndexKeys.Ascending(i => i.OrderId),
-            new CreateIndexOptions { Name = "invoice_order" }
-        ));
-        Invoices.Indexes.CreateOne(new CreateIndexModel<Invoice>(
-            Builders<Invoice>.IndexKeys.Ascending(i => i.CustomerId),
-            new CreateIndexOptions { Name = "invoice_customer" }
-        ));
-        Invoices.Indexes.CreateOne(new CreateIndexModel<Invoice>(
-            Builders<Invoice>.IndexKeys.Ascending(i => i.InvoiceNumber),
-            new CreateIndexOptions { Name = "invoice_number", Unique = true }
-        ));
-
-        // CartItem indexes
-        CartItems.Indexes.CreateOne(new CreateIndexModel<CartItem>(
-            Builders<CartItem>.IndexKeys.Ascending(c => c.UserId),
-            new CreateIndexOptions { Name = "cart_user" }
-        ));
-
-        // Review indexes
-        Reviews.Indexes.CreateOne(new CreateIndexModel<Review>(
-            Builders<Review>.IndexKeys.Ascending(r => r.ProductId),
-            new CreateIndexOptions { Name = "review_product" }
-        ));
-
-        // InventoryLog indexes
-        InventoryLogs.Indexes.CreateOne(new CreateIndexModel<InventoryLog>(
-            Builders<InventoryLog>.IndexKeys.Combine(
-                Builders<InventoryLog>.IndexKeys.Ascending(l => l.ProductId),
-                Builders<InventoryLog>.IndexKeys.Descending(l => l.CreatedAt)
-            ),
-            new CreateIndexOptions { Name = "inventory_product_date" }
-        ));
-        }
-        catch (Exception ex)
+        foreach (var (name, create) in indexes)
         {
-            Console.WriteLine($"[MongoDbService] Index creation warning: {ex.Message}");
+            try { create(); }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[MongoDbService] Index '{name}' warning: {ex.Message}");
+            }
         }
     }
 }
