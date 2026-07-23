@@ -45,8 +45,15 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Fetch event - Network first, fallback to cache
+// Fetch event - Network first, fallback to cache (skip API calls)
 self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+
+  // Skip API calls - let them pass through directly
+  if (url.pathname.startsWith('/api/') || url.hostname.includes('azurewebsites.net') || url.hostname.includes('googleapis.com') || url.hostname.includes('google.com')) {
+    return;
+  }
+
   event.respondWith(
     fetch(event.request)
       .then(response => {
