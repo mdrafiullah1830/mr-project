@@ -24,6 +24,8 @@ public class AdminController : ControllerBase
     [HttpGet("dashboard")]
     public async Task<IActionResult> GetDashboard()
     {
+    try
+    {
         var users = await _mongoDb.Users.Find(_ => true).ToListAsync();
         var sellers = await _mongoDb.Users.Find(u => u.Role == "seller").ToListAsync();
         var applications = await _mongoDb.SellerApplications.Find(_ => true).ToListAsync();
@@ -133,6 +135,12 @@ public class AdminController : ControllerBase
             topSellers,
             newUsersThisMonth = users.Count(u => u.CreatedAt >= monthStart)
         });
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[Admin] GetDashboard error: {ex.Message}");
+        return StatusCode(500, new { message = "Failed to load dashboard.", error = ex.Message });
+    }
     }
 
     // ==================== USER MANAGEMENT ====================
@@ -317,56 +325,64 @@ public class AdminController : ControllerBase
         [FromQuery] string? approvalStatus,
         [FromQuery] bool? inStock)
     {
-        var filter = Builders<Product>.Filter.Empty;
-
-        if (!string.IsNullOrWhiteSpace(category))
-            filter = Builders<Product>.Filter.And(filter, Builders<Product>.Filter.Eq(p => p.CategoryId, category));
-
-        if (!string.IsNullOrWhiteSpace(search))
+        try
         {
-            var escaped = System.Text.RegularExpressions.Regex.Escape(search);
-            filter = Builders<Product>.Filter.And(filter,
-                Builders<Product>.Filter.Regex(p => p.Name, new MongoDB.Bson.BsonRegularExpression(escaped, "i")));
+            var filter = Builders<Product>.Filter.Empty;
+
+            if (!string.IsNullOrWhiteSpace(category))
+                filter = Builders<Product>.Filter.And(filter, Builders<Product>.Filter.Eq(p => p.CategoryId, category));
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var escaped = System.Text.RegularExpressions.Regex.Escape(search);
+                filter = Builders<Product>.Filter.And(filter,
+                    Builders<Product>.Filter.Regex(p => p.Name, new MongoDB.Bson.BsonRegularExpression(escaped, "i")));
+            }
+
+            if (!string.IsNullOrWhiteSpace(status))
+                filter = Builders<Product>.Filter.And(filter, Builders<Product>.Filter.Eq(p => p.Status, status));
+
+            if (!string.IsNullOrWhiteSpace(approvalStatus))
+                filter = Builders<Product>.Filter.And(filter, Builders<Product>.Filter.Eq(p => p.ApprovalStatus, approvalStatus));
+
+            if (inStock.HasValue)
+            {
+                if (inStock.Value)
+                    filter = Builders<Product>.Filter.And(filter, Builders<Product>.Filter.Gt(p => p.StockQuantity, 0));
+                else
+                    filter = Builders<Product>.Filter.And(filter, Builders<Product>.Filter.Eq(p => p.StockQuantity, 0));
+            }
+
+            var products = await _mongoDb.Products
+                .Find(filter)
+                .SortByDescending(p => p.CreatedAt)
+                .ToListAsync();
+
+            return Ok(products.Select(p => new
+            {
+                id = p.Id,
+                name = p.Name,
+                slug = p.Slug,
+                price = p.Price,
+                discountPrice = p.DiscountPrice,
+                categoryId = p.CategoryId,
+                brandId = p.BrandId,
+                stockQuantity = p.StockQuantity,
+                status = p.Status,
+                approvalStatus = p.ApprovalStatus,
+                thumbnailImage = p.ThumbnailImage,
+                sellerId = p.SellerId,
+                averageRating = p.AverageRating,
+                soldCount = p.SoldCount,
+                viewCount = p.ViewCount,
+                createdAt = p.CreatedAt
+            }));
         }
-
-        if (!string.IsNullOrWhiteSpace(status))
-            filter = Builders<Product>.Filter.And(filter, Builders<Product>.Filter.Eq(p => p.Status, status));
-
-        if (!string.IsNullOrWhiteSpace(approvalStatus))
-            filter = Builders<Product>.Filter.And(filter, Builders<Product>.Filter.Eq(p => p.ApprovalStatus, approvalStatus));
-
-        if (inStock.HasValue)
+        catch (Exception ex)
         {
-            if (inStock.Value)
-                filter = Builders<Product>.Filter.And(filter, Builders<Product>.Filter.Gt(p => p.StockQuantity, 0));
-            else
-                filter = Builders<Product>.Filter.And(filter, Builders<Product>.Filter.Eq(p => p.StockQuantity, 0));
+            Console.WriteLine($"[Admin] GetProducts error: {ex.Message}");
+            return StatusCode(500, new { message = "Failed to load products.", error = ex.Message });
         }
-
-        var products = await _mongoDb.Products
-            .Find(filter)
-            .SortByDescending(p => p.CreatedAt)
-            .ToListAsync();
-
-        return Ok(products.Select(p => new
-        {
-            id = p.Id,
-            name = p.Name,
-            slug = p.Slug,
-            price = p.Price,
-            discountPrice = p.DiscountPrice,
-            categoryId = p.CategoryId,
-            brandId = p.BrandId,
-            stockQuantity = p.StockQuantity,
-            status = p.Status,
-            approvalStatus = p.ApprovalStatus,
-            thumbnailImage = p.ThumbnailImage,
-            sellerId = p.SellerId,
-            averageRating = p.AverageRating,
-            soldCount = p.SoldCount,
-            viewCount = p.ViewCount,
-            createdAt = p.CreatedAt
-        }));
     }
 
     [HttpPut("products/{id}/approve")]
@@ -710,62 +726,75 @@ public class AdminController : ControllerBase
     [HttpGet("analytics")]
     public async Task<IActionResult> GetAnalytics()
     {
-        var users = await _mongoDb.Users.Find(_ => true).ToListAsync();
-        var orders = await _mongoDb.Orders.Find(_ => true).ToListAsync();
-        var products = await _mongoDb.Products.Find(_ => true).ToListAsync();
-
-        var now = DateTime.UtcNow;
-
-        // Monthly revenue for last 6 months
-        var monthlyRevenue = new List<object>();
-        for (int i = 5; i >= 0; i--)
+        try
         {
-            var monthStart = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc).AddMonths(-i);
-            var monthEnd = monthStart.AddMonths(1);
-            var revenue = orders
-                .Where(o => o.Status == "delivered" && o.CreatedAt >= monthStart && o.CreatedAt < monthEnd)
-                .Sum(o => o.GrandTotal);
-            monthlyRevenue.Add(new { month = monthStart.ToString("MMM yyyy"), revenue });
+            var users = await _mongoDb.Users.Find(_ => true).ToListAsync();
+            var orders = await _mongoDb.Orders.Find(_ => true).ToListAsync();
+            var products = await _mongoDb.Products.Find(_ => true).ToListAsync();
+
+            var now = DateTime.UtcNow;
+
+            var monthlyRevenue = new List<object>();
+            for (int i = 5; i >= 0; i--)
+            {
+                var monthStart = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc).AddMonths(-i);
+                var monthEnd = monthStart.AddMonths(1);
+                var revenue = orders
+                    .Where(o => o.Status == "delivered" && o.CreatedAt >= monthStart && o.CreatedAt < monthEnd)
+                    .Sum(o => o.GrandTotal);
+                monthlyRevenue.Add(new { month = monthStart.ToString("MMM yyyy"), revenue });
+            }
+
+            var ordersByStatus = new
+            {
+                pending = orders.Count(o => o.Status == "pending"),
+                confirmed = orders.Count(o => o.Status == "confirmed"),
+                shipped = orders.Count(o => o.Status == "shipped"),
+                delivered = orders.Count(o => o.Status == "delivered"),
+                cancelled = orders.Count(o => o.Status == "cancelled")
+            };
+
+            var newUsers = new List<object>();
+            for (int i = 5; i >= 0; i--)
+            {
+                var monthStart = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc).AddMonths(-i);
+                var monthEnd = monthStart.AddMonths(1);
+                var count = users.Count(u => u.CreatedAt >= monthStart && u.CreatedAt < monthEnd);
+                newUsers.Add(new { month = monthStart.ToString("MMM yyyy"), count });
+            }
+
+            var deliveredOrders = orders.Where(o => o.Status == "delivered").ToList();
+            var categoryStats = products
+                .Where(p => !string.IsNullOrEmpty(p.CategoryId))
+                .GroupBy(p => p.CategoryId)
+                .Select(g =>
+                {
+                    var catProductIds = new HashSet<string>(g.Select(p => p.Id));
+                    var revenue = deliveredOrders
+                        .Where(o => o.Items.Any(i => catProductIds.Contains(i.ProductId)))
+                        .Sum(o => o.GrandTotal);
+                    return new { category = g.Key, count = g.Count(), revenue };
+                })
+                .OrderByDescending(c => c.count)
+                .Take(6)
+                .ToList();
+
+            return Ok(new
+            {
+                monthlyRevenue,
+                ordersByStatus,
+                newUsers,
+                categoryStats,
+                totalProducts = products.Count,
+                totalOrders = orders.Count,
+                totalUsers = users.Count(u => u.Role == "customer")
+            });
         }
-
-        // Orders by status
-        var ordersByStatus = new
+        catch (Exception ex)
         {
-            pending = orders.Count(o => o.Status == "pending"),
-            confirmed = orders.Count(o => o.Status == "confirmed"),
-            shipped = orders.Count(o => o.Status == "shipped"),
-            delivered = orders.Count(o => o.Status == "delivered"),
-            cancelled = orders.Count(o => o.Status == "cancelled")
-        };
-
-        // New users per month (last 6 months)
-        var newUsers = new List<object>();
-        for (int i = 5; i >= 0; i--)
-        {
-            var monthStart = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc).AddMonths(-i);
-            var monthEnd = monthStart.AddMonths(1);
-            var count = users.Count(u => u.CreatedAt >= monthStart && u.CreatedAt < monthEnd);
-            newUsers.Add(new { month = monthStart.ToString("MMM yyyy"), count });
+            Console.WriteLine($"[Admin] GetAnalytics error: {ex.Message}");
+            return StatusCode(500, new { message = "Failed to load analytics.", error = ex.Message });
         }
-
-        // Top categories by product count
-        var categoryStats = products
-            .GroupBy(p => p.CategoryId)
-            .Select(g => new { category = g.Key, count = g.Count(), revenue = orders.Where(o => o.Items.Any(i => products.Any(p => p.Id == i.ProductId && p.CategoryId == g.Key) && o.Status == "delivered")).Sum(o => o.GrandTotal) })
-            .OrderByDescending(c => c.count)
-            .Take(6)
-            .ToList();
-
-        return Ok(new
-        {
-            monthlyRevenue,
-            ordersByStatus,
-            newUsers,
-            categoryStats,
-            totalProducts = products.Count,
-            totalOrders = orders.Count,
-            totalUsers = users.Count(u => u.Role == "customer")
-        });
     }
 }
 
