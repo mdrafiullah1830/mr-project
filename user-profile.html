@@ -743,6 +743,9 @@
             <a href="chat.html" class="action-link-item"><i class="fas fa-headset" style="color:var(--orange)"></i> Help & Support</a>
             <a href="becomeseller.html" class="action-link-item"><i class="fas fa-store" style="color:#9c27b0"></i> Become a Seller</a>
             <a href="payment.html" class="action-link-item"><i class="fas fa-wallet" style="color:var(--blue)"></i> Payment Methods</a>
+            <div style="border-top:1px solid #f0f0f0;margin-top:8px;padding-top:8px">
+              <a href="#" class="action-link-item" onclick="doLogout()" style="color:var(--red)"><i class="fas fa-sign-out-alt" style="color:var(--red)"></i> Logout</a>
+            </div>
           </div>
         </div>
 
@@ -958,6 +961,17 @@
     /* ---- Init ---- */
     renderOrders();
     renderWishlist();
+
+    /* ---- Logout ---- */
+    function doLogout() {
+      if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('mr_shop_user');
+        localStorage.removeItem('mr_shop_token');
+        localStorage.removeItem('mr_shop_cart');
+        localStorage.removeItem('mr_shop_wishlist');
+        window.location.href = 'index.html';
+      }
+    }
   </script>
 
 </body>

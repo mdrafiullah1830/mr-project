@@ -1699,6 +1699,16 @@
           </div>
         </div>
 
+        <!-- Logout Card -->
+        <div class="sidebar-contact-card">
+          <div class="sidebar-contact-header"><i class="fas fa-sign-out-alt"></i> Account</div>
+          <div class="sidebar-contact-body">
+            <a href="seller.html" class="contact-link-item"><i class="fas fa-tachometer-alt" style="color:var(--blue)"></i> Seller Dashboard</a>
+            <a href="seller-settings.html" class="contact-link-item"><i class="fas fa-cog" style="color:var(--orange)"></i> Settings</a>
+            <a href="#" class="contact-link-item" onclick="doLogout()" style="color:var(--red)"><i class="fas fa-sign-out-alt" style="color:var(--red)"></i> Logout</a>
+          </div>
+        </div>
+
       </aside>
 
     </div>
@@ -1838,6 +1848,17 @@
           sidebarBtn.classList.remove('following');
           sidebarBtn.innerHTML = '<i class="fas fa-heart"></i> Follow Seller';
         }
+      }
+    }
+
+    /* ---- Logout ---- */
+    function doLogout() {
+      if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('mr_shop_user');
+        localStorage.removeItem('mr_shop_token');
+        localStorage.removeItem('mr_shop_cart');
+        localStorage.removeItem('mr_shop_wishlist');
+        window.location.href = 'index.html';
       }
     }
 
