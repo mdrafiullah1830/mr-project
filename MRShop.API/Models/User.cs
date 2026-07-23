@@ -24,7 +24,7 @@ public class User
     [BsonElement("address")]
     public string? Address { get; set; }
 
-    [BsonElement("role")]
+    [BsonElement("Role")]
     public string Role { get; set; } = "customer"; // customer, seller, admin
 
     [BsonElement("profilePhoto")]

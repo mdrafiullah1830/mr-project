@@ -45,6 +45,9 @@ public class Product
     [BsonElement("discountPrice")]
     public decimal? DiscountPrice { get; set; }
 
+    [BsonElement("originalPrice")]
+    public decimal? OriginalPrice { get; set; }
+
     [BsonElement("costPrice")]
     public decimal? CostPrice { get; set; }
 

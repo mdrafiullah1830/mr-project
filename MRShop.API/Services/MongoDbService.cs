@@ -1,5 +1,7 @@
 using System.Net.Security;
 using System.Security.Authentication;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using MRShop.API.Models;
 
@@ -11,6 +13,10 @@ public class MongoDbService
 
     public MongoDbService(IConfiguration configuration)
     {
+        // Register case-insensitive convention pack
+        var pack = new ConventionPack { new CamelCaseElementNameConvention() };
+        ConventionRegistry.Register("CaseInsensitive", pack, _ => true);
+
         var connectionString = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING")
             ?? configuration["MongoDB:ConnectionString"]
             ?? throw new InvalidOperationException(
