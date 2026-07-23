@@ -154,19 +154,30 @@ const MR_Auth = {
     const user = this.getUser();
     if (!user || !user.loggedIn) return;
 
-    const selectors = ['#accountLink', '.amz-header-link'];
+    // Update all Account links: href + text
+    const selectors = ['#accountLink', '#authLink', '.amz-header-link'];
     for (const sel of selectors) {
       const links = document.querySelectorAll(sel);
       for (const link of links) {
         const line1 = link.querySelector('.line1');
         if (line1 && (line1.textContent.includes('Hello, Sign in') || line1.textContent.includes('Hello,'))) {
+          // Fix href: signin.html -> user-profile.html
+          if (link.href && link.href.includes('signin.html')) {
+            link.href = 'user-profile.html';
+          }
           line1.textContent = `Hello, ${user.username}`;
           const line2 = link.querySelector('.line2');
           if (line2) line2.innerHTML = 'Account & Lists <i class="fas fa-caret-down"></i>';
-          return;
         }
       }
     }
+
+    // Also fix any remaining signin.html links for logged-in users
+    document.querySelectorAll('a[href="signin.html"]').forEach(link => {
+      if (link.classList.contains('amz-header-link') || link.id === 'accountLink' || link.id === 'authLink') {
+        link.href = 'user-profile.html';
+      }
+    });
   }
 };
 
