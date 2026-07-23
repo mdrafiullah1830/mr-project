@@ -363,14 +363,28 @@
 
     async function adminApiCall(endpoint, method = 'GET', body = null) {
       const token = getAdminToken();
-      const opts = { method, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` } };
+      const opts = { method, headers: { 'Content-Type': 'application/json' } };
+      if (token) opts.headers['Authorization'] = `Bearer ${token}`;
       if (body) opts.body = JSON.stringify(body);
       try {
         const res = await fetch(`${ADMIN_API}${endpoint}`, opts);
-        if (res.status === 401 || res.status === 403) { adminLogout(); return null; }
-        if (!res.ok) { const err = await res.json().catch(() => ({})); alert(err.message || 'Request failed'); return null; }
+        if (res.status === 401 || res.status === 403) {
+          if (!sessionStorage.getItem('admin_redirected')) {
+            sessionStorage.setItem('admin_redirected', '1');
+            adminLogout();
+          }
+          return null;
+        }
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          console.error(`API error ${res.status}:`, err);
+          return null;
+        }
         return await res.json();
-      } catch (e) { alert('Failed to connect to server'); return null; }
+      } catch (e) {
+        console.error('Network error:', e);
+        return null;
+      }
     }
 
     function showTab(name) {
@@ -909,15 +923,17 @@
     }
 
     // ==================== LOAD ALL ====================
-    loadDashboard();
-    loadAdminProducts();
-    loadSellers();
-    loadOrders();
-    loadUsers();
-    loadReviews();
-    loadCoupons();
-    loadCategories();
-    loadAnalytics();
+    function loadAllData() {
+      loadDashboard();
+      loadAdminProducts();
+      loadSellers();
+      loadOrders();
+      loadUsers();
+      loadReviews();
+      loadCoupons();
+      loadCategories();
+      loadAnalytics();
+    }
 
     // ==================== ANALYTICS ====================
     async function loadAnalytics() {
@@ -1026,6 +1042,8 @@
         window.location.href = 'index.html';
         return;
       }
+      // Auth passed - load all admin data
+      loadAllData();
     })();
   </script>
 </body>
