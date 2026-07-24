@@ -446,10 +446,71 @@
       returns: { title: "Return Policy", content: "We have a 7-day return policy. Items must be unused and in original packaging. Food items cannot be returned once delivered. To initiate a return, contact our support team. Refund is processed within 3-5 business days after return is approved." },
       payment: { title: "Payment Methods", content: "We accept: bKash, Nagad, Rocket, Cash on Delivery (COD), and bank transfer. All online payments are secured with SSL encryption. You can also use our coupon codes: SAVE10 (10% off), SAVE20 (20% off), WELCOME (15% off), MRSHOP (5% off)." },
       coupons: { title: "Coupons & Discounts", content: "Available coupons: SAVE10 (10% off on orders over ৳500), SAVE20 (20% off), WELCOME (15% off for new customers), MRSHOP (5% off). Apply coupon code at checkout." },
-      account: { title: "Account & Profile", content: "Create an account to track orders, save wishlist, and get personalized recommendations. You can sign up with email or use social login (Google, Facebook, Apple). Update your profile from 'Your Account' page." },
-      seller: { title: "Sell on MR Shop", content: "Join as a seller to reach 10,000+ customers. Register at 'Become a Seller' page. No listing fees. Low commission rates. Dashboard to manage products, orders, and payments." },
+      account: {
+        title: "Create an Account - Step by Step",
+        steps: [
+          "Go to the <strong>Sign In</strong> page from the top-right of the homepage.",
+          "Click on <strong>'Create your MR Shop account'</strong> link below the login form.",
+          "Enter your <strong>name, email address, and a strong password</strong> (min 8 characters).",
+          "Click <strong>'Create Account'</strong> — you'll receive a confirmation email.",
+          "Verify your email by clicking the link sent to your inbox.",
+          "You're all set! Now you can browse products, add to cart, save wishlist, and track orders."
+        ],
+        bnSteps: [
+          "হোমপেজের উপরে ডান পাশে <strong>Sign In</strong> পেজে যান।",
+          "লগইন ফর্মের নিচে <strong>'Create your MR Shop account'</strong> লিংকে ক্লিক করুন।",
+          "আপনার <strong>নাম, ইমেইল, এবং একটি শক্তিশালী পাসওয়ার্ড</strong> দিন (৮ ক্যারেক্টারের বেশি)।",
+          "<strong>'Create Account'</strong> বাটনে ক্লিক করুন — একটি কনফার্মেশন ইমেইল যাবে।",
+          "ইমেইলে পাঠানো লিংকে ক্লিক করে আপনার অ্যাকাউন্ট ভেরিফাই করুন।",
+          "হয়েছে! এখন আপনি পণ্য ব্রাউজ, কার্টে যোগ, উইশলিস্ট সেভ এবং অর্ডার ট্র্যাক করতে পারবেন।"
+        ],
+        tip: "You can also sign up using Google or Facebook — just click the social login buttons on the Sign In page."
+      },
+      seller: {
+        title: "Become a Seller - Step by Step",
+        steps: [
+          "Go to the <strong>'Become a Seller'</strong> page from the navigation bar or footer.",
+          "Click on <strong>'Register as Seller'</strong> button.",
+          "Fill in your <strong>shop name, phone number, email, and business address</strong>.",
+          "Upload your <strong>business documents</strong> (trade license, NID, bank details).",
+          "Submit the application — our team will review it within <strong>24-48 hours</strong>.",
+          "Once approved, log in to your <strong>Seller Dashboard</strong> to start listing products."
+        ],
+        bnSteps: [
+          "নেভিগেশন বার বা ফুটার থেকে <strong>'Become a Seller'</strong> পেজে যান।",
+          "<strong>'Register as Seller'</strong> বাটনে ক্লিক করুন।",
+          "আপনার <strong>দোকানের নাম, ফোন নম্বর, ইমেইল, এবং ব্যবসার ঠিকানা</strong> দিন।",
+          "আপনার <strong>ব্যবসার ডকুমেন্টস</strong> (ট্রেড লাইসেন্স, এনআইডি, ব্যাংক ডিটেইলস) আপলোড করুন।",
+          "আবেদন জমা দিন — আমাদের টিম <strong>২৪-৪৮ ঘন্টার</strong> মধ্যে রিভিউ করবে।",
+          "অ্যাপ্রুভ হলে <strong>Seller Dashboard</strong> এ লগইন করে প্রোডাক্ট লিস্টিং শুরু করুন।"
+        ],
+        tip: "No listing fees! Low commission rates. Start selling to 10,000+ customers across 64 districts."
+      },
+      order_tracking: {
+        title: "Track Your Order",
+        steps: [
+          "Go to the <strong>'Track Order'</strong> page from the navigation bar.",
+          "Enter your <strong>order number</strong> (you received it via SMS/Email after placing the order).",
+          "Enter your <strong>phone number</strong> used at checkout.",
+          "Click <strong>'Track'</strong> — you'll see the current status and delivery timeline."
+        ],
+        bnSteps: [
+          "নেভিগেশন বার থেকে <strong>'Track Order'</strong> পেজে যান।",
+          "আপনার <strong>অর্ডার নম্বর</strong> দিন (অর্ডার প্লেস করার পর SMS/Email এ পাঠানো হয়েছে)।",
+          "আপনার <strong>ফোন নম্বর</strong> দিন যা চেকআউট এ ব্যবহার করেছেন।",
+          "<strong>'Track'</strong> বাটনে ক্লিক করুন — বর্তমান স্ট্যাটাস এবং ডেলিভারি টাইমলাইন দেখতে পাবেন।"
+        ],
+        statuses: "Order statuses: Pending → Confirmed → Processing → Shipped → Out for Delivery → Delivered"
+      },
       store: { title: "About MR Shop", content: "MR Shop is Bangladesh's #1 online marketplace for authentic Bengali products. We deliver to all 64 districts. 500+ products. 10,000+ happy customers. 4.8 average rating. Powered by MR IT Company." }
     };
+
+    const PRIVATE_TOPICS = [
+      "password", "pass", "admin login", "admin password", "credit card number",
+      "card number", "cvv", "secret key", "api key", "jwt secret", "database password",
+      "db password", "admin credential", "login credential", "backdoor",
+      "পাসওয়ার্ড", "এডমিন লগইন", "ক্রেডিট কার্ড", "সিক্রেট", "গোপন"
+    ];
 
     // ============================================
     // SMART RESPONSE GENERATOR
@@ -458,6 +519,7 @@
 
     function detectIntent(text) {
       const t = text.toLowerCase();
+      if (PRIVATE_TOPICS.some(p => t.includes(p))) return { type: 'private' };
       if (t.match(/honey|মধু/)) return { type: 'product', category: 'food', keyword: 'honey' };
       if (t.match(/oil|তেল|mustard/)) return { type: 'product', category: 'food', keyword: 'oil' };
       if (t.match(/rice|ভাত|chaul/)) return { type: 'product', category: 'food', keyword: 'rice' };
@@ -483,21 +545,44 @@
       if (t.match(/return|রিটার্ন|refund|রিফান্ড|exchange/)) return { type: 'info', key: 'returns' };
       if (t.match(/pay|পেমেন্ট|bkash|nagad|cod|cash/)) return { type: 'info', key: 'payment' };
       if (t.match(/coupon|কুপন|discount|ছাড়|offer|অফার/)) return { type: 'info', key: 'coupons' };
-      if (t.match(/account|অ্যাকাউন্ট|sign.*in|login|register|সাইন/)) return { type: 'info', key: 'account' };
-      if (t.match(/sell|বিক্রি|seller|বিক্রেতা/)) return { type: 'info', key: 'seller' };
-      if (t.match(/about|সম্পর্কে|company|কোম্পানি|who.*are/)) return { type: 'info', key: 'store' };
       if (t.match(/stock|স্টক|available|আছে|out of/)) return { type: 'stock' };
       if (t.match(/warranty|ওয়ারেন্টি|guarantee/)) return { type: 'warranty' };
-      if (t.match(/order|অর্ডার|track|ট্র্যাক/)) return { type: 'order' };
       if (t.match(/^(hi|hello|hey|হাই|হেলো|নমস্কার|assalamu)/)) return { type: 'greeting' };
       if (t.match(/thank|ধন্যবাদ|thanks/)) return { type: 'thanks' };
       if (t.match(/help|সাহায্য/)) return { type: 'help' };
+      if (t.match(/about|সম্পর্কে|company|কোম্পানি|who.*are/)) return { type: 'info', key: 'store' };
+      if (t.match(/how.*(create|register|sign.?up|make).*account|how.*i.*(create|register|sign.?up)|create.*new.*account|registration.*process/)) return { type: 'step_by_step', key: 'account' };
+      if (t.match(/how.*(become|register|join).*seller|seller.*(registration|process|how)|become.*a.*seller|seller.*account.*create/)) return { type: 'step_by_step', key: 'seller' };
+      if (t.match(/(where|check|track|status).*(my|the).*order|order.*(status|track|check)|track.*order|order.*kothay/)) return { type: 'step_by_step', key: 'order_tracking' };
+      if (t.match(/account|অ্যাকাউন্ট|sign.*in|login|register|সাইন/)) return { type: 'step_by_step', key: 'account' };
+      if (t.match(/sell|বিক্রি|seller|বিক্রেতা/)) return { type: 'step_by_step', key: 'seller' };
+      if (t.match(/order|অর্ডার|ট্র্যাক/)) return { type: 'step_by_step', key: 'order_tracking' };
       return { type: 'general' };
     }
 
     function generateResponse(userInput) {
       const lang = detectLanguage(userInput);
       const intent = detectIntent(userInput);
+
+      if (intent.type === 'private') {
+        return lang === 'bn'
+          ? '⚠️ <strong>দুঃখিত, আমি এই বিষয়ে তথ্য দিতে পারব না।</strong><br><br>এটি একটি সংবেদনশীল/গোপনীয় বিষয়। শুধুমাত্র অনুমোদিত ব্যক্তি এই তথ্য অ্যাক্সেস করতে পারেন।<br><br>আমি পণ্য, মূল্য, ডেলিভারি, পেমেন্ট এবং অন্যান্য গ্রাহক সহায়তা বিষয়ে সাহায্য করতে পারি। আপনি কি অন্য কিছু জানতে চান?'
+          : '⚠️ <strong>Sorry, I cannot provide information on this topic.</strong><br><br>This appears to be a sensitive/confidential matter. Only authorized personnel can access this information.<br><br>I can help you with products, pricing, delivery, payment, and other customer support topics. Is there something else I can help you with?';
+      }
+
+      if (intent.type === 'step_by_step' && KNOWLEDGE[intent.key] && KNOWLEDGE[intent.key].steps) {
+        const kb = KNOWLEDGE[intent.key];
+        const steps = lang === 'bn' && kb.bnSteps ? kb.bnSteps : kb.steps;
+        let html = lang === 'bn'
+          ? `<strong>${kb.title} - ধাপে ধাপে:</strong><br><br>`
+          : `<strong>${kb.title} - Step by Step:</strong><br><br>`;
+        steps.forEach((step, i) => {
+          html += `<strong>Step ${i + 1}:</strong> ${step}<br><br>`;
+        });
+        if (kb.statuses) html += `<br><em>${kb.statuses}</em>`;
+        if (kb.tip) html += `<br><br>💡 <em>${kb.tip}</em>`;
+        return html;
+      }
 
       if (intent.type === 'greeting') {
         return lang === 'bn'
@@ -596,11 +681,6 @@
         return lang === 'bn'
           ? '<strong>ওয়ারেন্টি নীতি:</strong><br><br>• খাদ্য পণ্য: ডেলিভারির সময় যাচাই করুন<br>• হস্তশিল্প: ৭ দিনের রিটার্ন পলিসি<br>• পোশাক: সাইজ পরিবর্তনের জন্য ৭ দিন<br>• ইলেকট্রিক আইটেম: ১ বছরের ওয়ারেন্টি<br><br>বিস্তারিত জানতে সাপোর্টে যোগাযোগ করুন।'
           : '<strong>Warranty Policy:</strong><br><br>• Food products: Check at delivery time<br>• Handicrafts: 7-day return policy<br>• Clothing: Size exchange within 7 days<br>• Electronic items: 1 year warranty<br><br>For more details, contact our support team.';
-      }
-      if (intent.type === 'order') {
-        return lang === 'bn'
-          ? '<strong>অর্ডার সম্পর্কে:</strong><br><br>• অর্ডার ট্র্যাক করতে "Track Order" পেজে যান<br>• অর্ডার কনফার্মেশন SMS/Email এ পাঠানো হয়<br>• ডেলিভারি ৩-৭ কার্যদিবস<br>• সমস্যা হলে চ্যাট বা ফোনে যোগাযোগ করুন'
-          : '<strong>Order Information:</strong><br><br>• Track your order from "Track Order" page<br>• Order confirmation sent via SMS/Email<br>• Delivery takes 3-7 business days<br>• For issues, contact us via chat or phone';
       }
       const query = userInput.toLowerCase();
       const matchedProducts = PRODUCTS.filter(p => { const searchText = `${p.name} ${p.description} ${p.category}`.toLowerCase(); return query.split(' ').some(word => word.length > 2 && searchText.includes(word)); });
