@@ -447,9 +447,24 @@
     let allAdminProducts = [];
     let currentCategoryFilter = 'all';
 
+    function saveProductsToLocal(products) {
+      localStorage.setItem('mr_shop_products', JSON.stringify(products));
+    }
+
+    function getLocalProducts() {
+      try { return JSON.parse(localStorage.getItem('mr_shop_products')) || []; }
+      catch { return []; }
+    }
+
     async function loadAdminProducts() {
       const data = await adminApiCall('/admin/products');
-      if (data) allAdminProducts = data;
+      if (data) {
+        allAdminProducts = data;
+        saveProductsToLocal(data);
+      } else {
+        const local = getLocalProducts();
+        if (local.length > 0) allAdminProducts = local;
+      }
       renderProducts();
     }
 
@@ -511,7 +526,42 @@
       const categoryId = cat ? cat.id : categorySlug;
       const result = await adminApiCall('/products', 'POST', { name, categoryId, price, discountPrice, stockQuantity, description, thumbnailImage: '', status: 'published' });
       if (result) {
-        alert('Product added!');
+        alert('Product added to API!');
+
+        const localProduct = {
+          id: result.id || Date.now(),
+          name, price, originalPrice: discountPrice || price,
+          category: categorySlug,
+          image: './assets/images/placeholder.jpg',
+          rating: 0, reviews: 0, prime: false,
+          description, stock: stockQuantity,
+          link: getCategoryLink(categorySlug)
+        };
+        const local = getLocalProducts();
+        if (!local.find(p => p.id === localProduct.id)) local.push(localProduct);
+        saveProductsToLocal(local);
+
+        closeModal('productModal');
+        document.getElementById('prodName').value = '';
+        document.getElementById('prodPrice').value = '';
+        document.getElementById('prodOriginalPrice').value = '';
+        document.getElementById('prodStock').value = '';
+        document.getElementById('prodDesc').value = '';
+        loadAdminProducts();
+      } else {
+        alert('API offline. Saving to local storage only.');
+        const localProduct = {
+          id: Date.now(),
+          name, price, originalPrice: discountPrice || price,
+          category: categorySlug,
+          image: './assets/images/placeholder.jpg',
+          rating: 0, reviews: 0, prime: false,
+          description, stock: stockQuantity,
+          link: getCategoryLink(categorySlug)
+        };
+        const local = getLocalProducts();
+        if (!local.find(p => p.id === localProduct.id)) local.push(localProduct);
+        saveProductsToLocal(local);
         closeModal('productModal');
         document.getElementById('prodName').value = '';
         document.getElementById('prodPrice').value = '';
@@ -560,6 +610,17 @@
       };
       const result = await adminApiCall(`/admin/products/${id}/edit`, 'PUT', payload);
       if (result) {
+        const local = getLocalProducts();
+        const idx = local.findIndex(p => p.id === id);
+        if (idx !== -1) { local[idx].name = payload.name; local[idx].price = payload.price; local[idx].stock = payload.stockQuantity; local[idx].description = payload.description; local[idx].category = catSlug; }
+        saveProductsToLocal(local);
+        document.getElementById('editProductModal')?.remove();
+        loadAdminProducts();
+      } else {
+        const local = getLocalProducts();
+        const idx = local.findIndex(p => p.id === id);
+        if (idx !== -1) { local[idx].name = payload.name; local[idx].price = payload.price; local[idx].stock = payload.stockQuantity; local[idx].description = payload.description; local[idx].category = catSlug; }
+        saveProductsToLocal(local);
         document.getElementById('editProductModal')?.remove();
         loadAdminProducts();
       }
@@ -577,6 +638,8 @@
     async function deleteProduct(id) {
       if (!confirm('Delete this product?')) return;
       await adminApiCall(`/products/${id}`, 'DELETE');
+      const local = getLocalProducts();
+      saveProductsToLocal(local.filter(p => String(p.id) !== String(id)));
       loadAdminProducts();
     }
 

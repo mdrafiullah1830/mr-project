@@ -182,8 +182,12 @@
   <script src="assets/js/wishlist.js"></script>
 
   <script>
-    // Product Database
-    const products = MR_getProductsByCategory('food');
+    // Render products from MR_PRODUCTS (loaded from API + localStorage)
+    async function initFoodProducts() {
+      await MR_fetchProducts();
+      MR_mergeLocalProducts();
+      renderProducts();
+    }
 
     // Generate star rating
     function generateStars(rating) {
@@ -242,6 +246,7 @@
     // Render products
     function renderProducts() {
       const grid = document.getElementById('productsGrid');
+      const products = MR_getProductsByCategory('food');
       grid.innerHTML = products.map(createProductCard).join('');
     }
 
@@ -249,6 +254,7 @@
     function filterProducts() {
       const query = document.getElementById('searchInput').value.toLowerCase();
       const grid = document.getElementById('productsGrid');
+      const products = MR_getProductsByCategory('food');
       const filtered = query ? products.filter(p => p.name.toLowerCase().includes(query) || p.description.toLowerCase().includes(query)) : products;
       grid.innerHTML = filtered.map(createProductCard).join('');
     }
@@ -259,7 +265,7 @@
     }
 
     // Initialize
-    document.addEventListener('DOMContentLoaded', renderProducts);
+    document.addEventListener('DOMContentLoaded', initFoodProducts);
   </script>
 
 </body>

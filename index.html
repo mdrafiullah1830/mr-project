@@ -546,66 +546,24 @@
   <script src="assets/js/auth-shared.js"></script>
   <script src="assets/js/wishlist.js"></script>
   <script>
-    // Product Database (local for homepage)
-    let allProducts = [
-      { id: 1, name: "Sundarbans Wild Honey 500g", price: 850, originalPrice: 1200, category: "food", image: "./assets/images/honey.jpg", rating: 4.8, reviews: 234, prime: true, link: "food&natural.html" },
-      { id: 2, name: "Pure Mustard Oil 1L", price: 320, originalPrice: 400, category: "food", image: "./assets/images/oil.jpg", rating: 4.6, reviews: 189, prime: true, link: "food&natural.html" },
-      { id: 3, name: "Organic Basmati Rice 5kg", price: 180, originalPrice: 250, category: "food", image: "./assets/images/rice.jpg", rating: 4.5, reviews: 312, prime: true, link: "food&natural.html" },
-      { id: 101, name: "Authentic Bogura Doi 500g", price: 180, originalPrice: 220, category: "sweets", image: "./assets/images/doi.jpg", rating: 4.9, reviews: 456, prime: true, link: "sweets&dairy.html" },
-      { id: 102, name: "Roshogolla 12 Pieces", price: 250, originalPrice: 320, category: "sweets", image: "./assets/images/roshogolla.jpg", rating: 4.8, reviews: 389, prime: true, link: "sweets&dairy.html" },
-      { id: 201, name: "Nakshi Kantha Quilt", price: 1200, originalPrice: 1800, category: "handicrafts", image: "./assets/images/nakshi.jpg", rating: 4.9, reviews: 89, prime: false, link: "handricrafts.html" },
-      { id: 202, name: "Bamboo Basket Eco", price: 450, originalPrice: 600, category: "handicrafts", image: "./assets/images/basket.jpg", rating: 4.6, reviews: 134, prime: true, link: "handricrafts.html" },
-      { id: 301, name: "Jamdani Saree Cotton", price: 4500, originalPrice: 6000, category: "clothing", image: "./assets/images/saree.jpg", rating: 4.9, reviews: 78, prime: false, link: "clothing.html" },
-      { id: 302, name: "Cotton Panjabi", price: 850, originalPrice: 1100, category: "clothing", image: "./assets/images/panjabi.jpg", rating: 4.6, reviews: 234, prime: true, link: "clothing.html" },
-      { id: 401, name: "Bengali Literature", price: 350, originalPrice: 480, category: "books", image: "./assets/images/book1.jpg", rating: 4.7, reviews: 145, prime: true, link: "book.html" },
-      { id: 501, name: "Antique Coin Collection", price: 150, originalPrice: 200, category: "antique", image: "./assets/images/coin1.jpeg", rating: 4.5, reviews: 56, prime: false, link: "antique.html" },
-      { id: 4, name: "Pure Cow Ghee 500ml", price: 950, originalPrice: 1200, category: "food", image: "./assets/images/ghee.jpg", rating: 4.9, reviews: 156, prime: false, link: "food&natural.html" },
-      { id: 103, name: "Chomchom 8 Pieces", price: 300, originalPrice: 380, category: "sweets", image: "./assets/images/chomchom.jpg", rating: 4.7, reviews: 267, prime: false, link: "sweets&dairy.html" },
-      { id: 203, name: "Clay Pot Set", price: 350, originalPrice: 500, category: "handicrafts", image: "./assets/images/clay.jpg", rating: 4.7, reviews: 98, prime: true, link: "handricrafts.html" },
-      { id: 303, name: "Silk Salwar Kameez", price: 2200, originalPrice: 3000, category: "clothing", image: "./assets/images/salwar.jpg", rating: 4.8, reviews: 156, prime: false, link: "clothing.html" },
-      { id: 402, name: "History of Bengal", price: 480, originalPrice: 600, category: "books", image: "./assets/images/book2.jpg", rating: 4.8, reviews: 98, prime: true, link: "book.html" },
-      { id: 5, name: "Fresh Vegetables Bundle", price: 120, originalPrice: 180, category: "food", image: "./assets/images/vegetables.jpg", rating: 4.3, reviews: 89, prime: true, link: "food&natural.html" },
-      { id: 104, name: "Sandesh 10 Pieces", price: 220, originalPrice: 280, category: "sweets", image: "./assets/images/sandesh.jpg", rating: 4.6, reviews: 198, prime: true, link: "sweets&dairy.html" }
-    ];
+    // Use MR_PRODUCTS from products.js (loaded from API + localStorage)
+    let allProducts = [];
 
-    // Load products from localStorage (admin added)
-    function loadLocalProducts() {
-      try {
-        const localProducts = JSON.parse(localStorage.getItem('mr_shop_products')) || [];
-        if (localProducts.length > 0) {
-          const categoryLinks = {
-            food: 'food&natural.html',
-            sweets: 'sweets&dairy.html',
-            handicrafts: 'handricrafts.html',
-            clothing: 'clothing.html',
-            books: 'book.html',
-            antique: 'antique.html'
-          };
-          localProducts.forEach(p => {
-            if (!allProducts.find(ap => ap.id === p.id)) {
-              allProducts.push({
-                id: p.id,
-                name: p.name,
-                price: p.price,
-                originalPrice: p.originalPrice || p.price,
-                category: p.category,
-                image: p.image || 'https://via.placeholder.com/200x200?text=No+Image',
-                rating: p.rating || 4.5,
-                reviews: p.reviews || 0,
-                prime: p.prime || false,
-                link: categoryLinks[p.category] || 'index.html'
-              });
-            }
-          });
-          console.log('Local products loaded to index:', localProducts.length);
-        }
-      } catch (err) {
-        console.log('Error loading local products:', err);
-      }
+    async function initProducts() {
+      await MR_fetchProducts();
+      MR_mergeLocalProducts();
+      allProducts = [...MR_PRODUCTS];
+      renderProducts('all');
+      renderNewArrivals();
     }
 
-    // Load local products immediately
+    function loadLocalProducts() {
+      MR_mergeLocalProducts();
+      allProducts = [...MR_PRODUCTS];
+    }
+
     loadLocalProducts();
+    initProducts();
 
     function generateStars(r) {
       const f = Math.floor(r), h = r % 1 >= 0.5;
@@ -713,10 +671,6 @@
     // Scroll animations
     const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); });
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-    // Init
-    renderProducts('all');
-    renderNewArrivals();
   </script>
   <script src="assets/js/darkmode.js"></script>
   <script src="assets/js/i18n.js"></script>

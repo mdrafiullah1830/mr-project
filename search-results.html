@@ -386,8 +386,14 @@
       renderProducts(sorted);
     }
 
+    async function initSearch() {
+      await MR_fetchProducts();
+      MR_mergeLocalProducts();
+      loadResults();
+    }
+
     MR_Search.init('#searchInput', '#searchSuggestions');
-    loadResults();
+    initSearch();
   </script>
   <script src="assets/js/darkmode.js"></script>
   <script src="assets/js/i18n.js"></script>

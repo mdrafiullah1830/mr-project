@@ -36,7 +36,7 @@ async function MR_fetchProducts() {
       const data = await response.json();
       const apiProducts = data.products || data;
       if (apiProducts && apiProducts.length > 0) {
-        MR_PRODUCTS = apiProducts.map(p => ({
+        const mapped = apiProducts.map(p => ({
           id: p.id,
           name: p.name,
           slug: p.slug,
@@ -54,14 +54,64 @@ async function MR_fetchProducts() {
           tags: p.tags || [],
           link: `product-details.html?id=${p.id}`
         }));
+        MR_PRODUCTS = mapped;
         console.log('Products loaded from API:', MR_PRODUCTS.length);
         return true;
       }
     }
   } catch (err) {
-    console.log('API offline, using fallback products');
+    console.log('API offline, using local/fallback products');
   }
   return false;
+}
+
+// Merge localStorage products into MR_PRODUCTS
+function MR_mergeLocalProducts() {
+  try {
+    const localProducts = JSON.parse(localStorage.getItem('mr_shop_products')) || [];
+    if (localProducts.length > 0) {
+      const mapped = localProducts.map(p => ({
+        id: p.id,
+        name: p.name,
+        price: p.price,
+        originalPrice: p.originalPrice || p.price,
+        category: p.category,
+        image: p.image || './assets/images/placeholder.jpg',
+        rating: p.rating || 0,
+        reviews: p.reviews || 0,
+        prime: p.prime || false,
+        description: p.description || '',
+        stock: p.stock || 0,
+        link: getCategoryLink(p.category)
+      }));
+      for (const lp of mapped) {
+        if (!MR_PRODUCTS.find(p => String(p.id) === String(lp.id))) {
+          MR_PRODUCTS.push(lp);
+        }
+      }
+      console.log('Local products merged:', mapped.length);
+    }
+  } catch (err) {
+    console.log('Error loading local products:', err);
+  }
+}
+
+// Re-render all product grids on the current page
+function MR_renderProductGrids() {
+  document.querySelectorAll('[data-products-grid]').forEach(grid => {
+    const category = grid.dataset.category;
+    const products = category ? MR_getProductsByCategory(category) : MR_PRODUCTS;
+    grid.innerHTML = products.map(p => MR_createProductCard(p)).join('');
+  });
+
+  document.querySelectorAll('[data-search-results]').forEach(grid => {
+    const category = grid.dataset.searchCategory || 'all';
+    let products = MR_PRODUCTS;
+    if (category !== 'all') products = MR_getProductsByCategory(category);
+    const query = sessionStorage.getItem('mr_search_query');
+    if (query) products = MR_searchProducts(query);
+    grid.innerHTML = products.map(p => MR_createProductCard(p)).join('');
+  });
 }
 
 function getCategoryLink(category) {
@@ -191,23 +241,9 @@ function MR_loadLocalProducts() {
   }
 }
 
-// Load local products immediately when script loads
-MR_loadLocalProducts();
-
 // Initialize products on page load
 document.addEventListener('DOMContentLoaded', async () => {
   const apiLoaded = await MR_fetchProducts();
-  if (!apiLoaded) {
-    // Load from localStorage when API is offline
-    MR_loadLocalProducts();
-  } else {
-    // Also load local products to merge admin-added ones
-    MR_loadLocalProducts();
-  }
-  // Re-render any product grids on the page
-  document.querySelectorAll('[data-products-grid]').forEach(grid => {
-    const category = grid.dataset.category;
-    const products = category ? MR_getProductsByCategory(category) : MR_PRODUCTS;
-    grid.innerHTML = products.map(p => MR_createProductCard(p)).join('');
-  });
+  MR_mergeLocalProducts();
+  MR_renderProductGrids();
 });

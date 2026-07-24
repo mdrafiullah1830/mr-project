@@ -119,10 +119,15 @@
   <script src="assets/js/wishlist.js"></script>
 
   <script>
-    const products = MR_getProductsByCategory('sweets');
+    async function initSweetsProducts() {
+      await MR_fetchProducts();
+      MR_mergeLocalProducts();
+      renderProducts();
+    }
 
     function renderProducts() {
       const grid = document.getElementById('productsGrid');
+      const products = MR_getProductsByCategory('sweets');
       grid.innerHTML = products.map(p => MR_createProductCard(p)).join('');
     }
 
@@ -131,7 +136,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      renderProducts();
+      initSweetsProducts();
       MR_Cart.updateCartCount();
 
       const searchInput = document.querySelector('.amz-search-input');
@@ -139,6 +144,7 @@
         if (e.key === 'Enter') {
           const query = e.target.value.toLowerCase();
           const grid = document.getElementById('productsGrid');
+          const products = MR_getProductsByCategory('sweets');
 
           if (query.trim() === '') {
             renderProducts();
